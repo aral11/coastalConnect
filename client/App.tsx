@@ -71,15 +71,25 @@ const App = () => (
           <Route path="/other-services" element={<ServiceSector />} />
 
           {/* Placeholder pages */}
-          <Route 
-            path="/about" 
+          <Route
+            path="/locations"
             element={
-              <PlaceholderPage 
-                title="About Coastal Connect" 
+              <PlaceholderPage
+                title="Explore Locations"
+                description="Discover amazing destinations across coastal Karnataka and plan your perfect trip."
+                icon={<MapPin className="h-16 w-16 text-coastal-400" />}
+              />
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <PlaceholderPage
+                title="About Coastal Connect"
                 description="Learn more about our mission to connect travelers with amazing coastal experiences."
                 icon={<Info className="h-16 w-16 text-coastal-400" />}
               />
-            } 
+            }
           />
           <Route 
             path="/contact" 
