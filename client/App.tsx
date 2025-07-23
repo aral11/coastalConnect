@@ -9,6 +9,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
+import Eateries from "./pages/Eateries";
+import DriverApp from "./pages/DriverApp";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PlaceholderPage from "./pages/PlaceholderPage";
