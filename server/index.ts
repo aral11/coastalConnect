@@ -12,6 +12,7 @@ import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents }
 import { registerVendor, getPendingVendors, updateVendorStatus, getVendorStatus, getVendorCategories } from "./routes/vendors";
 import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizerProfile, getOrganizerDashboard, authenticateOrganizer, requireVerifiedOrganizer } from "./routes/eventOrganizers";
 import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEventForApproval, deleteEvent, cancelEvent, getEventRegistrations, getEventAnalytics } from "./routes/organizerEvents";
+import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, sendWelcomeEmail, sendCustomNotification, sendBulkNotification, getNotificationHistory, testEmail, testSMS } from "./routes/notifications";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
