@@ -230,11 +230,12 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-gradient-coastal rounded-lg p-2">
-                  <Anchor className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-xl font-bold">Coastal Connect</span>
+              <div className="flex items-center space-x-3 mb-4">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                  alt="coastalConnect"
+                  className="logo-brand h-8 brightness-0 invert"
+                />
               </div>
               <p className="text-gray-400 mb-4">
                 Your trusted partner for coastal accommodations and transportation services.
