@@ -40,6 +40,59 @@ interface ReligiousService {
 }
 
 export default function CommunityFeatures() {
+  const [featuredEvents, setFeaturedEvents] = useState<LocalEvent[]>([]);
+  const [religiousServices, setReligiousServices] = useState<ReligiousService[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCommunityData();
+  }, []);
+
+  const fetchCommunityData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch featured events
+      const eventsResponse = await fetch('/api/community/events/featured');
+      if (eventsResponse.ok) {
+        const eventsData = await eventsResponse.json();
+        setFeaturedEvents(eventsData.data || []);
+      }
+
+      // Fetch religious services
+      const religiousResponse = await fetch('/api/community/religious-services?limit=6');
+      if (religiousResponse.ok) {
+        const religiousData = await religiousResponse.json();
+        setReligiousServices(religiousData.data ? religiousData.data.slice(0, 6) : []);
+      }
+    } catch (error) {
+      console.error('Error fetching community data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const formatTime = (timeString?: string) => {
+    if (!timeString) return '';
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    } catch {
+      return timeString;
+    }
+  };
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="container mx-auto px-4">
