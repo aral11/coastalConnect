@@ -6,28 +6,36 @@ export const getLocalEvents: RequestHandler = async (req, res) => {
   try {
     const { category, date, featured } = req.query;
     const connection = await getConnection();
-    
-    let query = 'SELECT * FROM LocalEvents WHERE status = \'upcoming\'';
+
+    // Updated query to show published and approved events, including organizer info
+    let query = `
+      SELECT le.*, eo.organization_name, eo.contact_person
+      FROM LocalEvents le
+      LEFT JOIN EventOrganizers eo ON le.organizer_id = eo.id
+      WHERE le.status IN ('published', 'approved')
+      AND le.admin_approval_status = 'approved'
+      AND le.event_date >= CAST(GETDATE() AS DATE)
+    `;
     const request = connection.request();
-    
+
     if (category) {
-      query += ' AND category = @category';
+      query += ' AND le.category = @category';
       request.input('category', category);
     }
-    
+
     if (date) {
-      query += ' AND event_date >= @date';
+      query += ' AND le.event_date >= @date';
       request.input('date', date);
     }
-    
+
     if (featured === 'true') {
-      query += ' AND is_featured = 1';
+      query += ' AND le.is_featured = 1';
     }
-    
-    query += ' ORDER BY event_date ASC, start_time ASC';
-    
+
+    query += ' ORDER BY le.event_date ASC, le.start_time ASC';
+
     const result = await request.query(query);
-    
+
     res.json({
       success: true,
       data: result.recordset,
