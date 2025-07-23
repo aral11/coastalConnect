@@ -205,9 +205,9 @@ export default function Index() {
       {/* CTA Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready for Your Coastal Adventure?</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Experience Udupi?</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of travelers who trust Coastal Connect for their perfect coastal experience
+            Join travelers from across India who choose coastalConnect for authentic Udupi experiences
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
