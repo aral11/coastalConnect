@@ -9,6 +9,7 @@ import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./route
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
 import { getBeautyWellness, getArtsHistory, getNightlife, getShopping, getEntertainment, getEventManagement, getOtherServices } from "./routes/services";
 import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
+import { registerVendor, getPendingVendors, updateVendorStatus, getVendorStatus, getVendorCategories } from "./routes/vendors";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
