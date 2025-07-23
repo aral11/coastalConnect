@@ -164,14 +164,59 @@ export const confirmPayment: RequestHandler = async (req, res) => {
 
     // Verify payment with Razorpay
     const payment = await PaymentService.confirmPayment(order_id, payment_id, signature);
-    
+
     // Update booking status
     await BookingService.confirmPayment(parseInt(booking_id), booking_type);
 
+    // Get booking details for notifications
+    const bookingDetails = await BookingService.getBookingDetails(parseInt(booking_id), booking_type);
+
+    // Send email and SMS confirmations
+    if (bookingDetails) {
+      try {
+        // Send email confirmation
+        await EmailService.sendBookingConfirmation({
+          id: booking_id,
+          type: booking_type,
+          contactInfo: {
+            name: bookingDetails.guest_name || bookingDetails.passenger_name,
+            email: bookingDetails.guest_email || bookingDetails.passenger_email,
+            phone: bookingDetails.guest_phone || bookingDetails.passenger_phone
+          },
+          item: {
+            name: bookingDetails.item_name,
+            location: bookingDetails.location,
+            image: bookingDetails.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop'
+          },
+          bookingReference: bookingDetails.booking_reference,
+          checkIn: bookingDetails.check_in_date || bookingDetails.pickup_datetime,
+          checkOut: bookingDetails.check_out_date,
+          guests: bookingDetails.guests || 1,
+          totalAmount: bookingDetails.total_amount,
+          paymentId: payment_id,
+          specialRequests: bookingDetails.special_requests
+        });
+
+        // Send SMS confirmation
+        await SMSService.sendBookingConfirmation(
+          bookingDetails.guest_phone || bookingDetails.passenger_phone,
+          {
+            bookingReference: bookingDetails.booking_reference,
+            itemName: bookingDetails.item_name,
+            checkIn: bookingDetails.check_in_date || bookingDetails.pickup_datetime,
+            totalAmount: bookingDetails.total_amount
+          }
+        );
+      } catch (notificationError) {
+        console.error('Failed to send confirmation notifications:', notificationError);
+        // Don't fail the entire request if notifications fail
+      }
+    }
+
     res.json({
       success: true,
-      data: { payment },
-      message: 'Payment confirmed successfully'
+      data: { payment, booking: bookingDetails },
+      message: 'Payment confirmed successfully. Confirmation email and SMS sent.'
     });
   } catch (error) {
     console.error('Error confirming payment:', error);
