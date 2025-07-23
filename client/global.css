@@ -4,10 +4,9 @@
 
 @layer base {
   /**
-   * Tailwind CSS theme
-   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
-   * A different format will require also updating the theme in tailwind.config.ts.
-  */
+   * Coastal Connect Design System
+   * Modern coastal-themed color palette with ocean blues and warm coastal tones
+   */
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -18,8 +17,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Updated primary to coastal theme */
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -35,25 +35,44 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 199 89% 48%;
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Coastal brand colors */
+    --coastal-50: 199 100% 95%;
+    --coastal-100: 199 100% 85%;
+    --coastal-200: 199 100% 75%;
+    --coastal-300: 199 89% 65%;
+    --coastal-400: 199 89% 58%;
+    --coastal-500: 199 89% 48%;
+    --coastal-600: 199 89% 38%;
+    --coastal-700: 199 89% 28%;
+    --coastal-800: 199 89% 18%;
+    --coastal-900: 199 89% 8%;
+    --coastal-950: 199 89% 4%;
+
+    /* Ocean accent colors */
+    --ocean-50: 187 100% 95%;
+    --ocean-100: 187 100% 85%;
+    --ocean-200: 187 85% 75%;
+    --ocean-300: 187 78% 65%;
+    --ocean-400: 187 78% 55%;
+    --ocean-500: 187 78% 45%;
+    --ocean-600: 187 78% 35%;
+    --ocean-700: 187 78% 25%;
+    --ocean-800: 187 78% 15%;
+    --ocean-900: 187 78% 8%;
+    --ocean-950: 187 78% 4%;
   }
 
   .dark {
@@ -66,7 +85,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 199 89% 48%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -83,7 +102,8 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 199 89% 48%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -92,6 +112,32 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Dark mode coastal colors - slightly muted for better contrast */
+    --coastal-50: 199 89% 8%;
+    --coastal-100: 199 89% 12%;
+    --coastal-200: 199 89% 18%;
+    --coastal-300: 199 89% 28%;
+    --coastal-400: 199 89% 38%;
+    --coastal-500: 199 89% 48%;
+    --coastal-600: 199 89% 58%;
+    --coastal-700: 199 89% 65%;
+    --coastal-800: 199 100% 75%;
+    --coastal-900: 199 100% 85%;
+    --coastal-950: 199 100% 95%;
+
+    /* Dark mode ocean colors */
+    --ocean-50: 187 78% 8%;
+    --ocean-100: 187 78% 12%;
+    --ocean-200: 187 78% 18%;
+    --ocean-300: 187 78% 28%;
+    --ocean-400: 187 78% 38%;
+    --ocean-500: 187 78% 48%;
+    --ocean-600: 187 78% 55%;
+    --ocean-700: 187 78% 65%;
+    --ocean-800: 187 85% 75%;
+    --ocean-900: 187 100% 85%;
+    --ocean-950: 187 100% 95%;
   }
 }
 
@@ -101,6 +147,45 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+}
+
+@layer components {
+  .btn-coastal {
+    @apply bg-gradient-coastal text-white hover:shadow-coastal transition-all duration-300 rounded-lg px-6 py-3 font-medium;
+  }
+
+  .btn-ocean {
+    @apply bg-gradient-ocean text-white hover:shadow-ocean transition-all duration-300 rounded-lg px-6 py-3 font-medium;
+  }
+
+  .card-coastal {
+    @apply bg-white border border-coastal-200 rounded-xl shadow-coastal hover:shadow-ocean transition-all duration-300;
+  }
+
+  .hero-section {
+    @apply bg-gradient-coastal text-white relative overflow-hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    @apply absolute inset-0 bg-hero-pattern opacity-10;
   }
 }
