@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 
 export default function Index() {
+  const { user, isAuthenticated, logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
       {/* Navigation */}
