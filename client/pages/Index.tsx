@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import Layout from '@/components/Layout';
 import LocalCreatorsGrid from '@/components/LocalCreatorsGrid';
 import ComprehensiveServices from '@/components/ComprehensiveServices';
 import CommunityFeatures from '@/components/CommunityFeatures';
