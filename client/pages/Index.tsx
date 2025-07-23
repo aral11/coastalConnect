@@ -238,7 +238,7 @@ export default function Index() {
                 />
               </div>
               <p className="text-gray-400 mb-4">
-                Your trusted partner for coastal accommodations and transportation services.
+                Your trusted partner for authentic Udupi experiences - homestays, local cuisine, and cultural tours.
               </p>
               <div className="flex space-x-4">
                 <Mail className="h-5 w-5 text-gray-400" />
