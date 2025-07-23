@@ -368,11 +368,12 @@ export default function Index() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Connect</h4>
+              <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: hello@coastalconnect.in</li>
-                <li>Phone: +91 820 252 0001</li>
-                <li>Coastal Karnataka, India</li>
+                <li>Email: admin@coastalconnect.in</li>
+                <li>Phone: 8105003858</li>
+                <li>Website: www.coastalconnect.in</li>
+                <li>Coastal Vibes - @coastalvibes.in</li>
               </ul>
             </div>
           </div>
