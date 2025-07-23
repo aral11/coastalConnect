@@ -7,7 +7,20 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Hotels from "./pages/Hotels";
+import Drivers from "./pages/Drivers";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import PlaceholderPage from "./pages/PlaceholderPage";
 import NotFound from "./pages/NotFound";
+import { 
+  Info, 
+  Phone, 
+  HelpCircle, 
+  FileText, 
+  Shield,
+  Key 
+} from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +32,74 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/hotels" element={<Hotels />} />
+          <Route path="/drivers" element={<Drivers />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* Placeholder pages */}
+          <Route 
+            path="/about" 
+            element={
+              <PlaceholderPage 
+                title="About Coastal Connect" 
+                description="Learn more about our mission to connect travelers with amazing coastal experiences."
+                icon={<Info className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          <Route 
+            path="/contact" 
+            element={
+              <PlaceholderPage 
+                title="Contact Us" 
+                description="Get in touch with our team for support or inquiries."
+                icon={<Phone className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          <Route 
+            path="/help" 
+            element={
+              <PlaceholderPage 
+                title="Help Center" 
+                description="Find answers to common questions and get support."
+                icon={<HelpCircle className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          <Route 
+            path="/terms" 
+            element={
+              <PlaceholderPage 
+                title="Terms of Service" 
+                description="Read our terms and conditions for using Coastal Connect."
+                icon={<FileText className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          <Route 
+            path="/privacy" 
+            element={
+              <PlaceholderPage 
+                title="Privacy Policy" 
+                description="Learn how we protect and handle your personal information."
+                icon={<Shield className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          <Route 
+            path="/forgot-password" 
+            element={
+              <PlaceholderPage 
+                title="Reset Password" 
+                description="Reset your password to regain access to your account."
+                icon={<Key className="h-16 w-16 text-coastal-400" />}
+              />
+            } 
+          />
+          
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
