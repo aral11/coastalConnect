@@ -19,6 +19,9 @@ import {
 } from 'lucide-react';
 
 export default function Drivers() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   const placeholderDrivers = [
     {
       id: 1,
