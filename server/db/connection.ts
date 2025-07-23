@@ -218,6 +218,32 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create Creators table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Creators' AND xtype='U')
+      CREATE TABLE Creators (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        title NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        instagram_handle NVARCHAR(100) NOT NULL,
+        instagram_url NVARCHAR(500),
+        profile_image NVARCHAR(500),
+        cover_image NVARCHAR(500),
+        followers_count INT DEFAULT 0,
+        specialty NVARCHAR(100),
+        location NVARCHAR(255),
+        contact_email NVARCHAR(255),
+        contact_phone NVARCHAR(20),
+        website_url NVARCHAR(500),
+        featured_works NVARCHAR(MAX),
+        is_verified BIT DEFAULT 0,
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
     console.log('Database tables initialized successfully');
 
     // Create indexes for better performance
