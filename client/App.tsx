@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
 import Eateries from "./pages/Eateries";
+import Creators from "./pages/Creators";
 import DriverApp from "./pages/DriverApp";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/eateries" element={<Eateries />} />
+          <Route path="/creators" element={<Creators />} />
           <Route path="/driver-app" element={<DriverApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
