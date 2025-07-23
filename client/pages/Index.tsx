@@ -147,23 +147,23 @@ export default function Index() {
                   <Car className="h-8 w-8 text-ocean-600" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Driver Services</h3>
-                  <p className="text-ocean-600">Professional drivers for your journey</p>
+                  <h3 className="text-2xl font-bold text-gray-900">Local Drivers</h3>
+                  <p className="text-ocean-600">Knowledgeable local guides & drivers</p>
                 </div>
               </div>
-              
+
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-gray-600">
                   <Users className="h-5 w-5 text-blue-500 mr-2" />
-                  <span>Licensed and experienced drivers</span>
+                  <span>Local drivers who speak Kannada, Tulu & English</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Clock className="h-5 w-5 text-orange-500 mr-2" />
-                  <span>24/7 availability</span>
+                  <span>Temple visits & local sightseeing</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Shield className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Safe and insured rides</span>
+                  <span>Rates starting from ₹300/hour</span>
                 </div>
               </div>
 
