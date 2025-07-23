@@ -79,7 +79,7 @@ export class InstagramService {
     }
   }
 
-  // Enhanced mock data that closely simulates real Instagram profiles
+  // Enhanced data with actual creator-appropriate images
   private static getEnhancedMockInstagramData(username: string): InstagramProfile {
     const now = new Date();
     const profiles: { [key: string]: InstagramProfile } = {
@@ -92,7 +92,7 @@ export class InstagramService {
         follows_count: 423,
         name: 'Shutterbox Films',
         biography: 'Professional Photography & Videography 📸🎬\\n🌊 Capturing Coastal Karnataka\\n📍 Udupi, Karnataka\\n✉️ hello@shutterboxfilms.com',
-        profile_picture_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
+        profile_picture_url: 'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face',
         website: 'https://shutterboxfilms.com'
       },
       'priya_coastal_arts': {
