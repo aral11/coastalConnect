@@ -39,44 +39,7 @@ interface VendorFormData {
   subscriptionPlan: 'monthly' | 'annual';
 }
 
-const serviceCategories = {
-  'eateries': {
-    label: 'Eateries',
-    subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
-  },
-  'arts-history': {
-    label: 'Arts & History',
-    subcategories: ['Museum', 'Heritage Site', 'Art Gallery', 'Cultural Center', 'Traditional Crafts']
-  },
-  'beauty-wellness': {
-    label: 'Beauty & Wellness',
-    subcategories: ['Salon', 'Spa', 'Gym', 'Ayurveda Center', 'Yoga Studio', 'Massage Center']
-  },
-  'nightlife': {
-    label: 'Nightlife',
-    subcategories: ['Bar', 'Pub', 'Club', 'Lounge', 'Live Music Venue']
-  },
-  'shopping': {
-    label: 'Shopping',
-    subcategories: ['Market', 'Store', 'Boutique', 'Handicrafts', 'Electronics', 'Clothing']
-  },
-  'entertainment': {
-    label: 'Entertainment',
-    subcategories: ['Cinema', 'Gaming Zone', 'Sports Complex', 'Water Sports', 'Adventure Sports']
-  },
-  'event-management': {
-    label: 'Event Management',
-    subcategories: ['Wedding Planner', 'Corporate Events', 'Party Planning', 'Catering Services']
-  },
-  'transportation': {
-    label: 'Transportation',
-    subcategories: ['Taxi Service', 'Car Rental', 'Bike Rental', 'Auto Rickshaw', 'Bus Service']
-  },
-  'other-services': {
-    label: 'Other Services',
-    subcategories: ['Plumber', 'Electrician', 'Carpenter', 'Home Cleaning', 'Repair Services', 'IT Services']
-  }
-};
+// Service categories will be loaded dynamically from server
 
 export default function VendorRegister() {
   const [formData, setFormData] = useState<VendorFormData>({
