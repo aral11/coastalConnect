@@ -181,11 +181,14 @@ export default function Login() {
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input 
+                  <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="pl-10 pr-10"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                   <button
                     type="button"
