@@ -7,6 +7,8 @@ import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
 import { getCreators, getCreatorById, searchCreators, getInstagramStats } from "./routes/creators";
 import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./routes/auth";
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
+import { getBeautyWellness, getArtsHistory, getNightlife, getShopping, getEntertainment, getEventManagement, getOtherServices } from "./routes/services";
+import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
