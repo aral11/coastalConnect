@@ -17,6 +17,16 @@ import { useState } from 'react';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-coastal-50 via-white to-ocean-50 flex items-center justify-center p-4">
