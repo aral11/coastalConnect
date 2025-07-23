@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getConnection } from "../db/connection";
 import { EventOrganizer, Event } from "../models/EventOrganizer";
