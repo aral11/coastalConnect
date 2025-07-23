@@ -219,17 +219,17 @@ async function getCreatorFeaturedWorks(username: string): Promise<string[]> {
     const media = await InstagramService.getProfileMedia(username);
     return media.slice(0, 3).map(item => item.media_url);
   } catch (error) {
-    // Fallback to static images
+    // Fallback to static images that match our creators' work
     const works: { [key: string]: string[] } = {
       'shutterboxfilms_official': [
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&h=300&fit=crop'
+        'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop'
       ],
       'priya_coastal_arts': [
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=400&h=300&fit=crop',
-        'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop'
+        'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1610278785654-47468b2b4f8b?w=400&h=300&fit=crop',
+        'https://images.unsplash.com/photo-1616805765352-0b75cbbdec3a?w=400&h=300&fit=crop'
       ]
     };
     return works[username] || works['shutterboxfilms_official'];
