@@ -36,6 +36,7 @@ import {
 
 export default function Index() {
   const { user, isAuthenticated, logout } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
