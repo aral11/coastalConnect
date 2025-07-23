@@ -383,7 +383,7 @@ export default function Index() {
             <div>
               <h4 className="font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/eateries" className="hover:text-white transition-colors">Food & Drink</Link></li>
+                <li><Link to="/eateries" className="hover:text-white transition-colors">Eateries</Link></li>
                 <li><Link to="/drivers" className="hover:text-white transition-colors">Transportation</Link></li>
                 <li className="hover:text-white transition-colors cursor-pointer">Beauty & Wellness</li>
                 <li className="hover:text-white transition-colors cursor-pointer">Entertainment</li>
