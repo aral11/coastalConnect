@@ -95,7 +95,6 @@ export default function Hotels() {
                     variant="outline"
                     className="border-coastal-300 text-coastal-600"
                     onClick={() => {
-                      const { logout } = useAuth();
                       logout();
                       navigate('/');
                     }}
