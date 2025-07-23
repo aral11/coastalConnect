@@ -104,11 +104,11 @@ export default function Index() {
               <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
                 coastalConnect
               </span>
-              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal • Mangalore</div>
+              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal | Mangalore Coming Soon</div>
             </h1>
 
             <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Your comprehensive platform connecting local vendors across all sectors - from food & entertainment to wellness & events. Supporting our coastal community with pre-launch offers available!
+              Your comprehensive platform connecting local vendors across all sectors - from food & entertainment to wellness & events. Now live in Udupi & Manipal!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
