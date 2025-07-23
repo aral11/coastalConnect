@@ -401,3 +401,41 @@ export const searchCreators: RequestHandler = async (req, res) => {
     });
   }
 };
+
+// New endpoint to get real-time Instagram stats
+export const getInstagramStats: RequestHandler = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    if (!username) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username is required'
+      });
+    }
+
+    console.log(`📊 Fetching Instagram stats for @${username}...`);
+
+    const stats = await InstagramService.getUpdatedStats(username);
+    const creatorWithMedia = await InstagramService.getCreatorWithMedia(username);
+
+    res.json({
+      success: true,
+      data: {
+        username,
+        stats,
+        profile: creatorWithMedia?.profile,
+        recent_media: creatorWithMedia?.media.slice(0, 6),
+        last_updated: new Date().toISOString()
+      },
+      source: 'instagram'
+    });
+  } catch (error) {
+    console.error('Error fetching Instagram stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Instagram stats',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
