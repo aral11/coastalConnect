@@ -47,7 +47,16 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          
+
+          {/* Service Sector Pages */}
+          <Route path="/arts-history" element={<ServiceSector />} />
+          <Route path="/beauty-wellness" element={<ServiceSector />} />
+          <Route path="/nightlife" element={<ServiceSector />} />
+          <Route path="/shopping" element={<ServiceSector />} />
+          <Route path="/entertainment" element={<ServiceSector />} />
+          <Route path="/event-management" element={<ServiceSector />} />
+          <Route path="/other-services" element={<ServiceSector />} />
+
           {/* Placeholder pages */}
           <Route 
             path="/about" 
