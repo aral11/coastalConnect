@@ -4,8 +4,8 @@
 
 @layer base {
   /**
-   * Coastal Connect Design System
-   * Modern coastal-themed color palette with ocean blues and warm coastal tones
+   * coastalConnect Design System
+   * Based on the new logo with teal/dark green primary and coral red accent
    */
   :root {
     --background: 0 0% 100%;
@@ -17,8 +17,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Updated primary to coastal theme */
-    --primary: 199 89% 48%;
+    /* Updated primary to match new logo teal */
+    --primary: 180 37% 26%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -35,7 +35,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
+    --ring: 180 37% 26%;
 
     --radius: 0.5rem;
 
@@ -48,31 +48,44 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Coastal brand colors */
-    --coastal-50: 199 100% 95%;
-    --coastal-100: 199 100% 85%;
-    --coastal-200: 199 100% 75%;
-    --coastal-300: 199 89% 65%;
-    --coastal-400: 199 89% 58%;
-    --coastal-500: 199 89% 48%;
-    --coastal-600: 199 89% 38%;
-    --coastal-700: 199 89% 28%;
-    --coastal-800: 199 89% 18%;
-    --coastal-900: 199 89% 8%;
-    --coastal-950: 199 89% 4%;
+    /* Coastal brand colors - Teal/Dark Green palette */
+    --coastal-50: 180 37% 96%;
+    --coastal-100: 180 37% 88%;
+    --coastal-200: 180 37% 78%;
+    --coastal-300: 180 37% 66%;
+    --coastal-400: 180 37% 52%;
+    --coastal-500: 180 37% 38%;
+    --coastal-600: 180 37% 26%;
+    --coastal-700: 180 37% 20%;
+    --coastal-800: 180 37% 16%;
+    --coastal-900: 180 37% 12%;
+    --coastal-950: 180 37% 8%;
 
-    /* Ocean accent colors */
-    --ocean-50: 187 100% 95%;
-    --ocean-100: 187 100% 85%;
-    --ocean-200: 187 85% 75%;
-    --ocean-300: 187 78% 65%;
-    --ocean-400: 187 78% 55%;
-    --ocean-500: 187 78% 45%;
-    --ocean-600: 187 78% 35%;
-    --ocean-700: 187 78% 25%;
-    --ocean-800: 187 78% 15%;
-    --ocean-900: 187 78% 8%;
-    --ocean-950: 187 78% 4%;
+    /* Ocean colors - Complementary blue-green */
+    --ocean-50: 174 44% 96%;
+    --ocean-100: 174 44% 88%;
+    --ocean-200: 174 44% 78%;
+    --ocean-300: 174 44% 66%;
+    --ocean-400: 174 44% 52%;
+    --ocean-500: 174 44% 38%;
+    --ocean-600: 174 44% 30%;
+    --ocean-700: 174 44% 24%;
+    --ocean-800: 174 44% 18%;
+    --ocean-900: 174 44% 12%;
+    --ocean-950: 174 44% 8%;
+
+    /* Coral colors - Red accent from logo */
+    --coral-50: 5 100% 96%;
+    --coral-100: 5 100% 90%;
+    --coral-200: 5 100% 82%;
+    --coral-300: 5 100% 72%;
+    --coral-400: 5 87% 66%;
+    --coral-500: 5 77% 58%;
+    --coral-600: 5 72% 51%;
+    --coral-700: 5 67% 42%;
+    --coral-800: 5 63% 35%;
+    --coral-900: 5 58% 30%;
+    --coral-950: 5 58% 16%;
   }
 
   .dark {
@@ -85,7 +98,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 199 89% 48%;
+    --primary: 180 37% 26%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -102,7 +115,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 199 89% 48%;
+    --ring: 180 37% 26%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -113,31 +126,44 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Dark mode coastal colors - slightly muted for better contrast */
-    --coastal-50: 199 89% 8%;
-    --coastal-100: 199 89% 12%;
-    --coastal-200: 199 89% 18%;
-    --coastal-300: 199 89% 28%;
-    --coastal-400: 199 89% 38%;
-    --coastal-500: 199 89% 48%;
-    --coastal-600: 199 89% 58%;
-    --coastal-700: 199 89% 65%;
-    --coastal-800: 199 100% 75%;
-    --coastal-900: 199 100% 85%;
-    --coastal-950: 199 100% 95%;
+    /* Dark mode coastal colors */
+    --coastal-50: 180 37% 8%;
+    --coastal-100: 180 37% 12%;
+    --coastal-200: 180 37% 16%;
+    --coastal-300: 180 37% 20%;
+    --coastal-400: 180 37% 26%;
+    --coastal-500: 180 37% 38%;
+    --coastal-600: 180 37% 52%;
+    --coastal-700: 180 37% 66%;
+    --coastal-800: 180 37% 78%;
+    --coastal-900: 180 37% 88%;
+    --coastal-950: 180 37% 96%;
 
     /* Dark mode ocean colors */
-    --ocean-50: 187 78% 8%;
-    --ocean-100: 187 78% 12%;
-    --ocean-200: 187 78% 18%;
-    --ocean-300: 187 78% 28%;
-    --ocean-400: 187 78% 38%;
-    --ocean-500: 187 78% 48%;
-    --ocean-600: 187 78% 55%;
-    --ocean-700: 187 78% 65%;
-    --ocean-800: 187 85% 75%;
-    --ocean-900: 187 100% 85%;
-    --ocean-950: 187 100% 95%;
+    --ocean-50: 174 44% 8%;
+    --ocean-100: 174 44% 12%;
+    --ocean-200: 174 44% 18%;
+    --ocean-300: 174 44% 24%;
+    --ocean-400: 174 44% 30%;
+    --ocean-500: 174 44% 38%;
+    --ocean-600: 174 44% 52%;
+    --ocean-700: 174 44% 66%;
+    --ocean-800: 174 44% 78%;
+    --ocean-900: 174 44% 88%;
+    --ocean-950: 174 44% 96%;
+
+    /* Dark mode coral colors */
+    --coral-50: 5 58% 16%;
+    --coral-100: 5 58% 22%;
+    --coral-200: 5 58% 30%;
+    --coral-300: 5 63% 35%;
+    --coral-400: 5 67% 42%;
+    --coral-500: 5 72% 51%;
+    --coral-600: 5 77% 58%;
+    --coral-700: 5 87% 66%;
+    --coral-800: 5 100% 72%;
+    --coral-900: 5 100% 82%;
+    --coral-950: 5 100% 90%;
   }
 }
 
@@ -176,6 +202,10 @@
     @apply bg-gradient-ocean text-white hover:shadow-ocean transition-all duration-300 rounded-lg px-6 py-3 font-medium;
   }
 
+  .btn-coral {
+    @apply bg-gradient-coral text-white hover:shadow-coral transition-all duration-300 rounded-lg px-6 py-3 font-medium;
+  }
+
   .card-coastal {
     @apply bg-white border border-coastal-200 rounded-xl shadow-coastal hover:shadow-ocean transition-all duration-300;
   }
@@ -187,5 +217,9 @@
   .hero-section::before {
     content: '';
     @apply absolute inset-0 bg-hero-pattern opacity-10;
+  }
+
+  .logo-brand {
+    @apply w-auto h-8 object-contain;
   }
 }
