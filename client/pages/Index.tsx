@@ -51,13 +51,13 @@ export default function Index() {
               </Link>
             </div>
             
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Homestays</Link>
-              <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
-              <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors">Eateries</Link>
-              <Link to="/creators" className="text-gray-600 hover:text-coastal-600 transition-colors">Creators</Link>
-              <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
-              <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors">Contact</Link>
+            <div className="hidden md:flex items-center space-x-8" role="menubar">
+              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Homestays</Link>
+              <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Drivers</Link>
+              <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Eateries</Link>
+              <Link to="/creators" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Creators</Link>
+              <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">About</Link>
+              <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Contact</Link>
             </div>
 
             <div className="flex items-center space-x-4">
