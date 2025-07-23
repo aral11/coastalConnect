@@ -56,11 +56,20 @@ export default function BookingModal({ homestay, isOpen, onClose }: BookingModal
     setLoading(true);
 
     try {
+      // Get authentication token
+      const token = localStorage.getItem('authToken');
+
+      if (!token) {
+        alert('Please login to make a booking');
+        return;
+      }
+
       // Create booking
       const bookingResponse = await fetch('/api/bookings/homestay', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           homestay_id: homestay.id,
@@ -113,10 +122,12 @@ export default function BookingModal({ homestay, isOpen, onClose }: BookingModal
       handler: async function(response: any) {
         try {
           // Confirm payment on server
+          const token = localStorage.getItem('authToken');
           const confirmResponse = await fetch('/api/bookings/confirm-payment', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
               order_id: response.razorpay_order_id,
