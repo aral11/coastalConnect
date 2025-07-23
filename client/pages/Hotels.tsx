@@ -29,16 +29,25 @@ export default function Hotels() {
   const fetchHomestays = async () => {
     try {
       setLoading(true);
+      setError(null);
+
       const response = await fetch('/api/homestays');
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data: HomestayResponse = await response.json();
-      
+
       if (data.success && data.data) {
         setHomestays(data.data);
+        console.log(`Loaded ${data.data.length} homestays from ${(data as any).source || 'unknown'} source`);
       } else {
         setError(data.message || 'Failed to fetch homestays');
       }
     } catch (err) {
-      setError('Network error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Network error: ${errorMessage}`);
       console.error('Error fetching homestays:', err);
     } finally {
       setLoading(false);
