@@ -125,7 +125,7 @@ export default function VendorRegister() {
   };
 
   const selectedCategory = serviceCategories[formData.category as keyof typeof serviceCategories];
-  const subscriptionPrice = formData.subscriptionPlan === 'monthly' ? 99 : 199;
+  const subscriptionPrice = formData.subscriptionPlan === 'monthly' ? 99 : 99; // Launch offer: ₹99/year for first month, then ₹199/year
 
   if (submitted) {
     return (
