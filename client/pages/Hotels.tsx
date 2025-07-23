@@ -84,14 +84,37 @@ export default function Hotels() {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Link to="/login">
-                <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="btn-coastal">Get Started</Button>
-              </Link>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/dashboard">
+                    <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="border-coastal-300 text-coastal-600"
+                    onClick={() => {
+                      const { logout } = useAuth();
+                      logout();
+                      navigate('/');
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button className="btn-coastal">Get Started</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
