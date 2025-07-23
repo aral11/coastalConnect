@@ -83,6 +83,19 @@ export default {
           900: "hsl(var(--ocean-900))",
           950: "hsl(var(--ocean-950))",
         },
+        coral: {
+          50: "hsl(var(--coral-50))",
+          100: "hsl(var(--coral-100))",
+          200: "hsl(var(--coral-200))",
+          300: "hsl(var(--coral-300))",
+          400: "hsl(var(--coral-400))",
+          500: "hsl(var(--coral-500))",
+          600: "hsl(var(--coral-600))",
+          700: "hsl(var(--coral-700))",
+          800: "hsl(var(--coral-800))",
+          900: "hsl(var(--coral-900))",
+          950: "hsl(var(--coral-950))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -90,13 +103,15 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        'gradient-coastal': 'linear-gradient(135deg, hsl(var(--coastal-500)), hsl(var(--ocean-600)))',
-        'gradient-ocean': 'linear-gradient(135deg, hsl(var(--ocean-400)), hsl(var(--ocean-700)))',
+        'gradient-coastal': 'linear-gradient(135deg, hsl(var(--coastal-600)), hsl(var(--coastal-700)))',
+        'gradient-ocean': 'linear-gradient(135deg, hsl(var(--ocean-500)), hsl(var(--coastal-600)))',
+        'gradient-coral': 'linear-gradient(135deg, hsl(var(--coral-500)), hsl(var(--coral-600)))',
         'hero-pattern': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E\")",
       },
       boxShadow: {
-        'coastal': '0 10px 25px -3px rgba(14, 165, 233, 0.1), 0 4px 6px -2px rgba(14, 165, 233, 0.05)',
-        'ocean': '0 20px 25px -5px rgba(6, 182, 212, 0.1), 0 10px 10px -5px rgba(6, 182, 212, 0.04)',
+        'coastal': '0 10px 25px -3px rgba(45, 90, 90, 0.15), 0 4px 6px -2px rgba(45, 90, 90, 0.08)',
+        'ocean': '0 20px 25px -5px rgba(45, 90, 90, 0.12), 0 10px 10px -5px rgba(45, 90, 90, 0.06)',
+        'coral': '0 10px 25px -3px rgba(234, 88, 85, 0.15), 0 4px 6px -2px rgba(234, 88, 85, 0.08)',
       },
       keyframes: {
         "accordion-down": {
