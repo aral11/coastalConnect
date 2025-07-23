@@ -4,19 +4,28 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LocalCreatorsGrid from '@/components/LocalCreatorsGrid';
-import { 
-  MapPin, 
-  Car, 
-  Home, 
-  Star, 
-  Users, 
-  Shield, 
-  Clock, 
+import {
+  MapPin,
+  Car,
+  Home,
+  Star,
+  Users,
+  Shield,
+  Clock,
   Phone,
   Mail,
   ChevronRight,
   Waves,
-  Anchor
+  Anchor,
+  UtensilsCrossed,
+  Palette,
+  Sparkles,
+  Music,
+  ShoppingBag,
+  Camera,
+  PartyPopper,
+  Wrench,
+  Bike
 } from 'lucide-react';
 
 export default function Index() {
