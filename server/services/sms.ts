@@ -37,6 +37,27 @@ export class SMSService {
     }
   }
 
+  static async sendBookingConfirmation(
+    phone: string,
+    booking: {
+      bookingReference: string;
+      itemName: string;
+      checkIn: Date;
+      totalAmount: number;
+    }
+  ): Promise<boolean> {
+    const message = `🎉 Booking Confirmed!
+Ref: ${booking.bookingReference}
+Service: ${booking.itemName}
+Date: ${booking.checkIn.toLocaleDateString()}
+Amount: ₹${booking.totalAmount}
+
+Thank you for choosing coastalConnect!
+Details sent to your email.`;
+
+    return this.sendSMS(phone, message);
+  }
+
   static async sendDriverBookingNotification(
     driverPhone: string,
     booking: {
