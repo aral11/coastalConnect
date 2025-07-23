@@ -153,7 +153,11 @@ export default function Dashboard() {
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div>
-              <Button variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 mb-4 -ml-2">
+              <Button
+                variant="ghost"
+                className="text-white/80 hover:text-white hover:bg-white/10 mb-4 -ml-2"
+                onClick={() => window.location.href = '/'}
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Home
               </Button>
