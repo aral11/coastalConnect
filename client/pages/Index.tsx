@@ -252,6 +252,9 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Comprehensive Services - All 9 Sectors */}
+      <ComprehensiveServices />
+
       {/* Stats Section */}
       <section className="py-16 bg-gradient-to-r from-coastal-500 to-ocean-600 text-white">
         <div className="container mx-auto px-4">
