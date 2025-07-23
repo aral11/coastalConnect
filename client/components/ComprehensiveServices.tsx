@@ -42,6 +42,197 @@ interface ServiceSector {
 }
 
 export default function ComprehensiveServices() {
+  const [serviceSectors, setServiceSectors] = useState<ServiceSector[]>([
+    {
+      title: 'Food & Drink',
+      description: 'Restaurants, Cafés, Bars',
+      apiEndpoint: '/api/eateries',
+      color: 'red',
+      icon: <UtensilsCrossed className="h-6 w-6 text-red-600" />,
+      link: '/eateries'
+    },
+    {
+      title: 'Arts & History',
+      description: 'Museums, Heritage, Cultural Events',
+      apiEndpoint: '/api/services/arts-history',
+      color: 'purple',
+      icon: <Palette className="h-6 w-6 text-purple-600" />,
+      link: '/arts-history'
+    },
+    {
+      title: 'Beauty & Wellness',
+      description: 'Salons, Spas, Gyms',
+      apiEndpoint: '/api/services/beauty-wellness',
+      color: 'pink',
+      icon: <Sparkles className="h-6 w-6 text-pink-600" />,
+      link: '/beauty-wellness'
+    },
+    {
+      title: 'Nightlife',
+      description: 'Bars, Pubs, Clubs',
+      apiEndpoint: '/api/services/nightlife',
+      color: 'indigo',
+      icon: <Music className="h-6 w-6 text-indigo-600" />,
+      link: '/nightlife'
+    },
+    {
+      title: 'Shopping',
+      description: 'Markets, Stores, Boutiques',
+      apiEndpoint: '/api/services/shopping',
+      color: 'green',
+      icon: <ShoppingBag className="h-6 w-6 text-green-600" />,
+      link: '/shopping'
+    },
+    {
+      title: 'Entertainment',
+      description: 'Cinemas, Festivals, Activities',
+      apiEndpoint: '/api/services/entertainment',
+      color: 'orange',
+      icon: <Camera className="h-6 w-6 text-orange-600" />,
+      link: '/entertainment'
+    },
+    {
+      title: 'Event Management',
+      description: 'Weddings, Parties, Corporate',
+      apiEndpoint: '/api/services/event-management',
+      color: 'blue',
+      icon: <PartyPopper className="h-6 w-6 text-blue-600" />,
+      link: '/event-management'
+    },
+    {
+      title: 'Other Services',
+      description: 'Caterers, Plumbers, Electricians',
+      apiEndpoint: '/api/services/other-services',
+      color: 'gray',
+      icon: <Wrench className="h-6 w-6 text-gray-600" />,
+      link: '/other-services'
+    },
+    {
+      title: 'Transportation',
+      description: 'Auto, Car & Bike Rentals',
+      apiEndpoint: '/api/drivers',
+      color: 'teal',
+      icon: <Bike className="h-6 w-6 text-teal-600" />,
+      link: '/drivers'
+    }
+  ]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllServiceData();
+  }, []);
+
+  const fetchAllServiceData = async () => {
+    try {
+      setLoading(true);
+
+      const updatedSectors = await Promise.all(
+        serviceSectors.map(async (sector) => {
+          try {
+            const response = await fetch(sector.apiEndpoint);
+            if (response.ok) {
+              const data = await response.json();
+              return {
+                ...sector,
+                data: data.data ? data.data.slice(0, 3) : [], // Show top 3 for each sector
+                count: data.count || 0
+              };
+            } else {
+              return { ...sector, count: 0 };
+            }
+          } catch (error) {
+            console.log(`Failed to fetch ${sector.title} data:`, error);
+            return { ...sector, count: 0 };
+          }
+        })
+      );
+
+      setServiceSectors(updatedSectors);
+    } catch (error) {
+      console.error('Error fetching service data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderServiceCard = (sector: ServiceSector) => {
+    const bgColorClass = `bg-${sector.color}-100`;
+    const hoverBgColorClass = `group-hover:bg-${sector.color}-200`;
+    const buttonColorClass = `bg-${sector.color}-600 hover:bg-${sector.color}-700`;
+    const textColorClass = `text-${sector.color}-600`;
+
+    return (
+      <div key={sector.title} className="card-coastal p-6 group cursor-pointer">
+        <div className="flex items-center mb-4">
+          <div className={`${bgColorClass} rounded-lg p-3 mr-4 ${hoverBgColorClass} transition-colors`}>
+            {sector.icon}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">{sector.title}</h3>
+            <p className={`${textColorClass} text-sm`}>{sector.description}</p>
+            {sector.count !== undefined && (
+              <p className="text-xs text-gray-500 mt-1">
+                {sector.count} {sector.count === 1 ? 'service' : 'services'} available
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Show sample data if available */}
+        {sector.data && sector.data.length > 0 && (
+          <div className="mb-4">
+            <div className="space-y-2">
+              {sector.data.slice(0, 2).map((service) => (
+                <div key={service.id} className="text-xs bg-gray-50 p-2 rounded">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium truncate">{service.name}</span>
+                    {service.rating && (
+                      <div className="flex items-center">
+                        <Star className="h-3 w-3 text-yellow-400 mr-1" />
+                        <span>{service.rating}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center text-gray-500 mt-1">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    <span className="truncate">{service.location}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <p className="text-gray-600 text-sm mb-4">
+          {sector.title === 'Food & Drink' && 'Authentic Udupi cuisine, coastal specialties, and local dining experiences.'}
+          {sector.title === 'Arts & History' && 'Traditional art forms, cultural sites, Yakshagana performances, and heritage tours.'}
+          {sector.title === 'Beauty & Wellness' && 'Traditional Ayurvedic treatments, modern spa services, and fitness centers.'}
+          {sector.title === 'Nightlife' && 'Evening entertainment, live music venues, and social gathering spots.'}
+          {sector.title === 'Shopping' && 'Local markets, traditional handicrafts, and modern shopping experiences.'}
+          {sector.title === 'Entertainment' && 'Movie theaters, beach activities, cultural festivals, and outdoor adventures.'}
+          {sector.title === 'Event Management' && 'Traditional wedding planning, corporate events, and celebration management.'}
+          {sector.title === 'Other Services' && 'Essential services, home maintenance, and professional contractors.'}
+          {sector.title === 'Transportation' && 'Local transport, vehicle rentals, and trusted driver services.'}
+        </p>
+
+        <Link to={sector.link}>
+          <Button size="sm" className={`w-full ${buttonColorClass}`}>
+            {sector.title === 'Food & Drink' && 'Explore'}
+            {sector.title === 'Arts & History' && 'Discover'}
+            {sector.title === 'Beauty & Wellness' && 'Book Now'}
+            {sector.title === 'Nightlife' && 'Explore'}
+            {sector.title === 'Shopping' && 'Shop'}
+            {sector.title === 'Entertainment' && 'Book'}
+            {sector.title === 'Event Management' && 'Plan Event'}
+            {sector.title === 'Other Services' && 'Find Services'}
+            {sector.title === 'Transportation' && 'Book Ride'}
+            <ChevronRight className="ml-1 h-3 w-3" />
+          </Button>
+        </Link>
+      </div>
+    );
+  };
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
