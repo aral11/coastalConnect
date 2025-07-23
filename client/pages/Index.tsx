@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 import LocalCreatorsGrid from '@/components/LocalCreatorsGrid';
 import ComprehensiveServices from '@/components/ComprehensiveServices';
 import CommunityFeatures from '@/components/CommunityFeatures';
+import PlatformStats from '@/components/PlatformStats';
 import { designSystem, layouts } from '@/lib/design-system';
 import {
   MapPin,
