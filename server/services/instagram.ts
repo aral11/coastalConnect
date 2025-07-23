@@ -174,9 +174,9 @@ export class InstagramService {
         {
           id: 'media_shutterbox_1',
           media_type: 'IMAGE',
-          media_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc123',
-          caption: 'Golden hour magic at Malpe Beach 🌅 Nothing beats the coastal Karnataka sunset! #MalpeBeach #UdupiPhotography #CoastalKarnataka #GoldenHour',
+          caption: 'Golden hour magic at Malpe Beach 🌅 Nothing beats the coastal Karnataka sunset! Shot this for a beautiful couple\'s engagement session. #MalpeBeach #UdupiPhotography #EngagementShoot #GoldenHour',
           timestamp: getRecentTimestamp(2),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
@@ -184,9 +184,9 @@ export class InstagramService {
         {
           id: 'media_shutterbox_2',
           media_type: 'CAROUSEL_ALBUM',
-          media_url: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc124',
-          caption: 'Traditional coastal architecture meets modern photography 🏛️📸 Swipe to see the details! #UdupiArchitecture #Heritage #Photography',
+          caption: 'Wedding cinematography at its finest! 🎬💒 Capturing the sacred moments at Udupi Krishna Temple. Every frame tells a story of love and tradition. #WeddingFilm #UdupiWedding #CinematographyLife #ShutterboxFilms',
           timestamp: getRecentTimestamp(5),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
@@ -194,10 +194,10 @@ export class InstagramService {
         {
           id: 'media_shutterbox_3',
           media_type: 'VIDEO',
-          media_url: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=600&h=600&fit=crop',
-          thumbnail_url: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=600&fit=crop',
+          thumbnail_url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc125',
-          caption: 'Behind the scenes: Capturing the essence of Udupi temple festivals 🎭✨ #BehindTheScenes #UdupiTraditions #Videography',
+          caption: 'Behind the scenes: Drone footage of the stunning Kaup lighthouse! 🚁📸 Creating content for tourism board. The aerial perspectives of coastal Karnataka never cease to amaze! #DronePhotography #KaupLighthouse #BehindTheScenes',
           timestamp: getRecentTimestamp(7),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
