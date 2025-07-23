@@ -123,10 +123,10 @@ export default function Signup() {
                 <Label htmlFor="phone">Phone Number</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input 
+                  <Input
                     id="phone"
-                    type="tel" 
-                    placeholder="+1 (555) 123-4567"
+                    type="tel"
+                    placeholder="+91 98456 78901"
                     className="pl-10"
                   />
                 </div>
