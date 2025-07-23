@@ -221,7 +221,23 @@ export default function Drivers() {
                       <Phone className="h-4 w-4 mr-1" />
                       Call
                     </Button>
-                    <Button className="btn-ocean" size="sm">
+                    <Button
+                      className="btn-ocean"
+                      size="sm"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          // Store the intended booking for after login
+                          localStorage.setItem('pendingBooking', JSON.stringify({
+                            type: 'driver',
+                            driver: driver
+                          }));
+                          navigate('/login?redirect=/drivers');
+                        } else {
+                          // Open driver booking modal (to be implemented)
+                          alert('Driver booking functionality coming soon! Please check back later.');
+                        }
+                      }}
+                    >
                       Book Now
                     </Button>
                   </div>
