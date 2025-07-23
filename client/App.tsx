@@ -24,13 +24,14 @@ import EventOrganizerRegister from "./pages/EventOrganizerRegister";
 import EventOrganizerLogin from "./pages/EventOrganizerLogin";
 import EventOrganizerDashboard from "./pages/EventOrganizerDashboard";
 import CreateEvent from "./pages/CreateEvent";
-import { 
-  Info, 
-  Phone, 
-  HelpCircle, 
-  FileText, 
+import {
+  Info,
+  Phone,
+  HelpCircle,
+  FileText,
   Shield,
-  Key 
+  Key,
+  MapPin
 } from "lucide-react";
 
 const queryClient = new QueryClient();
