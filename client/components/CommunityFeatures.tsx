@@ -1,14 +1,43 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Calendar,
   MapPin,
   Clock,
   Users,
   Heart,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Star
 } from 'lucide-react';
+
+interface LocalEvent {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  event_date: string;
+  start_time?: string;
+  organizer?: string;
+  entry_fee?: number;
+  image_url?: string;
+  is_featured: boolean;
+}
+
+interface ReligiousService {
+  id: number;
+  name: string;
+  description: string;
+  religion: string;
+  category: string;
+  location: string;
+  morning_timings?: string;
+  evening_timings?: string;
+  phone?: string;
+  image_url?: string;
+}
 
 export default function CommunityFeatures() {
   return (
