@@ -78,7 +78,7 @@ export default function Index() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/hotels">
-                <Button size="lg" className="btn-ocean text-lg px-8 py-4 min-w-[200px]">
+                <Button size="lg" className="btn-coral text-lg px-8 py-4 min-w-[200px]">
                   <Home className="mr-2 h-5 w-5" />
                   Find Hotels
                 </Button>
