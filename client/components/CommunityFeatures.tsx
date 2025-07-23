@@ -118,29 +118,46 @@ export default function CommunityFeatures() {
             </div>
             
             <div className="space-y-4 mb-6">
-              <div className="p-4 bg-orange-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Sparkles className="h-4 w-4 text-orange-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Kambala Festivals</span>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
+                  <p className="text-sm text-gray-600 mt-2">Loading events...</p>
                 </div>
-                <p className="text-sm text-gray-600">Traditional buffalo races and cultural celebrations</p>
-              </div>
-              
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Sparkles className="h-4 w-4 text-blue-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Beach Festivals</span>
+              ) : featuredEvents.length > 0 ? (
+                featuredEvents.map((event, index) => {
+                  const colors = ['orange', 'blue', 'green'];
+                  const color = colors[index % colors.length];
+                  return (
+                    <div key={event.id} className={`p-4 bg-${color}-50 rounded-lg`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <Sparkles className={`h-4 w-4 text-${color}-600 mr-2`} />
+                          <span className="font-semibold text-gray-900">{event.title}</span>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {formatDate(event.event_date)}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{event.description}</p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <div className="flex items-center">
+                          <MapPin className="h-3 w-3 mr-1" />
+                          <span>{event.location}</span>
+                        </div>
+                        {event.entry_fee !== undefined && (
+                          <span>
+                            {event.entry_fee === 0 ? 'Free' : `₹${event.entry_fee}`}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="p-4 bg-gray-50 rounded-lg text-center">
+                  <p className="text-sm text-gray-600">No upcoming events available</p>
                 </div>
-                <p className="text-sm text-gray-600">Malpe beach events and coastal celebrations</p>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Sparkles className="h-4 w-4 text-green-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Cultural Programs</span>
-                </div>
-                <p className="text-sm text-gray-600">Yakshagana performances and art exhibitions</p>
-              </div>
+              )}
             </div>
 
             <Button className="w-full bg-orange-600 hover:bg-orange-700">
