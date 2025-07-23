@@ -155,7 +155,12 @@ export default function Login() {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            <form className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+            <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
