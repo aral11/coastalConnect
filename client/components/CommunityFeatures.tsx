@@ -178,29 +178,52 @@ export default function CommunityFeatures() {
             </div>
             
             <div className="space-y-4 mb-6">
-              <div className="p-4 bg-yellow-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <MapPin className="h-4 w-4 text-yellow-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Temple Timings</span>
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+                  <p className="text-sm text-gray-600 mt-2">Loading services...</p>
                 </div>
-                <p className="text-sm text-gray-600">Krishna Temple, Anantheshwara Temple, and more</p>
-              </div>
-              
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <MapPin className="h-4 w-4 text-blue-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Church Services</span>
+              ) : religiousServices.length > 0 ? (
+                religiousServices.slice(0, 3).map((service, index) => {
+                  const colors = ['yellow', 'blue', 'green'];
+                  const color = colors[index % colors.length];
+                  const religionIcons = {
+                    hindu: '🕉️',
+                    christian: '✝️',
+                    islam: '☪️'
+                  };
+                  return (
+                    <div key={service.id} className={`p-4 bg-${color}-50 rounded-lg`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <MapPin className={`h-4 w-4 text-${color}-600 mr-2`} />
+                          <span className="font-semibold text-gray-900">{service.name}</span>
+                        </div>
+                        <span className="text-lg">
+                          {religionIcons[service.religion as keyof typeof religionIcons] || '🏛️'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{service.description}</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                        {service.morning_timings && (
+                          <div>
+                            <span className="font-medium">Morning:</span> {service.morning_timings}
+                          </div>
+                        )}
+                        {service.evening_timings && (
+                          <div>
+                            <span className="font-medium">Evening:</span> {service.evening_timings}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="p-4 bg-gray-50 rounded-lg text-center">
+                  <p className="text-sm text-gray-600">No religious services data available</p>
                 </div>
-                <p className="text-sm text-gray-600">Mass timings and special celebrations</p>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <MapPin className="h-4 w-4 text-green-600 mr-2" />
-                  <span className="font-semibold text-gray-900">Mosque Prayers</span>
-                </div>
-                <p className="text-sm text-gray-600">Prayer times and community gatherings</p>
-              </div>
+              )}
             </div>
 
             <Button className="w-full bg-purple-600 hover:bg-purple-700">
