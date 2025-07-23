@@ -30,9 +30,11 @@ export default function Login() {
         <Card className="card-coastal shadow-xl">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <div className="bg-gradient-coastal rounded-xl p-3">
-                <Anchor className="h-8 w-8 text-white" />
-              </div>
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                alt="coastalConnect"
+                className="logo-brand h-12"
+              />
             </div>
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>
