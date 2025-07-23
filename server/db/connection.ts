@@ -29,9 +29,18 @@ export const getConnection = async (): Promise<sql.ConnectionPool> => {
       await pool.connect();
       console.log('Connected to SQL Server successfully');
     }
+
+    // Check if the pool is still connected
+    if (!pool.connected) {
+      console.log('Pool disconnected, reconnecting...');
+      await pool.connect();
+    }
+
     return pool;
   } catch (error) {
     console.error('Database connection failed:', error);
+    // Reset pool on connection failure
+    pool = null;
     throw error;
   }
 };
