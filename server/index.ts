@@ -15,8 +15,10 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Initialize database connection
-  initializeDatabase().catch(console.error);
+  // Initialize database connection (optional - fallback data available)
+  initializeDatabase().catch(error => {
+    console.log('Database initialization failed, using fallback data:', error.message);
+  });
 
   // Health check routes
   app.get("/api/ping", (_req, res) => {
