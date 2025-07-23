@@ -402,6 +402,7 @@ export default function Index() {
                 <li>Phone: 8105003858</li>
                 <li>Website: www.coastalconnect.in</li>
                 <li>Coastal Vibes - @coastalvibes.in</li>
+                <li>Live: Udupi & Manipal</li>
               </ul>
             </div>
           </div>
