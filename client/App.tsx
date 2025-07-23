@@ -20,6 +20,9 @@ import PlaceholderPage from "./pages/PlaceholderPage";
 import NotFound from "./pages/NotFound";
 import ServiceSector from "./pages/ServiceSector";
 import VendorRegister from "./pages/VendorRegister";
+import EventOrganizerRegister from "./pages/EventOrganizerRegister";
+import EventOrganizerLogin from "./pages/EventOrganizerLogin";
+import EventOrganizerDashboard from "./pages/EventOrganizerDashboard";
 import { 
   Info, 
   Phone, 
