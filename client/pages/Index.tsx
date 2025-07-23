@@ -80,6 +80,11 @@ export default function Index() {
                       For Vendors
                     </Button>
                   </Link>
+                  <Link to="/organizer-register">
+                    <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
+                      Event Organizer
+                    </Button>
+                  </Link>
                   <Link to="/login">
                     <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
                       Sign In
