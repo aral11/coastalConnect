@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import LocalCreatorsGrid from '@/components/LocalCreatorsGrid';
+import ComprehensiveServices from '@/components/ComprehensiveServices';
+import CommunityFeatures from '@/components/CommunityFeatures';
 import {
   MapPin,
   Car,
