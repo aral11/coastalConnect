@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   UtensilsCrossed,
   Palette,
@@ -244,7 +245,7 @@ export default function ComprehensiveServices() {
           </p>
           <div className="mt-6">
             <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-lg px-6 py-2">
-              🏪 Launch Offer - ₹99/year (First Month) | ₹199/year After
+              ��� Launch Offer - ₹99/year (First Month) | ₹199/year After
             </Badge>
           </div>
         </div>
