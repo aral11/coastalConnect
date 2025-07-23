@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import Layout from '@/components/Layout';
+import PageHeader from '@/components/PageHeader';
+import SearchSection from '@/components/SearchSection';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import BookingFlow from '@/components/BookingFlow';
 import { designSystem, layouts, statusColors } from '@/lib/design-system';
@@ -31,7 +34,12 @@ import {
   Zap,
   Award,
   ThumbsUp,
-  MessageCircle
+  MessageCircle,
+  ChefHat,
+  CheckCircle,
+  Filter,
+  Grid,
+  List
 } from 'lucide-react';
 
 interface Eatery {
@@ -82,7 +90,7 @@ interface Eatery {
   safety_measures?: string[];
 }
 
-export default function EateriesModern() {
+export default function Eateries() {
   const [eateries, setEateries] = useState<Eatery[]>([]);
   const [filteredEateries, setFilteredEateries] = useState<Eatery[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +99,8 @@ export default function EateriesModern() {
   const [showBookingFlow, setShowBookingFlow] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   // Mock data for search filters
   const categories = [
@@ -148,44 +158,39 @@ export default function EateriesModern() {
         // Enhance eateries with additional mock data for demo
         const enhancedEateries = data.data.map((eatery: Eatery) => ({
           ...eatery,
-          rating: eatery.rating || (3.5 + Math.random() * 1.5), // Random rating between 3.5-5
-          total_reviews: eatery.total_reviews || Math.floor(Math.random() * 500) + 50,
           delivery_available: Math.random() > 0.3,
           takeaway_available: Math.random() > 0.2,
-          has_parking: Math.random() > 0.4,
-          wifi_available: Math.random() > 0.6,
+          wifi_available: Math.random() > 0.4,
+          has_parking: Math.random() > 0.5,
           accepts_cards: Math.random() > 0.3,
-          outdoor_seating: Math.random() > 0.5,
+          outdoor_seating: Math.random() > 0.6,
           family_friendly: Math.random() > 0.2,
           pure_veg: Math.random() > 0.4,
-          distance: Math.round((Math.random() * 10 + 0.5) * 10) / 10, // Distance in km
-          offers: Math.random() > 0.6 ? [
-            {
-              type: 'discount',
-              description: '20% off on orders above ₹500',
-              discount: 20
-            }
-          ] : [],
-          popular_dishes: ['Masala Dosa', 'Idli Sambar', 'Mangalore Buns', 'Fish Curry'].slice(0, Math.floor(Math.random() * 3) + 1),
-          safety_measures: ['Sanitized Dining', 'Contactless Menu', 'Staff Vaccinated']
+          distance: Math.floor(Math.random() * 15) + 1,
+          featured: Math.random() > 0.8,
+          popular_dishes: ['Masala Dosa', 'Sambar Rice', 'Filter Coffee'].slice(0, Math.floor(Math.random() * 3) + 1),
+          offers: Math.random() > 0.7 ? [{
+            type: 'discount',
+            description: '20% off on orders above ₹500',
+            discount: 20
+          }] : []
         }));
         
         setEateries(enhancedEateries);
         setFilteredEateries(enhancedEateries);
       } else {
-        setError(data.message || 'Failed to fetch eateries');
+        throw new Error('Failed to fetch eateries');
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(`Network error: ${errorMessage}`);
-      console.error('Error fetching eateries:', err);
+    } catch (error) {
+      console.error('Error fetching eateries:', error);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   const loadFavorites = () => {
-    const saved = localStorage.getItem('coastalConnect_favorites_eateries');
+    const saved = localStorage.getItem('eatery_favorites');
     if (saved) {
       setFavorites(JSON.parse(saved));
     }
@@ -197,108 +202,36 @@ export default function EateriesModern() {
       : [...favorites, eateryId];
     
     setFavorites(newFavorites);
-    localStorage.setItem('coastalConnect_favorites_eateries', JSON.stringify(newFavorites));
+    localStorage.setItem('eatery_favorites', JSON.stringify(newFavorites));
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      const filtered = eateries.filter(eatery =>
+        eatery.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        eatery.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        eatery.cuisine_type?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredEateries(filtered);
+    } else {
+      setFilteredEateries(eateries);
+    }
   };
 
   const handleSearchChange = (filters: any) => {
-    let filtered = [...eateries];
-
-    // Apply search query
-    if (filters.query) {
-      filtered = filtered.filter(eatery => 
-        eatery.name.toLowerCase().includes(filters.query.toLowerCase()) ||
-        eatery.cuisine_type?.toLowerCase().includes(filters.query.toLowerCase()) ||
-        eatery.description?.toLowerCase().includes(filters.query.toLowerCase())
-      );
-    }
-
-    // Apply location filter
-    if (filters.location) {
-      filtered = filtered.filter(eatery => 
-        eatery.location.toLowerCase().includes(filters.location.toLowerCase())
-      );
-    }
-
-    // Apply category filter
-    if (filters.category) {
-      filtered = filtered.filter(eatery => 
-        eatery.cuisine_type?.toLowerCase().includes(filters.category.toLowerCase())
-      );
-    }
-
-    // Apply price range filter
-    if (filters.priceRange && (filters.priceRange[0] > 0 || filters.priceRange[1] < 10000)) {
-      filtered = filtered.filter(eatery => {
-        const price = (eatery.price_range || 500); // Default price if not set
-        return price >= filters.priceRange[0] && price <= filters.priceRange[1];
-      });
-    }
-
-    // Apply rating filter
-    if (filters.rating > 0) {
-      filtered = filtered.filter(eatery => (eatery.rating || 0) >= filters.rating);
-    }
-
-    // Apply amenities filter
-    if (filters.amenities && filters.amenities.length > 0) {
-      filtered = filtered.filter(eatery => {
-        return filters.amenities.some((amenity: string) => {
-          switch (amenity) {
-            case 'wifi': return eatery.wifi_available;
-            case 'parking': return eatery.has_parking;
-            case 'cards': return eatery.accepts_cards;
-            case 'outdoor': return eatery.outdoor_seating;
-            case 'delivery': return eatery.delivery_available;
-            case 'takeaway': return eatery.takeaway_available;
-            case 'bar': return eatery.bar_available;
-            case 'family': return eatery.family_friendly;
-            case 'pure_veg': return eatery.pure_veg;
-            case 'halal': return eatery.halal_certified;
-            default: return false;
-          }
-        });
-      });
-    }
-
-    // Apply availability filter
-    if (filters.availability) {
-      filtered = filtered.filter(eatery => eatery.is_active);
-    }
-
-    // Apply sorting
-    switch (filters.sortBy) {
-      case 'rating':
-        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        break;
-      case 'price_low':
-        filtered.sort((a, b) => (a.price_range || 0) - (b.price_range || 0));
-        break;
-      case 'price_high':
-        filtered.sort((a, b) => (b.price_range || 0) - (a.price_range || 0));
-        break;
-      case 'distance':
-        filtered.sort((a, b) => (a.distance || 0) - (b.distance || 0));
-        break;
-      case 'newest':
-        filtered.sort((a, b) => b.id - a.id);
-        break;
-      default: // relevance
-        // Keep original order
-        break;
-    }
-
-    setFilteredEateries(filtered);
+    // Implementation for SearchAndFilter component
+    // This would apply multiple filters
+    console.log('Search filters changed:', filters);
   };
 
-  const handleBookNow = (eatery: Eatery) => {
+  const bookEatery = (eatery: Eatery) => {
     setSelectedEatery(eatery);
     setShowBookingFlow(true);
   };
 
-  const handleBookingComplete = (booking: any) => {
+  const handleBookingComplete = () => {
     setShowBookingFlow(false);
     setSelectedEatery(null);
-    // Show success message or redirect
     alert('Booking confirmed! You will receive a confirmation email shortly.');
   };
 
@@ -310,10 +243,42 @@ export default function EateriesModern() {
         url: window.location.href + `/${eatery.id}`
       });
     } else {
-      // Fallback for browsers that don't support Web Share API
       navigator.clipboard.writeText(window.location.href + `/${eatery.id}`);
       alert('Link copied to clipboard!');
     }
+  };
+
+  const getAmenities = (eatery: Eatery) => {
+    const amenityList = [];
+    if (eatery.wifi_available) amenityList.push('Free WiFi');
+    if (eatery.has_parking) amenityList.push('Parking');
+    if (eatery.accepts_cards) amenityList.push('Cards Accepted');
+    if (eatery.delivery_available) amenityList.push('Home Delivery');
+    if (eatery.takeaway_available) amenityList.push('Takeaway');
+    if (eatery.outdoor_seating) amenityList.push('Outdoor Seating');
+    if (eatery.family_friendly) amenityList.push('Family Friendly');
+    if (eatery.pure_veg) amenityList.push('Pure Vegetarian');
+    return amenityList;
+  };
+
+  const getRatingColor = (rating: number) => {
+    if (rating >= 4.5) return 'text-green-600 bg-green-50';
+    if (rating >= 4.0) return 'text-blue-600 bg-blue-50';
+    if (rating >= 3.5) return 'text-yellow-600 bg-yellow-50';
+    return 'text-gray-600 bg-gray-50';
+  };
+
+  const getCuisineBadgeColor = (cuisine: string) => {
+    const colors = {
+      'South Indian': 'bg-orange-100 text-orange-800',
+      'North Indian': 'bg-red-100 text-red-800',
+      'Chinese': 'bg-yellow-100 text-yellow-800',
+      'Continental': 'bg-purple-100 text-purple-800',
+      'Seafood': 'bg-blue-100 text-blue-800',
+      'Fast Food': 'bg-gray-100 text-gray-800',
+      'Desserts': 'bg-pink-100 text-pink-800'
+    };
+    return colors[cuisine as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
   if (showBookingFlow && selectedEatery) {
@@ -340,337 +305,292 @@ export default function EateriesModern() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white">
+  if (error) {
+    return (
+      <Layout>
+        <PageHeader
+          title="Eateries"
+          description="Discover authentic local cuisine experiences"
+          icon={<ChefHat className="h-8 w-8" />}
+        />
         <div className={layouts.container}>
-          <div className="py-6">
-            <div className="flex items-center justify-between mb-4">
-              <Link to="/" className="flex items-center space-x-3 text-white hover:text-orange-100 transition-colors">
-                <ArrowLeft className="h-5 w-5" />
-                <span>Back to Home</span>
-              </Link>
-              
-              <div className="flex items-center space-x-4">
-                <Button variant="ghost" className="text-white hover:bg-white/10">
-                  <Heart className="h-4 w-4 mr-2" />
-                  Favorites ({favorites.length})
-                </Button>
+          <div className="py-16 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-4">
+                <p className="font-medium">Failed to load eateries</p>
+                <p className="text-sm text-red-600 mt-1">{error}</p>
               </div>
-            </div>
-            
-            <div className="text-center">
-              <h1 className="text-4xl lg:text-5xl font-bold mb-2">
-                Best Eateries in Coastal Karnataka
-              </h1>
-              <p className="text-xl opacity-90 max-w-2xl mx-auto">
-                Discover authentic local cuisine, from traditional Udupi dishes to coastal delicacies
-              </p>
-              <div className="flex justify-center items-center mt-4 space-x-6 text-sm">
-                <span className="flex items-center">
-                  <Utensils className="h-4 w-4 mr-1" />
-                  {eateries.length}+ Restaurants
-                </span>
-                <span className="flex items-center">
-                  <Star className="h-4 w-4 mr-1" />
-                  Verified Reviews
-                </span>
-                <span className="flex items-center">
-                  <ShoppingBag className="h-4 w-4 mr-1" />
-                  Delivery Available
-                </span>
-              </div>
+              <Button onClick={fetchEateries} className="w-full">
+                Try Again
+              </Button>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Search and Filters */}
-      <div className={`${layouts.container} -mt-8`}>
-        <SearchAndFilter
-          onSearchChange={handleSearchChange}
-          categories={categories}
-          locations={locations}
-          amenities={amenities}
-          loading={loading}
-          resultCount={filteredEateries.length}
-          className="mb-8"
-        />
-      </div>
-
-      {/* Results Section */}
-      <div className={layouts.container}>
-        {/* Results Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {loading ? 'Loading...' : `${filteredEateries.length} Restaurants Found`}
-            </h2>
-            <p className="text-gray-600">
-              Showing restaurants in Udupi, Manipal, and nearby areas
-            </p>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-            >
-              Grid
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-            >
-              List
-            </Button>
-          </div>
-        </div>
-
-        {/* Error State */}
-        {error && (
-          <div className="text-center py-12">
-            <div className="text-red-600 mb-4">{error}</div>
-            <Button onClick={fetchEateries} className="bg-orange-600 hover:bg-orange-700">
-              Try Again
-            </Button>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Card key={index} className="overflow-hidden">
-                <Skeleton className="h-48 w-full" />
-                <CardContent className="p-4">
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-1/2 mb-4" />
-                  <div className="flex justify-between items-center">
-                    <Skeleton className="h-4 w-1/4" />
-                    <Skeleton className="h-8 w-20" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* No Results */}
-        {!loading && !error && filteredEateries.length === 0 && (
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-            <Utensils className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">No restaurants found</h3>
-            <p className="text-gray-600 max-w-md mx-auto mb-6">
-              Try adjusting your filters or search criteria to find more restaurants.
-            </p>
-            <Button onClick={() => window.location.reload()} className="bg-orange-600 hover:bg-orange-700">
-              Reset Filters
-            </Button>
-          </div>
-        )}
-
-        {/* Eateries Grid/List */}
-        {!loading && !error && filteredEateries.length > 0 && (
-          <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
-            {filteredEateries.map((eatery) => (
-              <EateryCard
-                key={eatery.id}
-                eatery={eatery}
-                isFavorite={favorites.includes(eatery.id)}
-                onToggleFavorite={() => toggleFavorite(eatery.id)}
-                onBookNow={() => handleBookNow(eatery)}
-                onShare={() => shareEatery(eatery)}
-                viewMode={viewMode}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Eatery Card Component
-function EateryCard({ 
-  eatery, 
-  isFavorite, 
-  onToggleFavorite, 
-  onBookNow, 
-  onShare,
-  viewMode 
-}: {
-  eatery: Eatery;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
-  onBookNow: () => void;
-  onShare: () => void;
-  viewMode: 'grid' | 'list';
-}) {
-  const cardClass = viewMode === 'list' 
-    ? 'flex items-center space-x-4 p-4' 
-    : 'overflow-hidden';
+      </Layout>
+    );
+  }
 
   return (
-    <Card className={`${designSystem.components.card.default} hover:shadow-lg transition-all duration-300 ${cardClass}`}>
-      {/* Image */}
-      <div className={viewMode === 'list' ? 'w-32 h-24 flex-shrink-0' : 'relative h-48 overflow-hidden'}>
-        <img 
-          src={eatery.image_url || "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop"} 
-          alt={eatery.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        
-        {/* Overlay badges - only in grid view */}
-        {viewMode === 'grid' && (
-          <div className="absolute top-2 left-2 flex flex-col space-y-1">
-            {eatery.featured && (
-              <Badge className="bg-orange-500 text-white text-xs">
-                <Award className="h-3 w-3 mr-1" />
-                Featured
-              </Badge>
-            )}
-            {eatery.offers && eatery.offers.length > 0 && (
-              <Badge className="bg-green-500 text-white text-xs">
-                {eatery.offers[0].discount}% OFF
-              </Badge>
-            )}
-          </div>
-        )}
-        
-        {/* Favorite and Share buttons */}
-        <div className="absolute top-2 right-2 flex space-x-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="bg-white/80 hover:bg-white h-8 w-8 p-0"
-            onClick={onToggleFavorite}
-          >
-            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="bg-white/80 hover:bg-white h-8 w-8 p-0"
-            onClick={onShare}
-          >
-            <Share2 className="h-4 w-4 text-gray-600" />
-          </Button>
+    <Layout fullWidth>
+      <PageHeader
+        title="Udupi Eateries"
+        description="Discover authentic local cuisine experiences with traditional Udupi flavors and coastal Karnataka specialties"
+        icon={<ChefHat className="h-8 w-8" />}
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Eateries' }
+        ]}
+      >
+        <div className="flex justify-center items-center mt-6 space-x-6 text-sm text-blue-100">
+          <span className="flex items-center">
+            <Utensils className="h-4 w-4 mr-1" />
+            {eateries.length}+ Restaurants
+          </span>
+          <span className="flex items-center">
+            <Star className="h-4 w-4 mr-1" />
+            Verified Reviews
+          </span>
+          <span className="flex items-center">
+            <ShoppingBag className="h-4 w-4 mr-1" />
+            Delivery Available
+          </span>
         </div>
-      </div>
+      </PageHeader>
 
-      {/* Content */}
-      <CardContent className={viewMode === 'list' ? 'flex-1 p-0' : 'p-4'}>
-        <div className="flex justify-between items-start mb-2">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{eatery.name}</h3>
-            <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-              <div className="flex items-center">
-                <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                <span className="font-medium">{eatery.rating?.toFixed(1)}</span>
-                <span className="text-gray-500">({eatery.total_reviews})</span>
+      <SearchSection
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+        placeholder="Search restaurants by name, cuisine, or location..."
+        showFilters={true}
+        onFiltersClick={() => setShowFilters(!showFilters)}
+        filtersActive={showFilters}
+      >
+        {showFilters && (
+          <SearchAndFilter
+            onSearchChange={handleSearchChange}
+            categories={categories}
+            locations={locations}
+            amenities={amenities}
+            loading={loading}
+            resultCount={filteredEateries.length}
+          />
+        )}
+      </SearchSection>
+
+      <main className="bg-white">
+        <div className={layouts.container}>
+          <div className="py-8">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {loading ? 'Loading...' : `${filteredEateries.length} Restaurants Found`}
+                </h2>
+                <p className="text-gray-600 mt-1">
+                  Showing restaurants in Udupi, Manipal, and nearby areas
+                </p>
               </div>
-              {eatery.distance && (
-                <div className="flex items-center">
-                  <Navigation className="h-3 w-3 mr-1" />
-                  <span>{eatery.distance} km</span>
+              
+              {!loading && (
+                <div className="flex items-center gap-4">
+                  <div className="hidden lg:flex items-center gap-2">
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                    >
+                      <Grid className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <option>Recommended</option>
+                    <option>Rating</option>
+                    <option>Distance</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                  </select>
                 </div>
               )}
             </div>
+
+            {/* Loading State */}
+            {loading && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <Skeleton className="h-48 w-full" />
+                    <CardContent className="p-4">
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full mb-4" />
+                      <div className="flex justify-between items-center">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-9 w-24" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Eateries Grid */}
+            {!loading && filteredEateries.length > 0 && (
+              <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
+                {filteredEateries.map((eatery) => (
+                  <Card key={eatery.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
+                    <div className="relative">
+                      <img
+                        src={eatery.image_url || 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop'}
+                        alt={eatery.name}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      
+                      {/* Overlay Actions */}
+                      <div className="absolute top-3 right-3 flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => toggleFavorite(eatery.id)}
+                        >
+                          <Heart className={`h-4 w-4 ${favorites.includes(eatery.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => shareEatery(eatery)}
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* Offers Badge */}
+                      {eatery.offers && eatery.offers.length > 0 && (
+                        <div className="absolute top-3 left-3">
+                          <Badge className="bg-green-600 text-white border-0">
+                            {eatery.offers[0].discount}% OFF
+                          </Badge>
+                        </div>
+                      )}
+
+                      {/* Distance Badge */}
+                      <div className="absolute bottom-3 right-3">
+                        <Badge variant="secondary" className="bg-black/50 text-white border-0">
+                          <Navigation className="h-3 w-3 mr-1" />
+                          {eatery.distance}km away
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <CardContent className="p-5">
+                      <div className="space-y-3">
+                        {/* Rating & Cuisine */}
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRatingColor(eatery.rating || 4.2)}`}>
+                              <Star className="h-3 w-3 fill-current" />
+                              {eatery.rating || '4.2'}
+                            </div>
+                            <span className="text-xs text-gray-500">
+                              ({eatery.total_reviews || 128} reviews)
+                            </span>
+                          </div>
+                          <Badge className={getCuisineBadgeColor(eatery.cuisine_type || 'South Indian')}>
+                            {eatery.cuisine_type || 'South Indian'}
+                          </Badge>
+                        </div>
+
+                        {/* Title & Description */}
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
+                            {eatery.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                            {eatery.description || 'Authentic local cuisine with fresh ingredients and traditional recipes'}
+                          </p>
+                        </div>
+
+                        {/* Location & Hours */}
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <MapPin className="h-4 w-4" />
+                            {eatery.location}
+                          </div>
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <Clock className="h-4 w-4" />
+                            {eatery.opening_hours || 'Open 7:00 AM - 10:00 PM'}
+                          </div>
+                        </div>
+
+                        {/* Amenities */}
+                        <div className="flex flex-wrap gap-2">
+                          {eatery.delivery_available && (
+                            <Badge variant="outline" className="text-xs">
+                              <ShoppingBag className="h-3 w-3 mr-1" />
+                              Delivery
+                            </Badge>
+                          )}
+                          {eatery.takeaway_available && (
+                            <Badge variant="outline" className="text-xs">
+                              <Utensils className="h-3 w-3 mr-1" />
+                              Takeaway
+                            </Badge>
+                          )}
+                          {eatery.wifi_available && (
+                            <Badge variant="outline" className="text-xs">
+                              <Wifi className="h-3 w-3 mr-1" />
+                              WiFi
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Price & Booking */}
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                          <div className="flex items-center gap-1">
+                            <IndianRupee className="h-4 w-4 text-gray-700" />
+                            <span className="font-bold text-lg text-gray-900">
+                              {eatery.price_range || 450}
+                            </span>
+                            <span className="text-sm text-gray-500">for two</span>
+                          </div>
+                          
+                          <Button 
+                            onClick={() => bookEatery(eatery)}
+                            className="bg-blue-600 hover:bg-blue-700 px-6"
+                          >
+                            Reserve Table
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!loading && filteredEateries.length === 0 && (
+              <div className="text-center py-16">
+                <ChefHat className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No eateries found</h3>
+                <p className="text-gray-600 mb-6">Try adjusting your search criteria or check back later.</p>
+                <Button onClick={fetchEateries}>
+                  Refresh Results
+                </Button>
+              </div>
+            )}
           </div>
-          
-          <div className="text-right">
-            <div className="font-medium text-gray-900">₹{eatery.price_range || 500}</div>
-            <div className="text-xs text-gray-500">for two</div>
-          </div>
         </div>
-
-        <div className="flex items-center text-sm text-gray-600 mb-2">
-          <MapPin className="h-4 w-4 mr-1" />
-          <span>{eatery.location}</span>
-        </div>
-
-        <div className="text-sm text-gray-600 mb-3">
-          {eatery.cuisine_type} • {eatery.description?.slice(0, 50)}...
-        </div>
-
-        {/* Popular dishes */}
-        {eatery.popular_dishes && eatery.popular_dishes.length > 0 && (
-          <div className="mb-3">
-            <div className="text-xs text-gray-500 mb-1">Popular:</div>
-            <div className="flex flex-wrap gap-1">
-              {eatery.popular_dishes.slice(0, 2).map((dish, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {dish}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Amenities */}
-        <div className="flex flex-wrap gap-1 mb-4">
-          {eatery.delivery_available && (
-            <Badge variant="outline" className="text-xs">
-              <Zap className="h-3 w-3 mr-1" />
-              Delivery
-            </Badge>
-          )}
-          {eatery.wifi_available && (
-            <Badge variant="outline" className="text-xs">
-              <Wifi className="h-3 w-3 mr-1" />
-              WiFi
-            </Badge>
-          )}
-          {eatery.has_parking && (
-            <Badge variant="outline" className="text-xs">
-              <Car className="h-3 w-3 mr-1" />
-              Parking
-            </Badge>
-          )}
-          {eatery.accepts_cards && (
-            <Badge variant="outline" className="text-xs">
-              <CreditCard className="h-3 w-3 mr-1" />
-              Cards
-            </Badge>
-          )}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex space-x-2">
-          <Button 
-            size="sm" 
-            className="flex-1 bg-orange-600 hover:bg-orange-700"
-            onClick={onBookNow}
-          >
-            <Calendar className="h-4 w-4 mr-1" />
-            Book Table
-          </Button>
-          {eatery.phone && (
-            <Button variant="outline" size="sm">
-              <Phone className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      </main>
+    </Layout>
   );
-}
-
-// Helper function to get amenities for booking flow
-function getAmenities(eatery: Eatery): string[] {
-  const amenities = [];
-  if (eatery.wifi_available) amenities.push('Free WiFi');
-  if (eatery.has_parking) amenities.push('Parking');
-  if (eatery.accepts_cards) amenities.push('Card Payment');
-  if (eatery.outdoor_seating) amenities.push('Outdoor Seating');
-  if (eatery.delivery_available) amenities.push('Home Delivery');
-  if (eatery.takeaway_available) amenities.push('Takeaway');
-  if (eatery.family_friendly) amenities.push('Family Friendly');
-  if (eatery.pure_veg) amenities.push('Pure Vegetarian');
-  return amenities;
 }
