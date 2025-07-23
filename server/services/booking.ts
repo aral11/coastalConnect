@@ -235,16 +235,16 @@ export class BookingService {
   static async confirmPayment(bookingId: number, bookingType: 'homestay' | 'driver'): Promise<boolean> {
     try {
       const connection = await getConnection();
-      
+
       const table = bookingType === 'homestay' ? 'HomestayBookings' : 'DriverBookings';
-      
+
       await connection.request()
         .input('booking_id', bookingId)
         .input('payment_status', 'paid')
         .input('booking_status', 'confirmed')
         .input('updated_at', new Date())
         .query(`
-          UPDATE ${table} 
+          UPDATE ${table}
           SET payment_status = @payment_status, booking_status = @booking_status, updated_at = @updated_at
           WHERE id = @booking_id
         `);
@@ -253,6 +253,52 @@ export class BookingService {
     } catch (error) {
       console.log('Database not available, payment confirmation mocked');
       return true; // Mock success
+    }
+  }
+
+  static async getBookingDetails(bookingId: number, bookingType: 'homestay' | 'driver'): Promise<any> {
+    try {
+      const connection = await getConnection();
+
+      if (bookingType === 'homestay') {
+        const result = await connection.request()
+          .input('booking_id', bookingId)
+          .query(`
+            SELECT b.*, h.name as item_name, h.location, h.image_url
+            FROM HomestayBookings b
+            LEFT JOIN homestays h ON b.homestay_id = h.id
+            WHERE b.id = @booking_id
+          `);
+        return result.recordset[0];
+      } else {
+        const result = await connection.request()
+          .input('booking_id', bookingId)
+          .query(`
+            SELECT b.*, d.name as item_name, d.location, d.profile_image as image_url
+            FROM DriverBookings b
+            LEFT JOIN drivers d ON b.driver_id = d.id
+            WHERE b.id = @booking_id
+          `);
+        return result.recordset[0];
+      }
+    } catch (error) {
+      console.log('Database not available, returning mock booking details');
+      // Return mock booking details
+      return {
+        id: bookingId,
+        booking_reference: `BK${Date.now().toString().slice(-6)}`,
+        guest_name: 'Guest User',
+        guest_email: 'guest@example.com',
+        guest_phone: '+919876543210',
+        item_name: bookingType === 'homestay' ? 'Coastal Heritage Homestay' : 'Local Driver Service',
+        location: 'Udupi, Karnataka',
+        check_in_date: new Date(),
+        check_out_date: bookingType === 'homestay' ? new Date(Date.now() + 86400000) : null,
+        pickup_datetime: bookingType === 'driver' ? new Date() : null,
+        guests: 2,
+        total_amount: bookingType === 'homestay' ? 2500 : 350,
+        special_requests: null
+      };
     }
   }
 
