@@ -28,6 +28,107 @@ export default function Login() {
 
   const redirectTo = searchParams.get('redirect') || '/dashboard';
 
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        login(data.data.token, data.data.user);
+
+        // Check if there's a pending booking to continue
+        const pendingBooking = localStorage.getItem('pendingBooking');
+        if (pendingBooking) {
+          localStorage.removeItem('pendingBooking');
+          const booking = JSON.parse(pendingBooking);
+          navigate(`/${booking.type}s`); // Navigate to hotels or drivers page
+        } else {
+          navigate(redirectTo);
+        }
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (error) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Mock Google OAuth flow
+      const response = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: 'mock_google_token' }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        login(data.data.token, data.data.user);
+        navigate(redirectTo);
+      } else {
+        setError(data.message || 'Google login failed');
+      }
+    } catch (error) {
+      setError('Google login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Mock Apple OAuth flow
+      const response = await fetch('/api/auth/apple', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: 'mock_apple_token' }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        login(data.data.token, data.data.user);
+        navigate(redirectTo);
+      } else {
+        setError(data.message || 'Apple login failed');
+      }
+    } catch (error) {
+      setError('Apple login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-coastal-50 via-white to-ocean-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
