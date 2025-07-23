@@ -5,19 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 import { Homestay, HomestayResponse } from '@shared/api';
-import {
+import { 
   Search,
-  MapPin,
-  Star,
-  Wifi,
-  Car,
-  Coffee,
-  Waves,
-  Anchor,
+  MapPin, 
+  Star, 
   ArrowLeft,
   Filter,
   Heart,
-  IndianRupee
+  IndianRupee,
+  Phone,
+  Waves
 } from 'lucide-react';
 
 export default function Hotels() {
@@ -34,7 +31,7 @@ export default function Hotels() {
       setLoading(true);
       const response = await fetch('/api/homestays');
       const data: HomestayResponse = await response.json();
-
+      
       if (data.success && data.data) {
         setHomestays(data.data);
       } else {
@@ -55,15 +52,15 @@ export default function Hotels() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
-                alt="coastalConnect"
+              <img 
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800" 
+                alt="coastalConnect" 
                 className="logo-brand h-10"
               />
             </Link>
             
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/hotels" className="text-coastal-600 font-medium">Hotels</Link>
+              <Link to="/hotels" className="text-coastal-600 font-medium">Homestays</Link>
               <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
               <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
               <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors">Contact</Link>
@@ -109,7 +106,7 @@ export default function Hotels() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input 
-                placeholder="Search by location, property name..." 
+                placeholder="Search by location in Udupi..." 
                 className="pl-10 h-12 text-lg"
               />
             </div>
@@ -124,93 +121,151 @@ export default function Hotels() {
         </div>
       </section>
 
-      {/* Hotels Grid */}
+      {/* Homestays Grid */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Available Properties</h2>
-            <p className="text-gray-600">{placeholderHotels.length} properties found</p>
+            <h2 className="text-2xl font-bold text-gray-900">Available Homestays</h2>
+            <p className="text-gray-600">{homestays.length} homestays found</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {placeholderHotels.map((hotel) => (
-              <Card key={hotel.id} className="card-coastal overflow-hidden group cursor-pointer">
-                <div className="relative">
-                  <img 
-                    src={hotel.image} 
-                    alt={hotel.name}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-700"
-                  >
-                    <Heart className="h-4 w-4" />
-                  </Button>
-                </div>
-                
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg font-bold">{hotel.name}</CardTitle>
-                      <CardDescription className="flex items-center mt-1">
-                        <MapPin className="h-4 w-4 mr-1 text-coastal-500" />
-                        {hotel.location}
-                      </CardDescription>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-coastal-600">{hotel.price}</div>
-                      <div className="text-sm text-gray-500">per night</div>
-                    </div>
-                  </div>
-                </CardHeader>
+          {loading && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-coastal-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading Udupi homestays...</p>
+            </div>
+          )}
 
-                <CardContent className="pt-0">
-                  <div className="flex items-center mb-4">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="ml-1 font-medium">{hotel.rating}</span>
-                      <span className="text-gray-500 ml-2">({hotel.reviews} reviews)</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {hotel.amenities.slice(0, 3).map((amenity, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {amenity}
-                      </Badge>
-                    ))}
-                    {hotel.amenities.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{hotel.amenities.length - 3} more
-                      </Badge>
-                    )}
-                  </div>
-
-                  <Button className="w-full btn-coastal">
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Placeholder Message */}
-          <div className="mt-16 text-center py-12 bg-gray-50 rounded-xl">
-            <Waves className="h-16 w-16 mx-auto text-coastal-400 mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">More Properties Coming Soon!</h3>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-              We're continuously adding more beautiful coastal properties to our platform. 
-              This is a preview of our hotel booking system - the full implementation with 
-              search, filtering, and booking capabilities will be available soon.
-            </p>
-            <Link to="/">
-              <Button className="btn-coastal">
-                Back to Home
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button onClick={fetchHomestays} className="btn-coastal">
+                Try Again
               </Button>
-            </Link>
-          </div>
+            </div>
+          )}
+
+          {!loading && !error && homestays.length === 0 && (
+            <div className="text-center py-12 bg-gray-50 rounded-xl">
+              <Waves className="h-16 w-16 mx-auto text-coastal-400 mb-4" />
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">No Homestays Found</h3>
+              <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+                We're still setting up the database connection. Please check that your SQL Server is running
+                and try seeding the database with sample data.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Button onClick={fetchHomestays} className="btn-coastal">
+                  Refresh
+                </Button>
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const response = await fetch('/api/seed', { method: 'POST' });
+                      const result = await response.json();
+                      if (result.success) {
+                        fetchHomestays();
+                      }
+                    } catch (err) {
+                      console.error('Error seeding database:', err);
+                    }
+                  }}
+                  variant="outline"
+                  className="border-coastal-300 text-coastal-600"
+                >
+                  Seed Database
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!loading && !error && homestays.length > 0 && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {homestays.map((homestay) => (
+                <Card key={homestay.id} className="card-coastal overflow-hidden group cursor-pointer">
+                  <div className="relative">
+                    <img 
+                      src={homestay.image_url || "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop"} 
+                      alt={homestay.name}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-700"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg font-bold">{homestay.name}</CardTitle>
+                        <CardDescription className="flex items-center mt-1">
+                          <MapPin className="h-4 w-4 mr-1 text-coastal-500" />
+                          {homestay.location}
+                        </CardDescription>
+                      </div>
+                      {homestay.price_per_night && (
+                        <div className="text-right ml-4">
+                          <div className="text-xl font-bold text-coastal-600 flex items-center">
+                            <IndianRupee className="h-4 w-4" />
+                            {homestay.price_per_night}
+                          </div>
+                          <div className="text-sm text-gray-500">per night</div>
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pt-0">
+                    {homestay.description && (
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {homestay.description}
+                      </p>
+                    )}
+
+                    {homestay.rating && (
+                      <div className="flex items-center mb-4">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <span className="ml-1 font-medium">{homestay.rating}</span>
+                          <span className="text-gray-500 ml-2">({homestay.total_reviews} reviews)</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {homestay.amenities && (
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {homestay.amenities.split(',').slice(0, 3).map((amenity, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {amenity.trim()}
+                          </Badge>
+                        ))}
+                        {homestay.amenities.split(',').length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{homestay.amenities.split(',').length - 3} more
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-2">
+                      {homestay.phone && (
+                        <Button variant="outline" size="sm" className="text-coastal-600 border-coastal-200">
+                          <Phone className="h-3 w-3 mr-1" />
+                          Call
+                        </Button>
+                      )}
+                      <Button className="btn-coastal" size="sm">
+                        View Details
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
