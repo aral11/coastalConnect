@@ -65,43 +65,57 @@ export default function Index() {
             </div>
 
             <div className="flex items-center space-x-4">
-              {isAuthenticated ? (
-                <>
-                  <Link to="/dashboard">
-                    <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                      Welcome, {user?.name}
+              {/* Desktop Actions */}
+              <div className="hidden md:flex items-center space-x-4">
+                {isAuthenticated ? (
+                  <>
+                    <Link to="/dashboard">
+                      <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
+                        Welcome, {user?.name}
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      className="border-coastal-300 text-coastal-600"
+                      onClick={logout}
+                    >
+                      Logout
                     </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="border-coastal-300 text-coastal-600"
-                    onClick={logout}
-                  >
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/vendor-register">
-                    <Button variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50">
-                      For Vendors
-                    </Button>
-                  </Link>
-                  <Link to="/organizer-register">
-                    <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
-                      Event Organizer
-                    </Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link to="/signup">
-                    <Button className="btn-coastal">Get Started</Button>
-                  </Link>
-                </>
-              )}
+                  </>
+                ) : (
+                  <>
+                    <Link to="/vendor-register">
+                      <Button variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50">
+                        For Vendors
+                      </Button>
+                    </Link>
+                    <Link to="/organizer-register">
+                      <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
+                        Event Organizer
+                      </Button>
+                    </Link>
+                    <Link to="/login">
+                      <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/signup">
+                      <Button className="btn-coastal">Get Started</Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle mobile menu"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
             </div>
           </div>
         </div>
