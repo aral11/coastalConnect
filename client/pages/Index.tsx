@@ -267,9 +267,9 @@ export default function Index() {
             <div>
               <h4 className="font-semibold mb-4">Connect</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: hello@coastalconnect.com</li>
-                <li>Phone: +1 (555) 123-4567</li>
-                <li>Available 24/7</li>
+                <li>Email: hello@coastalconnect.in</li>
+                <li>Phone: +91 820 252 0001</li>
+                <li>Udupi, Karnataka 576101</li>
               </ul>
             </div>
           </div>
