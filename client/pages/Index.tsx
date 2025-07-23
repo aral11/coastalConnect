@@ -183,20 +183,20 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="animate-float">
-              <div className="text-4xl lg:text-5xl font-bold mb-2">500+</div>
-              <div className="text-lg opacity-90">Properties</div>
+              <div className="text-4xl lg:text-5xl font-bold mb-2">50+</div>
+              <div className="text-lg opacity-90">Homestays</div>
             </div>
             <div className="animate-float" style={{ animationDelay: '0.5s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">200+</div>
-              <div className="text-lg opacity-90">Drivers</div>
+              <div className="text-4xl lg:text-5xl font-bold mb-2">100+</div>
+              <div className="text-lg opacity-90">Local Eateries</div>
             </div>
             <div className="animate-float" style={{ animationDelay: '1s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">10K+</div>
-              <div className="text-lg opacity-90">Happy Guests</div>
+              <div className="text-4xl lg:text-5xl font-bold mb-2">25+</div>
+              <div className="text-lg opacity-90">Local Drivers</div>
             </div>
             <div className="animate-float" style={{ animationDelay: '1.5s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">4.9</div>
-              <div className="text-lg opacity-90">Rating</div>
+              <div className="text-4xl lg:text-5xl font-bold mb-2">4.8</div>
+              <div className="text-lg opacity-90">Average Rating</div>
             </div>
           </div>
         </div>
