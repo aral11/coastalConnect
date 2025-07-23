@@ -53,6 +53,11 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
 
+          {/* Event Organizer Routes */}
+          <Route path="/organizer-register" element={<EventOrganizerRegister />} />
+          <Route path="/organizer-login" element={<EventOrganizerLogin />} />
+          <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
+
           {/* Service Sector Pages */}
           <Route path="/arts-history" element={<ServiceSector />} />
           <Route path="/beauty-wellness" element={<ServiceSector />} />
