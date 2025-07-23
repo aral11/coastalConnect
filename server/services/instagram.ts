@@ -207,9 +207,9 @@ export class InstagramService {
         {
           id: 'media_priya_1',
           media_type: 'IMAGE',
-          media_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc126',
-          caption: 'Working on a new Yakshagana mask 🎭 Each piece tells a story of our rich cultural heritage #YakshaganaArt #UdupiTraditions #HandmadeWithLove',
+          caption: 'Working on a new Yakshagana mask 🎭 Each piece tells a story of our rich cultural heritage. This one represents Hanuman from the epic tales. Hours of careful painting and detailing! #YakshaganaArt #UdupiTraditions #HandmadeWithLove #TraditionalArt',
           timestamp: getRecentTimestamp(1),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
@@ -217,9 +217,9 @@ export class InstagramService {
         {
           id: 'media_priya_2',
           media_type: 'IMAGE',
-          media_url: 'https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1610278785654-47468b2b4f8b?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc127',
-          caption: 'Temple art workshop this weekend! 🪔 Teaching the next generation our traditional crafts #TempleArt #UdupiWorkshop #CulturalEducation',
+          caption: 'Beautiful brass lamps ready for Deepavali! 🪔✨ Each one hand-carved with traditional motifs. These will light up homes across Udupi during the festival season. #BrassArt #Deepavali #UdupiCrafts #HandmadeLamps',
           timestamp: getRecentTimestamp(4),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
@@ -227,9 +227,9 @@ export class InstagramService {
         {
           id: 'media_priya_3',
           media_type: 'CAROUSEL_ALBUM',
-          media_url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=600&fit=crop',
+          media_url: 'https://images.unsplash.com/photo-1616805765352-0b75cbbdec3a?w=600&h=600&fit=crop',
           permalink: 'https://instagram.com/p/CyxABc128',
-          caption: 'Process shots of creating traditional coastal handicrafts 🎨 Swipe to see the journey from sketch to finish #ProcessVideo #CoastalArts',
+          caption: 'Process shots of creating traditional temple jewelry 💎 From raw materials to finished masterpiece! Teaching these ancient techniques to keep our culture alive. Swipe to see the transformation! #TempleJewelry #ProcessVideo #CoastalArts #CulturalPreservation',
           timestamp: getRecentTimestamp(6),
           like_count: getRandomLikes(),
           comments_count: getRandomComments()
