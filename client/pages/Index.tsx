@@ -175,6 +175,45 @@ export default function Index() {
                 </Button>
               </Link>
             </div>
+
+            {/* Eateries Service */}
+            <div className="card-coastal p-8 group cursor-pointer">
+              <div className="flex items-center mb-6">
+                <div className="bg-coral-100 rounded-lg p-3 mr-4 group-hover:bg-coral-200 transition-colors">
+                  <svg className="h-8 w-8 text-coral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Local Eateries</h3>
+                  <p className="text-coral-600">Authentic Udupi cuisine & reviews</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center text-gray-600">
+                  <Star className="h-5 w-5 text-yellow-400 mr-2" />
+                  <span>Google ratings & verified reviews</span>
+                </div>
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="h-5 w-5 text-coral-500 mr-2" />
+                  <span>Traditional Udupi restaurants</span>
+                </div>
+                <div className="flex items-center text-gray-600">
+                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Vegetarian & coastal specialties</span>
+                </div>
+              </div>
+
+              <Link to="/eateries">
+                <Button className="w-full btn-coral group-hover:shadow-lg">
+                  Explore Eateries
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
