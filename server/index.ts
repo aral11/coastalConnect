@@ -4,6 +4,8 @@ import { handleDemo } from "./routes/demo";
 import { getHomestays, getHomestayById, searchHomestays } from "./routes/homestays";
 import { getEateries, getEateryById, searchEateries } from "./routes/eateries";
 import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
+import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./routes/auth";
+import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 
