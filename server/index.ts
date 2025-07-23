@@ -149,5 +149,16 @@ export function createServer() {
   app.get("/api/organizers/events/:id/registrations", authenticateOrganizer, getEventRegistrations);
   app.get("/api/organizers/events/:id/analytics", authenticateOrganizer, getEventAnalytics);
 
+  // Notification API routes
+  app.post("/api/notifications/booking-confirmation", sendBookingConfirmation);
+  app.post("/api/notifications/booking-cancellation", sendBookingCancellation);
+  app.post("/api/notifications/booking-reminder", sendBookingReminder);
+  app.post("/api/notifications/welcome-email", sendWelcomeEmail);
+  app.post("/api/notifications/custom", sendCustomNotification);
+  app.post("/api/notifications/bulk", sendBulkNotification);
+  app.get("/api/notifications/history", getNotificationHistory);
+  app.post("/api/notifications/test-email", testEmail);
+  app.post("/api/notifications/test-sms", testSMS);
+
   return app;
 }
