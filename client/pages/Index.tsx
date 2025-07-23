@@ -33,8 +33,9 @@ export default function Index() {
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Hotels</Link>
+              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Homestays</Link>
               <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
+              <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors">Eateries</Link>
               <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
               <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors">Contact</Link>
             </div>
