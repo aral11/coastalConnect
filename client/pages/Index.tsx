@@ -37,15 +37,18 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50">
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                alt="coastalConnect"
-                className="logo-brand h-10"
-              />
+              <Link to="/" aria-label="coastalConnect home">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
+                  alt="coastalConnect"
+                  className="logo-brand h-10 transition-transform hover:scale-105"
+                  loading="lazy"
+                />
+              </Link>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
