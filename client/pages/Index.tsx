@@ -119,6 +119,116 @@ export default function Index() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-coastal-200 shadow-lg">
+            <div className="container mx-auto px-4 py-4 space-y-3">
+              <Link
+                to="/hotels"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Homestays
+              </Link>
+              <Link
+                to="/drivers"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Drivers
+              </Link>
+              <Link
+                to="/eateries"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Eateries
+              </Link>
+              <Link
+                to="/creators"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Creators
+              </Link>
+              <Link
+                to="/about"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+
+              <hr className="border-coastal-200 my-3" />
+
+              {isAuthenticated ? (
+                <div className="space-y-3">
+                  <Link to="/dashboard">
+                    <Button variant="ghost" className="w-full justify-start text-coastal-600 hover:text-coastal-700">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="w-full border-coastal-300 text-coastal-600"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <Link to="/vendor-register">
+                    <Button
+                      variant="outline"
+                      className="w-full border-coastal-300 text-coastal-600 hover:bg-coastal-50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      For Vendors
+                    </Button>
+                  </Link>
+                  <Link to="/organizer-register">
+                    <Button
+                      variant="outline"
+                      className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Event Organizer
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-coastal-600 hover:text-coastal-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button
+                      className="w-full btn-coastal"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
