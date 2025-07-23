@@ -160,9 +160,18 @@ export default function CommunityFeatures() {
               )}
             </div>
 
-            <Button className="w-full bg-orange-600 hover:bg-orange-700">
-              View All Events <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="space-y-2">
+              <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                View All Events <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full text-orange-600 border-orange-600 hover:bg-orange-50"
+                onClick={() => window.location.href = '/organizer-register'}
+              >
+                Organize an Event
+              </Button>
+            </div>
           </div>
 
           {/* Religious Services */}
