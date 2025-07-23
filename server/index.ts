@@ -8,6 +8,7 @@ import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./route
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
+import { authenticateToken } from "./middleware/auth";
 
 export function createServer() {
   const app = express();
@@ -87,11 +88,11 @@ export function createServer() {
   app.post("/api/auth/register", register);
   app.get("/api/auth/verify", verifyToken);
 
-  // Booking API routes
-  app.post("/api/bookings/homestay", createHomestayBooking);
-  app.post("/api/bookings/driver", createDriverBooking);
+  // Booking API routes (protected)
+  app.post("/api/bookings/homestay", authenticateToken, createHomestayBooking);
+  app.post("/api/bookings/driver", authenticateToken, createDriverBooking);
   app.post("/api/bookings/confirm-payment", confirmPayment);
-  app.get("/api/bookings/user", getUserBookings);
+  app.get("/api/bookings/user", authenticateToken, getUserBookings);
   app.put("/api/bookings/driver/:booking_id/status", updateDriverBookingStatus);
   app.post("/api/bookings/validate-trip-code", validateTripCode);
 
