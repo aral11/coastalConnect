@@ -37,7 +37,8 @@ import {
   Wifi,
   CreditCard,
   Route,
-  Gauge
+  Gauge,
+  Music
 } from 'lucide-react';
 
 interface Driver {
