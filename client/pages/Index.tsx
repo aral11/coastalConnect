@@ -65,15 +65,15 @@ export default function Index() {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-              Connect with
+              Discover
               <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
-                Coastal Experiences
+                Udupi Karnataka
               </span>
             </h1>
-            
+
             <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Discover beautiful homestays, hotels, and reliable drivers for your perfect coastal getaway. 
-              Experience the best of coastal living with trusted local services.
+              Experience authentic coastal Karnataka culture in Udupi. Find traditional homestays,
+              authentic local eateries, and trusted drivers for your spiritual and cultural journey.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
