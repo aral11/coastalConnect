@@ -19,6 +19,7 @@ import Signup from "./pages/Signup";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import NotFound from "./pages/NotFound";
 import ServiceSector from "./pages/ServiceSector";
+import VendorRegister from "./pages/VendorRegister";
 import { 
   Info, 
   Phone, 
