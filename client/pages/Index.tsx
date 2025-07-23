@@ -112,23 +112,23 @@ export default function Index() {
                   <Home className="h-8 w-8 text-coastal-600" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Hotels & Homestays</h3>
-                  <p className="text-coastal-600">Comfortable accommodations by the coast</p>
+                  <h3 className="text-2xl font-bold text-gray-900">Traditional Homestays</h3>
+                  <p className="text-coastal-600">Authentic Udupi hospitality & cuisine</p>
                 </div>
               </div>
-              
+
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-gray-600">
                   <Star className="h-5 w-5 text-yellow-400 mr-2" />
-                  <span>Verified properties with authentic reviews</span>
+                  <span>Authentic Udupi family homes</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <MapPin className="h-5 w-5 text-coastal-500 mr-2" />
-                  <span>Prime coastal locations</span>
+                  <span>Near Krishna Temple & Malpe Beach</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Shield className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Secure booking with instant confirmation</span>
+                  <span>Traditional vegetarian meals included</span>
                 </div>
               </div>
 
