@@ -93,7 +93,7 @@ export default function Index() {
                   Explore Eateries
                 </Button>
               </Link>
-              <Link to="/hotels">
+              <Link to="/homestays">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 text-lg">
                   <Home className="mr-2 h-5 w-5" />
                   Book Homestays
@@ -156,7 +156,7 @@ export default function Index() {
                     <span>24/7 Support</span>
                   </div>
                 </div>
-                <Link to="/hotels">
+                <Link to="/homestays">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     Book Now <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
