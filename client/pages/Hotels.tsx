@@ -27,6 +27,9 @@ export default function Hotels() {
   const [selectedHomestay, setSelectedHomestay] = useState<Homestay | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchHomestays();
   }, []);
