@@ -7,10 +7,9 @@ export interface SMSMessage {
 }
 
 export class SMSService {
-  private static client = twilio(
-    process.env.TWILIO_ACCOUNT_SID || 'mock_account_sid',
-    process.env.TWILIO_AUTH_TOKEN || 'mock_auth_token'
-  );
+  private static client = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_ACCOUNT_SID.startsWith('AC')
+    ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+    : null;
 
   private static fromNumber = process.env.TWILIO_PHONE_NUMBER || '+1234567890';
 
