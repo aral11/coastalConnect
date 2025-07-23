@@ -225,7 +225,13 @@ export default function Login() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="h-11">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+              >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                   <path
                     fill="currentColor"
