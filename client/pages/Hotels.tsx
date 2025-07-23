@@ -5,10 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 import { Homestay, HomestayResponse } from '@shared/api';
-import { 
+import BookingModal from '@/components/BookingModal';
+import {
   Search,
-  MapPin, 
-  Star, 
+  MapPin,
+  Star,
   ArrowLeft,
   Filter,
   Heart,
