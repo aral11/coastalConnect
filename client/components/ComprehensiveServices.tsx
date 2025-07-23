@@ -257,8 +257,25 @@ export default function ComprehensiveServices() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {serviceSectors.map(renderServiceCard)}
-          </div>
+          {loading ? (
+            // Skeleton loading state
+            Array.from({ length: 9 }).map((_, index) => (
+              <div key={index} className="card-coastal p-6">
+                <div className="flex items-center mb-4">
+                  <Skeleton className="w-12 h-12 rounded-lg mr-4" />
+                  <div className="flex-1">
+                    <Skeleton className="h-5 w-32 mb-2" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </div>
+                <Skeleton className="h-16 w-full mb-4" />
+                <Skeleton className="h-9 w-full rounded-md" />
+              </div>
+            ))
+          ) : (
+            serviceSectors.map(renderServiceCard)
+          )}
+        </div>
         )}
 
         {/* Vendor CTA Section */}
