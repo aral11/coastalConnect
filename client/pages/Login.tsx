@@ -143,7 +143,7 @@ export default function Login() {
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
                 alt="coastalConnect"
                 className="logo-brand h-12"
               />
