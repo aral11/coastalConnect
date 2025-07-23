@@ -48,6 +48,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/vendor-register" element={<VendorRegister />} />
 
           {/* Service Sector Pages */}
           <Route path="/arts-history" element={<ServiceSector />} />
