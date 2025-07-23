@@ -57,7 +57,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
   const navItems = [
     {
       label: 'Homestays',
-      href: '/hotels',
+      href: '/homestays',
       icon: <Building className="h-4 w-4" />,
       description: 'Authentic local stays'
     },
