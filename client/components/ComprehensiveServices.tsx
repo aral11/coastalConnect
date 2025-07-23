@@ -239,12 +239,12 @@ export default function ComprehensiveServices() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">coastalConnect Services</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Your one-stop platform connecting local vendors across Udupi and Manipal. Pre-launch offers available for early sign-ups! 
-            Vendors can add their business listings with minimal lifetime subscription.
+            Your one-stop platform connecting local vendors across Udupi and Manipal.
+            Join our growing network of trusted local businesses and reach more customers.
           </p>
           <div className="mt-6">
-            <Badge variant="secondary" className="bg-green-100 text-green-800 text-lg px-6 py-2">
-              🚀 Pre-Launch Special Offers Available!
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-lg px-6 py-2">
+              🏪 Join Our Network - ₹99/month | ₹199/year
             </Badge>
           </div>
         </div>
