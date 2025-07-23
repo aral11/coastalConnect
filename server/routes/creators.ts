@@ -63,9 +63,9 @@ const mockCreators: Creator[] = [
     location: "Udupi, Karnataka",
     contact_email: "priya@coastalarts.in",
     featured_works: [
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=400&h=300&fit=crop",
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop"
+      "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1610278785654-47468b2b4f8b?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1616805765352-0b75cbbdec3a?w=400&h=300&fit=crop"
     ],
     is_verified: true,
     is_active: true
