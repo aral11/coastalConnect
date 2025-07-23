@@ -297,6 +297,9 @@ export default function Index() {
         </div>
       </section>
 
+      {/* Community Features Section */}
+      <CommunityFeatures />
+
       {/* CTA Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
