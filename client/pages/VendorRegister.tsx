@@ -40,8 +40,8 @@ interface VendorFormData {
 }
 
 const serviceCategories = {
-  'food-drink': {
-    label: 'Food & Drink',
+  'eateries': {
+    label: 'Eateries',
     subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
   },
   'arts-history': {
