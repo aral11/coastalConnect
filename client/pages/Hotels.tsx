@@ -287,6 +287,18 @@ export default function Hotels() {
           )}
         </div>
       </section>
+
+      {/* Booking Modal */}
+      {selectedHomestay && (
+        <BookingModal
+          homestay={selectedHomestay}
+          isOpen={isBookingModalOpen}
+          onClose={() => {
+            setIsBookingModalOpen(false);
+            setSelectedHomestay(null);
+          }}
+        />
+      )}
     </div>
   );
 }
