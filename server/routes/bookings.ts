@@ -2,8 +2,9 @@ import { RequestHandler } from "express";
 import { BookingService } from "../services/booking";
 import { PaymentService } from "../services/payments";
 import { SMSService } from "../services/sms";
+import { AuthenticatedRequest } from "../middleware/auth";
 
-export const createHomestayBooking: RequestHandler = async (req, res) => {
+export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
     const {
       homestay_id,
@@ -16,8 +17,15 @@ export const createHomestayBooking: RequestHandler = async (req, res) => {
       special_requests
     } = req.body;
 
-    // Get user ID from token (mock for now)
-    const user_id = 1; // This should come from authentication middleware
+    // Get user ID from authentication middleware
+    const user_id = req.user?.id;
+    
+    if (!user_id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
 
     if (!homestay_id || !check_in_date || !check_out_date || !guests || !guest_name || !guest_phone || !guest_email) {
       return res.status(400).json({
@@ -64,7 +72,7 @@ export const createHomestayBooking: RequestHandler = async (req, res) => {
   }
 };
 
-export const createDriverBooking: RequestHandler = async (req, res) => {
+export const createDriverBooking: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
     const {
       driver_id,
@@ -76,8 +84,15 @@ export const createDriverBooking: RequestHandler = async (req, res) => {
       passengers_count
     } = req.body;
 
-    // Get user ID from token (mock for now)
-    const user_id = 1; // This should come from authentication middleware
+    // Get user ID from authentication middleware
+    const user_id = req.user?.id;
+    
+    if (!user_id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
 
     if (!driver_id || !pickup_location || !dropoff_location || !pickup_datetime || !passenger_name || !passenger_phone) {
       return res.status(400).json({
@@ -97,8 +112,8 @@ export const createDriverBooking: RequestHandler = async (req, res) => {
       passengers_count: parseInt(passengers_count) || 1
     });
 
-    // Send notification to driver (mock driver phone)
-    const driverPhone = '+91 98456 78901'; // This should come from driver data
+    // Get driver details for SMS
+    const driverPhone = await BookingService.getDriverPhone(parseInt(driver_id));
     await SMSService.sendDriverBookingNotification(driverPhone, {
       booking_reference: result.booking.booking_reference,
       passenger_name,
@@ -167,10 +182,17 @@ export const confirmPayment: RequestHandler = async (req, res) => {
   }
 };
 
-export const getUserBookings: RequestHandler = async (req, res) => {
+export const getUserBookings: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
-    // Get user ID from token (mock for now)
-    const user_id = 1; // This should come from authentication middleware
+    // Get user ID from authentication middleware
+    const user_id = req.user?.id;
+    
+    if (!user_id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
 
     const bookings = await BookingService.getUserBookings(user_id);
 
@@ -189,7 +211,7 @@ export const getUserBookings: RequestHandler = async (req, res) => {
   }
 };
 
-export const updateDriverBookingStatus: RequestHandler = async (req, res) => {
+export const updateDriverBookingStatus: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
     const { booking_id } = req.params;
     const { status, trip_code } = req.body;
@@ -209,31 +231,30 @@ export const updateDriverBookingStatus: RequestHandler = async (req, res) => {
       });
     }
 
-    await BookingService.updateDriverBookingStatus(parseInt(booking_id), status);
+    const bookingDetails = await BookingService.updateDriverBookingStatus(parseInt(booking_id), status);
 
     // Send appropriate notifications based on status
-    if (status === 'accepted') {
-      // Notify customer that driver accepted
-      const customerPhone = '+91 98765 43210'; // This should come from booking data
-      await SMSService.sendDriverAcceptanceNotification(customerPhone, {
-        name: 'Suresh Kumar',
-        phone: '+91 98456 78901',
-        vehicle_type: 'Sedan',
-        vehicle_number: 'KA 20 A 1234',
-        trip_code: trip_code || 'ABC123'
+    if (status === 'accepted' && bookingDetails) {
+      await SMSService.sendDriverAcceptanceNotification(bookingDetails.passenger_phone, {
+        name: bookingDetails.driver_name,
+        phone: bookingDetails.driver_phone,
+        vehicle_type: bookingDetails.vehicle_type,
+        vehicle_number: bookingDetails.vehicle_number,
+        trip_code: bookingDetails.trip_code
       });
-    } else if (status === 'in_progress') {
-      // Notify customer that trip started
-      const customerPhone = '+91 98765 43210';
-      await SMSService.sendTripStartedNotification(customerPhone, 'Suresh Kumar', 'KA 20 A 1234', 60);
-    } else if (status === 'completed') {
-      // Notify customer that trip completed
-      const customerPhone = '+91 98765 43210';
-      await SMSService.sendTripCompletedNotification(customerPhone, {
-        driver_name: 'Suresh Kumar',
-        duration: 45,
-        amount: 300,
-        booking_reference: 'CC123ABC'
+    } else if (status === 'in_progress' && bookingDetails) {
+      await SMSService.sendTripStartedNotification(
+        bookingDetails.passenger_phone, 
+        bookingDetails.driver_name, 
+        bookingDetails.vehicle_number, 
+        bookingDetails.estimated_duration || 60
+      );
+    } else if (status === 'completed' && bookingDetails) {
+      await SMSService.sendTripCompletedNotification(bookingDetails.passenger_phone, {
+        driver_name: bookingDetails.driver_name,
+        duration: bookingDetails.actual_duration || 45,
+        amount: bookingDetails.total_amount,
+        booking_reference: bookingDetails.booking_reference
       });
     }
 
@@ -262,9 +283,7 @@ export const validateTripCode: RequestHandler = async (req, res) => {
       });
     }
 
-    // In a real implementation, you would validate the trip code against the database
-    // For now, we'll simulate validation
-    const isValid = trip_code.length === 6; // Mock validation
+    const isValid = await BookingService.validateTripCode(parseInt(booking_id), trip_code);
 
     if (!isValid) {
       return res.status(400).json({
