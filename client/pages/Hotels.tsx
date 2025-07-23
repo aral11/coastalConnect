@@ -269,8 +269,15 @@ export default function Hotels() {
                           Call
                         </Button>
                       )}
-                      <Button className="btn-coastal" size="sm">
-                        View Details
+                      <Button
+                        className="btn-coastal"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedHomestay(homestay);
+                          setIsBookingModalOpen(true);
+                        }}
+                      >
+                        Book Now
                       </Button>
                     </div>
                   </CardContent>
