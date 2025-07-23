@@ -4,7 +4,7 @@ import { handleDemo } from "./routes/demo";
 import { getHomestays, getHomestayById, searchHomestays } from "./routes/homestays";
 import { getEateries, getEateryById, searchEateries } from "./routes/eateries";
 import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
-import { getCreators, getCreatorById, searchCreators } from "./routes/creators";
+import { getCreators, getCreatorById, searchCreators, getInstagramStats } from "./routes/creators";
 import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./routes/auth";
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
 import { initializeDatabase, getConnection } from "./db/connection";
@@ -86,6 +86,7 @@ export function createServer() {
   app.get("/api/creators", getCreators);
   app.get("/api/creators/search", searchCreators);
   app.get("/api/creators/:id", getCreatorById);
+  app.get("/api/creators/instagram/:username", getInstagramStats);
 
   // Authentication API routes
   app.post("/api/auth/google", googleAuth);
