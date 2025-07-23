@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +7,7 @@ import Layout from '@/components/Layout';
 import LocalCreatorsGrid from '@/components/LocalCreatorsGrid';
 import ComprehensiveServices from '@/components/ComprehensiveServices';
 import CommunityFeatures from '@/components/CommunityFeatures';
+import { designSystem, layouts } from '@/lib/design-system';
 import {
   MapPin,
   Car,
@@ -31,524 +31,378 @@ import {
   PartyPopper,
   Wrench,
   Bike,
-  Menu,
-  X
+  ArrowRight,
+  CheckCircle,
+  TrendingUp,
+  Award,
+  Heart,
+  PlayCircle
 } from 'lucide-react';
 
 export default function Index() {
-  const { user, isAuthenticated, logout } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link to="/" aria-label="coastalConnect home">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                  alt="coastalConnect"
-                  className="logo-brand h-10 transition-transform hover:scale-105"
-                  loading="lazy"
-                />
-              </Link>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8" role="menubar">
-              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Homestays</Link>
-              <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Drivers</Link>
-              <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Eateries</Link>
-              <Link to="/creators" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Creators</Link>
-              <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">About</Link>
-              <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors py-2 px-1 rounded focus:outline-none focus:ring-2 focus:ring-coastal-500" role="menuitem">Contact</Link>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Desktop Actions */}
-              <div className="hidden md:flex items-center space-x-4">
-                {isAuthenticated ? (
-                  <>
-                    <Link to="/dashboard">
-                      <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                        Welcome, {user?.name}
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      className="border-coastal-300 text-coastal-600"
-                      onClick={logout}
-                    >
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/vendor-register">
-                      <Button variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50">
-                        For Vendors
-                      </Button>
-                    </Link>
-                    <Link to="/organizer-register">
-                      <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
-                        Event Organizer
-                      </Button>
-                    </Link>
-                    <Link to="/login">
-                      <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link to="/signup">
-                      <Button className="btn-coastal">Get Started</Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-
-              {/* Mobile Menu Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle mobile menu"
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
-            </div>
+    <Layout fullWidth>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 text-white overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+            <div className="absolute bottom-40 right-20 w-48 h-48 bg-purple-500/20 rounded-full blur-2xl"></div>
+            <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-blue-400/15 rounded-full blur-lg"></div>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-coastal-200 shadow-lg">
-            <div className="container mx-auto px-4 py-4 space-y-3">
-              <Link
-                to="/hotels"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Homestays
-              </Link>
-              <Link
-                to="/drivers"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Drivers
-              </Link>
-              <Link
-                to="/eateries"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Eateries
-              </Link>
-              <Link
-                to="/creators"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Creators
-              </Link>
-              <Link
-                to="/about"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                className="block py-2 text-gray-600 hover:text-coastal-600 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
-
-              <hr className="border-coastal-200 my-3" />
-
-              {isAuthenticated ? (
-                <div className="space-y-3">
-                  <Link to="/dashboard">
-                    <Button variant="ghost" className="w-full justify-start text-coastal-600 hover:text-coastal-700">
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="w-full border-coastal-300 text-coastal-600"
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Logout
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Link to="/vendor-register">
-                    <Button
-                      variant="outline"
-                      className="w-full border-coastal-300 text-coastal-600 hover:bg-coastal-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      For Vendors
-                    </Button>
-                  </Link>
-                  <Link to="/organizer-register">
-                    <Button
-                      variant="outline"
-                      className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Event Organizer
-                    </Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-coastal-600 hover:text-coastal-700"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link to="/signup">
-                    <Button
-                      className="w-full btn-coastal"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Get Started
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <section className="hero-section py-20 lg:py-32">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Waves className="h-8 w-8 mr-3 animate-wave text-coral-300" />
-              <Badge variant="secondary" className="bg-coral-500/20 text-white border-coral-400/30">
-                Your One-Stop Solution for Udupi & Manipal
+        <div className={`${layouts.container} relative z-10`}>
+          <div className="py-20 lg:py-32 text-center">
+            {/* Status Badge */}
+            <div className="flex items-center justify-center mb-8">
+              <Badge className="bg-green-500/20 text-green-300 border-green-400/30 text-sm font-medium px-4 py-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                Live in Udupi & Manipal • Mangalore Coming Soon
               </Badge>
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-              <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
-                coastalConnect
-              </span>
-              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal | Mangalore Coming Soon</div>
-            </h1>
-
-            <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Your comprehensive platform connecting local vendors across all sectors - from food & entertainment to wellness & events. Now live in Udupi & Manipal!
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link to="/hotels">
-                <Button size="lg" className="btn-coral text-lg px-8 py-4 min-w-[200px]">
-                  <Home className="mr-2 h-5 w-5" />
-                  Find Hotels
-                </Button>
-              </Link>
-              <Link to="/drivers">
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 text-lg px-8 py-4 min-w-[200px]">
-                  <Car className="mr-2 h-5 w-5" />
-                  Book Drivers
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Coastal Karnataka</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Authentic coastal Karnataka experiences - from traditional homestays to local eateries and temple visits
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {/* Hotels & Homestays */}
-            <div className="card-coastal p-8 group cursor-pointer">
-              <div className="flex items-center mb-6">
-                <div className="bg-coastal-100 rounded-lg p-3 mr-4 group-hover:bg-coastal-200 transition-colors">
-                  <Home className="h-8 w-8 text-coastal-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Traditional Homestays</h3>
-                  <p className="text-coastal-600">Authentic coastal hospitality & cuisine</p>
-                </div>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center text-gray-600">
-                  <Star className="h-5 w-5 text-yellow-400 mr-2" />
-                  <span>Authentic coastal family homes</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="h-5 w-5 text-coastal-500 mr-2" />
-                  <span>Near temples & coastal beaches</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Shield className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Traditional vegetarian meals included</span>
-                </div>
-              </div>
-
-              <Link to="/hotels">
-                <Button className="w-full btn-coastal group-hover:shadow-lg">
-                  Explore Hotels
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+            {/* Main Heading */}
+            <div className="max-w-5xl mx-auto mb-8">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                <span className="block bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                  Your Coastal Karnataka
+                </span>
+                <span className="block bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+                  Experience Starts Here
+                </span>
+              </h1>
+              
+              <p className="text-xl lg:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed mb-8">
+                Discover authentic local experiences with our comprehensive platform connecting you to 
+                verified homestays, eateries, drivers, and creators across coastal Karnataka.
+              </p>
             </div>
 
-            {/* Driver Services */}
-            <div className="card-coastal p-8 group cursor-pointer">
-              <div className="flex items-center mb-6">
-                <div className="bg-ocean-100 rounded-lg p-3 mr-4 group-hover:bg-ocean-200 transition-colors">
-                  <Car className="h-8 w-8 text-ocean-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Local Drivers</h3>
-                  <p className="text-ocean-600">Knowledgeable local guides & drivers</p>
-                </div>
+            {/* Key Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">500+</div>
+                <div className="text-blue-200 text-sm">Verified Vendors</div>
               </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center text-gray-600">
-                  <Users className="h-5 w-5 text-blue-500 mr-2" />
-                  <span>Local drivers who speak Kannada, Tulu & English</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Clock className="h-5 w-5 text-orange-500 mr-2" />
-                  <span>Temple visits & local sightseeing</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Shield className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Rates starting from ₹300/hour</span>
-                </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">10k+</div>
+                <div className="text-blue-200 text-sm">Happy Customers</div>
               </div>
-
-              <Link to="/drivers">
-                <Button className="w-full btn-ocean group-hover:shadow-lg">
-                  Book a Driver
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">50+</div>
+                <div className="text-blue-200 text-sm">Local Creators</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-1">4.8★</div>
+                <div className="text-blue-200 text-sm">Average Rating</div>
+              </div>
             </div>
 
-            {/* Eateries Service */}
-            <div className="card-coastal p-8 group cursor-pointer">
-              <div className="flex items-center mb-6">
-                <div className="bg-coral-100 rounded-lg p-3 mr-4 group-hover:bg-coral-200 transition-colors">
-                  <svg className="h-8 w-8 text-coral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Local Eateries</h3>
-                  <p className="text-coral-600">Authentic Udupi cuisine & reviews</p>
-                </div>
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center text-gray-600">
-                  <Star className="h-5 w-5 text-yellow-400 mr-2" />
-                  <span>Google ratings & verified reviews</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="h-5 w-5 text-coral-500 mr-2" />
-                  <span>Traditional coastal restaurants</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Vegetarian & coastal specialties</span>
-                </div>
-              </div>
-
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <Link to="/eateries">
-                <Button className="w-full btn-coral group-hover:shadow-lg">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8 py-3 text-lg">
+                  <UtensilsCrossed className="mr-2 h-5 w-5" />
                   Explore Eateries
-                  <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
+              </Link>
+              <Link to="/hotels">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 text-lg">
+                  <Home className="mr-2 h-5 w-5" />
+                  Book Homestays
+                </Button>
+              </Link>
+            </div>
+
+            {/* Quick Access */}
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link to="/drivers" className="flex items-center bg-white/10 hover:bg-white/20 transition-colors px-4 py-2 rounded-full text-sm">
+                <Car className="h-4 w-4 mr-2" />
+                Drivers
+              </Link>
+              <Link to="/creators" className="flex items-center bg-white/10 hover:bg-white/20 transition-colors px-4 py-2 rounded-full text-sm">
+                <Camera className="h-4 w-4 mr-2" />
+                Creators
+              </Link>
+              <Link to="/vendor-register" className="flex items-center bg-white/10 hover:bg-white/20 transition-colors px-4 py-2 rounded-full text-sm">
+                <Store className="h-4 w-4 mr-2" />
+                For Vendors
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Comprehensive Services - All 9 Sectors */}
+      {/* Services Overview */}
+      <section className={`${layouts.section} bg-white`}>
+        <div className={layouts.container}>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">What We Offer</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Your one-stop platform for all coastal Karnataka experiences
+            </p>
+          </div>
+
+          {/* Main Services Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {/* Homestays */}
+            <Card className={`${designSystem.components.card.default} group cursor-pointer hover:shadow-xl transition-all duration-300`}>
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
+                  <Home className="h-8 w-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl font-bold">Authentic Homestays</CardTitle>
+                <CardDescription>Experience local hospitality with verified hosts</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Verified Properties</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Local Experiences</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>24/7 Support</span>
+                  </div>
+                </div>
+                <Link to="/hotels">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    Book Now <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Eateries */}
+            <Card className={`${designSystem.components.card.default} group cursor-pointer hover:shadow-xl transition-all duration-300`}>
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors">
+                  <UtensilsCrossed className="h-8 w-8 text-orange-600" />
+                </div>
+                <CardTitle className="text-xl font-bold">Local Eateries</CardTitle>
+                <CardDescription>Savor authentic coastal Karnataka cuisine</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Authentic Cuisine</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Verified Reviews</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Online Booking</span>
+                  </div>
+                </div>
+                <Link to="/eateries">
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                    Explore <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Drivers */}
+            <Card className={`${designSystem.components.card.default} group cursor-pointer hover:shadow-xl transition-all duration-300`}>
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
+                  <Car className="h-8 w-8 text-green-600" />
+                </div>
+                <CardTitle className="text-xl font-bold">Trusted Drivers</CardTitle>
+                <CardDescription>Safe and reliable transportation services</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Verified Drivers</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>GPS Tracking</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Transparent Pricing</span>
+                  </div>
+                </div>
+                <Link to="/drivers">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    Book Ride <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Creators */}
+            <Card className={`${designSystem.components.card.default} group cursor-pointer hover:shadow-xl transition-all duration-300`}>
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-colors">
+                  <Camera className="h-8 w-8 text-purple-600" />
+                </div>
+                <CardTitle className="text-xl font-bold">Local Creators</CardTitle>
+                <CardDescription>Connect with talented local artists</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Verified Profiles</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Portfolio Showcase</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <span>Direct Contact</span>
+                  </div>
+                </div>
+                <Link to="/creators">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                    Discover <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Comprehensive Services */}
       <ComprehensiveServices />
 
-      {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-coastal-500 to-ocean-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="animate-float">
-              <div className="text-4xl lg:text-5xl font-bold mb-2">9</div>
-              <div className="text-lg opacity-90">Service Sectors</div>
-            </div>
-            <div className="animate-float" style={{ animationDelay: '0.5s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">200+</div>
-              <div className="text-lg opacity-90">Local Vendors</div>
-            </div>
-            <div className="animate-float" style={{ animationDelay: '1s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">3</div>
-              <div className="text-lg opacity-90">Cities Covered</div>
-            </div>
-            <div className="animate-float" style={{ animationDelay: '1.5s' }}>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">Pre-Launch</div>
-              <div className="text-lg opacity-90">Special Offers</div>
-            </div>
+      {/* Local Creators Section */}
+      <section className={`${layouts.section} bg-white`}>
+        <div className={layouts.container}>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Featured Local Creators</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover and connect with talented content creators showcasing the beauty of coastal Karnataka
+            </p>
+          </div>
+          <LocalCreatorsGrid />
+          <div className="text-center mt-12">
+            <Link to="/creators">
+              <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+                View All Creators <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Local Creators Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Local Creators</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Meet the talented Instagram creators showcasing the beauty and culture of coastal Karnataka
+      {/* Community Features */}
+      <CommunityFeatures />
+
+      {/* For Business Section */}
+      <section className={`${layouts.section} bg-gradient-to-r from-blue-600 to-purple-600`}>
+        <div className={layouts.container}>
+          <div className="text-center text-white">
+            <h2 className="text-4xl font-bold mb-4">Join Our Growing Network</h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-12">
+              Are you a local business owner? Join thousands of verified vendors and grow your business with coastalConnect
             </p>
-            <div className="mt-6">
-              <Link to="/creators">
-                <Button variant="outline" className="border-purple-300 text-purple-600 hover:bg-purple-50">
-                  View All Creators
+            
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Increase Visibility</h3>
+                <p className="text-blue-100">Reach thousands of potential customers actively looking for your services</p>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Verified Business</h3>
+                <p className="text-blue-100">Build trust with our verification badge and quality assurance program</p>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Award className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Premium Support</h3>
+                <p className="text-blue-100">Get dedicated support and marketing tools to grow your business</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/vendor-register">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8">
+                  <Store className="mr-2 h-5 w-5" />
+                  Register as Vendor
+                </Button>
+              </Link>
+              <Link to="/organizer-register">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8">
+                  <PartyPopper className="mr-2 h-5 w-5" />
+                  Event Organizer
                 </Button>
               </Link>
             </div>
           </div>
-
-          <LocalCreatorsGrid />
         </div>
       </section>
 
-      {/* Community Features Section */}
-      <CommunityFeatures />
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Join coastalConnect?</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Be part of a community-focused platform that brings visibility to local businesses.
-            Join our verified vendor network or discover amazing local services!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/vendor-register">
-              <Button size="lg" className="btn-coastal text-lg px-8 py-4">
-                <Store className="mr-2 h-5 w-5" />
-                Become a Vendor
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button size="lg" variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50 text-lg px-8 py-4">
-                Find Services
-              </Button>
-            </Link>
+      {/* Trust & Safety */}
+      <section className={`${layouts.section} bg-gray-50`}>
+        <div className={layouts.container}>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose coastalConnect?</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Your safety and satisfaction are our top priorities
+            </p>
           </div>
 
-          <div className="mt-8 grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="font-semibold text-blue-900">For Vendors</div>
-              <div className="text-sm text-blue-700">Launch Offer: ₹99/year</div>
-              <div className="text-xs text-blue-600">Regular: ₹199/year after first month</div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Verified Services</h3>
+              <p className="text-gray-600">All vendors undergo strict verification for your safety</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="font-semibold text-green-900">Quick Approval</div>
-              <div className="text-sm text-green-700">24-48 hours</div>
-              <div className="text-xs text-green-600">Document verification</div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">24/7 Support</h3>
+              <p className="text-gray-600">Round-the-clock customer support for peace of mind</p>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="font-semibold text-purple-900">Live in</div>
-              <div className="text-sm text-purple-700">Udupi & Manipal</div>
-              <div className="text-xs text-purple-600">Mangalore coming soon</div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-yellow-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Authentic Reviews</h3>
+              <p className="text-gray-600">Real reviews from verified customers</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Local Community</h3>
+              <p className="text-gray-600">Supporting and empowering local businesses</p>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                  alt="coastalConnect"
-                  className="logo-brand h-8 brightness-0 invert"
-                />
-              </div>
-              <p className="text-gray-400 mb-4">
-                Your one-stop solution for all your needs in Udupi and Manipal! Connecting verified local vendors across various sectors.
-                Founded by Aral Aldrin John D'Souza - Coastal Vibes.
-              </p>
-              <div className="flex space-x-4">
-                <a href="mailto:admin@coastalconnect.in" className="flex items-center text-gray-400 hover:text-white">
-                  <Mail className="h-5 w-5 mr-2" />
-                  admin@coastalconnect.in
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/eateries" className="hover:text-white transition-colors">Eateries</Link></li>
-                <li><Link to="/drivers" className="hover:text-white transition-colors">Transportation</Link></li>
-                <li className="hover:text-white transition-colors cursor-pointer">Beauty & Wellness</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Entertainment</li>
-                <li className="hover:text-white transition-colors cursor-pointer">Event Management</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><Link to="/help" className="hover:text-white transition-colors">Help Center</Link></li>
-                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Email: admin@coastalconnect.in</li>
-                <li>Phone: 8105003858</li>
-                <li>Website: www.coastalconnect.in</li>
-                <li>Coastal Vibes - @coastalvibes.in</li>
-                <li>Live: Udupi & Manipal</li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Coastal Connect. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </Layout>
   );
 }
