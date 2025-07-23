@@ -130,5 +130,23 @@ export function createServer() {
   app.put("/api/vendors/:vendorId/status", updateVendorStatus); // Admin only
   app.get("/api/vendors/:vendorId/status", getVendorStatus);
 
+  // Event Organizer Authentication routes
+  app.post("/api/organizers/register", registerOrganizer);
+  app.post("/api/organizers/login", loginOrganizer);
+  app.get("/api/organizers/profile", authenticateOrganizer, getOrganizerProfile);
+  app.put("/api/organizers/profile", authenticateOrganizer, updateOrganizerProfile);
+  app.get("/api/organizers/dashboard", authenticateOrganizer, getOrganizerDashboard);
+
+  // Event Management routes (for organizers)
+  app.post("/api/organizers/events", authenticateOrganizer, requireVerifiedOrganizer, createEvent);
+  app.get("/api/organizers/events", authenticateOrganizer, getOrganizerEvents);
+  app.get("/api/organizers/events/:id", authenticateOrganizer, getEventDetails);
+  app.put("/api/organizers/events/:id", authenticateOrganizer, updateEvent);
+  app.post("/api/organizers/events/:id/submit", authenticateOrganizer, submitEventForApproval);
+  app.delete("/api/organizers/events/:id", authenticateOrganizer, deleteEvent);
+  app.post("/api/organizers/events/:id/cancel", authenticateOrganizer, cancelEvent);
+  app.get("/api/organizers/events/:id/registrations", authenticateOrganizer, getEventRegistrations);
+  app.get("/api/organizers/events/:id/analytics", authenticateOrganizer, getEventAnalytics);
+
   return app;
 }
