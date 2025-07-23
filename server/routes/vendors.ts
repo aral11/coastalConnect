@@ -154,7 +154,7 @@ export const getPendingVendors: RequestHandler = async (req, res) => {
         vendor_id: 'VND1703123456789',
         business_name: 'Coastal Delights Restaurant',
         owner_name: 'Pradeep Kumar',
-        category: 'food-drink',
+        category: 'eateries',
         subcategory: 'Restaurant',
         phone: '9876543210',
         email: 'pradeep@coastaldelights.com',
@@ -300,8 +300,8 @@ export const getVendorStatus: RequestHandler = async (req, res) => {
 // Get vendor categories
 export const getVendorCategories: RequestHandler = async (req, res) => {
   const categories = {
-    'food-drink': {
-      label: 'Food & Drink',
+    'eateries': {
+      label: 'Eateries',
       subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
     },
     'arts-history': {
