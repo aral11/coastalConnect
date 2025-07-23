@@ -314,20 +314,38 @@ export default function Index() {
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Join coastalConnect?</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Be part of a community-focused platform that brings visibility to local businesses.
-            Pre-launch offers available for early sign-ups and vendor registrations!
+            Join our verified vendor network or discover amazing local services!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/signup">
+            <Link to="/vendor-register">
               <Button size="lg" className="btn-coastal text-lg px-8 py-4">
-                Get Started Today
+                <Store className="mr-2 h-5 w-5" />
+                Become a Vendor
               </Button>
             </Link>
-            <Link to="/contact">
+            <Link to="/signup">
               <Button size="lg" variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50 text-lg px-8 py-4">
-                <Phone className="mr-2 h-5 w-5" />
-                Contact Us
+                Find Services
               </Button>
             </Link>
+          </div>
+
+          <div className="mt-8 grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="font-semibold text-blue-900">For Vendors</div>
+              <div className="text-sm text-blue-700">₹99/month | ₹199/year</div>
+              <div className="text-xs text-blue-600">Admin verified accounts</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="font-semibold text-green-900">Quick Approval</div>
+              <div className="text-sm text-green-700">24-48 hours</div>
+              <div className="text-xs text-green-600">Document verification</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="font-semibold text-purple-900">Live in</div>
+              <div className="text-sm text-purple-700">Udupi & Manipal</div>
+              <div className="text-xs text-purple-600">Mangalore coming soon</div>
+            </div>
           </div>
         </div>
       </section>
