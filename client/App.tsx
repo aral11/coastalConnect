@@ -58,6 +58,7 @@ const App = () => (
           <Route path="/organizer-register" element={<EventOrganizerRegister />} />
           <Route path="/organizer-login" element={<EventOrganizerLogin />} />
           <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
+          <Route path="/organizer/events/create" element={<CreateEvent />} />
 
           {/* Service Sector Pages */}
           <Route path="/arts-history" element={<ServiceSector />} />
