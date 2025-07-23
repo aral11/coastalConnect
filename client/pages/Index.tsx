@@ -85,20 +85,19 @@ export default function Index() {
             <div className="flex items-center justify-center mb-6">
               <Waves className="h-8 w-8 mr-3 animate-wave text-coral-300" />
               <Badge variant="secondary" className="bg-coral-500/20 text-white border-coral-400/30">
-                Your Coastal Adventure Starts Here
+                Your One-Stop Solution for Udupi & Manipal
               </Badge>
             </div>
-            
+
             <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-              Discover
               <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
-                Coastal Karnataka
+                coastalConnect
               </span>
+              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal • Mangalore</div>
             </h1>
 
             <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Experience authentic coastal Karnataka culture. Find traditional homestays,
-              authentic local eateries, and trusted drivers for your spiritual and cultural journey.
+              Your comprehensive platform connecting local vendors across all sectors - from food & entertainment to wellness & events. Supporting our coastal community with pre-launch offers available!
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
