@@ -244,7 +244,7 @@ export default function ComprehensiveServices() {
           </p>
           <div className="mt-6">
             <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-lg px-6 py-2">
-              🏪 Join Our Network - ₹99/month | ₹199/year
+              🏪 Launch Offer - ₹99/year (First Month) | ₹199/year After
             </Badge>
           </div>
         </div>
