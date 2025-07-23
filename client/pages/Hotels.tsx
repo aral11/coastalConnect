@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
+import { useState, useEffect } from 'react';
+import { Homestay, HomestayResponse } from '@shared/api';
+import {
   Search,
-  MapPin, 
-  Star, 
+  MapPin,
+  Star,
   Wifi,
   Car,
   Coffee,
@@ -14,7 +16,8 @@ import {
   Anchor,
   ArrowLeft,
   Filter,
-  Heart
+  Heart,
+  IndianRupee
 } from 'lucide-react';
 
 export default function Hotels() {
