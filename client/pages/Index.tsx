@@ -74,6 +74,11 @@ export default function Index() {
                 </>
               ) : (
                 <>
+                  <Link to="/vendor-register">
+                    <Button variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50">
+                      For Vendors
+                    </Button>
+                  </Link>
                   <Link to="/login">
                     <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
                       Sign In
