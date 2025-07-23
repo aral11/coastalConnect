@@ -99,14 +99,73 @@ const mockEateries: Eatery[] = [
 
 export const getEateries: RequestHandler = async (req, res) => {
   try {
-    // Try database first
+    const { cuisine_type, location, rating } = req.query;
+
+    // First try to get real data from Google Places API
+    console.log('🍽️ Fetching restaurant data from Google Places API...');
+
+    const locationFilter = location ? location.toString().toLowerCase() : 'all';
+    const validLocations = ['udupi', 'manipal', 'all'];
+    const searchLocation = validLocations.includes(locationFilter) ?
+      locationFilter as 'udupi' | 'manipal' | 'all' : 'all';
+
+    let restaurants = await GooglePlacesService.searchRestaurants(searchLocation);
+
+    // Apply filters
+    if (cuisine_type) {
+      restaurants = restaurants.filter(r =>
+        r.cuisine_type.toLowerCase().includes(cuisine_type.toString().toLowerCase())
+      );
+    }
+
+    if (rating) {
+      const minRating = parseFloat(rating as string);
+      restaurants = restaurants.filter(r => r.rating >= minRating);
+    }
+
+    // Sort by rating DESC, then reviews DESC
+    restaurants.sort((a, b) => {
+      if (a.rating !== b.rating) {
+        return b.rating - a.rating;
+      }
+      return b.total_reviews - a.total_reviews;
+    });
+
+    res.json({
+      success: true,
+      data: restaurants,
+      count: restaurants.length,
+      source: 'google_places'
+    });
+
+  } catch (error) {
+    console.log('Google Places API failed, trying database...');
+
     try {
+      const { cuisine_type, location, rating } = req.query;
       const connection = await getConnection();
-      const result = await connection.request().query(`
-        SELECT * FROM Eateries
-        WHERE is_active = 1
-        ORDER BY rating DESC, name ASC
-      `);
+
+      let query = 'SELECT * FROM Eateries WHERE is_active = 1';
+      const request = connection.request();
+
+      if (cuisine_type) {
+        query += ' AND cuisine_type LIKE @cuisine_type';
+        request.input('cuisine_type', `%${cuisine_type}%`);
+      }
+
+      if (location) {
+        query += ' AND location LIKE @location';
+        request.input('location', `%${location}%`);
+      }
+
+      if (rating) {
+        query += ' AND rating >= @rating';
+        request.input('rating', parseFloat(rating as string));
+      }
+
+      query += ' ORDER BY rating DESC, total_reviews DESC';
+
+      const result = await request.query(query);
 
       res.json({
         success: true,
@@ -114,26 +173,43 @@ export const getEateries: RequestHandler = async (req, res) => {
         count: result.recordset.length,
         source: 'database'
       });
-      return;
     } catch (dbError) {
-      console.log('Database not available, using fallback eateries data');
+      console.log('Database also not available, using enhanced fallback eateries data');
+
+      let filteredEateries = [...mockEateries];
+
+      if (req.query.cuisine_type) {
+        filteredEateries = filteredEateries.filter(e =>
+          e.cuisine_type.toLowerCase().includes((req.query.cuisine_type as string).toLowerCase())
+        );
+      }
+
+      if (req.query.location) {
+        filteredEateries = filteredEateries.filter(e =>
+          e.location.toLowerCase().includes((req.query.location as string).toLowerCase())
+        );
+      }
+
+      if (req.query.rating) {
+        const minRating = parseFloat(req.query.rating as string);
+        filteredEateries = filteredEateries.filter(e => e.rating >= minRating);
+      }
+
+      // Sort by rating DESC, then reviews DESC
+      filteredEateries.sort((a, b) => {
+        if (a.rating !== b.rating) {
+          return b.rating - a.rating;
+        }
+        return b.total_reviews - a.total_reviews;
+      });
+
+      res.json({
+        success: true,
+        data: filteredEateries,
+        count: filteredEateries.length,
+        source: 'fallback'
+      });
     }
-
-    // Fallback to mock data
-    res.json({
-      success: true,
-      data: mockEateries,
-      count: mockEateries.length,
-      source: 'fallback'
-    });
-
-  } catch (error) {
-    console.error('Error fetching eateries:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching eateries',
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
   }
 };
 
