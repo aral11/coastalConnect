@@ -101,7 +101,8 @@ const sectorConfigs: { [key: string]: SectorConfig } = {
 };
 
 export default function ServiceSector() {
-  const { sector } = useParams<{ sector: string }>();
+  const location = useLocation();
+  const sector = location.pathname.substring(1); // Remove leading slash
   const [services, setServices] = useState<ServiceData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
