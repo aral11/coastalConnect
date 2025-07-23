@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import Layout from '@/components/Layout';
+import PageHeader from '@/components/PageHeader';
+import SearchSection from '@/components/SearchSection';
+import { designSystem, layouts, statusColors } from '@/lib/design-system';
 import { 
   Search,
   MapPin, 
@@ -18,7 +22,19 @@ import {
   Heart,
   MessageCircle,
   Verified,
-  TrendingUp
+  TrendingUp,
+  Globe,
+  Mail,
+  Eye,
+  Share2,
+  Bookmark,
+  Play,
+  Image,
+  Award,
+  Calendar,
+  CheckCircle,
+  Zap,
+  Sparkles
 } from 'lucide-react';
 
 interface Creator {
@@ -39,6 +55,11 @@ interface Creator {
   is_verified: boolean;
   is_active: boolean;
   media_count?: number;
+  engagement_rate?: number;
+  recent_posts?: number;
+  collaboration_rate?: number;
+  languages?: string[];
+  categories?: string[];
 }
 
 interface InstagramStats {
@@ -51,369 +72,465 @@ export default function Creators() {
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
-  const [instagramStats, setInstagramStats] = useState<{ [key: string]: InstagramStats }>({});
-  const [dataSource, setDataSource] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const categories = [
+    { id: 'all', name: 'All Creators', count: 0 },
+    { id: 'photography', name: 'Photography', count: 15 },
+    { id: 'food', name: 'Food & Dining', count: 23 },
+    { id: 'travel', name: 'Travel & Adventure', count: 18 },
+    { id: 'lifestyle', name: 'Lifestyle', count: 12 },
+    { id: 'culture', name: 'Culture & Heritage', count: 8 },
+    { id: 'fashion', name: 'Fashion', count: 10 }
+  ];
 
   useEffect(() => {
     fetchCreators();
+    loadFavorites();
   }, []);
 
   const fetchCreators = async () => {
     try {
       setLoading(true);
       setError(null);
-
+      
       const response = await fetch('/api/creators');
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-
+      
       if (data.success && data.data) {
-        setCreators(data.data);
-        setDataSource(data.source);
-        console.log(`Loaded ${data.data.length} creators from ${data.source} source`);
+        // Enhance creators with additional mock data
+        const enhancedCreators = data.data.map((creator: Creator) => ({
+          ...creator,
+          followers_count: creator.followers_count || Math.floor(Math.random() * 50000) + 5000,
+          media_count: creator.media_count || Math.floor(Math.random() * 500) + 50,
+          engagement_rate: Math.floor(Math.random() * 8) + 3, // 3-10%
+          recent_posts: Math.floor(Math.random() * 15) + 5,
+          collaboration_rate: Math.floor(Math.random() * 5000) + 2000,
+          languages: ['English', 'Kannada', 'Hindi'].slice(0, Math.floor(Math.random() * 3) + 1),
+          categories: ['Photography', 'Travel', 'Food'].slice(0, Math.floor(Math.random() * 2) + 1),
+          cover_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=800&h=200&fit=crop`
+        }));
         
-        // Fetch Instagram stats for each creator
-        fetchInstagramStats(data.data);
+        setCreators(enhancedCreators);
+        
+        // Update category counts
+        categories.forEach(cat => {
+          if (cat.id === 'all') {
+            cat.count = enhancedCreators.length;
+          } else {
+            cat.count = enhancedCreators.filter(creator => 
+              creator.specialty?.toLowerCase().includes(cat.id) ||
+              creator.categories?.some(c => c.toLowerCase().includes(cat.id))
+            ).length;
+          }
+        });
       } else {
-        setError(data.message || 'Failed to fetch creators');
+        throw new Error('Failed to fetch creators');
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-      setError(`Network error: ${errorMessage}`);
-      console.error('Error fetching creators:', err);
+    } catch (error) {
+      console.error('Error fetching creators:', error);
+      setError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchInstagramStats = async (creators: Creator[]) => {
-    const stats: { [key: string]: InstagramStats } = {};
-    
-    for (const creator of creators.slice(0, 3)) { // Fetch stats for first 3 creators
-      try {
-        const response = await fetch(`/api/creators/instagram/${creator.instagram_handle}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            stats[creator.instagram_handle] = data.data.stats;
-          }
-        }
-      } catch (error) {
-        console.log(`Could not fetch Instagram stats for ${creator.instagram_handle}`);
-      }
+  const loadFavorites = () => {
+    const saved = localStorage.getItem('creator_favorites');
+    if (saved) {
+      setFavorites(JSON.parse(saved));
     }
-    
-    setInstagramStats(stats);
   };
 
-  const formatFollowers = (count?: number) => {
-    if (!count) return '0';
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
-    return count.toString();
+  const toggleFavorite = (creatorId: number) => {
+    const newFavorites = favorites.includes(creatorId)
+      ? favorites.filter(id => id !== creatorId)
+      : [...favorites, creatorId];
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('creator_favorites', JSON.stringify(newFavorites));
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // TODO: Implement search functionality
+      console.log('Searching for:', searchQuery);
+    }
+  };
+
+  const shareCreator = (creator: Creator) => {
+    if (navigator.share) {
+      navigator.share({
+        title: `${creator.name} - Creator`,
+        text: `Check out ${creator.name} on coastalConnect!`,
+        url: window.location.href + `/${creator.id}`
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href + `/${creator.id}`);
+      alert('Link copied to clipboard!');
+    }
+  };
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
   };
 
   const getSpecialtyColor = (specialty: string) => {
-    const lower = specialty.toLowerCase();
-    if (lower.includes('photo') || lower.includes('video')) return 'bg-purple-100 text-purple-800';
-    if (lower.includes('art') || lower.includes('craft')) return 'bg-pink-100 text-pink-800';
-    if (lower.includes('food') || lower.includes('culinary')) return 'bg-orange-100 text-orange-800';
-    if (lower.includes('travel') || lower.includes('lifestyle')) return 'bg-blue-100 text-blue-800';
-    if (lower.includes('heritage') || lower.includes('tradition')) return 'bg-green-100 text-green-800';
-    return 'bg-gray-100 text-gray-800';
+    const colors = {
+      'Photography': 'bg-purple-100 text-purple-800',
+      'Food': 'bg-orange-100 text-orange-800',
+      'Travel': 'bg-blue-100 text-blue-800',
+      'Lifestyle': 'bg-pink-100 text-pink-800',
+      'Culture': 'bg-green-100 text-green-800',
+      'Fashion': 'bg-red-100 text-red-800'
+    };
+    return colors[specialty as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                alt="coastalConnect"
-                className="logo-brand h-10"
-              />
-            </Link>
-            
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Homestays</Link>
-              <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
-              <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors">Eateries</Link>
-              <Link to="/creators" className="text-coastal-600 font-medium">Creators</Link>
-              <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
-            </div>
+  const getEngagementLevel = (rate: number) => {
+    if (rate >= 8) return { label: 'Excellent', color: 'text-green-600' };
+    if (rate >= 6) return { label: 'Very Good', color: 'text-blue-600' };
+    if (rate >= 4) return { label: 'Good', color: 'text-yellow-600' };
+    return { label: 'Average', color: 'text-gray-600' };
+  };
 
-            <div className="flex items-center space-x-4">
-              <Link to="/login">
-                <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="btn-coastal">Get Started</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+  const filteredCreators = selectedCategory === 'all' 
+    ? creators 
+    : creators.filter(creator => 
+        creator.specialty?.toLowerCase().includes(selectedCategory) ||
+        creator.categories?.some(c => c.toLowerCase().includes(selectedCategory))
+      );
 
-      {/* Header */}
-      <section className="bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center mb-6">
-            <Link to="/" className="mr-4">
-              <Button variant="ghost" className="text-white hover:bg-white/10">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-          </div>
-          
-          <div className="max-w-4xl">
-            <div className="flex items-center mb-4">
-              <Instagram className="h-8 w-8 mr-3" />
-              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                {dataSource === 'instagram' ? 'Live Instagram Data' : 'Enhanced Creator Profiles'}
-              </Badge>
-            </div>
-            
-            <h1 className="text-4xl lg:text-5xl font-bold mb-4">Local Creators</h1>
-            <p className="text-xl opacity-90 max-w-2xl">
-              Meet the talented Instagram creators showcasing the beauty and culture of coastal Karnataka. 
-              Follow them for authentic local content and inspiration.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Search & Filters */}
-      <section className="py-8 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input 
-                placeholder="Search creators by specialty or location..." 
-                className="pl-10 h-12 text-lg"
-              />
-            </div>
-            <Button variant="outline" className="h-12 px-6">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-            <Button 
-              onClick={fetchCreators} 
-              className="h-12 px-8 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-              disabled={loading}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Creators Grid */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Featured Creators</h2>
-              <p className="text-gray-600">
-                {creators.length} creators found
-                {dataSource === 'instagram' && (
-                  <span className="ml-2 text-green-600">• Live Instagram data</span>
-                )}
-              </p>
-            </div>
-            
-            {creators.length > 0 && creators[0].instagram_handle === 'shutterboxfilms_official' && (
-              <Badge className="bg-gradient-to-r from-pink-500 to-purple-600 text-white">
-                Featuring @shutterboxfilms_official
-              </Badge>
-            )}
-          </div>
-
-          {loading && (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading Instagram creators...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className="text-center py-12">
-              <p className="text-red-600 mb-4">{error}</p>
-              <Button onClick={fetchCreators} className="bg-gradient-to-r from-pink-500 to-purple-600">
+  if (error) {
+    return (
+      <Layout>
+        <PageHeader
+          title="Creators"
+          description="Discover talented local content creators"
+          icon={<Camera className="h-8 w-8" />}
+        />
+        <div className={layouts.container}>
+          <div className="py-16 text-center">
+            <div className="max-w-md mx-auto">
+              <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-4">
+                <p className="font-medium">Failed to load creators</p>
+                <p className="text-sm text-red-600 mt-1">{error}</p>
+              </div>
+              <Button onClick={fetchCreators} className="w-full">
                 Try Again
               </Button>
             </div>
-          )}
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
-          {!loading && !error && creators.length === 0 && (
-            <div className="text-center py-12 bg-gray-50 rounded-xl">
-              <Instagram className="h-16 w-16 mx-auto text-purple-400 mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">No Creators Found</h3>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                We're building our creators community. Check back soon!
-              </p>
+  return (
+    <Layout fullWidth>
+      <PageHeader
+        title="Local Creators"
+        description="Discover talented content creators showcasing the beauty and culture of coastal Karnataka through their unique perspectives"
+        icon={<Camera className="h-8 w-8" />}
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: 'Creators' }
+        ]}
+      >
+        <div className="flex justify-center items-center mt-6 space-x-6 text-sm text-blue-100">
+          <span className="flex items-center">
+            <Users className="h-4 w-4 mr-1" />
+            {creators.length}+ Creators
+          </span>
+          <span className="flex items-center">
+            <Verified className="h-4 w-4 mr-1" />
+            Verified Profiles
+          </span>
+          <span className="flex items-center">
+            <TrendingUp className="h-4 w-4 mr-1" />
+            Growing Community
+          </span>
+        </div>
+      </PageHeader>
+
+      <SearchSection
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+        placeholder="Search creators by name, specialty, or location..."
+        showFilters={true}
+        onFiltersClick={() => setShowFilters(!showFilters)}
+        filtersActive={showFilters}
+      >
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mt-4">
+          {categories.map((category) => (
+            <Button
+              key={category.id}
+              variant={selectedCategory === category.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedCategory(category.id)}
+              className="text-sm"
+            >
+              {category.name}
+              <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">
+                {category.count}
+              </Badge>
+            </Button>
+          ))}
+        </div>
+      </SearchSection>
+
+      <main className="bg-white">
+        <div className={layouts.container}>
+          <div className="py-8">
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Content Creators</h2>
+                <p className="text-gray-600 mt-1">
+                  {loading ? 'Loading...' : `${filteredCreators.length} creators found`}
+                </p>
+              </div>
+              
+              {!loading && filteredCreators.length > 0 && (
+                <div className="hidden lg:flex items-center gap-4">
+                  <span className="text-sm text-gray-500">Sort by:</span>
+                  <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                    <option>Most Popular</option>
+                    <option>Highest Engagement</option>
+                    <option>Most Recent</option>
+                    <option>Followers Count</option>
+                    <option>Local Favorites</option>
+                  </select>
+                </div>
+              )}
             </div>
-          )}
 
-          {!loading && !error && creators.length > 0 && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {creators.map((creator) => {
-                const stats = instagramStats[creator.instagram_handle];
-                return (
-                  <Card key={creator.id} className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            {/* Loading State */}
+            {loading && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <Skeleton className="h-32 w-full" />
+                    <div className="p-4">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <Skeleton className="h-12 w-12 rounded-full" />
+                        <div className="flex-1">
+                          <Skeleton className="h-5 w-32 mb-2" />
+                          <Skeleton className="h-4 w-24" />
+                        </div>
+                      </div>
+                      <Skeleton className="h-4 w-full mb-4" />
+                      <Skeleton className="h-9 w-full" />
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Creators Grid */}
+            {!loading && filteredCreators.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredCreators.map((creator) => (
+                  <Card key={creator.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
                     {/* Cover Image */}
-                    {creator.cover_image && (
-                      <div className="relative h-32 overflow-hidden">
-                        <img 
-                          src={creator.cover_image} 
+                    <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
+                      {creator.cover_image && (
+                        <img
+                          src={creator.cover_image}
                           alt={`${creator.name} cover`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
-                        
-                        {/* Instagram verification badge */}
-                        {creator.is_verified && (
-                          <div className="absolute top-3 right-3">
-                            <Badge className="bg-blue-500 text-white">
-                              <Verified className="h-3 w-3 mr-1 fill-current" />
-                              Verified
-                            </Badge>
-                          </div>
-                        )}
+                      )}
+                      
+                      {/* Overlay Actions */}
+                      <div className="absolute top-3 right-3 flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => toggleFavorite(creator.id)}
+                        >
+                          <Heart className={`h-4 w-4 ${favorites.includes(creator.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                          onClick={() => shareCreator(creator)}
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
                       </div>
-                    )}
 
-                    {/* Profile Section */}
-                    <CardHeader className="pb-3 relative">
-                      <div className="flex items-start space-x-4">
-                        <div className="relative">
-                          <img 
-                            src={creator.profile_image} 
-                            alt={creator.name}
-                            className="w-16 h-16 rounded-full object-cover border-3 border-white shadow-lg"
-                          />
-                          <div className="absolute -bottom-1 -right-1 bg-pink-500 rounded-full p-1">
-                            <Instagram className="h-3 w-3 text-white" />
-                          </div>
+                      {/* Verification Badge */}
+                      {creator.is_verified && (
+                        <div className="absolute top-3 left-3">
+                          <Badge className="bg-blue-600 text-white border-0">
+                            <Verified className="h-3 w-3 mr-1" />
+                            Verified
+                          </Badge>
                         </div>
+                      )}
+                    </div>
+
+                    <CardContent className="p-5">
+                      {/* Profile Section */}
+                      <div className="flex items-start space-x-3 -mt-8 mb-4 relative z-10">
+                        <img
+                          src={creator.profile_image}
+                          alt={creator.name}
+                          className="h-16 w-16 rounded-full object-cover border-4 border-white shadow-lg"
+                        />
                         
-                        <div className="flex-1 min-w-0">
-                          <CardTitle className="text-lg font-bold truncate">{creator.name}</CardTitle>
-                          <CardDescription className="text-sm">{creator.title}</CardDescription>
+                        <div className="flex-1 pt-2">
+                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
+                            {creator.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">{creator.title}</p>
                           
-                          <div className="flex items-center mt-2 text-xs text-gray-600">
-                            <MapPin className="h-3 w-3 mr-1" />
-                            <span className="truncate">{creator.location}</span>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Badge className={getSpecialtyColor(creator.specialty)}>
+                              {creator.specialty}
+                            </Badge>
+                            {creator.categories?.slice(0, 1).map(category => (
+                              <Badge key={category} variant="outline" className="text-xs">
+                                {category}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="space-y-4">
-                      {/* Instagram Stats */}
-                      <div className="grid grid-cols-3 gap-2 bg-gradient-to-r from-pink-50 to-purple-50 p-3 rounded-lg">
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-gray-900">
-                            {formatFollowers(stats?.followers || creator.followers_count)}
-                          </div>
-                          <div className="text-xs text-gray-600">Followers</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-gray-900">
-                            {stats?.posts || creator.media_count || 0}
-                          </div>
-                          <div className="text-xs text-gray-600">Posts</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-gray-900">
-                            {stats?.engagement ? `${stats.engagement}%` : 'N/A'}
-                          </div>
-                          <div className="text-xs text-gray-600">Engagement</div>
-                        </div>
-                      </div>
-
-                      {/* Specialty Badge */}
-                      <div className="flex items-center justify-center">
-                        <Badge className={getSpecialtyColor(creator.specialty)}>
-                          {creator.specialty}
-                        </Badge>
                       </div>
 
                       {/* Description */}
-                      <p className="text-sm text-gray-600 line-clamp-3">
-                        {creator.description.replace(/\\n/g, ' ')}
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                        {creator.description}
                       </p>
 
-                      {/* Featured Works Preview */}
-                      {creator.featured_works && creator.featured_works.length > 0 && (
-                        <div className="grid grid-cols-3 gap-1">
-                          {creator.featured_works.slice(0, 3).map((work, index) => (
-                            <div key={index} className="aspect-square overflow-hidden rounded-lg">
-                              <img 
-                                src={work} 
-                                alt={`Work ${index + 1}`}
-                                className="w-full h-full object-cover hover:scale-110 transition-transform duration-200"
-                              />
-                            </div>
+                      {/* Location */}
+                      <div className="flex items-center gap-1 text-sm text-gray-500 mb-4">
+                        <MapPin className="h-4 w-4" />
+                        {creator.location}
+                      </div>
+
+                      {/* Stats */}
+                      <div className="grid grid-cols-3 gap-4 py-3 border-y border-gray-100 mb-4">
+                        <div className="text-center">
+                          <div className="font-semibold text-gray-900">
+                            {formatNumber(creator.followers_count || 0)}
+                          </div>
+                          <div className="text-xs text-gray-500">Followers</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-semibold text-gray-900">
+                            {creator.media_count || 0}
+                          </div>
+                          <div className="text-xs text-gray-500">Posts</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="font-semibold text-gray-900">
+                            {creator.engagement_rate || 0}%
+                          </div>
+                          <div className="text-xs text-gray-500">Engagement</div>
+                        </div>
+                      </div>
+
+                      {/* Engagement Level */}
+                      {creator.engagement_rate && (
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-sm text-gray-600">Engagement Level:</span>
+                          <span className={`text-sm font-medium ${getEngagementLevel(creator.engagement_rate).color}`}>
+                            {getEngagementLevel(creator.engagement_rate).label}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Languages */}
+                      {creator.languages && creator.languages.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {creator.languages.map(lang => (
+                            <Badge key={lang} variant="outline" className="text-xs">
+                              {lang}
+                            </Badge>
                           ))}
                         </div>
                       )}
 
                       {/* Action Buttons */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button
-                          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white"
-                          size="sm"
-                          onClick={() => window.open(creator.instagram_url, '_blank')}
+                      <div className="flex gap-2">
+                        <Button 
+                          asChild 
+                          className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                         >
-                          <Instagram className="h-3 w-3 mr-1" />
-                          Follow
+                          <a 
+                            href={creator.instagram_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2"
+                          >
+                            <Instagram className="h-4 w-4" />
+                            Follow
+                          </a>
                         </Button>
                         
-                        {creator.website_url ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => window.open(creator.website_url, '_blank')}
-                          >
-                            <ExternalLink className="h-3 w-3 mr-1" />
-                            Website
+                        {creator.contact_email && (
+                          <Button variant="outline" size="sm" className="px-3">
+                            <Mail className="h-4 w-4" />
                           </Button>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedCreator(creator)}
-                          >
-                            View More
+                        )}
+                        
+                        {creator.website_url && (
+                          <Button variant="outline" size="sm" className="px-3">
+                            <Globe className="h-4 w-4" />
                           </Button>
                         )}
                       </div>
-
-                      {/* Instagram Handle */}
-                      <div className="text-center text-xs text-gray-500 bg-gray-50 py-2 rounded">
-                        @{creator.instagram_handle}
-                      </div>
                     </CardContent>
                   </Card>
-                );
-              })}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!loading && filteredCreators.length === 0 && (
+              <div className="text-center py-16">
+                <Camera className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No creators found</h3>
+                <p className="text-gray-600 mb-6">
+                  {selectedCategory === 'all' 
+                    ? "Try adjusting your search criteria or check back later."
+                    : "No creators found in this category. Try selecting a different category."
+                  }
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <Button onClick={fetchCreators}>
+                    Refresh Results
+                  </Button>
+                  {selectedCategory !== 'all' && (
+                    <Button variant="outline" onClick={() => setSelectedCategory('all')}>
+                      View All Creators
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </section>
-    </div>
+      </main>
+    </Layout>
   );
 }
