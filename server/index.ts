@@ -10,6 +10,8 @@ import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBook
 import { getBeautyWellness, getArtsHistory, getNightlife, getShopping, getEntertainment, getEventManagement, getOtherServices } from "./routes/services";
 import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
 import { registerVendor, getPendingVendors, updateVendorStatus, getVendorStatus, getVendorCategories } from "./routes/vendors";
+import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizerProfile, getOrganizerDashboard, authenticateOrganizer, requireVerifiedOrganizer } from "./routes/eventOrganizers";
+import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEventForApproval, deleteEvent, cancelEvent, getEventRegistrations, getEventAnalytics } from "./routes/organizerEvents";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
