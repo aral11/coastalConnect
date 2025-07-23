@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { getConnection } from "../db/connection";
 import { Eatery } from "../models";
+import { GooglePlacesService } from "../services/googlePlaces";
 
 // Fallback eateries data
 const mockEateries: Eatery[] = [
