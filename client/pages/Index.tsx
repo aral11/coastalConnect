@@ -339,8 +339,8 @@ export default function Index() {
           <div className="mt-8 grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="font-semibold text-blue-900">For Vendors</div>
-              <div className="text-sm text-blue-700">₹99/month | ₹199/year</div>
-              <div className="text-xs text-blue-600">Admin verified accounts</div>
+              <div className="text-sm text-blue-700">Launch Offer: ₹99/year</div>
+              <div className="text-xs text-blue-600">Regular: ₹199/year after first month</div>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="font-semibold text-green-900">Quick Approval</div>
