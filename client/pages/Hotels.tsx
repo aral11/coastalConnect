@@ -278,8 +278,17 @@ export default function Hotels() {
                         className="btn-coastal"
                         size="sm"
                         onClick={() => {
-                          setSelectedHomestay(homestay);
-                          setIsBookingModalOpen(true);
+                          if (!isAuthenticated) {
+                            // Store the intended booking for after login
+                            localStorage.setItem('pendingBooking', JSON.stringify({
+                              type: 'homestay',
+                              homestay: homestay
+                            }));
+                            navigate('/login?redirect=/hotels');
+                          } else {
+                            setSelectedHomestay(homestay);
+                            setIsBookingModalOpen(true);
+                          }
                         }}
                       >
                         Book Now
