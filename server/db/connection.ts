@@ -495,6 +495,38 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create Vendor Registrations table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='VendorRegistrations' AND xtype='U')
+      CREATE TABLE VendorRegistrations (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        vendor_id NVARCHAR(50) UNIQUE NOT NULL,
+        business_name NVARCHAR(255) NOT NULL,
+        owner_name NVARCHAR(255) NOT NULL,
+        category NVARCHAR(100) NOT NULL,
+        subcategory NVARCHAR(100) NOT NULL,
+        description NVARCHAR(MAX),
+        address NVARCHAR(500) NOT NULL,
+        city NVARCHAR(100) NOT NULL,
+        phone NVARCHAR(20) NOT NULL,
+        email NVARCHAR(255) NOT NULL,
+        website NVARCHAR(500),
+        aadhar_number NVARCHAR(12) NOT NULL,
+        gst_number NVARCHAR(15),
+        subscription_plan NVARCHAR(20) NOT NULL,
+        status NVARCHAR(50) DEFAULT 'pending_verification',
+        documents NVARCHAR(MAX), -- JSON string
+        admin_notes NVARCHAR(MAX),
+        payment_status NVARCHAR(50) DEFAULT 'pending',
+        payment_id NVARCHAR(100),
+        approved_by NVARCHAR(255),
+        created_at DATETIME DEFAULT GETDATE(),
+        reviewed_at DATETIME,
+        activated_at DATETIME,
+        subscription_expires_at DATETIME
+      )
+    `);
+
     console.log('Database tables initialized successfully');
 
     // Create indexes for better performance
