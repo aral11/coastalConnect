@@ -29,7 +29,7 @@ export default function Index() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2F1876014695b440e1a27b22429dcf0090?format=webp&width=800"
                 alt="coastalConnect"
                 className="logo-brand h-10"
               />
@@ -90,12 +90,12 @@ export default function Index() {
             <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
               Discover
               <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
-                Udupi Karnataka
+                Coastal Karnataka
               </span>
             </h1>
 
             <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Experience authentic coastal Karnataka culture in Udupi. Find traditional homestays,
+              Experience authentic coastal Karnataka culture. Find traditional homestays,
               authentic local eateries, and trusted drivers for your spiritual and cultural journey.
             </p>
             
@@ -121,9 +121,9 @@ export default function Index() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Udupi</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Coastal Karnataka</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Authentic Udupi experiences - from traditional homestays to local eateries and temple visits
+              Authentic coastal Karnataka experiences - from traditional homestays to local eateries and temple visits
             </p>
           </div>
 
@@ -136,18 +136,18 @@ export default function Index() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900">Traditional Homestays</h3>
-                  <p className="text-coastal-600">Authentic Udupi hospitality & cuisine</p>
+                  <p className="text-coastal-600">Authentic coastal hospitality & cuisine</p>
                 </div>
               </div>
 
               <div className="space-y-4 mb-6">
                 <div className="flex items-center text-gray-600">
                   <Star className="h-5 w-5 text-yellow-400 mr-2" />
-                  <span>Authentic Udupi family homes</span>
+                  <span>Authentic coastal family homes</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <MapPin className="h-5 w-5 text-coastal-500 mr-2" />
-                  <span>Near Krishna Temple & Malpe Beach</span>
+                  <span>Near temples & coastal beaches</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <Shield className="h-5 w-5 text-green-500 mr-2" />
@@ -219,7 +219,7 @@ export default function Index() {
                 </div>
                 <div className="flex items-center text-gray-600">
                   <MapPin className="h-5 w-5 text-coral-500 mr-2" />
-                  <span>Traditional Udupi restaurants</span>
+                  <span>Traditional coastal restaurants</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,9 +267,9 @@ export default function Index() {
       {/* CTA Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Experience Udupi?</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Experience Coastal Karnataka?</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join travelers from across India who choose coastalConnect for authentic Udupi experiences
+            Join travelers from across India who choose coastalConnect for authentic coastal Karnataka experiences
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
@@ -294,13 +294,13 @@ export default function Index() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2F1876014695b440e1a27b22429dcf0090?format=webp&width=800"
                   alt="coastalConnect"
                   className="logo-brand h-8 brightness-0 invert"
                 />
               </div>
               <p className="text-gray-400 mb-4">
-                Your trusted partner for authentic Udupi experiences - homestays, local cuisine, and cultural tours.
+                Your trusted partner for authentic coastal Karnataka experiences - homestays, local cuisine, and cultural tours.
               </p>
               <div className="flex space-x-4">
                 <Mail className="h-5 w-5 text-gray-400" />
@@ -331,7 +331,7 @@ export default function Index() {
               <ul className="space-y-2 text-gray-400">
                 <li>Email: hello@coastalconnect.in</li>
                 <li>Phone: +91 820 252 0001</li>
-                <li>Udupi, Karnataka 576101</li>
+                <li>Coastal Karnataka, India</li>
               </ul>
             </div>
           </div>
