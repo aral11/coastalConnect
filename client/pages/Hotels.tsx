@@ -57,11 +57,12 @@ export default function Hotels() {
       <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="bg-gradient-coastal rounded-lg p-2">
-                <Anchor className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-coastal-700">Coastal Connect</span>
+            <Link to="/" className="flex items-center space-x-3">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fabdf57ca676049e3bb2813b741a90763?format=webp&width=800"
+                alt="coastalConnect"
+                className="logo-brand h-10"
+              />
             </Link>
             
             <div className="hidden md:flex items-center space-x-8">
