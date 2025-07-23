@@ -168,15 +168,17 @@ export default function Signup() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-6">
-            <div className="flex items-center justify-center">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                alt="coastalConnect"
-                className="logo-brand h-12"
-              />
-            </div>
+          <Link to="/" className="inline-flex items-center text-coastal-600 hover:text-coastal-700 mb-6 transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
           </Link>
+          <div className="flex items-center justify-center mb-4">
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
+              alt="coastalConnect"
+              className="logo-brand h-12"
+            />
+          </div>
         </div>
 
         {/* Signup Card */}
