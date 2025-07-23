@@ -98,7 +98,7 @@ const mockCreators: Creator[] = [
     description: "Showcasing hidden gems and must-visit spots across coastal Karnataka. Your guide to unexplored beaches and local experiences.",
     instagram_handle: "beach_vibes_karnataka",
     instagram_url: "https://instagram.com/beach_vibes_karnataka",
-    profile_image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
+    profile_image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face",
     cover_image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop",
     followers_count: 18700,
     specialty: "Travel & Lifestyle",
