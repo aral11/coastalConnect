@@ -80,5 +80,20 @@ export function createServer() {
   app.get("/api/drivers/search", searchDrivers);
   app.get("/api/drivers/:id", getDriverById);
 
+  // Authentication API routes
+  app.post("/api/auth/google", googleAuth);
+  app.post("/api/auth/apple", appleAuth);
+  app.post("/api/auth/email", emailAuth);
+  app.post("/api/auth/register", register);
+  app.get("/api/auth/verify", verifyToken);
+
+  // Booking API routes
+  app.post("/api/bookings/homestay", createHomestayBooking);
+  app.post("/api/bookings/driver", createDriverBooking);
+  app.post("/api/bookings/confirm-payment", confirmPayment);
+  app.get("/api/bookings/user", getUserBookings);
+  app.put("/api/bookings/driver/:booking_id/status", updateDriverBookingStatus);
+  app.post("/api/bookings/validate-trip-code", validateTripCode);
+
   return app;
 }
