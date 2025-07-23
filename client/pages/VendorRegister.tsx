@@ -68,6 +68,73 @@ export default function VendorRegister() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [serviceCategories, setServiceCategories] = useState<any>({});
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  useEffect(() => {
+    fetchServiceCategories();
+  }, []);
+
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch('/api/vendors/categories');
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        setServiceCategories(data.data);
+      } else {
+        // Fallback categories in case API fails
+        setServiceCategories({
+          'eateries': {
+            label: 'Eateries',
+            subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
+          },
+          'arts-history': {
+            label: 'Arts & History',
+            subcategories: ['Museum', 'Heritage Site', 'Art Gallery', 'Cultural Center', 'Traditional Crafts']
+          },
+          'beauty-wellness': {
+            label: 'Beauty & Wellness',
+            subcategories: ['Salon', 'Spa', 'Gym', 'Ayurveda Center', 'Yoga Studio', 'Massage Center']
+          },
+          'nightlife': {
+            label: 'Nightlife',
+            subcategories: ['Bar', 'Pub', 'Club', 'Lounge', 'Live Music Venue']
+          },
+          'shopping': {
+            label: 'Shopping',
+            subcategories: ['Market', 'Store', 'Boutique', 'Handicrafts', 'Electronics', 'Clothing']
+          },
+          'entertainment': {
+            label: 'Entertainment',
+            subcategories: ['Cinema', 'Gaming Zone', 'Sports Complex', 'Water Sports', 'Adventure Sports']
+          },
+          'event-management': {
+            label: 'Event Management',
+            subcategories: ['Wedding Planner', 'Corporate Events', 'Party Planning', 'Catering Services']
+          },
+          'transportation': {
+            label: 'Transportation',
+            subcategories: ['Taxi Service', 'Car Rental', 'Bike Rental', 'Auto Rickshaw', 'Bus Service']
+          },
+          'other-services': {
+            label: 'Other Services',
+            subcategories: ['Plumber', 'Electrician', 'Carpenter', 'Home Cleaning', 'Repair Services', 'IT Services']
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Use fallback categories
+      setServiceCategories({
+        'eateries': { label: 'Eateries', subcategories: ['Restaurant', 'Cafe', 'Bar'] },
+        'beauty-wellness': { label: 'Beauty & Wellness', subcategories: ['Salon', 'Spa', 'Gym'] },
+        'other-services': { label: 'Other Services', subcategories: ['Repair Services', 'IT Services'] }
+      });
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
 
   const handleInputChange = (field: keyof VendorFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
