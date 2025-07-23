@@ -95,9 +95,9 @@ export default function Hotels() {
             </Link>
           </div>
           
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4">Hotels & Homestays</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4">Udupi Homestays</h1>
           <p className="text-xl opacity-90 max-w-2xl">
-            Discover beautiful coastal accommodations for your perfect getaway
+            Experience authentic Udupi hospitality in traditional family homes with home-cooked meals
           </p>
         </div>
       </section>
