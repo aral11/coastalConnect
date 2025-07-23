@@ -21,38 +21,32 @@ import {
 } from 'lucide-react';
 
 export default function Hotels() {
-  const placeholderHotels = [
-    {
-      id: 1,
-      name: "Ocean Breeze Resort",
-      location: "Coastal Bay, CA",
-      price: "$299",
-      rating: 4.8,
-      reviews: 124,
-      image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop",
-      amenities: ["Ocean View", "Free WiFi", "Pool", "Restaurant"]
-    },
-    {
-      id: 2,
-      name: "Seaside Villa Homestay",
-      location: "Marina District, FL",
-      price: "$189",
-      rating: 4.9,
-      reviews: 89,
-      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop",
-      amenities: ["Beach Access", "Kitchen", "Garden", "Pet Friendly"]
-    },
-    {
-      id: 3,
-      name: "Coastal Paradise Hotel",
-      location: "Sunset Beach, OR",
-      price: "$349",
-      rating: 4.7,
-      reviews: 203,
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
-      amenities: ["Spa", "Fine Dining", "Valet", "Beach Club"]
+  const [homestays, setHomestays] = useState<Homestay[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchHomestays();
+  }, []);
+
+  const fetchHomestays = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/homestays');
+      const data: HomestayResponse = await response.json();
+
+      if (data.success && data.data) {
+        setHomestays(data.data);
+      } else {
+        setError(data.message || 'Failed to fetch homestays');
+      }
+    } catch (err) {
+      setError('Network error occurred');
+      console.error('Error fetching homestays:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
