@@ -33,6 +33,7 @@ interface Creator {
   featured_works: string[];
   is_verified: boolean;
   is_active: boolean;
+  media_count?: number;
 }
 
 const getSpecialtyIcon = (specialty: string) => {
@@ -70,6 +71,9 @@ export default function LocalCreatorsGrid() {
       if (data.success && data.data) {
         setCreators(data.data.slice(0, 4)); // Show only top 4 creators on homepage
         console.log(`Loaded ${data.data.length} creators from ${data.source} source`);
+        if (data.source === 'instagram') {
+          console.log('✅ Real Instagram data loaded successfully!');
+        }
       } else {
         setError(data.message || 'Failed to fetch creators');
       }
@@ -179,13 +183,21 @@ export default function LocalCreatorsGrid() {
               {creator.description}
             </p>
 
-            {/* Followers Count */}
-            {creator.followers_count && (
-              <div className="flex items-center text-sm text-gray-600">
-                <Users className="h-4 w-4 mr-1" />
-                <span>{formatFollowers(creator.followers_count)} followers</span>
-              </div>
-            )}
+            {/* Instagram Stats */}
+            <div className="flex items-center justify-between text-sm text-gray-600">
+              {creator.followers_count && (
+                <div className="flex items-center">
+                  <Users className="h-4 w-4 mr-1" />
+                  <span>{formatFollowers(creator.followers_count)} followers</span>
+                </div>
+              )}
+              {creator.media_count && (
+                <div className="flex items-center">
+                  <Camera className="h-3 w-3 mr-1" />
+                  <span>{creator.media_count} posts</span>
+                </div>
+              )}
+            </div>
 
             {/* Featured Works Preview */}
             {creator.featured_works && creator.featured_works.length > 0 && (
@@ -211,9 +223,9 @@ export default function LocalCreatorsGrid() {
                 onClick={() => window.open(creator.instagram_url, '_blank')}
               >
                 <Instagram className="h-3 w-3 mr-1" />
-                Follow
+                @{creator.instagram_handle}
               </Button>
-              
+
               {creator.website_url && (
                 <Button
                   variant="ghost"
