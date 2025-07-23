@@ -20,6 +20,7 @@ import {
   Waves,
   Anchor,
   UtensilsCrossed,
+  Store,
   Palette,
   Sparkles,
   Music,
