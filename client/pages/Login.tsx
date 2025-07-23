@@ -210,8 +210,8 @@ export default function Login() {
                 </Link>
               </div>
 
-              <Button className="w-full btn-coastal h-11">
-                Sign In
+              <Button type="submit" className="w-full btn-coastal h-11" disabled={loading}>
+                {loading ? 'Signing In...' : 'Sign In'}
               </Button>
             </form>
 
