@@ -161,5 +161,8 @@ export function createServer() {
   app.post("/api/notifications/test-email", testEmail);
   app.post("/api/notifications/test-sms", testSMS);
 
+  // Platform statistics
+  app.get("/api/stats", getPlatformStats);
+
   return app;
 }
