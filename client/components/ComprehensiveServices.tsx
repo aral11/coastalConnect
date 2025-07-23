@@ -44,7 +44,7 @@ interface ServiceSector {
 export default function ComprehensiveServices() {
   const [serviceSectors, setServiceSectors] = useState<ServiceSector[]>([
     {
-      title: 'Food & Drink',
+      title: 'Eateries',
       description: 'Restaurants, Cafés, Bars',
       apiEndpoint: '/api/eateries',
       color: 'red',
@@ -205,7 +205,7 @@ export default function ComprehensiveServices() {
         )}
 
         <p className="text-gray-600 text-sm mb-4">
-          {sector.title === 'Food & Drink' && 'Authentic Udupi cuisine, coastal specialties, and local dining experiences.'}
+          {sector.title === 'Eateries' && 'Authentic Udupi cuisine, coastal specialties, and local dining experiences.'}
           {sector.title === 'Arts & History' && 'Traditional art forms, cultural sites, Yakshagana performances, and heritage tours.'}
           {sector.title === 'Beauty & Wellness' && 'Traditional Ayurvedic treatments, modern spa services, and fitness centers.'}
           {sector.title === 'Nightlife' && 'Evening entertainment, live music venues, and social gathering spots.'}
@@ -218,7 +218,7 @@ export default function ComprehensiveServices() {
 
         <Link to={sector.link}>
           <Button size="sm" className={`w-full ${buttonColorClass}`}>
-            {sector.title === 'Food & Drink' && 'Explore'}
+            {sector.title === 'Eateries' && 'Explore'}
             {sector.title === 'Arts & History' && 'Discover'}
             {sector.title === 'Beauty & Wellness' && 'Book Now'}
             {sector.title === 'Nightlife' && 'Explore'}
