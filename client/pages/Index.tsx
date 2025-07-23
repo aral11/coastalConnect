@@ -29,7 +29,7 @@ export default function Index() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2F1876014695b440e1a27b22429dcf0090?format=webp&width=800"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
                 alt="coastalConnect"
                 className="logo-brand h-10"
               />
@@ -294,7 +294,7 @@ export default function Index() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2F1876014695b440e1a27b22429dcf0090?format=webp&width=800"
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
                   alt="coastalConnect"
                   className="logo-brand h-8 brightness-0 invert"
                 />
