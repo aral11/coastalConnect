@@ -479,10 +479,13 @@ export default function VendorRegister() {
                         onClick={() => handleInputChange('subscriptionPlan', 'monthly')}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">Monthly Plan</span>
+                          <span className="font-semibold">Launch Offer</span>
                           <span className="text-2xl font-bold text-coastal-600">₹99</span>
                         </div>
-                        <p className="text-sm text-gray-600">Flexible monthly billing</p>
+                        <p className="text-sm text-gray-600">First month special price</p>
+                        <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs mt-1">
+                          Limited Time
+                        </Badge>
                       </div>
                       
                       <div 
@@ -492,12 +495,12 @@ export default function VendorRegister() {
                         onClick={() => handleInputChange('subscriptionPlan', 'annual')}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">Annual Plan</span>
+                          <span className="font-semibold">Regular Price</span>
                           <span className="text-2xl font-bold text-coastal-600">₹199</span>
                         </div>
-                        <p className="text-sm text-gray-600">Save ₹989 per year!</p>
-                        <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs mt-1">
-                          83% Savings
+                        <p className="text-sm text-gray-600">After first month</p>
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs mt-1">
+                          Annual Billing
                         </Badge>
                       </div>
                     </div>
