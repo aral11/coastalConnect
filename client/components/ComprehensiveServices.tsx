@@ -1,7 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   UtensilsCrossed,
   Palette,
   Sparkles,
@@ -13,8 +14,32 @@ import {
   Bike,
   ChevronRight,
   Mail,
-  Phone
+  Phone,
+  MapPin,
+  Star
 } from 'lucide-react';
+
+interface ServiceData {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  location: string;
+  rating?: number;
+  total_reviews?: number;
+  image_url?: string;
+}
+
+interface ServiceSector {
+  title: string;
+  description: string;
+  apiEndpoint: string;
+  color: string;
+  icon: React.ReactNode;
+  link: string;
+  data?: ServiceData[];
+  count?: number;
+}
 
 export default function ComprehensiveServices() {
   return (
