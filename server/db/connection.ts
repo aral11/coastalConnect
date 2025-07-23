@@ -244,6 +244,257 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create Beauty & Wellness table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='BeautyWellness' AND xtype='U')
+      CREATE TABLE BeautyWellness (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- salon, spa, gym, ayurveda
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        opening_hours NVARCHAR(200),
+        services NVARCHAR(MAX), -- JSON array of services
+        price_range NVARCHAR(50),
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Arts & History table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ArtsHistory' AND xtype='U')
+      CREATE TABLE ArtsHistory (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- museum, heritage_site, cultural_event, art_gallery
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        opening_hours NVARCHAR(200),
+        entry_fee DECIMAL(10,2),
+        activities NVARCHAR(MAX), -- JSON array
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        historical_significance NVARCHAR(MAX),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Nightlife table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Nightlife' AND xtype='U')
+      CREATE TABLE Nightlife (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- bar, pub, club, lounge
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        opening_hours NVARCHAR(200),
+        music_type NVARCHAR(200),
+        dress_code NVARCHAR(200),
+        entry_fee DECIMAL(10,2),
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Shopping table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Shopping' AND xtype='U')
+      CREATE TABLE Shopping (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- market, store, boutique, mall
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        opening_hours NVARCHAR(200),
+        specialties NVARCHAR(MAX), -- JSON array
+        price_range NVARCHAR(50),
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Entertainment table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Entertainment' AND xtype='U')
+      CREATE TABLE Entertainment (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- cinema, festival, outdoor_activity, sports
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        opening_hours NVARCHAR(200),
+        activities NVARCHAR(MAX), -- JSON array
+        ticket_price DECIMAL(10,2),
+        age_group NVARCHAR(100),
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Event Management table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='EventManagement' AND xtype='U')
+      CREATE TABLE EventManagement (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- wedding, corporate, party, festival
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        services NVARCHAR(MAX), -- JSON array
+        package_details NVARCHAR(MAX),
+        price_range NVARCHAR(100),
+        portfolio NVARCHAR(MAX), -- JSON array of image URLs
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        website_url NVARCHAR(500),
+        experience_years INT,
+        capacity_range NVARCHAR(100),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Other Services table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='OtherServices' AND xtype='U')
+      CREATE TABLE OtherServices (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- catering, plumber, electrician, maintenance
+        location NVARCHAR(255) NOT NULL,
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        services NVARCHAR(MAX), -- JSON array
+        availability NVARCHAR(200),
+        hourly_rate DECIMAL(10,2),
+        fixed_rate DECIMAL(10,2),
+        rating DECIMAL(3,2),
+        total_reviews INT DEFAULT 0,
+        experience_years INT,
+        certifications NVARCHAR(MAX),
+        emergency_available BIT DEFAULT 0,
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Local Events table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='LocalEvents' AND xtype='U')
+      CREATE TABLE LocalEvents (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        title NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        category NVARCHAR(100) NOT NULL, -- kambala, festival, cultural, religious, sports
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        event_date DATE NOT NULL,
+        start_time TIME,
+        end_time TIME,
+        organizer NVARCHAR(255),
+        contact_phone NVARCHAR(20),
+        contact_email NVARCHAR(255),
+        entry_fee DECIMAL(10,2),
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        registration_url NVARCHAR(500),
+        capacity INT,
+        registered_count INT DEFAULT 0,
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_featured BIT DEFAULT 0,
+        status NVARCHAR(50) DEFAULT 'upcoming',
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
+    // Create Religious Services table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ReligiousServices' AND xtype='U')
+      CREATE TABLE ReligiousServices (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX),
+        religion NVARCHAR(100) NOT NULL, -- hindu, christian, islam, buddhist, jain
+        category NVARCHAR(100) NOT NULL, -- temple, church, mosque, prayer_hall
+        location NVARCHAR(255) NOT NULL,
+        address NVARCHAR(500),
+        phone NVARCHAR(20),
+        email NVARCHAR(255),
+        morning_timings NVARCHAR(200),
+        evening_timings NVARCHAR(200),
+        special_timings NVARCHAR(500), -- JSON for festivals/special days
+        services NVARCHAR(MAX), -- JSON array of services offered
+        languages NVARCHAR(200),
+        priest_contact NVARCHAR(100),
+        image_url NVARCHAR(500),
+        website_url NVARCHAR(500),
+        latitude DECIMAL(10,8),
+        longitude DECIMAL(11,8),
+        is_active BIT DEFAULT 1,
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE()
+      )
+    `);
+
     console.log('Database tables initialized successfully');
 
     // Create indexes for better performance
