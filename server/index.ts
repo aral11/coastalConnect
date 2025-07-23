@@ -44,6 +44,23 @@ export function createServer() {
   // Legacy demo route
   app.get("/api/demo", handleDemo);
 
+  // Database seeding endpoint (for development)
+  app.post("/api/seed", async (_req, res) => {
+    try {
+      await seedDatabase();
+      res.json({
+        success: true,
+        message: "Database seeded successfully with Udupi data!"
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error seeding database",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Homestays API routes
   app.get("/api/homestays", getHomestays);
   app.get("/api/homestays/search", searchHomestays);
