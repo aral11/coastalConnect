@@ -364,7 +364,7 @@ export default function Index() {
                 />
               </div>
               <p className="text-gray-400 mb-4">
-                Your one-stop solution for all your needs in Udupi and Manipal! Connecting local vendors across various sectors.
+                Your one-stop solution for all your needs in Udupi and Manipal! Connecting verified local vendors across various sectors.
                 Founded by Aral Aldrin John D'Souza - Coastal Vibes.
               </p>
               <div className="flex space-x-4">
