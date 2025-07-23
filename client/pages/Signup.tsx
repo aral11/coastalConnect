@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Eye, EyeOff, Lock, Mail, Phone, User, Waves, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Phone, User, Waves, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
