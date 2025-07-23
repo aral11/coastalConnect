@@ -5,13 +5,20 @@ dotenv.config();
 
 const config: sql.config = {
   server: process.env.DB_SERVER || 'DESKTOP-6FSVDEL\\SQLEXPRESS',
-  user: process.env.DB_USER || 'DESKTOP-6FSVDEL\\Aral',
-  password: process.env.DB_PASSWORD || '',
   database: process.env.DB_DATABASE || 'CoastalConnectUdupi',
+  authentication: {
+    type: 'ntlm',
+    options: {
+      userName: process.env.DB_USER || 'DESKTOP-6FSVDEL\\Aral',
+      password: process.env.DB_PASSWORD || '',
+      domain: process.env.DB_DOMAIN || ''
+    }
+  },
   options: {
-    encrypt: process.env.DB_ENCRYPT === 'true',
-    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true',
+    encrypt: process.env.DB_ENCRYPT === 'true' || false,
+    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' || true,
     enableArithAbort: true,
+    instanceName: 'SQLEXPRESS'
   },
   pool: {
     max: 10,
