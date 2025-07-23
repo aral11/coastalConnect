@@ -16,7 +16,7 @@ export class SMSService {
   static async sendSMS(to: string, message: string): Promise<boolean> {
     try {
       // For development/cloud environment without real Twilio credentials
-      if (process.env.NODE_ENV === 'development' || !process.env.TWILIO_ACCOUNT_SID) {
+      if (!this.client || process.env.NODE_ENV === 'development') {
         console.log(`📱 Mock SMS sent to ${to}:`);
         console.log(`Message: ${message}`);
         return true;
