@@ -40,6 +40,7 @@ export default function Index() {
               <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Homestays</Link>
               <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
               <Link to="/eateries" className="text-gray-600 hover:text-coastal-600 transition-colors">Eateries</Link>
+              <Link to="/creators" className="text-gray-600 hover:text-coastal-600 transition-colors">Creators</Link>
               <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
               <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors">Contact</Link>
             </div>
@@ -271,8 +272,15 @@ export default function Index() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Local Creators</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Meet the talented creators showcasing the beauty and culture of coastal Karnataka
+              Meet the talented Instagram creators showcasing the beauty and culture of coastal Karnataka
             </p>
+            <div className="mt-6">
+              <Link to="/creators">
+                <Button variant="outline" className="border-purple-300 text-purple-600 hover:bg-purple-50">
+                  View All Creators
+                </Button>
+              </Link>
+            </div>
           </div>
 
           <LocalCreatorsGrid />
