@@ -336,11 +336,14 @@ export default function Index() {
                 />
               </div>
               <p className="text-gray-400 mb-4">
-                Your trusted partner for authentic coastal Karnataka experiences - homestays, local cuisine, and cultural tours.
+                Your one-stop solution for all your needs in Udupi and Manipal! Connecting local vendors across various sectors.
+                Founded by Aral Aldrin John D'Souza - Coastal Vibes.
               </p>
               <div className="flex space-x-4">
-                <Mail className="h-5 w-5 text-gray-400" />
-                <Phone className="h-5 w-5 text-gray-400" />
+                <a href="mailto:admin@coastalconnect.in" className="flex items-center text-gray-400 hover:text-white">
+                  <Mail className="h-5 w-5 mr-2" />
+                  admin@coastalconnect.in
+                </a>
               </div>
             </div>
             
