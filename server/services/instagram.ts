@@ -104,7 +104,7 @@ export class InstagramService {
         follows_count: 567,
         name: 'Priya Coastal Arts',
         biography: 'Traditional Udupi Art & Handicrafts 🎨\\n🪔 Yakshagana Masks & Temple Art\\n📍 Udupi, Karnataka\\n🛒 Shop link below',
-        profile_picture_url: 'https://images.unsplash.com/photo-1494790108755-2616b612b131?w=300&h=300&fit=crop&crop=face',
+        profile_picture_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
         website: 'https://coastalarts.in'
       },
       'coastal_flavor_stories': {
@@ -116,7 +116,7 @@ export class InstagramService {
         follows_count: 234,
         name: 'Coastal Flavor Stories',
         biography: 'Udupi Food Blogger 🍛\\n🥥 Authentic Coastal Karnataka Cuisine\\n📍 Manipal, Udupi\\n📧 Collab: hello@coastalflavorstories.com',
-        profile_picture_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
+        profile_picture_url: 'https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face',
         website: 'https://coastalflavorstories.com'
       },
       'beach_vibes_karnataka': {
@@ -128,7 +128,7 @@ export class InstagramService {
         follows_count: 156,
         name: 'Beach Vibes Karnataka',
         biography: 'Travel Content Creator 🏖️\\n🌴 Hidden Coastal Gems\\n📍 Malpe, Udupi\\n🌊 #CoastalKarnataka #UdupiTourism',
-        profile_picture_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
+        profile_picture_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
         website: 'https://beachvibeskarnataka.com'
       },
       'udupi_traditions': {
@@ -140,7 +140,7 @@ export class InstagramService {
         follows_count: 345,
         name: 'Udupi Traditions',
         biography: 'Cultural Heritage Documenter 🏛️\\n🪔 Temple Festivals & Traditions\\n📍 Udupi Temple Area\\n📚 Preserving Our Culture',
-        profile_picture_url: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=300&h=300&fit=crop&crop=face'
+        profile_picture_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop&crop=face'
       }
     };
 
