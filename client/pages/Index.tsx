@@ -98,9 +98,9 @@ export default function Index() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Explore Udupi</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Everything you need for your coastal adventure, from comfortable stays to reliable transportation
+              Authentic Udupi experiences - from traditional homestays to local eateries and temple visits
             </p>
           </div>
 
