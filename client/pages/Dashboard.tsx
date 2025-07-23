@@ -153,6 +153,10 @@ export default function Dashboard() {
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div>
+              <Button variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 mb-4 -ml-2">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Button>
               <h1 className="text-3xl font-bold">My Dashboard</h1>
               <p className="opacity-90">Welcome back, {user?.name}</p>
             </div>
