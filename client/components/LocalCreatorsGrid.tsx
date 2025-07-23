@@ -145,10 +145,15 @@ export default function LocalCreatorsGrid() {
           <CardHeader className="pb-3 relative">
             <div className="flex items-start space-x-3">
               <div className="relative">
-                <img 
-                  src={creator.profile_image} 
+                <img
+                  src={creator.profile_image}
                   alt={creator.name}
                   className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
+                  onError={(e) => {
+                    console.log(`Failed to load image: ${creator.profile_image}`);
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face';
+                  }}
+                  onLoad={() => console.log(`Successfully loaded image for ${creator.name}`)}
                 />
                 {creator.is_verified && (
                   <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
