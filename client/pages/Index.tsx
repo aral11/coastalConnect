@@ -58,8 +58,8 @@ export default function Index() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex items-center justify-center mb-6">
-              <Waves className="h-8 w-8 mr-3 animate-wave" />
-              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+              <Waves className="h-8 w-8 mr-3 animate-wave text-coral-300" />
+              <Badge variant="secondary" className="bg-coral-500/20 text-white border-coral-400/30">
                 Your Coastal Adventure Starts Here
               </Badge>
             </div>
