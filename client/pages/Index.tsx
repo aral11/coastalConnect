@@ -82,25 +82,8 @@ export default function Index() {
               </p>
             </div>
 
-            {/* Key Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">500+</div>
-                <div className="text-blue-200 text-sm">Verified Vendors</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">10k+</div>
-                <div className="text-blue-200 text-sm">Happy Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">50+</div>
-                <div className="text-blue-200 text-sm">Local Creators</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">4.8★</div>
-                <div className="text-blue-200 text-sm">Average Rating</div>
-              </div>
-            </div>
+            {/* Dynamic Platform Stats */}
+            <PlatformStats className="mb-12" />
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
