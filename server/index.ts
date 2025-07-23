@@ -5,6 +5,7 @@ import { getHomestays, getHomestayById, searchHomestays } from "./routes/homesta
 import { getEateries, getEateryById, searchEateries } from "./routes/eateries";
 import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
 import { initializeDatabase, getConnection } from "./db/connection";
+import { seedDatabase } from "./seedData";
 
 export function createServer() {
   const app = express();
