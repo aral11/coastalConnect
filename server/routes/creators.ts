@@ -77,7 +77,7 @@ const mockCreators: Creator[] = [
     description: "Documenting authentic Udupi cuisine and coastal Karnataka food culture. From temple prasadam to street food gems.",
     instagram_handle: "coastal_flavor_stories",
     instagram_url: "https://instagram.com/coastal_flavor_stories",
-    profile_image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face",
+    profile_image: "https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face",
     cover_image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop",
     followers_count: 12500,
     specialty: "Food & Culinary Content",
