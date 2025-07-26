@@ -76,7 +76,32 @@ export default function Login() {
     setError('');
 
     try {
-      // Simulate Google OAuth popup
+      // Show user-friendly message about the authentication process
+      console.log('Starting Google authentication...');
+
+      // Simulate Google OAuth popup experience
+      const simulateGooglePopup = () => {
+        return new Promise((resolve) => {
+          // Simulate user selection in Google popup
+          setTimeout(() => {
+            const mockGoogleUser = {
+              email: `user${Math.floor(Math.random() * 1000)}@gmail.com`,
+              name: `Demo User ${Math.floor(Math.random() * 100)}`,
+              picture: `https://ui-avatars.com/api/?name=Demo+User&background=4285f4&color=fff&size=150`
+            };
+            resolve(mockGoogleUser);
+          }, 1500); // Simulate popup delay
+        });
+      };
+
+      // Show authentication in progress
+      setError('Opening Google sign-in...');
+
+      const googleUserData = await simulateGooglePopup();
+
+      setError('Verifying credentials...');
+
+      // Generate realistic token
       const googleToken = `google_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
       const response = await fetch('/api/auth/google', {
@@ -84,22 +109,32 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: googleToken }),
+        body: JSON.stringify({
+          token: googleToken,
+          userInfo: googleUserData
+        }),
       });
 
       const data = await response.json();
 
       if (data.success) {
+        setError('Login successful! Redirecting...');
         login(data.data.token, data.data.user);
-        navigate(redirectTo);
+
+        // Small delay to show success message
+        setTimeout(() => {
+          navigate(redirectTo);
+        }, 1000);
       } else {
-        setError(data.message || 'Google login failed');
+        setError(data.message || 'Google login failed - please try again');
       }
     } catch (error) {
       console.error('Google login error:', error);
-      setError('Google login failed. Please try again.');
+      setError('Google login service is temporarily unavailable. Please try email login or try again later.');
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
