@@ -146,6 +146,76 @@ export const getServiceCategory: RequestHandler = async (req, res) => {
         totalCount: 8,
         averagePrice: 0,
         averageRating: 4.7
+      },
+      {
+        id: 'arts-history',
+        title: 'Arts & History',
+        description: 'Museums, Heritage Sites, Cultural Events & Traditional Art Forms',
+        icon: 'Palette',
+        features: ['Cultural heritage', 'Traditional art forms', 'Historical sites', 'Local museums'],
+        totalCount: 10,
+        averagePrice: 150,
+        averageRating: 4.4
+      },
+      {
+        id: 'beauty-wellness',
+        title: 'Beauty & Wellness',
+        description: 'Salons, Spas, Gyms & Ayurvedic Centers',
+        icon: 'Sparkles',
+        features: ['Professional services', 'Ayurvedic treatments', 'Modern facilities', 'Expert staff'],
+        totalCount: 18,
+        averagePrice: 800,
+        averageRating: 4.2
+      },
+      {
+        id: 'nightlife',
+        title: 'Nightlife',
+        description: 'Bars, Pubs, Clubs & Entertainment Venues',
+        icon: 'Music',
+        features: ['Live music', 'Good ambiance', 'Quality drinks', 'Entertainment'],
+        totalCount: 6,
+        averagePrice: 1200,
+        averageRating: 4.0
+      },
+      {
+        id: 'shopping',
+        title: 'Shopping',
+        description: 'Markets, Stores, Boutiques & Local Crafts',
+        icon: 'ShoppingBag',
+        features: ['Local crafts', 'Traditional items', 'Modern stores', 'Good variety'],
+        totalCount: 25,
+        averagePrice: 500,
+        averageRating: 4.1
+      },
+      {
+        id: 'entertainment',
+        title: 'Entertainment',
+        description: 'Cinemas, Festivals, Activities & Outdoor Adventures',
+        icon: 'Camera',
+        features: ['Outdoor activities', 'Cultural events', 'Adventure sports', 'Entertainment'],
+        totalCount: 14,
+        averagePrice: 300,
+        averageRating: 4.3
+      },
+      {
+        id: 'event-management',
+        title: 'Event Management',
+        description: 'Weddings, Parties, Corporate Events & Celebrations',
+        icon: 'PartyPopper',
+        features: ['Professional planning', 'Full-service events', 'Custom packages', 'Expert coordination'],
+        totalCount: 8,
+        averagePrice: 15000,
+        averageRating: 4.6
+      },
+      {
+        id: 'other-services',
+        title: 'Other Services',
+        description: 'Caterers, Plumbers, Electricians & Essential Services',
+        icon: 'Wrench',
+        features: ['Essential services', 'Professional work', 'Reliable providers', 'Quick response'],
+        totalCount: 20,
+        averagePrice: 400,
+        averageRating: 4.0
       }
     ];
 
