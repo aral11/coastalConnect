@@ -80,7 +80,7 @@ export default function PageHeader({
                 <h1 className="text-3xl lg:text-5xl font-bold mb-4">
                   {title}
                 </h1>
-                <p className="text-lg lg:text-xl text-blue-100 max-w-2xl">
+                <p className="text-lg lg:text-xl text-orange-100 max-w-2xl">
                   {description}
                 </p>
               </div>
