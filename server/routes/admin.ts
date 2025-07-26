@@ -199,6 +199,29 @@ router.post('/approve/:type/:id', requireAdmin, async (req: Request, res: Respon
       console.log('Database not available, simulating approval action');
     }
 
+    // Trigger real-time stats update when approving content
+    if (action === 'approve') {
+      try {
+        if (type === 'homestay' || type === 'eatery' || type === 'driver') {
+          // Trigger vendor count update
+          await fetch(`${process.env.BASE_URL || 'http://localhost:3000'}/api/stats/increment-vendor`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+        } else if (type === 'creator') {
+          // Trigger creator count update
+          await fetch(`${process.env.BASE_URL || 'http://localhost:3000'}/api/stats/increment-creator`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+        console.log(`📊 Stats updated after approving ${type} #${id}`);
+      } catch (statsError) {
+        console.error('Failed to update stats after approval:', statsError);
+        // Don't fail the approval if stats update fails
+      }
+    }
+
     res.json({
       success: true,
       message: `${type} ${action}d successfully`,
