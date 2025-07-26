@@ -199,17 +199,10 @@ export default function LocalCreatorsGrid() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {fallbackCreators.map((creator) => (
             <Card key={creator.id} className="card-coastal overflow-hidden group hover:shadow-lg transition-all duration-300">
-              {/* Cover Image */}
-              {creator.cover_image && (
-                <div className="relative h-24 overflow-hidden">
-                  <img
-                    src={creator.cover_image}
-                    alt={`${creator.name} cover`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
-                </div>
-              )}
+              {/* Professional Cover Design */}
+              <div className={`relative h-24 overflow-hidden ${getSpecialtyGradient(creator.specialty)}`}>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+              </div>
 
               {/* Profile Section */}
               <CardHeader className="pb-3 relative">
