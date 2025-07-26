@@ -145,9 +145,9 @@ export default function Signup() {
           </Link>
           <div className="flex items-center justify-center mb-4">
             <img
-              src="/coastalconnect-logo.svg"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Ff02d77f44d21496f8520d656967049db?format=webp&width=800"
               alt="coastalConnect"
-              className="logo-brand h-12"
+              className="h-12 w-auto object-contain"
             />
           </div>
         </div>
