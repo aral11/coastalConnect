@@ -172,6 +172,9 @@ export function createServer() {
   // Subscription API routes
   app.use("/api/subscription", subscriptionRouter);
 
+  // Admin API routes
+  app.use("/api/admin", adminRouter);
+
   // Service categories
 app.get("/api/services", getServiceCategories);
 app.get("/api/services/:categoryId", getServiceCategory);
