@@ -92,6 +92,13 @@ export default function AdminDashboard() {
         const statsData = await statsResponse.json();
         setAdminStats(statsData.data);
       }
+
+      // Fetch data summary
+      const summaryResponse = await fetch('/api/admin/data-summary?adminKey=admin123');
+      if (summaryResponse.ok) {
+        const summaryData = await summaryResponse.json();
+        setDataSummary(summaryData.data.summary);
+      }
     } catch (error) {
       console.error('Error fetching admin data:', error);
       setMessage({type: 'error', text: 'Failed to load admin data'});
