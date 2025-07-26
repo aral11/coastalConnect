@@ -28,6 +28,9 @@ import BusinessDashboard from "./pages/BusinessDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Help from "./pages/Help";
+import Support from "./pages/Support";
+import SafetyGuidelines from "./pages/SafetyGuidelines";
+import Feedback from "./pages/Feedback";
 import {
   Info,
   Phone,
