@@ -14,6 +14,7 @@ import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizer
 import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEventForApproval, deleteEvent, cancelEvent, getEventRegistrations, getEventAnalytics } from "./routes/organizerEvents";
 import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, sendWelcomeEmail, sendCustomNotification, sendBulkNotification, getNotificationHistory, testEmail, testSMS } from "./routes/notifications";
 import { getPlatformStats } from "./routes/stats";
+import { getServiceCategories, getServiceCategory } from "./routes/services";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
