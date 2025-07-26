@@ -525,20 +525,28 @@ export default function VendorRegister() {
                   <div>
                     <Label>Select Subscription Plan *</Label>
                     <div className="grid md:grid-cols-2 gap-4 mt-2">
-                      <div 
+                      <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
                           formData.subscriptionPlan === 'monthly' ? 'border-coastal-500 bg-coastal-50' : 'border-gray-200'
                         }`}
                         onClick={() => handleInputChange('subscriptionPlan', 'monthly')}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">Launch Offer</span>
-                          <span className="text-2xl font-bold text-coastal-600">₹99</span>
+                          <span className="font-semibold">
+                            {isLaunchOffer ? 'Launch Offer' : 'Monthly Plan'}
+                          </span>
+                          <span className="text-2xl font-bold text-coastal-600">
+                            ₹{formData.subscriptionPlan === 'monthly' ? calculateSubscriptionPrice() : 199}
+                          </span>
                         </div>
-                        <p className="text-sm text-gray-600">First month special price</p>
-                        <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs mt-1">
-                          Limited Time
-                        </Badge>
+                        <p className="text-sm text-gray-600">
+                          {isLaunchOffer ? 'First month special price' : 'Regular monthly rate'}
+                        </p>
+                        {isLaunchOffer && (
+                          <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs mt-1">
+                            Limited Time
+                          </Badge>
+                        )}
                       </div>
                       
                       <div 
