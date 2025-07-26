@@ -378,28 +378,8 @@ export default function Creators() {
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredCreators.map((creator) => (
                   <Card key={creator.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-                    {/* Cover Image */}
-                    <div className="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
-                      {creator.cover_image && (
-                        <img
-                          src={creator.cover_image}
-                          alt={`${creator.name} cover`}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            console.log(`❌ Failed to load cover image for ${creator.name}: ${creator.cover_image}`);
-                            const fallbackCovers = [
-                              'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop',
-                              'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop',
-                              'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop',
-                              'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop',
-                              'https://images.unsplash.com/photo-1588678401-c846c6021369?w=800&h=400&fit=crop'
-                            ];
-                            const randomCover = fallbackCovers[creator.id % fallbackCovers.length];
-                            e.currentTarget.src = randomCover;
-                          }}
-                          onLoad={() => console.log(`✅ Successfully loaded cover image for ${creator.name}`)}
-                        />
-                      )}
+                    {/* Professional Cover Design */}
+                    <div className={`relative h-32 ${getSpecialtyGradient(creator.specialty)}`}>
                       
                       {/* Overlay Actions */}
                       <div className="absolute top-3 right-3 flex gap-2">
