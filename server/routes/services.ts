@@ -220,7 +220,7 @@ export const getServiceCategory: RequestHandler = async (req, res) => {
     ];
 
     const category = serviceCategories.find(cat => cat.id === categoryId);
-    
+
     if (!category) {
       return res.status(404).json({
         success: false,
@@ -228,9 +228,16 @@ export const getServiceCategory: RequestHandler = async (req, res) => {
       });
     }
 
+    // Generate sample service listings for the category
+    const serviceListings = generateServiceListings(categoryId, category.totalCount);
+
     res.json({
       success: true,
-      data: category,
+      data: {
+        category: category,
+        services: serviceListings,
+        total: serviceListings.length
+      },
       timestamp: new Date().toISOString()
     });
 
