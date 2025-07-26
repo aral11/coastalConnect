@@ -141,6 +141,16 @@ export default function BookingModal({ homestay, isOpen, onClose }: BookingModal
           const confirmData = await confirmResponse.json();
 
           if (confirmData.success) {
+            // Trigger real-time stats update
+            const event = new CustomEvent('booking-confirmed', {
+              detail: {
+                id: bookingData.booking.id,
+                type: 'homestay',
+                amount: bookingData.booking.total_amount
+              }
+            });
+            window.dispatchEvent(event);
+
             alert('Booking confirmed! You will receive SMS confirmation shortly.');
             onClose();
             setStep(1);
