@@ -165,5 +165,9 @@ export function createServer() {
   // Platform statistics
   app.get("/api/stats", getPlatformStats);
 
+  // Service categories
+  app.get("/api/services", getServiceCategories);
+  app.get("/api/services/:categoryId", getServiceCategory);
+
   return app;
 }
