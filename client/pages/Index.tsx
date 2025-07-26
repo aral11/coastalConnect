@@ -160,7 +160,7 @@ export default function Index() {
         </div>
 
         <div className={`${layouts.container} relative z-10`}>
-          <div className="py-16 lg:py-24">
+          <div className="py-12 lg:py-20">
             {/* Status Badge */}
             <div className="flex items-center justify-center mb-8">
               <Badge className="bg-white/20 text-white border-white/30 text-sm font-medium px-6 py-3 rounded-full">
