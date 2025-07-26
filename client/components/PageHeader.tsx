@@ -57,8 +57,8 @@ export default function PageHeader({
             </nav>
           )}
 
-          {/* Back Button */}
-          {showBackButton && (
+          {/* Back Button (only show if no breadcrumbs) */}
+          {showBackButton && !breadcrumbs && (
             <Link
               to="/"
               className="inline-flex items-center text-orange-100 hover:text-white transition-colors mb-6 group"
