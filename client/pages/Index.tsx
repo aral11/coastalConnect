@@ -117,6 +117,24 @@ export default function Index() {
           link: '/creators',
           color: 'from-pink-500 to-pink-600',
           offer: 'EXPLORE NOW'
+        },
+        {
+          id: 'events',
+          title: 'EVENTS',
+          description: 'LOCAL EVENTS & ACTIVITIES',
+          icon: <Calendar className="h-12 w-12" />,
+          link: '/events',
+          color: 'from-indigo-500 to-indigo-600',
+          offer: 'BOOK NOW'
+        },
+        {
+          id: 'services',
+          title: 'SERVICES',
+          description: 'ALL OTHER SERVICES',
+          icon: <Store className="h-12 w-12" />,
+          link: '/services',
+          color: 'from-teal-500 to-teal-600',
+          offer: 'DISCOVER'
         }
       ];
       setServices(fallbackServices);
