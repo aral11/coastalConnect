@@ -131,8 +131,11 @@ export function createServer() {
   // Vendor Management API routes
   app.use("/api/vendors", vendorRouter);
 
-  // Platform statistics with refresh capability
+  // Platform statistics with refresh capability and real-time updates
   app.post("/api/stats/refresh", refreshStats);
+  app.post("/api/stats/increment-vendor", incrementVendorCount);
+  app.post("/api/stats/increment-creator", incrementCreatorCount);
+  app.post("/api/stats/update-rating", updateAverageRating);
 
   // Event Organizer Authentication routes
   app.post("/api/organizers/register", registerOrganizer);
