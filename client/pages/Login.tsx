@@ -76,13 +76,15 @@ export default function Login() {
     setError('');
 
     try {
-      // Mock Google OAuth flow
+      // Simulate Google OAuth popup
+      const googleToken = `google_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
       const response = await fetch('/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: 'mock_google_token' }),
+        body: JSON.stringify({ token: googleToken }),
       });
 
       const data = await response.json();
@@ -94,6 +96,7 @@ export default function Login() {
         setError(data.message || 'Google login failed');
       }
     } catch (error) {
+      console.error('Google login error:', error);
       setError('Google login failed. Please try again.');
     } finally {
       setLoading(false);
