@@ -155,7 +155,30 @@ export default function VendorRegister() {
   };
 
   const selectedCategory = serviceCategories[formData.category as keyof typeof serviceCategories];
-  const subscriptionPrice = formData.subscriptionPlan === 'monthly' ? 99 : 99; // Launch offer: ₹99/year for first month, then ₹199/year
+
+  // Calculate subscription pricing based on registration timing
+  const calculateSubscriptionPrice = () => {
+    const launchDate = new Date('2024-01-01'); // Platform launch date
+    const currentDate = new Date();
+    const registrationDate = new Date();
+
+    // First month after launch (January 2024): ₹99/month
+    // After first month: ₹199/month
+    const monthsSinceLaunch = (currentDate.getFullYear() - launchDate.getFullYear()) * 12 +
+                             (currentDate.getMonth() - launchDate.getMonth());
+
+    const isFirstMonth = monthsSinceLaunch === 0;
+
+    if (formData.subscriptionPlan === 'monthly') {
+      return isFirstMonth ? 99 : 199;
+    } else {
+      // Annual plan: Always ₹199 (special pricing)
+      return 199;
+    }
+  };
+
+  const subscriptionPrice = calculateSubscriptionPrice();
+  const isLaunchOffer = subscriptionPrice === 99;
 
   if (submitted) {
     return (
