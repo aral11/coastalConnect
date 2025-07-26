@@ -337,7 +337,7 @@ export default function Drivers() {
                         <div className="flex items-center space-x-3">
                           <div className="relative">
                             <img
-                              src={driver.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name)}&background=3B82F6&color=fff&size=64`}
+                              src={driver.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name)}&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png`}
                               alt={driver.name}
                               className="h-16 w-16 rounded-full object-cover border-2 border-blue-100"
                             />
