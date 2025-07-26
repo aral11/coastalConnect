@@ -27,20 +27,26 @@ let pool: sql.ConnectionPool | null = null;
 export const getConnection = async (): Promise<sql.ConnectionPool> => {
   try {
     if (!pool) {
+      console.log(`🔗 Connecting to SQL Server: ${config.server}`);
+      console.log(`📁 Database: ${config.database}`);
+      console.log(`🔐 Authentication: Windows Authentication (integrated security)`);
+
       pool = new sql.ConnectionPool(config);
       await pool.connect();
-      console.log('Connected to SQL Server successfully');
+      console.log('✅ Connected to SQL Server successfully');
     }
 
     // Check if the pool is still connected
     if (!pool.connected) {
-      console.log('Pool disconnected, reconnecting...');
+      console.log('🔄 Pool disconnected, reconnecting...');
       await pool.connect();
     }
 
     return pool;
   } catch (error) {
-    console.error('Database connection failed:', error);
+    console.error('❌ Database connection failed:', error);
+    console.error('💡 Make sure SQL Server Express is running and Windows Authentication is enabled');
+    console.error('🔧 Try running: sqlcmd -S localhost\\SQLEXPRESS -E');
     // Reset pool on connection failure
     pool = null;
     throw error;
