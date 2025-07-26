@@ -169,6 +169,15 @@ export const confirmPayment: RequestHandler = async (req, res) => {
     // Update booking status
     await BookingService.confirmPayment(parseInt(booking_id), booking_type);
 
+    // Update stats in real-time for immediate UI updates
+    try {
+      await incrementBookingCount({} as any, {} as any);
+      console.log('📈 Stats updated after booking confirmation');
+    } catch (statsError) {
+      console.error('Failed to update stats after booking:', statsError);
+      // Don't fail the request if stats update fails
+    }
+
     // Get booking details for notifications
     const bookingDetails = await BookingService.getBookingDetails(parseInt(booking_id), booking_type);
 
