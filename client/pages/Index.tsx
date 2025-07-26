@@ -151,7 +151,7 @@ export default function Index() {
   return (
     <Layout fullWidth>
       {/* Hero Section - Swiggy Style */}
-      <section className="relative bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 text-white overflow-hidden min-h-[70vh]">
+      <section className="relative bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 text-white overflow-hidden min-h-[80vh]">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-10 w-32 h-32 bg-white rounded-full blur-xl"></div>
