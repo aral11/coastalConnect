@@ -176,5 +176,12 @@ app.get("/api/business/bookings/:bookingId", getBookingDetails);
 app.put("/api/business/bookings/:bookingId/status", updateBookingStatus);
 app.get("/api/business/analytics", getBusinessAnalytics);
 
+// Common data (categories, locations, etc.)
+app.get("/api/categories", getCategories);
+app.get("/api/locations", getLocations);
+app.get("/api/price-ranges", getPriceRanges);
+app.get("/api/features", getFeatures);
+app.get("/api/config", getAppConfig);
+
   return app;
 }
