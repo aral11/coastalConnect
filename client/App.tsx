@@ -64,6 +64,7 @@ const App = () => (
           <Route path="/homestays" element={<Hotels />} />
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/eateries" element={<Eateries />} />
+          <Route path="/events" element={<Events />} />
           <Route path="/creators" element={<Creators />} />
           <Route path="/driver-app" element={<DriverApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
