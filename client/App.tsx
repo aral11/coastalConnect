@@ -24,6 +24,9 @@ import EventOrganizerRegister from "./pages/EventOrganizerRegister";
 import EventOrganizerLogin from "./pages/EventOrganizerLogin";
 import EventOrganizerDashboard from "./pages/EventOrganizerDashboard";
 import CreateEvent from "./pages/CreateEvent";
+import BusinessDashboard from "./pages/BusinessDashboard";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import {
   Info,
   Phone,
@@ -61,6 +64,30 @@ const App = () => (
           <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
           <Route path="/organizer/events/create" element={<CreateEvent />} />
 
+          {/* Business Routes */}
+          <Route path="/business-dashboard" element={<BusinessDashboard />} />
+          <Route path="/partner-with-us" element={
+            <PlaceholderPage
+              title="Partner with Us"
+              description="Join our network of local service providers and grow your business."
+              icon={<Info className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/advertise" element={
+            <PlaceholderPage
+              title="Advertise with Coastal Connect"
+              description="Promote your business to thousands of coastal travelers."
+              icon={<Info className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/bulk-bookings" element={
+            <PlaceholderPage
+              title="Bulk Bookings"
+              description="Special rates for group bookings and corporate events."
+              icon={<Info className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+
           {/* Service Sector Pages */}
           <Route path="/arts-history" element={<ServiceSector />} />
           <Route path="/beauty-wellness" element={<ServiceSector />} />
@@ -81,26 +108,8 @@ const App = () => (
               />
             }
           />
-          <Route
-            path="/about"
-            element={
-              <PlaceholderPage
-                title="About Coastal Connect"
-                description="Learn more about our mission to connect travelers with amazing coastal experiences."
-                icon={<Info className="h-16 w-16 text-coastal-400" />}
-              />
-            }
-          />
-          <Route 
-            path="/contact" 
-            element={
-              <PlaceholderPage 
-                title="Contact Us" 
-                description="Get in touch with our team for support or inquiries."
-                icon={<Phone className="h-16 w-16 text-coastal-400" />}
-              />
-            } 
-          />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route 
             path="/help" 
             element={
