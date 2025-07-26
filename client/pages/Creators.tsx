@@ -142,7 +142,14 @@ export default function Creators() {
             categories: ['Photography', 'Travel', 'Food'].slice(0, Math.floor(Math.random() * 2) + 1)
           };
         });
-        
+
+        console.log('✨ Enhanced creators data:', enhancedCreators);
+        enhancedCreators.forEach((creator, index) => {
+          console.log(`👤 Creator ${index + 1}: ${creator.name}`);
+          console.log(`  📸 Profile Image: ${creator.profile_image}`);
+          console.log(`  🖼️ Cover Image: ${creator.cover_image}`);
+        });
+
         setCreators(enhancedCreators);
         
         // Update category counts
