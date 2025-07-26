@@ -88,6 +88,7 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
       window.removeEventListener('booking-confirmed', handleBookingEvent);
       window.removeEventListener('vendor-approved', handleVendorApproval);
       window.removeEventListener('creator-registered', handleCreatorRegistration);
+      window.removeEventListener('data-cleared', handleDataCleared);
     };
   }, []);
 
