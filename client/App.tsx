@@ -12,6 +12,7 @@ import Search from "./pages/Search";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
 import Eateries from "./pages/Eateries";
+import Events from "./pages/Events";
 import Creators from "./pages/Creators";
 import DriverApp from "./pages/DriverApp";
 import Dashboard from "./pages/Dashboard";
