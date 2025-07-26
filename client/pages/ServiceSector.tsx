@@ -131,7 +131,15 @@ export default function ServiceSector() {
       const data = await response.json();
       
       if (data.success && data.data) {
-        setServices(data.data);
+        // Handle the new API response structure that includes category info and services array
+        if (data.data.services && Array.isArray(data.data.services)) {
+          setServices(data.data.services);
+        } else if (Array.isArray(data.data)) {
+          // Fallback for old API response structure
+          setServices(data.data);
+        } else {
+          setError('Invalid services data format');
+        }
       } else {
         setError(data.message || 'Failed to fetch services');
       }
