@@ -217,14 +217,8 @@ function getDefaultAvatar(username: string): string {
 }
 
 function getCoverImage(username: string): string {
-  const covers: { [key: string]: string } = {
-    'shutterboxfilms_official': 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop',
-    'priya_coastal_arts': 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop',
-    'coastal_flavor_stories': 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop',
-    'beach_vibes_karnataka': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop',
-    'udupi_traditions': 'https://images.unsplash.com/photo-1588678401-c846c6021369?w=800&h=400&fit=crop'
-  };
-  return covers[username] || 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop';
+  // Return empty string - we'll use CSS gradients instead of dummy images
+  return '';
 }
 
 async function getCreatorFeaturedWorks(username: string): Promise<string[]> {
