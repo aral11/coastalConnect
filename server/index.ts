@@ -16,6 +16,7 @@ import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, 
 import { getPlatformStats } from "./routes/stats";
 import { getServiceCategories, getServiceCategory } from "./routes/services";
 import { submitContactForm, getContactInfo } from "./routes/contact";
+import searchRouter from "./routes/search";
 import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBookingStatus, getBusinessAnalytics } from "./routes/business";
 import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
 import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
