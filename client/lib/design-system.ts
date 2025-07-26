@@ -1,101 +1,101 @@
-// coastalConnect Design System
-// Inspired by MakeMyTrip, Booking.com, and Zomato
+/**
+ * coastalConnect Design System
+ * Inspired by Swiggy's modern food delivery platform design
+ * Features: Orange/red theme, clean typography, modern cards
+ */
 
 export const designSystem = {
-  // Brand Colors - Coastal Theme
   colors: {
     primary: {
-      50: '#f0f9ff',
-      100: '#e0f2fe',
-      200: '#bae6fd',
-      300: '#7dd3fc',
-      400: '#38bdf8',
-      500: '#0ea5e9', // Main brand color
-      600: '#0284c7',
-      700: '#0369a1',
-      800: '#075985',
-      900: '#0c4a6e',
+      50: '#FFF3E0',
+      100: '#FFE0B2', 
+      200: '#FFCC80',
+      300: '#FFB74D',
+      400: '#FFA726',
+      500: '#FF9800', // Main orange
+      600: '#FB8C00',
+      700: '#F57C00',
+      800: '#EF6C00',
+      900: '#E65100'
     },
     secondary: {
-      50: '#fef2f2',
-      100: '#fee2e2',
-      200: '#fecaca',
-      300: '#fca5a5',
-      400: '#f87171',
-      500: '#ef4444',
-      600: '#dc2626',
-      700: '#b91c1c',
-      800: '#991b1b',
-      900: '#7f1d1d',
+      50: '#FFEBEE',
+      100: '#FFCDD2',
+      200: '#EF9A9A',
+      300: '#E57373',
+      400: '#EF5350',
+      500: '#F44336', // Red accent
+      600: '#E53935',
+      700: '#D32F2F',
+      800: '#C62828',
+      900: '#B71C1C'
     },
-    accent: {
-      50: '#f0fdf4',
-      100: '#dcfce7',
-      200: '#bbf7d0',
-      300: '#86efac',
-      400: '#4ade80',
-      500: '#22c55e',
-      600: '#16a34a',
-      700: '#15803d',
-      800: '#166534',
-      900: '#14532d',
+    swiggyOrange: {
+      50: '#FFF4E6',
+      100: '#FFE4CC',
+      200: '#FFCC99',
+      300: '#FFB366',
+      400: '#FF9933',
+      500: '#FF5722', // Swiggy's signature orange
+      600: '#E64A19',
+      700: '#D84315',
+      800: '#BF360C',
+      900: '#FF3D00'
     },
     neutral: {
-      50: '#fafafa',
-      100: '#f5f5f5',
-      200: '#e5e5e5',
-      300: '#d4d4d4',
-      400: '#a3a3a3',
-      500: '#737373',
-      600: '#525252',
-      700: '#404040',
-      800: '#262626',
-      900: '#171717',
-    },
-    warning: {
-      50: '#fffbeb',
-      100: '#fef3c7',
-      200: '#fde68a',
-      300: '#fcd34d',
-      400: '#fbbf24',
-      500: '#f59e0b',
-      600: '#d97706',
-      700: '#b45309',
-      800: '#92400e',
-      900: '#78350f',
-    },
-    error: {
-      50: '#fef2f2',
-      100: '#fee2e2',
-      200: '#fecaca',
-      300: '#fca5a5',
-      400: '#f87171',
-      500: '#ef4444',
-      600: '#dc2626',
-      700: '#b91c1c',
-      800: '#991b1b',
-      900: '#7f1d1d',
+      50: '#FAFAFA',
+      100: '#F5F5F5',
+      200: '#EEEEEE',
+      300: '#E0E0E0',
+      400: '#BDBDBD',
+      500: '#9E9E9E',
+      600: '#757575',
+      700: '#616161',
+      800: '#424242',
+      900: '#212121'
     },
     success: {
-      50: '#f0fdf4',
-      100: '#dcfce7',
-      200: '#bbf7d0',
-      300: '#86efac',
-      400: '#4ade80',
-      500: '#22c55e',
-      600: '#16a34a',
-      700: '#15803d',
-      800: '#166534',
-      900: '#14532d',
+      50: '#E8F5E8',
+      100: '#C8E6C8',
+      200: '#A5D6A5',
+      300: '#81C784',
+      400: '#66BB6A',
+      500: '#4CAF50',
+      600: '#43A047',
+      700: '#388E3C',
+      800: '#2E7D32',
+      900: '#1B5E20'
     },
+    warning: {
+      50: '#FFFDE7',
+      100: '#FFF9C4',
+      200: '#FFF59D',
+      300: '#FFF176',
+      400: '#FFEE58',
+      500: '#FFEB3B',
+      600: '#FDD835',
+      700: '#FBC02D',
+      800: '#F9A825',
+      900: '#F57F17'
+    },
+    error: {
+      50: '#FFEBEE',
+      100: '#FFCDD2',
+      200: '#EF9A9A',
+      300: '#E57373',
+      400: '#EF5350',
+      500: '#F44336',
+      600: '#E53935',
+      700: '#D32F2F',
+      800: '#C62828',
+      900: '#B71C1C'
+    }
   },
-
-  // Typography Scale
+  
   typography: {
     fontFamily: {
-      sans: ['Inter', 'system-ui', 'sans-serif'],
-      serif: ['Georgia', 'serif'],
-      mono: ['Fira Code', 'monospace'],
+      sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+      mono: ['Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', 'monospace']
     },
     fontSize: {
       xs: ['0.75rem', { lineHeight: '1rem' }],
@@ -108,20 +108,23 @@ export const designSystem = {
       '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
       '5xl': ['3rem', { lineHeight: '1' }],
       '6xl': ['3.75rem', { lineHeight: '1' }],
+      '7xl': ['4.5rem', { lineHeight: '1' }],
+      '8xl': ['6rem', { lineHeight: '1' }],
+      '9xl': ['8rem', { lineHeight: '1' }]
     },
     fontWeight: {
       thin: '100',
+      extralight: '200',
       light: '300',
       normal: '400',
       medium: '500',
       semibold: '600',
       bold: '700',
       extrabold: '800',
-      black: '900',
-    },
+      black: '900'
+    }
   },
 
-  // Spacing Scale
   spacing: {
     px: '1px',
     0: '0',
@@ -157,10 +160,9 @@ export const designSystem = {
     64: '16rem',
     72: '18rem',
     80: '20rem',
-    96: '24rem',
+    96: '24rem'
   },
 
-  // Border Radius
   borderRadius: {
     none: '0',
     sm: '0.125rem',
@@ -170,146 +172,97 @@ export const designSystem = {
     xl: '0.75rem',
     '2xl': '1rem',
     '3xl': '1.5rem',
-    full: '9999px',
+    full: '9999px'
   },
 
-  // Shadows
-  boxShadow: {
-    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-    DEFAULT: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-    md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
-    '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-    inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
-    none: 'none',
+  shadows: {
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    DEFAULT: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+    none: 'none'
   },
 
-  // Breakpoints
-  breakpoints: {
-    sm: '640px',
-    md: '768px',
-    lg: '1024px',
-    xl: '1280px',
-    '2xl': '1536px',
-  },
-
-  // Component Variants
   components: {
     button: {
-      primary: 'bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-2 rounded-lg transition-colors',
-      secondary: 'bg-neutral-100 hover:bg-neutral-200 text-neutral-900 font-medium px-4 py-2 rounded-lg transition-colors',
-      outline: 'border border-primary-500 text-primary-500 hover:bg-primary-50 font-medium px-4 py-2 rounded-lg transition-colors',
-      ghost: 'text-primary-500 hover:bg-primary-50 font-medium px-4 py-2 rounded-lg transition-colors',
-      danger: 'bg-error-500 hover:bg-error-600 text-white font-medium px-4 py-2 rounded-lg transition-colors',
+      primary: 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]',
+      secondary: 'bg-white hover:bg-gray-50 text-orange-600 font-semibold py-3 px-6 rounded-xl border-2 border-orange-600 hover:border-orange-700 transition-all duration-200',
+      ghost: 'bg-transparent hover:bg-orange-50 text-orange-600 font-semibold py-3 px-6 rounded-xl transition-all duration-200',
+      danger: 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200',
+      success: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200'
     },
     card: {
-      default: 'bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-neutral-200',
-      elevated: 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-neutral-200',
-      flat: 'bg-white rounded-lg border border-neutral-200',
+      default: 'bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden',
+      elevated: 'bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden transform hover:scale-[1.02]',
+      flat: 'bg-white rounded-2xl border border-gray-200 hover:border-orange-200 transition-all duration-300 overflow-hidden',
+      gradient: 'bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl shadow-xl text-white overflow-hidden'
     },
     input: {
-      default: 'border border-neutral-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors',
-      error: 'border border-error-500 rounded-lg px-3 py-2 focus:ring-2 focus:ring-error-500 focus:border-error-500 transition-colors',
+      default: 'w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 text-gray-900 placeholder-gray-500',
+      search: 'w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 text-gray-900 placeholder-gray-500 bg-white shadow-sm'
     },
-  },
-
-  // Animation Durations
-  animation: {
-    fast: '150ms',
-    normal: '300ms',
-    slow: '500ms',
-  },
-
-  // Z-Index Scale
-  zIndex: {
-    hide: -1,
-    auto: 'auto',
-    base: 0,
-    docked: 10,
-    dropdown: 1000,
-    sticky: 1100,
-    banner: 1200,
-    overlay: 1300,
-    modal: 1400,
-    popover: 1500,
-    skipLink: 1600,
-    toast: 1700,
-    tooltip: 1800,
-  },
-} as const;
-
-// Utility functions for consistent styling
-export const getColorClass = (color: string, shade: number = 500) => {
-  return `${color}-${shade}`;
+    badge: {
+      primary: 'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800',
+      secondary: 'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800',
+      success: 'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800',
+      warning: 'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800',
+      error: 'inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800'
+    }
+  }
 };
 
-export const getSpacingClass = (type: 'p' | 'm' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr' | 'mx' | 'my' | 'mt' | 'mb' | 'ml' | 'mr', value: string | number) => {
-  return `${type}-${value}`;
-};
-
-export const getTextClass = (size: string, weight?: string) => {
-  return weight ? `text-${size} font-${weight}` : `text-${size}`;
-};
-
-export const getRoundedClass = (size: string = 'DEFAULT') => {
-  return size === 'DEFAULT' ? 'rounded' : `rounded-${size}`;
-};
-
-export const getShadowClass = (size: string = 'DEFAULT') => {
-  return size === 'DEFAULT' ? 'shadow' : `shadow-${size}`;
-};
-
-// Consistent animation classes
-export const animations = {
-  fadeIn: 'animate-in fade-in duration-300',
-  fadeOut: 'animate-out fade-out duration-300',
-  slideInFromBottom: 'animate-in slide-in-from-bottom duration-300',
-  slideInFromTop: 'animate-in slide-in-from-top duration-300',
-  slideInFromLeft: 'animate-in slide-in-from-left duration-300',
-  slideInFromRight: 'animate-in slide-in-from-right duration-300',
-  scaleIn: 'animate-in zoom-in duration-300',
-  scaleOut: 'animate-out zoom-out duration-300',
-  spin: 'animate-spin',
-  pulse: 'animate-pulse',
-  bounce: 'animate-bounce',
-};
-
-// Consistent layout patterns
 export const layouts = {
-  container: 'container mx-auto px-4 sm:px-6 lg:px-8',
-  section: 'py-12 sm:py-16 lg:py-20',
-  card: 'bg-white rounded-xl shadow-md p-6',
+  container: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8',
+  section: 'py-16 lg:py-24',
   grid: {
     responsive: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
-    auto: 'grid grid-cols-auto gap-6',
-    fixed: 'grid gap-6',
-  },
-  flex: {
-    center: 'flex items-center justify-center',
-    between: 'flex items-center justify-between',
-    start: 'flex items-start',
-    end: 'flex items-end',
-    col: 'flex flex-col',
-  },
+    cards: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6',
+    features: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'
+  }
 };
 
-// Status indicators
+export const animations = {
+  fadeIn: 'animate-fade-in',
+  slideUp: 'animate-slide-up',
+  bounce: 'animate-bounce',
+  pulse: 'animate-pulse',
+  spin: 'animate-spin'
+};
+
 export const statusColors = {
-  success: 'text-success-600 bg-success-50 border-success-200',
-  warning: 'text-warning-600 bg-warning-50 border-warning-200',
-  error: 'text-error-600 bg-error-50 border-error-200',
-  info: 'text-primary-600 bg-primary-50 border-primary-200',
-  neutral: 'text-neutral-600 bg-neutral-50 border-neutral-200',
+  success: designSystem.colors.success,
+  warning: designSystem.colors.warning,
+  error: designSystem.colors.error,
+  info: designSystem.colors.primary
 };
 
-// Common icon sizes
-export const iconSizes = {
-  xs: 'h-3 w-3',
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-  lg: 'h-6 w-6',
-  xl: 'h-8 w-8',
-  '2xl': 'h-10 w-10',
-  '3xl': 'h-12 w-12',
+// Utility functions
+export const getColorVariant = (variant: 'primary' | 'secondary' | 'success' | 'warning' | 'error', shade: number = 500) => {
+  return designSystem.colors[variant]?.[shade] || designSystem.colors.primary[500];
 };
+
+export const getSpacing = (size: keyof typeof designSystem.spacing) => {
+  return designSystem.spacing[size];
+};
+
+export const getShadow = (size: keyof typeof designSystem.shadows) => {
+  return designSystem.shadows[size];
+};
+
+// Swiggy-specific theme utilities
+export const swiggyTheme = {
+  primary: designSystem.colors.swiggyOrange[500],
+  primaryHover: designSystem.colors.swiggyOrange[600],
+  background: designSystem.colors.swiggyOrange[500],
+  cardBackground: '#FFFFFF',
+  textPrimary: designSystem.colors.neutral[900],
+  textSecondary: designSystem.colors.neutral[600],
+  textLight: designSystem.colors.neutral[500],
+  border: designSystem.colors.neutral[200],
+  borderHover: designSystem.colors.swiggyOrange[300]
+};
+
+export default designSystem;
