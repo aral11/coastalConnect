@@ -328,7 +328,7 @@ export default function ServiceSector() {
                 Try Again
               </Button>
             </div>
-          ) : services.length === 0 ? (
+          ) : !Array.isArray(services) || services.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl shadow-sm">
               {config.icon}
               <h3 className="text-2xl font-bold text-gray-900 mb-4 mt-4">No Services Found</h3>
