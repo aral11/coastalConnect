@@ -110,7 +110,7 @@ const App = () => (
               <PlaceholderPage
                 title="Explore Locations"
                 description="Discover amazing destinations across coastal Karnataka and plan your perfect trip."
-                icon={<MapPin className="h-16 w-16 text-coastal-400" />}
+                icon={<MapPin className="h-16 w-16 text-orange-500" />}
               />
             }
           />
