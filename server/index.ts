@@ -10,7 +10,7 @@ import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBook
 // Old services route removed - replaced with new service categories
 import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
 import vendorRouter from "./routes/vendors";
-import { refreshStats, incrementVendorCount, incrementCreatorCount, updateAverageRating } from "./routes/stats";
+import { refreshStats, incrementVendorCount, incrementCreatorCount, updateAverageRating, resetStats } from "./routes/stats";
 import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizerProfile, getOrganizerDashboard, authenticateOrganizer, requireVerifiedOrganizer } from "./routes/eventOrganizers";
 import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEventForApproval, deleteEvent, cancelEvent, getEventRegistrations, getEventAnalytics } from "./routes/organizerEvents";
 import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, sendWelcomeEmail, sendCustomNotification, sendBulkNotification, getNotificationHistory, testEmail, testSMS } from "./routes/notifications";
