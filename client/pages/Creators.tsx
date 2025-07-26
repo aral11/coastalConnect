@@ -118,8 +118,8 @@ export default function Creators() {
 
           return {
             ...creator,
-            profile_image: creator.profile_image || fallbackProfiles[index % fallbackProfiles.length],
-            cover_image: creator.cover_image || fallbackCovers[index % fallbackCovers.length],
+            profile_image: creator.profile_image || fallbackAvatar,
+            cover_image: '', // Use CSS gradients instead
             followers_count: creator.followers_count || Math.floor(Math.random() * 50000) + 5000,
             media_count: creator.media_count || Math.floor(Math.random() * 500) + 50,
             engagement_rate: Math.floor(Math.random() * 8) + 3, // 3-10%
