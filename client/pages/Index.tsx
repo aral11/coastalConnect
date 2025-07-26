@@ -268,7 +268,7 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {services.map((service) => (
               <Link key={service.id} to={service.link} className="group">
                 <Card className="h-full bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-0 overflow-hidden group-hover:scale-[1.02]">
