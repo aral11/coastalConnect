@@ -499,6 +499,135 @@ export default function AdminDashboard() {
               </div>
             </TabsContent>
 
+            <TabsContent value="data" className="space-y-6">
+              {/* Data Summary */}
+              {dataSummary && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <AlertTriangle className="h-5 w-5 text-orange-600" />
+                      <span>Platform Data Summary</span>
+                    </CardTitle>
+                    <CardDescription>
+                      Current data in the platform. Use "Clear All Data" to remove all dummy data and start fresh.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-blue-600">Homestays</p>
+                        <p className="text-2xl font-bold text-blue-800">{dataSummary.homestays}</p>
+                      </div>
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-green-600">Eateries</p>
+                        <p className="text-2xl font-bold text-green-800">{dataSummary.eateries}</p>
+                      </div>
+                      <div className="bg-purple-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-purple-600">Drivers</p>
+                        <p className="text-2xl font-bold text-purple-800">{dataSummary.drivers}</p>
+                      </div>
+                      <div className="bg-pink-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-pink-600">Creators</p>
+                        <p className="text-2xl font-bold text-pink-800">{dataSummary.creators}</p>
+                      </div>
+                      <div className="bg-orange-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-orange-600">Events</p>
+                        <p className="text-2xl font-bold text-orange-800">{dataSummary.events}</p>
+                      </div>
+                      <div className="bg-indigo-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-indigo-600">Bookings</p>
+                        <p className="text-2xl font-bold text-indigo-800">{dataSummary.bookings}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-gray-600">Users</p>
+                        <p className="text-2xl font-bold text-gray-800">{dataSummary.users}</p>
+                      </div>
+                      <div className="bg-yellow-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-yellow-600">Reviews</p>
+                        <p className="text-2xl font-bold text-yellow-800">{dataSummary.reviews}</p>
+                      </div>
+                    </div>
+
+                    <div className="border-t pt-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">Clear All Data</h3>
+                          <p className="text-gray-600 mb-4">
+                            This will permanently remove all dummy data from the platform including vendors, bookings, events, and reviews.
+                            The platform statistics will be reset to zero. This action cannot be undone.
+                          </p>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          onClick={() => setShowClearDialog(true)}
+                          disabled={actionLoading || clearLoading}
+                          className="flex items-center space-x-2"
+                        >
+                          <AlertTriangle className="h-4 w-4" />
+                          <span>Clear All Data</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Clear Data Confirmation */}
+              {showClearDialog && (
+                <Card className="border-red-200">
+                  <CardHeader>
+                    <CardTitle className="text-red-800 flex items-center space-x-2">
+                      <AlertTriangle className="h-5 w-5" />
+                      <span>Confirm Data Deletion</span>
+                    </CardTitle>
+                    <CardDescription className="text-red-600">
+                      This action will permanently delete ALL data from the platform and cannot be undone.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Type "CLEAR ALL DATA" to confirm:
+                      </label>
+                      <Input
+                        value={clearConfirmText}
+                        onChange={(e) => setClearConfirmText(e.target.value)}
+                        placeholder="CLEAR ALL DATA"
+                        className="border-red-300 focus:border-red-500"
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <Button
+                        variant="destructive"
+                        onClick={handleClearAllData}
+                        disabled={clearConfirmText !== 'CLEAR ALL DATA' || clearLoading}
+                        className="flex items-center space-x-2"
+                      >
+                        {clearLoading ? (
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <XCircle className="h-4 w-4" />
+                        )}
+                        <span>{clearLoading ? 'Clearing...' : 'Clear All Data'}</span>
+                      </Button>
+
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowClearDialog(false);
+                          setClearConfirmText('');
+                        }}
+                        disabled={clearLoading}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
             <TabsContent value="analytics">
               <Card>
                 <CardHeader>
