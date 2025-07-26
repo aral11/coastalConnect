@@ -112,7 +112,7 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
               {stat.icon}
               {stat.value}
             </div>
-            <div className="text-blue-200 text-sm">{stat.label}</div>
+            <div className="text-orange-100 text-sm">{stat.label}</div>
           </div>
         ))}
       </div>
