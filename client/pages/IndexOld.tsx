@@ -495,9 +495,9 @@ export default function Index() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img
-                  src="/coastalconnect-logo.svg"
+                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Ff02d77f44d21496f8520d656967049db?format=webp&width=800"
                   alt="coastalConnect"
-                  className="logo-brand h-8 brightness-0 invert"
+                  className="h-8 w-auto object-contain brightness-0 invert"
                 />
               </div>
               <p className="text-gray-400 mb-4">
