@@ -36,7 +36,8 @@ import {
   UserCheck,
   Sparkles,
   ShoppingBag,
-  Globe
+  Globe,
+  Calendar
 } from 'lucide-react';
 
 interface ServiceCategory {
