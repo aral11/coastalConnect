@@ -40,6 +40,17 @@ interface AdminStats {
   revenueToday: number;
 }
 
+interface DataSummary {
+  homestays: number;
+  eateries: number;
+  drivers: number;
+  creators: number;
+  events: number;
+  bookings: number;
+  users: number;
+  reviews: number;
+}
+
 export default function AdminDashboard() {
   const [pendingItems, setPendingItems] = useState<PendingItem[]>([]);
   const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
