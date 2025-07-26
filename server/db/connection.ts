@@ -34,7 +34,8 @@ export const getConnection = async (): Promise<sql.ConnectionPool> => {
     if (!pool) {
       console.log(`🔗 Connecting to SQL Server: ${config.server}`);
       console.log(`📁 Database: ${config.database}`);
-      console.log(`🔐 Authentication: Windows Authentication (integrated security)`);
+      console.log(`👤 User: ${config.authentication.options?.userName || 'Current Windows User'}`);
+      console.log(`🔐 Authentication: Windows Authentication (NTLM)`);
 
       pool = new sql.ConnectionPool(config);
       await pool.connect();
