@@ -13,6 +13,7 @@ import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
 import Eateries from "./pages/Eateries";
 import Events from "./pages/Events";
+import Services from "./pages/Services";
 import Creators from "./pages/Creators";
 import DriverApp from "./pages/DriverApp";
 import Dashboard from "./pages/Dashboard";
