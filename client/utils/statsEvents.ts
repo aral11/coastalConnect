@@ -45,6 +45,15 @@ export const triggerRatingUpdateEvent = (ratingData: { vendorId: number; vendorT
 };
 
 /**
+ * Trigger when all platform data is cleared (admin function)
+ */
+export const triggerDataClearedEvent = () => {
+  const event = new CustomEvent('data-cleared');
+  window.dispatchEvent(event);
+  console.log('🗑️ Data cleared event triggered - stats will reset to zero');
+};
+
+/**
  * Force refresh all platform statistics
  */
 export const refreshPlatformStats = async () => {
@@ -55,7 +64,7 @@ export const refreshPlatformStats = async () => {
         'Content-Type': 'application/json'
       }
     });
-    
+
     if (response.ok) {
       console.log('📊 Platform stats refreshed successfully');
       // Trigger a custom event to notify components
