@@ -124,10 +124,11 @@ export default function Navigation({ className = '' }: NavigationProps) {
             aria-label="coastalConnect home"
           >
             <div className="relative">
-              {/* Orange circle background like Swiggy */}
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">C</span>
-              </div>
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Ff02d77f44d21496f8520d656967049db?format=webp&width=800"
+                alt="coastalConnect"
+                className="h-12 w-12 object-contain"
+              />
               <div className="absolute -top-1 -right-1">
                 <Badge className="bg-green-500 text-white text-xs px-1 py-0 h-4 text-[10px] font-bold rounded-full">
                   LIVE
