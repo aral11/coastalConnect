@@ -306,9 +306,11 @@ export default function Navigation({ className = '' }: NavigationProps) {
                       onClick={handleMobileMenuClose}
                       className="flex items-center space-x-3"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-                        <span className="text-white font-bold">C</span>
-                      </div>
+                      <img
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Ff02d77f44d21496f8520d656967049db?format=webp&width=800"
+                        alt="coastalConnect"
+                        className="h-10 w-10 object-contain"
+                      />
                       <div>
                         <div className="font-bold text-gray-900">coastalConnect</div>
                         <div className="text-xs text-gray-500">Udupi • Manipal</div>
