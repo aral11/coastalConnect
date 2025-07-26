@@ -320,7 +320,10 @@ export default function LocalCreatorsGrid() {
                   className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
                   onError={(e) => {
                     console.log(`Failed to load image: ${creator.profile_image}`);
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face';
+                    // Generate professional initials avatar as fallback
+                    const colors = ['4F46E5', 'EC4899', 'F59E0B', '0EA5E9', '10B981', '8B5CF6'];
+                    const bgColor = colors[creator.id % colors.length];
+                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(creator.name)}&size=200&background=${bgColor}&color=FFFFFF&bold=true&format=png`;
                   }}
                   onLoad={() => console.log(`Successfully loaded image for ${creator.name}`)}
                 />
