@@ -23,7 +23,7 @@ export default function PageHeader({
   children
 }: PageHeaderProps) {
   return (
-    <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 text-white overflow-hidden">
+    <section className="relative bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 text-white overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black/20"></div>
