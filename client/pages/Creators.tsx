@@ -106,6 +106,9 @@ export default function Creators() {
       const data = await response.json();
       
       if (data.success && data.data) {
+        console.log('📋 Raw creators data received:', data.data);
+        console.log(`🔗 Data source: ${data.source || 'unknown'}`);
+
         // Enhance creators with additional mock data
         const enhancedCreators = data.data.map((creator: Creator, index: number) => {
           // Fallback profile images if not provided
