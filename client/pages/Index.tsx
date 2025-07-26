@@ -196,7 +196,7 @@ export default function Index() {
               </h1>
               
               <p className="text-xl lg:text-2xl text-orange-100 max-w-4xl mx-auto leading-relaxed mb-8">
-                Your one-stop platform for authentic coastal experiences. Find homestays, local eateries, trusted drivers, and talented creators.
+                Your one-stop platform for authentic coastal experiences.
               </p>
             </div>
 
