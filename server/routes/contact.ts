@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { sendEmail } from '../services/emailService';
+import { EmailService } from '../services/emailService';
 
 interface ContactFormData {
   name: string;
