@@ -232,8 +232,8 @@ export default function Index() {
             </div>
 
             {/* Dynamic Platform Stats */}
-            <div className="mt-12">
-              <PlatformStats className="mb-12" />
+            <div className="mt-8">
+              <PlatformStats className="mb-8" />
             </div>
           </div>
         </div>
