@@ -17,64 +17,70 @@ export const getPlatformStats: RequestHandler = async (req, res) => {
 
     try {
       const pool = await getConnection();
-      // Query homestays
+
+      // Query ADMIN-APPROVED homestays only
       const homestaysResult = await pool.request().query(
-        'SELECT COUNT(*) as count FROM homestays WHERE is_active = 1'
+        'SELECT COUNT(*) as count FROM homestays WHERE is_active = 1 AND admin_approval_status = \'approved\''
       );
-      
-      // Query eateries
+
+      // Query ADMIN-APPROVED eateries only
       const eateriesResult = await pool.request().query(
-        'SELECT COUNT(*) as count FROM eateries WHERE is_active = 1'
+        'SELECT COUNT(*) as count FROM eateries WHERE is_active = 1 AND admin_approval_status = \'approved\''
       );
-      
-      // Query drivers
+
+      // Query ADMIN-APPROVED drivers only
       const driversResult = await pool.request().query(
-        'SELECT COUNT(*) as count FROM drivers WHERE is_available = 1'
+        'SELECT COUNT(*) as count FROM drivers WHERE is_available = 1 AND admin_approval_status = \'approved\''
       );
-      
-      // Query creators
+
+      // Query ADMIN-APPROVED creators only
       const creatorsResult = await pool.request().query(
-        'SELECT COUNT(*) as count FROM creators WHERE is_active = 1'
+        'SELECT COUNT(*) as count FROM creators WHERE is_active = 1 AND admin_approval_status = \'approved\''
       );
-      
-      // Query total bookings
+
+      // Query CONFIRMED bookings only (real-time updates)
       const bookingsResult = await pool.request().query(
-        'SELECT COUNT(*) as count FROM bookings WHERE status != \'cancelled\''
+        'SELECT COUNT(*) as count FROM bookings WHERE status = \'confirmed\' OR status = \'completed\''
       );
-      
-      // Query average rating
+
+      // Query average rating from APPROVED vendors only
       const ratingsResult = await pool.request().query(`
-        SELECT AVG(CAST(rating as float)) as avg_rating 
+        SELECT AVG(CAST(rating as float)) as avg_rating
         FROM (
-          SELECT rating FROM homestays WHERE rating IS NOT NULL
+          SELECT rating FROM homestays WHERE rating IS NOT NULL AND admin_approval_status = 'approved'
           UNION ALL
-          SELECT rating FROM eateries WHERE rating IS NOT NULL
+          SELECT rating FROM eateries WHERE rating IS NOT NULL AND admin_approval_status = 'approved'
           UNION ALL
-          SELECT rating FROM drivers WHERE rating IS NOT NULL
+          SELECT rating FROM drivers WHERE rating IS NOT NULL AND admin_approval_status = 'approved'
         ) as all_ratings
       `);
-      
-      // Query total reviews
+
+      // Query total reviews from APPROVED vendors only
       const reviewsResult = await pool.request().query(`
         SELECT SUM(total_reviews) as total FROM (
-          SELECT ISNULL(total_reviews, 0) as total_reviews FROM homestays WHERE total_reviews IS NOT NULL
+          SELECT ISNULL(total_reviews, 0) as total_reviews FROM homestays WHERE total_reviews IS NOT NULL AND admin_approval_status = 'approved'
           UNION ALL
-          SELECT ISNULL(total_reviews, 0) as total_reviews FROM eateries WHERE total_reviews IS NOT NULL
+          SELECT ISNULL(total_reviews, 0) as total_reviews FROM eateries WHERE total_reviews IS NOT NULL AND admin_approval_status = 'approved'
           UNION ALL
-          SELECT ISNULL(total_reviews, 0) as total_reviews FROM drivers WHERE total_reviews IS NOT NULL
+          SELECT ISNULL(total_reviews, 0) as total_reviews FROM drivers WHERE total_reviews IS NOT NULL AND admin_approval_status = 'approved'
         ) as all_reviews
       `);
-      
+
+      // Query total registered users
+      const usersResult = await pool.request().query(
+        'SELECT COUNT(*) as count FROM Users WHERE is_verified = 1'
+      );
+
       stats = {
-        totalVendors: (homestaysResult.recordset[0]?.count || 0) + 
+        totalVendors: (homestaysResult.recordset[0]?.count || 0) +
                      (eateriesResult.recordset[0]?.count || 0),
         totalBookings: bookingsResult.recordset[0]?.count || 0,
         totalCreators: creatorsResult.recordset[0]?.count || 0,
         averageRating: Math.round((ratingsResult.recordset[0]?.avg_rating || 0) * 10) / 10,
-        activeVendors: (homestaysResult.recordset[0]?.count || 0) + 
-                      (eateriesResult.recordset[0]?.count || 0) + 
+        activeVendors: (homestaysResult.recordset[0]?.count || 0) +
+                      (eateriesResult.recordset[0]?.count || 0) +
                       (driversResult.recordset[0]?.count || 0),
-        totalUsers: 0, // This would come from users table when implemented
+        totalUsers: usersResult.recordset[0]?.count || 0,
         totalReviews: reviewsResult.recordset[0]?.total || 0
       };
       
