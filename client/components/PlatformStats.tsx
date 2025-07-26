@@ -177,14 +177,14 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
   }
 
   return (
-    <div className={`grid grid-cols-${Math.min(statsToShow.length, 4)} gap-6 max-w-4xl mx-auto ${className}`}>
+    <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto ${className}`}>
       {statsToShow.map((stat, index) => (
         <div key={index} className="text-center">
           <div className="text-3xl font-bold text-white mb-1 flex items-center justify-center">
             {stat.icon}
             {stat.value}
           </div>
-          <div className="text-blue-200 text-sm">{stat.label}</div>
+          <div className="text-orange-100 text-sm">{stat.label}</div>
         </div>
       ))}
     </div>
