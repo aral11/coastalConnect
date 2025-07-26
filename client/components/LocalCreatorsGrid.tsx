@@ -103,12 +103,185 @@ export default function LocalCreatorsGrid() {
   }
 
   if (error) {
+    console.log('LocalCreatorsGrid: Error occurred, showing fallback creators');
+
+    // Provide fallback creators to prevent blank cards
+    const fallbackCreators: Creator[] = [
+      {
+        id: 1,
+        name: 'Priya Shenoy',
+        title: 'Coastal Photographer',
+        description: 'Capturing the beauty of coastal Karnataka through stunning photography. Specializing in landscapes and cultural documentation.',
+        instagram_handle: '@priya_coastal',
+        instagram_url: 'https://instagram.com/priya_coastal',
+        profile_image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=300&h=300&fit=crop&crop=face',
+        cover_image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=200&fit=crop',
+        followers_count: 5200,
+        specialty: 'Photography',
+        location: 'Udupi, Karnataka',
+        featured_works: [],
+        is_verified: true,
+        is_active: true,
+        media_count: 156
+      },
+      {
+        id: 2,
+        name: 'Arjun Kumar',
+        title: 'Food Content Creator',
+        description: 'Exploring authentic Udupi cuisine and coastal delicacies. Sharing traditional recipes and restaurant reviews.',
+        instagram_handle: '@foodie_arjun',
+        instagram_url: 'https://instagram.com/foodie_arjun',
+        profile_image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
+        cover_image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=600&h=200&fit=crop',
+        followers_count: 3800,
+        specialty: 'Food & Culinary',
+        location: 'Manipal, Karnataka',
+        featured_works: [],
+        is_verified: false,
+        is_active: true,
+        media_count: 89
+      },
+      {
+        id: 3,
+        name: 'Deepa Kamath',
+        title: 'Cultural Heritage Documenter',
+        description: 'Preserving and sharing the rich cultural heritage of coastal Karnataka through visual storytelling.',
+        instagram_handle: '@coastal_heritage',
+        instagram_url: 'https://instagram.com/coastal_heritage',
+        profile_image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
+        cover_image: 'https://images.unsplash.com/photo-1582632431511-26040d79dfa7?w=600&h=200&fit=crop',
+        followers_count: 2100,
+        specialty: 'Heritage & Tradition',
+        location: 'Udupi, Karnataka',
+        featured_works: [],
+        is_verified: true,
+        is_active: true,
+        media_count: 203
+      },
+      {
+        id: 4,
+        name: 'Ravi D\'Souza',
+        title: 'Travel & Lifestyle Vlogger',
+        description: 'Showcasing hidden gems and travel experiences across coastal Karnataka for fellow explorers.',
+        instagram_handle: '@ravi_travels',
+        instagram_url: 'https://instagram.com/ravi_travels',
+        profile_image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
+        cover_image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=200&fit=crop',
+        followers_count: 4600,
+        specialty: 'Travel & Lifestyle',
+        location: 'Malpe, Karnataka',
+        featured_works: [],
+        is_verified: false,
+        is_active: true,
+        media_count: 134
+      }
+    ];
+
     return (
-      <div className="text-center py-12">
-        <p className="text-red-600 mb-4">{error}</p>
-        <Button onClick={fetchCreators} className="btn-coastal">
-          Try Again
-        </Button>
+      <div className="space-y-6">
+        <div className="text-center">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-sm">
+            <Camera className="h-4 w-4 mr-2" />
+            Showing sample creators (API unavailable)
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {fallbackCreators.map((creator) => (
+            <Card key={creator.id} className="card-coastal overflow-hidden group hover:shadow-lg transition-all duration-300">
+              {/* Cover Image */}
+              {creator.cover_image && (
+                <div className="relative h-24 overflow-hidden">
+                  <img
+                    src={creator.cover_image}
+                    alt={`${creator.name} cover`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+                </div>
+              )}
+
+              {/* Profile Section */}
+              <CardHeader className="pb-3 relative">
+                <div className="flex items-start space-x-3">
+                  <div className="relative">
+                    <img
+                      src={creator.profile_image}
+                      alt={creator.name}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
+                    />
+                    {creator.is_verified && (
+                      <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
+                        <Verified className="h-3 w-3 text-white fill-current" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg font-bold truncate">{creator.name}</CardTitle>
+                    <CardDescription className="text-sm">{creator.title}</CardDescription>
+
+                    <div className="flex items-center mt-2 text-xs text-gray-600">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span className="truncate">{creator.location}</span>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-3">
+                {/* Specialty Badge */}
+                <div className="flex items-center">
+                  <Badge variant="secondary" className="text-xs">
+                    {getSpecialtyIcon(creator.specialty)}
+                    <span className="ml-1">{creator.specialty}</span>
+                  </Badge>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {creator.description}
+                </p>
+
+                {/* Instagram Stats */}
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  {creator.followers_count && (
+                    <div className="flex items-center">
+                      <Users className="h-4 w-4 mr-1" />
+                      <span>{formatFollowers(creator.followers_count)} followers</span>
+                    </div>
+                  )}
+                  {creator.media_count && (
+                    <div className="flex items-center">
+                      <Camera className="h-4 w-4 mr-1" />
+                      <span>{creator.media_count} posts</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-2 pt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 text-xs"
+                    onClick={() => window.open(creator.instagram_url, '_blank')}
+                  >
+                    <Instagram className="h-3 w-3 mr-1" />
+                    Follow
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="flex-1 text-xs btn-coastal"
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    View
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
