@@ -136,6 +136,7 @@ export function createServer() {
   app.post("/api/stats/increment-vendor", incrementVendorCount);
   app.post("/api/stats/increment-creator", incrementCreatorCount);
   app.post("/api/stats/update-rating", updateAverageRating);
+  app.post("/api/stats/reset", resetStats);
 
   // Event Organizer Authentication routes
   app.post("/api/organizers/register", registerOrganizer);
