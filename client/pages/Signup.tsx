@@ -132,36 +132,7 @@ export default function Signup() {
     }
   };
 
-  const handleAppleSignup = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Mock Apple signup process
-      const response = await fetch('/api/auth/apple', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token: 'mock_apple_token_' + Date.now()
-        })
-      });
 
-      const data = await response.json();
-
-      if (data.success) {
-        login(data.data.token, data.data.user);
-        navigate('/dashboard');
-      } else {
-        setError(data.message || 'Apple signup failed');
-      }
-    } catch (err) {
-      setError('Apple signup failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-coastal-50 via-white to-ocean-50 flex items-center justify-center p-4">
