@@ -111,7 +111,7 @@ export default function Drivers() {
           distance: Math.floor(Math.random() * 10) + 1,
           estimated_arrival: Math.floor(Math.random() * 15) + 5,
           vehicle_model: ['Maruti Dzire', 'Hyundai Xcent', 'Toyota Innova', 'Mahindra Scorpio', 'Tata Nexon'][Math.floor(Math.random() * 5)],
-          profile_image: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=400&fit=crop&crop=face`,
+          profile_image: `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name)}&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png`,
           vehicle_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`
         }));
         
