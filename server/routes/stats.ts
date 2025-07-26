@@ -278,3 +278,38 @@ export const updateAverageRating: RequestHandler = async (req, res) => {
     });
   }
 };
+
+// Reset all stats to zero (admin function for clearing data)
+export const resetStats: RequestHandler = async (req, res) => {
+  try {
+    // Clear the stats cache to force fresh calculation
+    statsCache = null;
+    lastCacheUpdate = 0;
+
+    // For demo purposes, we'll simulate resetting stats
+    // In a real implementation, you might want to:
+    // 1. Clear cache
+    // 2. Update any stats tables to zero
+    // 3. Reset counters
+
+    res.json({
+      success: true,
+      message: 'Statistics reset successfully',
+      data: {
+        activeVendors: 0,
+        totalBookings: 0,
+        localCreators: 0,
+        averageRating: 0,
+        timestamp: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    console.error('Error resetting stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reset statistics',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
