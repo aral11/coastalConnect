@@ -17,7 +17,7 @@ interface PlaceholderPageProps {
 export default function PlaceholderPage({ 
   title, 
   description, 
-  icon = <Construction className="h-16 w-16 text-coastal-400" />
+  icon = <Construction className="h-16 w-16 text-orange-500" />
 }: PlaceholderPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
