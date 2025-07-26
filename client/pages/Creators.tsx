@@ -107,17 +107,38 @@ export default function Creators() {
       
       if (data.success && data.data) {
         // Enhance creators with additional mock data
-        const enhancedCreators = data.data.map((creator: Creator) => ({
-          ...creator,
-          followers_count: creator.followers_count || Math.floor(Math.random() * 50000) + 5000,
-          media_count: creator.media_count || Math.floor(Math.random() * 500) + 50,
-          engagement_rate: Math.floor(Math.random() * 8) + 3, // 3-10%
-          recent_posts: Math.floor(Math.random() * 15) + 5,
-          collaboration_rate: Math.floor(Math.random() * 5000) + 2000,
-          languages: ['English', 'Kannada', 'Hindi'].slice(0, Math.floor(Math.random() * 3) + 1),
-          categories: ['Photography', 'Travel', 'Food'].slice(0, Math.floor(Math.random() * 2) + 1),
-          cover_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=800&h=200&fit=crop`
-        }));
+        const enhancedCreators = data.data.map((creator: Creator, index: number) => {
+          // Fallback profile images if not provided
+          const fallbackProfiles = [
+            'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
+            'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop&crop=face'
+          ];
+
+          // Fallback cover images
+          const fallbackCovers = [
+            'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1588678401-c846c6021369?w=800&h=400&fit=crop'
+          ];
+
+          return {
+            ...creator,
+            profile_image: creator.profile_image || fallbackProfiles[index % fallbackProfiles.length],
+            cover_image: creator.cover_image || fallbackCovers[index % fallbackCovers.length],
+            followers_count: creator.followers_count || Math.floor(Math.random() * 50000) + 5000,
+            media_count: creator.media_count || Math.floor(Math.random() * 500) + 50,
+            engagement_rate: Math.floor(Math.random() * 8) + 3, // 3-10%
+            recent_posts: Math.floor(Math.random() * 15) + 5,
+            collaboration_rate: Math.floor(Math.random() * 5000) + 2000,
+            languages: ['English', 'Kannada', 'Hindi'].slice(0, Math.floor(Math.random() * 3) + 1),
+            categories: ['Photography', 'Travel', 'Food'].slice(0, Math.floor(Math.random() * 2) + 1)
+          };
+        });
         
         setCreators(enhancedCreators);
         
