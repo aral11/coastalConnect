@@ -242,6 +242,14 @@ export default function Index() {
       {/* Service Categories - Swiggy Style Cards */}
       <section className="bg-gray-50 py-16">
         <div className={layouts.container}>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Explore Our Services</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover authentic coastal experiences through our trusted network of local providers
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service) => (
               <Link key={service.id} to={service.link} className="group">
