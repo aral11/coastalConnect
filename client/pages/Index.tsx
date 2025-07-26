@@ -232,7 +232,9 @@ export default function Index() {
             </div>
 
             {/* Dynamic Platform Stats */}
-            <PlatformStats className="mb-8" />
+            <div className="mt-16">
+              <PlatformStats className="mb-8" />
+            </div>
           </div>
         </div>
       </section>
