@@ -170,12 +170,19 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
     return (
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto ${className}`}>
         {statsToShow.map((stat, index) => (
-          <div key={index} className="text-center">
-            <div className="text-3xl font-bold text-white mb-1 flex items-center justify-center">
+          <div key={index} className="text-center relative">
+            <div className={`text-3xl font-bold text-white mb-1 flex items-center justify-center transition-all duration-500 ${
+              isUpdating ? 'scale-110 animate-pulse' : ''
+            }`}>
               {stat.icon}
               {stat.value}
             </div>
             <div className="text-orange-100 text-sm">{stat.label}</div>
+            {isUpdating && (
+              <div className="absolute -top-2 -right-2">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
+              </div>
+            )}
           </div>
         ))}
       </div>
