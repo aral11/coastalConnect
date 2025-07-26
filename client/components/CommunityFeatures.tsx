@@ -238,8 +238,14 @@ export default function CommunityFeatures() {
               )}
             </div>
 
-            <Button className="w-full bg-purple-600 hover:bg-purple-700">
-              View Timings <ChevronRight className="ml-2 h-4 w-4" />
+            <Button
+              className="w-full bg-purple-600 hover:bg-purple-700"
+              onClick={() => {
+                const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=temples+udupi+manipal';
+                window.open(googleMapsUrl, '_blank');
+              }}
+            >
+              View Temple Locations <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
 
