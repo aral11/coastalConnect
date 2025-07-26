@@ -287,7 +287,10 @@ export default function CommunityFeatures() {
               </div>
             </div>
 
-            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              onClick={() => window.location.href = '/contact'}
+            >
               Join Community <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
