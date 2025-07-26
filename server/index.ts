@@ -111,14 +111,7 @@ export function createServer() {
   app.put("/api/bookings/driver/:booking_id/status", updateDriverBookingStatus);
   app.post("/api/bookings/validate-trip-code", validateTripCode);
 
-  // Services API routes - All 9 Sectors
-  app.get("/api/services/beauty-wellness", getBeautyWellness);
-  app.get("/api/services/arts-history", getArtsHistory);
-  app.get("/api/services/nightlife", getNightlife);
-  app.get("/api/services/shopping", getShopping);
-  app.get("/api/services/entertainment", getEntertainment);
-  app.get("/api/services/event-management", getEventManagement);
-  app.get("/api/services/other-services", getOtherServices);
+  // Old service routes removed - replaced with new service categories API
 
   // Community API routes - Events & Religious Services
   app.get("/api/community/events", getLocalEvents);
