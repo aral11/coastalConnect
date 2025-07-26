@@ -354,6 +354,19 @@ export default function Creators() {
                           src={creator.cover_image}
                           alt={`${creator.name} cover`}
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            console.log(`❌ Failed to load cover image for ${creator.name}: ${creator.cover_image}`);
+                            const fallbackCovers = [
+                              'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop',
+                              'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop',
+                              'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop',
+                              'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop',
+                              'https://images.unsplash.com/photo-1588678401-c846c6021369?w=800&h=400&fit=crop'
+                            ];
+                            const randomCover = fallbackCovers[creator.id % fallbackCovers.length];
+                            e.currentTarget.src = randomCover;
+                          }}
+                          onLoad={() => console.log(`✅ Successfully loaded cover image for ${creator.name}`)}
                         />
                       )}
                       
@@ -407,7 +420,7 @@ export default function Creators() {
                             const randomFallback = fallbackImages[creator.id % fallbackImages.length];
                             e.currentTarget.src = randomFallback;
                           }}
-                          onLoad={() => console.log(`�� Successfully loaded profile image for ${creator.name}`)}
+                          onLoad={() => console.log(`✅ Successfully loaded profile image for ${creator.name}`)}
                         />
                         
                         <div className="flex-1 pt-2">
