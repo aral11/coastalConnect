@@ -160,8 +160,12 @@ export function createServer() {
   app.get("/api/stats", getPlatformStats);
 
   // Service categories
-  app.get("/api/services", getServiceCategories);
-  app.get("/api/services/:categoryId", getServiceCategory);
+app.get("/api/services", getServiceCategories);
+app.get("/api/services/:categoryId", getServiceCategory);
+
+// Contact form
+app.post("/api/contact", submitContactForm);
+app.get("/api/contact/info", getContactInfo);
 
   return app;
 }
