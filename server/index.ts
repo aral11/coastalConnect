@@ -168,5 +168,12 @@ app.get("/api/services/:categoryId", getServiceCategory);
 app.post("/api/contact", submitContactForm);
 app.get("/api/contact/info", getContactInfo);
 
+// Business dashboard
+app.get("/api/business/metrics", getBusinessMetrics);
+app.get("/api/business/recent-bookings", getRecentBookings);
+app.get("/api/business/bookings/:bookingId", getBookingDetails);
+app.put("/api/business/bookings/:bookingId/status", updateBookingStatus);
+app.get("/api/business/analytics", getBusinessAnalytics);
+
   return app;
 }
