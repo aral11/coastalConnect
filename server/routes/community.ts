@@ -45,7 +45,14 @@ export const getLocalEvents: RequestHandler = async (req, res) => {
   } catch (error) {
     console.log('Database not available, using fallback events data');
     
-    // Enhanced fallback data with real-style events
+    // Enhanced fallback data with real-style events - dates dynamically generated
+    const today = new Date();
+    const getEventDate = (daysFromNow: number) => {
+      const eventDate = new Date(today);
+      eventDate.setDate(today.getDate() + daysFromNow);
+      return eventDate.toISOString().split('T')[0];
+    };
+
     const fallbackData = [
       {
         id: 1,
@@ -54,7 +61,7 @@ export const getLocalEvents: RequestHandler = async (req, res) => {
         category: "kambala",
         location: "Udupi",
         address: "Kambala Ground, Udupi, Karnataka",
-        event_date: "2024-01-15",
+        event_date: getEventDate(3),
         start_time: "14:00",
         end_time: "20:00",
         organizer: "Udupi Kambala Committee",
