@@ -27,6 +27,7 @@ import CreateEvent from "./pages/CreateEvent";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Help from "./pages/Help";
 import {
   Info,
   Phone,
@@ -34,7 +35,12 @@ import {
   FileText,
   Shield,
   Key,
-  MapPin
+  MapPin,
+  HeadphonesIcon,
+  MessageCircle,
+  AlertTriangle,
+  Users,
+  BookOpen
 } from "lucide-react";
 
 const queryClient = new QueryClient();
@@ -110,46 +116,90 @@ const App = () => (
           />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route 
-            path="/help" 
+          <Route path="/help" element={<Help />} />
+          <Route
+            path="/terms"
             element={
-              <PlaceholderPage 
-                title="Help Center" 
-                description="Find answers to common questions and get support."
-                icon={<HelpCircle className="h-16 w-16 text-coastal-400" />}
-              />
-            } 
-          />
-          <Route 
-            path="/terms" 
-            element={
-              <PlaceholderPage 
-                title="Terms of Service" 
+              <PlaceholderPage
+                title="Terms of Service"
                 description="Read our terms and conditions for using Coastal Connect."
-                icon={<FileText className="h-16 w-16 text-coastal-400" />}
+                icon={<FileText className="h-16 w-16 text-orange-500" />}
               />
-            } 
+            }
           />
-          <Route 
-            path="/privacy" 
+          <Route
+            path="/privacy"
             element={
-              <PlaceholderPage 
-                title="Privacy Policy" 
+              <PlaceholderPage
+                title="Privacy Policy"
                 description="Learn how we protect and handle your personal information."
-                icon={<Shield className="h-16 w-16 text-coastal-400" />}
+                icon={<Shield className="h-16 w-16 text-orange-500" />}
               />
-            } 
+            }
           />
-          <Route 
-            path="/forgot-password" 
+          <Route
+            path="/forgot-password"
             element={
-              <PlaceholderPage 
-                title="Reset Password" 
+              <PlaceholderPage
+                title="Reset Password"
                 description="Reset your password to regain access to your account."
-                icon={<Key className="h-16 w-16 text-coastal-400" />}
+                icon={<Key className="h-16 w-16 text-orange-500" />}
               />
-            } 
+            }
           />
+
+          {/* Support & Help Routes */}
+          <Route path="/support" element={
+            <PlaceholderPage
+              title="Customer Support"
+              description="Get dedicated support for your bookings and account issues."
+              icon={<HeadphonesIcon className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/safety" element={
+            <PlaceholderPage
+              title="Safety Guidelines"
+              description="Important safety information for your coastal travels."
+              icon={<Shield className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/feedback" element={
+            <PlaceholderPage
+              title="Feedback"
+              description="Share your thoughts and help us improve our services."
+              icon={<MessageCircle className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/report-issue" element={
+            <PlaceholderPage
+              title="Report an Issue"
+              description="Report problems or safety concerns with our services."
+              icon={<AlertTriangle className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+
+          {/* Company Pages */}
+          <Route path="/careers" element={
+            <PlaceholderPage
+              title="Careers"
+              description="Join our team and help shape the future of coastal tourism."
+              icon={<Users className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/press" element={
+            <PlaceholderPage
+              title="Press & Media"
+              description="Latest news, press releases, and media resources."
+              icon={<FileText className="h-16 w-16 text-orange-500" />}
+            />
+          } />
+          <Route path="/blog" element={
+            <PlaceholderPage
+              title="Blog"
+              description="Travel tips, destination guides, and coastal stories."
+              icon={<BookOpen className="h-16 w-16 text-orange-500" />}
+            />
+          } />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
