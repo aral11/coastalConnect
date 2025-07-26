@@ -7,7 +7,7 @@ import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
 import { getCreators, getCreatorById, searchCreators, getInstagramStats } from "./routes/creators";
 import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./routes/auth";
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
-import { getBeautyWellness, getArtsHistory, getNightlife, getShopping, getEntertainment, getEventManagement, getOtherServices } from "./routes/services";
+// Old services route removed - replaced with new service categories
 import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
 import { registerVendor, getPendingVendors, updateVendorStatus, getVendorStatus, getVendorCategories } from "./routes/vendors";
 import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizerProfile, getOrganizerDashboard, authenticateOrganizer, requireVerifiedOrganizer } from "./routes/eventOrganizers";
