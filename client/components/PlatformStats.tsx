@@ -59,6 +59,24 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
       }, 1000);
     };
 
+    const handleDataCleared = () => {
+      console.log('🗑️ Data cleared detected, resetting stats...');
+      setIsUpdating(true);
+      setStats({
+        totalVendors: 0,
+        totalBookings: 0,
+        totalCreators: 0,
+        averageRating: 0,
+        activeVendors: 0,
+        totalUsers: 0,
+        totalReviews: 0
+      });
+      setTimeout(() => {
+        fetchStats();
+        setTimeout(() => setIsUpdating(false), 1000);
+      }, 1000);
+    };
+
     // Add event listeners for real-time updates
     window.addEventListener('booking-confirmed', handleBookingEvent);
     window.addEventListener('vendor-approved', handleVendorApproval);
