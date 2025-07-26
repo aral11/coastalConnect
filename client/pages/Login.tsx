@@ -108,13 +108,15 @@ export default function Login() {
     setError('');
 
     try {
-      // Mock Apple OAuth flow
+      // Simulate Apple OAuth popup
+      const appleToken = `apple_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
       const response = await fetch('/api/auth/apple', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: 'mock_apple_token' }),
+        body: JSON.stringify({ token: appleToken }),
       });
 
       const data = await response.json();
