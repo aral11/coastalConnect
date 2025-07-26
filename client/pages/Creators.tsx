@@ -111,23 +111,10 @@ export default function Creators() {
 
         // Enhance creators with additional mock data
         const enhancedCreators = data.data.map((creator: Creator, index: number) => {
-          // Fallback profile images if not provided
-          const fallbackProfiles = [
-            'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face',
-            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
-            'https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face',
-            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
-            'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop&crop=face'
-          ];
-
-          // Fallback cover images
-          const fallbackCovers = [
-            'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1588678401-c846c6021369?w=800&h=400&fit=crop'
-          ];
+          // Professional initials-based avatars if not provided
+          const colors = ['4F46E5', 'EC4899', 'F59E0B', '0EA5E9', '10B981', '8B5CF6'];
+          const bgColor = colors[index % colors.length];
+          const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(creator.name)}&size=200&background=${bgColor}&color=FFFFFF&bold=true&format=png`;
 
           return {
             ...creator,
