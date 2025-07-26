@@ -63,17 +63,33 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/stats');
-      
+
+      const response = await fetch('/api/stats', {
+        // Add cache-busting to ensure fresh data
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         setStats(data.data);
+        setLastUpdated(new Date());
+        console.log('📊 Platform stats updated:', {
+          vendors: data.data.activeVendors,
+          bookings: data.data.totalBookings,
+          creators: data.data.totalCreators,
+          rating: data.data.averageRating,
+          source: data.source || 'api',
+          timestamp: data.timestamp
+        });
       } else {
         throw new Error('Failed to fetch platform statistics');
       }
