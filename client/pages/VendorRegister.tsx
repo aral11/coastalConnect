@@ -549,19 +549,21 @@ export default function VendorRegister() {
                         )}
                       </div>
                       
-                      <div 
+                      <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
                           formData.subscriptionPlan === 'annual' ? 'border-coastal-500 bg-coastal-50' : 'border-gray-200'
                         }`}
                         onClick={() => handleInputChange('subscriptionPlan', 'annual')}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">Regular Price</span>
-                          <span className="text-2xl font-bold text-coastal-600">₹199</span>
+                          <span className="font-semibold">Annual Plan</span>
+                          <span className="text-2xl font-bold text-coastal-600">
+                            ₹{formData.subscriptionPlan === 'annual' ? calculateSubscriptionPrice() : 199}
+                          </span>
                         </div>
-                        <p className="text-sm text-gray-600">After first month</p>
+                        <p className="text-sm text-gray-600">Special annual rate</p>
                         <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs mt-1">
-                          Annual Billing
+                          Best Value
                         </Badge>
                       </div>
                     </div>
