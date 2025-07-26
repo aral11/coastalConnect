@@ -34,17 +34,29 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
     // Listen for real-time events that should trigger stats refresh
     const handleBookingEvent = () => {
       console.log('📈 Booking event detected, refreshing stats...');
-      setTimeout(() => fetchStats(), 1000); // Small delay to ensure DB is updated
+      setIsUpdating(true);
+      setTimeout(() => {
+        fetchStats();
+        setTimeout(() => setIsUpdating(false), 1000);
+      }, 1000); // Small delay to ensure DB is updated
     };
 
     const handleVendorApproval = () => {
       console.log('✅ Vendor approval detected, refreshing stats...');
-      setTimeout(() => fetchStats(), 1000);
+      setIsUpdating(true);
+      setTimeout(() => {
+        fetchStats();
+        setTimeout(() => setIsUpdating(false), 1000);
+      }, 1000);
     };
 
     const handleCreatorRegistration = () => {
       console.log('👥 Creator registration detected, refreshing stats...');
-      setTimeout(() => fetchStats(), 1000);
+      setIsUpdating(true);
+      setTimeout(() => {
+        fetchStats();
+        setTimeout(() => setIsUpdating(false), 1000);
+      }, 1000);
     };
 
     // Add event listeners for real-time updates
