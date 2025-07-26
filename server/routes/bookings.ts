@@ -4,6 +4,7 @@ import { PaymentService } from "../services/payments";
 import { SMSService } from "../services/sms";
 import { EmailService } from "../services/emailService";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { incrementBookingCount } from "./stats";
 
 export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
