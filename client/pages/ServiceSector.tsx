@@ -338,7 +338,7 @@ export default function ServiceSector() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map(renderServiceCard)}
+              {Array.isArray(services) ? services.map(renderServiceCard) : null}
             </div>
           )}
         </div>
