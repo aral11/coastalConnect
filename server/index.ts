@@ -129,11 +129,10 @@ export function createServer() {
   app.get("/api/community/religious-services", getReligiousServices);
 
   // Vendor Management API routes
-  app.post("/api/vendors/register", registerVendor);
-  app.get("/api/vendors/categories", getVendorCategories);
-  app.get("/api/vendors/pending", getPendingVendors); // Admin only
-  app.put("/api/vendors/:vendorId/status", updateVendorStatus); // Admin only
-  app.get("/api/vendors/:vendorId/status", getVendorStatus);
+  app.use("/api/vendors", vendorRouter);
+
+  // Platform statistics with refresh capability
+  app.post("/api/stats/refresh", refreshStats);
 
   // Event Organizer Authentication routes
   app.post("/api/organizers/register", registerOrganizer);
