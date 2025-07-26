@@ -60,6 +60,10 @@ export default function AdminDashboard() {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+  const [dataSummary, setDataSummary] = useState<DataSummary | null>(null);
+  const [clearConfirmText, setClearConfirmText] = useState('');
+  const [showClearDialog, setShowClearDialog] = useState(false);
+  const [clearLoading, setClearLoading] = useState(false);
 
   // Admin authentication
   const handleLogin = () => {
