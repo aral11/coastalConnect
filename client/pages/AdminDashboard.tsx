@@ -370,6 +370,7 @@ export default function AdminDashboard() {
           <Tabs defaultValue="pending" className="space-y-6">
             <TabsList>
               <TabsTrigger value="pending">Pending Approvals ({pendingItems.length})</TabsTrigger>
+              <TabsTrigger value="data">Data Management</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
