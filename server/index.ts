@@ -185,5 +185,16 @@ app.get("/api/price-ranges", getPriceRanges);
 app.get("/api/features", getFeatures);
 app.get("/api/config", getAppConfig);
 
+// Support tickets
+app.post("/api/support/tickets", createSupportTicket);
+app.get("/api/support/tickets", getSupportTickets);
+app.get("/api/support/tickets/:ticketId", getSupportTicket);
+app.put("/api/support/tickets/:ticketId", updateSupportTicket);
+
+// Feedback
+app.post("/api/feedback", submitFeedback);
+app.get("/api/feedback", getFeedbacks);
+app.get("/api/feedback/stats", getFeedbackStats);
+
   return app;
 }
