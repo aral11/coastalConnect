@@ -181,24 +181,34 @@ export class AuthService {
   }
 
   static async authenticateWithApple(appleToken: string): Promise<AuthToken> {
-    // In a real implementation, you would verify the Apple token
-    // For now, we'll simulate the process
+    // In a real implementation, you would verify the Apple token with Apple's API
+    // For demo purposes, we simulate a successful Apple authentication
+    console.log('Processing Apple OAuth token:', appleToken.substring(0, 20) + '...');
+
+    // Generate a more realistic user based on the token
+    const userNames = ['Arun Bhat', 'Kavitha Shenoy', 'Manoj Kundapur', 'Shanti Kamath', 'Rohan D\'Souza'];
+    const domains = ['icloud.com', 'me.com'];
+
+    const randomName = userNames[Math.floor(Math.random() * userNames.length)];
+    const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+    const randomEmail = randomName.toLowerCase().replace(/['\s]+/g, '.') + '@' + randomDomain;
+
     const mockAppleUser = {
-      email: 'user@icloud.com',
-      name: 'Apple User',
+      email: randomEmail,
+      name: randomName,
       provider: 'apple' as const,
-      provider_id: 'apple_' + Date.now(),
-      avatar_url: 'https://via.placeholder.com/150'
+      provider_id: appleToken.split('_')[1] || ('apple_' + Date.now()),
+      avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(randomName)}&background=000000&color=fff&size=150`
     };
 
     let user = await this.findUserByEmail(mockAppleUser.email);
-    
+
     if (!user) {
       user = await this.createUser(mockAppleUser);
     }
 
     const token = this.generateToken(user);
-    
+
     return {
       token,
       user: user
