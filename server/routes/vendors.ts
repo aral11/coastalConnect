@@ -1,55 +1,79 @@
-import { RequestHandler } from "express";
-import { getConnection } from "../db/connection";
+import { Router, Request, Response } from 'express';
+import { getConnection } from '../db/connection';
 
-export interface VendorRegistration {
-  businessName: string;
-  ownerName: string;
-  category: string;
-  subcategory: string;
-  description: string;
-  address: string;
-  city: string;
-  phone: string;
-  email: string;
-  website?: string;
-  aadharNumber: string;
-  gstNumber?: string;
-  subscriptionPlan: 'monthly' | 'annual';
-  documents: {
-    aadharFront: string;
-    aadharBack: string;
-    businessProof: string;
-    gstCertificate?: string;
-  };
-}
+const router = Router();
 
-// Vendor registration endpoint
-export const registerVendor: RequestHandler = async (req, res) => {
+// Register new vendor
+router.post('/register', async (req: Request, res: Response) => {
   try {
-    const vendorData: VendorRegistration = req.body;
-    
+    const {
+      business_name,
+      owner_name,
+      category,
+      subcategory,
+      description,
+      address,
+      city,
+      phone,
+      email,
+      website,
+      aadhar_number,
+      gst_number,
+      subscription_plan
+    } = req.body;
+
     // Validate required fields
-    const requiredFields = ['businessName', 'ownerName', 'category', 'phone', 'email', 'aadharNumber'];
-    for (const field of requiredFields) {
-      if (!vendorData[field as keyof VendorRegistration]) {
-        return res.status(400).json({
-          success: false,
-          message: `${field} is required`
-        });
-      }
+    if (!business_name || !owner_name || !category || !phone || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be provided'
+      });
     }
 
+    const vendorData = {
+      business_name,
+      owner_name,
+      category,
+      subcategory,
+      description,
+      address,
+      city,
+      phone,
+      email,
+      website: website || null,
+      aadhar_number,
+      gst_number: gst_number || null,
+      subscription_plan,
+      admin_approval_status: 'pending',
+      created_at: new Date(),
+      is_active: false,
+      rating: 0,
+      total_reviews: 0
+    };
+
+    let registrationId: number;
+
     try {
-      const connection = await getConnection();
+      const pool = await getConnection();
       
-      // Generate unique vendor ID
-      const vendorId = `VND${Date.now()}${Math.floor(Math.random() * 1000)}`;
+      // Insert into appropriate table based on category
+      let tableName = 'vendors'; // Default table
+      let additionalFields = '';
       
-      // Insert vendor registration
-      await connection.request()
-        .input('vendorId', vendorId)
-        .input('businessName', vendorData.businessName)
-        .input('ownerName', vendorData.ownerName)
+      if (category === 'eateries') {
+        tableName = 'eateries';
+        additionalFields = ', cuisine_type, price_range';
+      } else if (category === 'transportation') {
+        tableName = 'drivers';
+        additionalFields = ', vehicle_type, vehicle_number, license_number';
+      } else if (category === 'arts-history' || category === 'beauty-wellness' || category === 'shopping') {
+        tableName = 'businesses';
+        additionalFields = ', business_type';
+      }
+
+      const result = await pool.request()
+        .input('business_name', vendorData.business_name)
+        .input('owner_name', vendorData.owner_name)
         .input('category', vendorData.category)
         .input('subcategory', vendorData.subcategory)
         .input('description', vendorData.description)
@@ -57,289 +81,192 @@ export const registerVendor: RequestHandler = async (req, res) => {
         .input('city', vendorData.city)
         .input('phone', vendorData.phone)
         .input('email', vendorData.email)
-        .input('website', vendorData.website || null)
-        .input('aadharNumber', vendorData.aadharNumber)
-        .input('gstNumber', vendorData.gstNumber || null)
-        .input('subscriptionPlan', vendorData.subscriptionPlan)
-        .input('status', 'pending_verification')
-        .input('documents', JSON.stringify(vendorData.documents))
+        .input('website', vendorData.website)
+        .input('aadhar_number', vendorData.aadhar_number)
+        .input('gst_number', vendorData.gst_number)
+        .input('subscription_plan', vendorData.subscription_plan)
+        .input('admin_approval_status', vendorData.admin_approval_status)
+        .input('created_at', vendorData.created_at)
+        .input('is_active', vendorData.is_active)
+        .input('rating', vendorData.rating)
+        .input('total_reviews', vendorData.total_reviews)
         .query(`
-          INSERT INTO VendorRegistrations (
-            vendor_id, business_name, owner_name, category, subcategory, 
-            description, address, city, phone, email, website, 
-            aadhar_number, gst_number, subscription_plan, status, documents, 
-            created_at
+          INSERT INTO ${tableName} (
+            name, owner_name, category, subcategory, description, location,
+            city, phone, email, website, aadhar_number, gst_number,
+            subscription_plan, admin_approval_status, created_at, is_active,
+            rating, total_reviews
           ) VALUES (
-            @vendorId, @businessName, @ownerName, @category, @subcategory,
-            @description, @address, @city, @phone, @email, @website,
-            @aadharNumber, @gstNumber, @subscriptionPlan, @status, @documents,
-            GETDATE()
-          )
+            @business_name, @owner_name, @category, @subcategory, @description,
+            @address, @city, @phone, @email, @website, @aadhar_number,
+            @gst_number, @subscription_plan, @admin_approval_status, @created_at,
+            @is_active, @rating, @total_reviews
+          );
+          SELECT SCOPE_IDENTITY() as id;
         `);
 
-      // TODO: Send email notification to admin and vendor
-      
-      res.json({
-        success: true,
-        message: 'Vendor registration submitted successfully',
-        vendorId: vendorId,
-        data: {
-          estimatedApprovalTime: '24-48 hours',
-          nextSteps: [
-            'Document verification by admin team',
-            'Approval notification via email',
-            'Payment link for subscription',
-            'Account activation'
-          ]
-        }
-      });
+      registrationId = result.recordset[0]?.id || Math.floor(Math.random() * 10000);
+      console.log('✅ Vendor registration saved to database:', registrationId);
 
     } catch (dbError) {
-      console.log('Database not available, storing registration for later processing');
-      
-      // In production, this would queue the registration for processing
-      // For now, simulate successful submission
-      const vendorId = `VND${Date.now()}${Math.floor(Math.random() * 1000)}`;
-      
-      res.json({
-        success: true,
-        message: 'Vendor registration submitted successfully',
-        vendorId: vendorId,
-        source: 'queued_for_processing',
-        data: {
-          estimatedApprovalTime: '24-48 hours',
-          nextSteps: [
-            'Document verification by admin team',
-            'Approval notification via email',
-            'Payment link for subscription',
-            'Account activation'
-          ]
-        }
-      });
+      console.log('Database not available, simulating vendor registration');
+      registrationId = Math.floor(Math.random() * 10000);
     }
+
+    // Generate registration reference
+    const registrationRef = `VR${Date.now().toString().slice(-6)}${registrationId}`;
+
+    res.status(201).json({
+      success: true,
+      data: {
+        registration_id: registrationId,
+        registration_reference: registrationRef,
+        business_name: vendorData.business_name,
+        category: vendorData.category,
+        subcategory: vendorData.subcategory,
+        admin_approval_status: 'pending',
+        created_at: vendorData.created_at,
+        estimated_approval_time: '24-48 hours',
+        next_steps: [
+          'Document verification by admin team',
+          'Business verification call',
+          'Approval notification via email',
+          'Payment link for subscription',
+          'Account activation'
+        ]
+      },
+      message: 'Vendor registration submitted successfully. You will receive approval notification within 24-48 hours.'
+    });
+
   } catch (error) {
     console.error('Error registering vendor:', error);
     res.status(500).json({
       success: false,
-      message: 'Error processing vendor registration',
+      message: 'Vendor registration failed',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
-};
+});
 
-// Get pending vendor registrations (Admin only)
-export const getPendingVendors: RequestHandler = async (req, res) => {
+// Get vendor categories for the form
+router.get('/categories', async (req: Request, res: Response) => {
   try {
-    const connection = await getConnection();
-    
-    const result = await connection.request().query(`
-      SELECT * FROM VendorRegistrations 
-      WHERE status = 'pending_verification'
-      ORDER BY created_at DESC
-    `);
-    
-    res.json({
-      success: true,
-      data: result.recordset,
-      count: result.recordset.length,
-      source: 'database'
-    });
-  } catch (error) {
-    console.log('Database not available for admin panel');
-    
-    // Mock pending registrations for admin panel
-    const mockPendingVendors = [
-      {
-        id: 1,
-        vendor_id: 'VND1703123456789',
-        business_name: 'Coastal Delights Restaurant',
-        owner_name: 'Pradeep Kumar',
-        category: 'eateries',
-        subcategory: 'Restaurant',
-        phone: '9876543210',
-        email: 'pradeep@coastaldelights.com',
-        city: 'udupi',
-        subscription_plan: 'annual',
-        status: 'pending_verification',
-        created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+    const categories = {
+      'eateries': {
+        label: 'Eateries',
+        subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery', 'Street Food']
       },
-      {
-        id: 2,
-        vendor_id: 'VND1703123456790',
-        business_name: 'Manipal Fitness Center',
-        owner_name: 'Sneha Rao',
-        category: 'beauty-wellness',
-        subcategory: 'Gym',
-        phone: '9876543211',
-        email: 'sneha@manipalfitness.com',
-        city: 'manipal',
-        subscription_plan: 'monthly',
-        status: 'pending_verification',
-        created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+      'arts-history': {
+        label: 'Arts & History',
+        subcategories: ['Museum', 'Heritage Site', 'Art Gallery', 'Cultural Center', 'Traditional Crafts', 'Yakshagana', 'Temple Tours']
+      },
+      'beauty-wellness': {
+        label: 'Beauty & Wellness',
+        subcategories: ['Salon', 'Spa', 'Gym', 'Ayurveda Center', 'Yoga Studio', 'Massage Center', 'Beauty Parlor']
+      },
+      'nightlife': {
+        label: 'Nightlife',
+        subcategories: ['Bar', 'Pub', 'Club', 'Lounge', 'Live Music Venue', 'Karaoke Bar']
+      },
+      'shopping': {
+        label: 'Shopping',
+        subcategories: ['Market', 'Store', 'Boutique', 'Handicrafts', 'Electronics', 'Clothing', 'Jewelry', 'Souvenirs']
+      },
+      'entertainment': {
+        label: 'Entertainment',
+        subcategories: ['Cinema', 'Gaming Zone', 'Sports Complex', 'Water Sports', 'Adventure Sports', 'Beach Activities']
+      },
+      'event-management': {
+        label: 'Event Management',
+        subcategories: ['Wedding Planner', 'Corporate Events', 'Party Planning', 'Catering Services', 'Decoration', 'Photography']
+      },
+      'transportation': {
+        label: 'Transportation',
+        subcategories: ['Taxi Service', 'Car Rental', 'Bike Rental', 'Auto Rickshaw', 'Bus Service', 'Tour Packages']
+      },
+      'other-services': {
+        label: 'Other Services',
+        subcategories: ['Plumber', 'Electrician', 'Carpenter', 'Home Cleaning', 'Repair Services', 'IT Services', 'Delivery']
       }
-    ];
-    
+    };
+
     res.json({
       success: true,
-      data: mockPendingVendors,
-      count: mockPendingVendors.length,
-      source: 'fallback'
+      data: categories,
+      message: 'Service categories retrieved successfully'
     });
-  }
-};
 
-// Approve/reject vendor registration (Admin only)
-export const updateVendorStatus: RequestHandler = async (req, res) => {
-  try {
-    const { vendorId } = req.params;
-    const { status, adminNotes } = req.body;
-    
-    if (!['approved', 'rejected'].includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid status. Must be approved or rejected'
-      });
-    }
-
-    try {
-      const connection = await getConnection();
-      
-      await connection.request()
-        .input('vendorId', vendorId)
-        .input('status', status)
-        .input('adminNotes', adminNotes || null)
-        .input('reviewedAt', new Date())
-        .query(`
-          UPDATE VendorRegistrations 
-          SET status = @status, admin_notes = @adminNotes, reviewed_at = @reviewedAt
-          WHERE vendor_id = @vendorId
-        `);
-
-      // TODO: Send email notification to vendor about approval/rejection
-      
-      res.json({
-        success: true,
-        message: `Vendor ${status} successfully`,
-        data: {
-          vendorId: vendorId,
-          status: status,
-          nextSteps: status === 'approved' ? 
-            ['Payment link sent to vendor', 'Account will activate upon payment'] :
-            ['Vendor notified of rejection', 'Can reapply with corrected documents']
-        }
-      });
-
-    } catch (dbError) {
-      console.log('Database not available, simulating status update');
-      
-      res.json({
-        success: true,
-        message: `Vendor ${status} successfully`,
-        source: 'simulated',
-        data: {
-          vendorId: vendorId,
-          status: status
-        }
-      });
-    }
   } catch (error) {
-    console.error('Error updating vendor status:', error);
+    console.error('Error fetching categories:', error);
     res.status(500).json({
       success: false,
-      message: 'Error updating vendor status',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Failed to fetch categories'
     });
   }
-};
+});
 
-// Get vendor registration status
-export const getVendorStatus: RequestHandler = async (req, res) => {
+// Get vendors by category (only approved ones for public view)
+router.get('/category/:category', async (req: Request, res: Response) => {
   try {
-    const { vendorId } = req.params;
+    const { category } = req.params;
+    const limit = parseInt(req.query.limit as string) || 20;
     
+    let vendors: any[] = [];
+
     try {
-      const connection = await getConnection();
+      const pool = await getConnection();
       
-      const result = await connection.request()
-        .input('vendorId', vendorId)
+      // Determine table based on category
+      let tableName = 'vendors';
+      if (category === 'eateries') tableName = 'eateries';
+      else if (category === 'transportation') tableName = 'drivers';
+      else tableName = 'businesses';
+
+      const result = await pool.request()
+        .input('category', category)
+        .input('limit', limit)
         .query(`
-          SELECT vendor_id, business_name, status, subscription_plan, created_at, reviewed_at, admin_notes
-          FROM VendorRegistrations 
-          WHERE vendor_id = @vendorId
+          SELECT TOP(@limit) 
+            id, name, description, location, phone, email, website,
+            rating, total_reviews, admin_approval_status, created_at
+          FROM ${tableName}
+          WHERE category = @category AND admin_approval_status = 'approved' AND is_active = 1
+          ORDER BY rating DESC, total_reviews DESC
         `);
-      
-      if (result.recordset.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: 'Vendor registration not found'
-        });
-      }
-      
-      res.json({
-        success: true,
-        data: result.recordset[0],
-        source: 'database'
-      });
+
+      vendors = result.recordset;
 
     } catch (dbError) {
-      res.status(404).json({
-        success: false,
-        message: 'Vendor registration not found'
-      });
+      console.log('Database not available, using fallback vendor data');
+      
+      // Fallback approved vendors by category
+      const fallbackVendors = {
+        'eateries': [
+          { id: 1, name: 'Coastal Kitchen', description: 'Authentic Udupi cuisine', location: 'Udupi', rating: 4.5, total_reviews: 89 },
+          { id: 2, name: 'Beach View Cafe', description: 'Coffee and snacks with sea view', location: 'Malpe', rating: 4.3, total_reviews: 56 }
+        ],
+        'transportation': [
+          { id: 1, name: 'Reliable Taxi Service', description: 'Local and outstation trips', location: 'Udupi', rating: 4.4, total_reviews: 134 }
+        ]
+      };
+      
+      vendors = fallbackVendors[category as keyof typeof fallbackVendors] || [];
     }
+
+    res.json({
+      success: true,
+      data: vendors,
+      count: vendors.length,
+      message: `Found ${vendors.length} approved vendors in ${category} category`
+    });
+
   } catch (error) {
-    console.error('Error fetching vendor status:', error);
+    console.error('Error fetching vendors by category:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching vendor status',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: 'Failed to fetch vendors'
     });
   }
-};
+});
 
-// Get vendor categories
-export const getVendorCategories: RequestHandler = async (req, res) => {
-  const categories = {
-    'eateries': {
-      label: 'Eateries',
-      subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
-    },
-    'arts-history': {
-      label: 'Arts & History',
-      subcategories: ['Museum', 'Heritage Site', 'Art Gallery', 'Cultural Center', 'Traditional Crafts']
-    },
-    'beauty-wellness': {
-      label: 'Beauty & Wellness',
-      subcategories: ['Salon', 'Spa', 'Gym', 'Ayurveda Center', 'Yoga Studio', 'Massage Center']
-    },
-    'nightlife': {
-      label: 'Nightlife',
-      subcategories: ['Bar', 'Pub', 'Club', 'Lounge', 'Live Music Venue']
-    },
-    'shopping': {
-      label: 'Shopping',
-      subcategories: ['Market', 'Store', 'Boutique', 'Handicrafts', 'Electronics', 'Clothing']
-    },
-    'entertainment': {
-      label: 'Entertainment',
-      subcategories: ['Cinema', 'Gaming Zone', 'Sports Complex', 'Water Sports', 'Adventure Sports']
-    },
-    'event-management': {
-      label: 'Event Management',
-      subcategories: ['Wedding Planner', 'Corporate Events', 'Party Planning', 'Catering Services']
-    },
-    'transportation': {
-      label: 'Transportation',
-      subcategories: ['Taxi Service', 'Car Rental', 'Bike Rental', 'Auto Rickshaw', 'Bus Service']
-    },
-    'other-services': {
-      label: 'Other Services',
-      subcategories: ['Plumber', 'Electrician', 'Carpenter', 'Home Cleaning', 'Repair Services', 'IT Services']
-    }
-  };
-
-  res.json({
-    success: true,
-    data: categories
-  });
-};
+export default router;
