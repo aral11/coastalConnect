@@ -15,6 +15,7 @@ import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEv
 import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, sendWelcomeEmail, sendCustomNotification, sendBulkNotification, getNotificationHistory, testEmail, testSMS } from "./routes/notifications";
 import { getPlatformStats } from "./routes/stats";
 import { getServiceCategories, getServiceCategory } from "./routes/services";
+import { submitContactForm, getContactInfo } from "./routes/contact";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
