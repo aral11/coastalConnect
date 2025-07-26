@@ -103,36 +103,7 @@ export default function Login() {
     }
   };
 
-  const handleAppleLogin = async () => {
-    setLoading(true);
-    setError('');
 
-    try {
-      // Simulate Apple OAuth popup
-      const appleToken = `apple_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-
-      const response = await fetch('/api/auth/apple', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: appleToken }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        login(data.data.token, data.data.user);
-        navigate(redirectTo);
-      } else {
-        setError(data.message || 'Apple login failed');
-      }
-    } catch (error) {
-      setError('Apple login failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-coastal-50 via-white to-ocean-50 flex items-center justify-center p-4">
