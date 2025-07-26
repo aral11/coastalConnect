@@ -180,7 +180,7 @@ export const incrementBookingCount: RequestHandler = async (req, res) => {
       statsCache.totalBookings += 1;
       console.log('📈 Booking count incremented in real-time:', statsCache.totalBookings);
     }
-    
+
     res.json({
       success: true,
       message: 'Booking count updated',
@@ -191,6 +191,90 @@ export const incrementBookingCount: RequestHandler = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to update booking count'
+    });
+  }
+};
+
+// Update vendor count when vendor is approved (called from admin approval)
+export const incrementVendorCount: RequestHandler = async (req, res) => {
+  try {
+    if (statsCache) {
+      statsCache.activeVendors += 1;
+      statsCache.totalVendors += 1;
+      console.log('🏪 Vendor count incremented in real-time:', statsCache.activeVendors);
+    }
+
+    // Clear cache to force fresh calculation on next request
+    statsCache = null;
+    lastCacheUpdate = 0;
+
+    res.json({
+      success: true,
+      message: 'Vendor count updated',
+      newCount: statsCache?.activeVendors || 0
+    });
+  } catch (error) {
+    console.error('Error incrementing vendor count:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update vendor count'
+    });
+  }
+};
+
+// Update creator count when creator is approved (called from admin approval)
+export const incrementCreatorCount: RequestHandler = async (req, res) => {
+  try {
+    if (statsCache) {
+      statsCache.totalCreators += 1;
+      console.log('👥 Creator count incremented in real-time:', statsCache.totalCreators);
+    }
+
+    // Clear cache to force fresh calculation on next request
+    statsCache = null;
+    lastCacheUpdate = 0;
+
+    res.json({
+      success: true,
+      message: 'Creator count updated',
+      newCount: statsCache?.totalCreators || 0
+    });
+  } catch (error) {
+    console.error('Error incrementing creator count:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update creator count'
+    });
+  }
+};
+
+// Update rating when new review is submitted
+export const updateAverageRating: RequestHandler = async (req, res) => {
+  try {
+    const { newRating, vendorType } = req.body;
+
+    if (typeof newRating !== 'number' || newRating < 1 || newRating > 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid rating value. Must be between 1 and 5.'
+      });
+    }
+
+    // Clear cache to force fresh calculation including the new rating
+    statsCache = null;
+    lastCacheUpdate = 0;
+
+    console.log(`⭐ New ${newRating}-star rating received for ${vendorType}, cache cleared for recalculation`);
+
+    res.json({
+      success: true,
+      message: 'Rating updated, stats will refresh on next request'
+    });
+  } catch (error) {
+    console.error('Error updating average rating:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update rating'
     });
   }
 };
