@@ -3,8 +3,8 @@ import { AuthService } from "../services/auth";
 
 export const googleAuth: RequestHandler = async (req, res) => {
   try {
-    const { token } = req.body;
-    
+    const { token, userInfo } = req.body;
+
     if (!token) {
       return res.status(400).json({
         success: false,
@@ -12,8 +12,12 @@ export const googleAuth: RequestHandler = async (req, res) => {
       });
     }
 
-    const authResult = await AuthService.authenticateWithGoogle(token);
-    
+    console.log('Google authentication request received');
+
+    const authResult = await AuthService.authenticateWithGoogle(token, userInfo);
+
+    console.log('Google authentication successful for user:', authResult.user.email);
+
     res.json({
       success: true,
       data: authResult,
