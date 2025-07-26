@@ -60,46 +60,78 @@ export default function Index() {
   }, []);
 
   const loadServices = async () => {
-    // In a real app, this would come from the database
-    const serviceData: ServiceCategory[] = [
-      {
-        id: 'homestays',
-        title: 'HOMESTAYS',
-        description: 'AUTHENTIC LOCAL STAYS',
-        icon: <Bed className="h-12 w-12" />,
-        link: '/homestays',
-        color: 'from-blue-500 to-blue-600',
-        offer: 'UPTO 40% OFF'
-      },
-      {
-        id: 'eateries',
-        title: 'EATERIES',
-        description: 'LOCAL CUISINE & DINING',
-        icon: <ChefHat className="h-12 w-12" />,
-        link: '/eateries',
-        color: 'from-green-500 to-green-600',
-        offer: 'UPTO 50% OFF'
-      },
-      {
-        id: 'drivers',
-        title: 'TRANSPORT',
-        description: 'LOCAL DRIVERS & RIDES',
-        icon: <Car className="h-12 w-12" />,
-        link: '/drivers',
-        color: 'from-purple-500 to-purple-600',
-        offer: 'UPTO 30% OFF'
-      },
-      {
-        id: 'creators',
-        title: 'CREATORS',
-        description: 'LOCAL CONTENT & GUIDES',
-        icon: <Camera className="h-12 w-12" />,
-        link: '/creators',
-        color: 'from-pink-500 to-pink-600',
-        offer: 'EXPLORE NOW'
+    try {
+      const response = await fetch('/api/services');
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        // Map API data to component format with icons
+        const serviceData: ServiceCategory[] = data.data.map((service: any) => ({
+          id: service.id,
+          title: service.title,
+          description: service.description,
+          icon: getServiceIcon(service.icon),
+          link: service.link,
+          color: service.color,
+          offer: service.offer
+        }));
+        setServices(serviceData);
       }
-    ];
-    setServices(serviceData);
+    } catch (error) {
+      console.error('Error loading services:', error);
+      // Fallback to default services if API fails
+      const fallbackServices: ServiceCategory[] = [
+        {
+          id: 'homestays',
+          title: 'HOMESTAYS',
+          description: 'AUTHENTIC LOCAL STAYS',
+          icon: <Bed className="h-12 w-12" />,
+          link: '/homestays',
+          color: 'from-blue-500 to-blue-600',
+          offer: 'UPTO 40% OFF'
+        },
+        {
+          id: 'eateries',
+          title: 'EATERIES',
+          description: 'LOCAL CUISINE & DINING',
+          icon: <ChefHat className="h-12 w-12" />,
+          link: '/eateries',
+          color: 'from-green-500 to-green-600',
+          offer: 'UPTO 50% OFF'
+        },
+        {
+          id: 'drivers',
+          title: 'TRANSPORT',
+          description: 'LOCAL DRIVERS & RIDES',
+          icon: <Car className="h-12 w-12" />,
+          link: '/drivers',
+          color: 'from-purple-500 to-purple-600',
+          offer: 'UPTO 30% OFF'
+        },
+        {
+          id: 'creators',
+          title: 'CREATORS',
+          description: 'LOCAL CONTENT & GUIDES',
+          icon: <Camera className="h-12 w-12" />,
+          link: '/creators',
+          color: 'from-pink-500 to-pink-600',
+          offer: 'EXPLORE NOW'
+        }
+      ];
+      setServices(fallbackServices);
+    }
+  };
+
+  const getServiceIcon = (iconName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      'Bed': <Bed className="h-12 w-12" />,
+      'ChefHat': <ChefHat className="h-12 w-12" />,
+      'Car': <Car className="h-12 w-12" />,
+      'Camera': <Camera className="h-12 w-12" />,
+      'Calendar': <Calendar className="h-12 w-12" />,
+      'Store': <Store className="h-12 w-12" />
+    };
+    return iconMap[iconName] || <Store className="h-12 w-12" />;
   };
 
   const handleSearch = () => {
