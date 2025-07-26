@@ -74,13 +74,13 @@ export default function PlaceholderPage({
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/">
-                <Button className="btn-coastal min-w-[140px]">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white min-w-[140px]">
                   <Home className="h-4 w-4 mr-2" />
                   Go Home
                 </Button>
               </Link>
               <Link to="/" className="sm:order-first">
-                <Button variant="outline" className="border-coastal-300 text-coastal-600 hover:bg-coastal-50 min-w-[140px]">
+                <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50 min-w-[140px]">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
                 </Button>
