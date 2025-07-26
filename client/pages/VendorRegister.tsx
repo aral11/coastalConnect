@@ -146,12 +146,49 @@ export default function VendorRegister() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setLoading(false);
-    setSubmitted(true);
+
+    try {
+      // Prepare form data for submission
+      const submissionData = {
+        business_name: formData.businessName,
+        owner_name: formData.ownerName,
+        category: formData.category,
+        subcategory: formData.subcategory,
+        description: formData.description,
+        address: formData.address,
+        city: formData.city,
+        phone: formData.phone,
+        email: formData.email,
+        website: formData.website,
+        aadhar_number: formData.aadharNumber,
+        gst_number: formData.gstNumber,
+        subscription_plan: formData.subscriptionPlan,
+        admin_approval_status: 'pending'
+      };
+
+      // Submit vendor registration
+      const response = await fetch('/api/vendors/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('✅ Vendor registration submitted successfully:', data.data);
+        setSubmitted(true);
+      } else {
+        throw new Error(data.message || 'Registration submission failed');
+      }
+    } catch (error) {
+      console.error('❌ Vendor registration error:', error);
+      alert('Registration submission failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectedCategory = serviceCategories[formData.category as keyof typeof serviceCategories];
