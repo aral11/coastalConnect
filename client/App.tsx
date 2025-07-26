@@ -158,6 +158,9 @@ const App = () => (
           <Route path="/support" element={<Support />} />
           <Route path="/safety" element={<SafetyGuidelines />} />
           <Route path="/feedback" element={<Feedback />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/report-issue" element={
             <PlaceholderPage
               title="Report an Issue"
