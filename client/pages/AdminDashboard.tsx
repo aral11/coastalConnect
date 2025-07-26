@@ -191,6 +191,11 @@ export default function AdminDashboard() {
         setMessage({type: 'success', text: `Successfully cleared ${result.data.totalRecordsCleared} records from the platform`});
         setShowClearDialog(false);
         setClearConfirmText('');
+
+        // Dispatch event to update platform stats in real-time
+        const event = new CustomEvent('data-cleared');
+        window.dispatchEvent(event);
+
         fetchData(); // Refresh all data
       } else {
         throw new Error('Failed to clear data');
