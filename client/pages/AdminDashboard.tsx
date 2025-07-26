@@ -169,6 +169,39 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleClearAllData = async () => {
+    if (clearConfirmText !== 'CLEAR ALL DATA') {
+      setMessage({type: 'error', text: 'Please type "CLEAR ALL DATA" to confirm'});
+      return;
+    }
+
+    try {
+      setClearLoading(true);
+
+      const response = await fetch('/api/admin/clear-all-data?adminKey=admin123', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ confirmText: clearConfirmText }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setMessage({type: 'success', text: `Successfully cleared ${result.data.totalRecordsCleared} records from the platform`});
+        setShowClearDialog(false);
+        setClearConfirmText('');
+        fetchData(); // Refresh all data
+      } else {
+        throw new Error('Failed to clear data');
+      }
+    } catch (error) {
+      setMessage({type: 'error', text: 'Failed to clear all data'});
+    } finally {
+      setClearLoading(false);
+    }
+  };
+
   const toggleItemSelection = (type: string, id: number) => {
     const itemKey = `${type}-${id}`;
     const newSelection = new Set(selectedItems);
