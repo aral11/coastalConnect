@@ -81,6 +81,7 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
     window.addEventListener('booking-confirmed', handleBookingEvent);
     window.addEventListener('vendor-approved', handleVendorApproval);
     window.addEventListener('creator-registered', handleCreatorRegistration);
+    window.addEventListener('data-cleared', handleDataCleared);
 
     return () => {
       clearInterval(refreshInterval);
