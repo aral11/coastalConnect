@@ -38,7 +38,7 @@ export default function PageHeader({
         <div className="py-16 lg:py-20">
           {/* Breadcrumbs */}
           {breadcrumbs && (
-            <nav className="flex items-center space-x-2 text-sm text-blue-100 mb-6" aria-label="Breadcrumb">
+            <nav className="flex items-center space-x-2 text-sm text-orange-100 mb-6" aria-label="Breadcrumb">
               {breadcrumbs.map((crumb, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && <ChevronRight className="h-4 w-4" />}
