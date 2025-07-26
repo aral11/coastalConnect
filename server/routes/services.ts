@@ -1,5 +1,180 @@
 import { RequestHandler } from "express";
 
+// Generate sample service listings for a category
+function generateServiceListings(categoryId: string, count: number) {
+  const serviceData: { [key: string]: any[] } = {
+    'arts-history': [
+      {
+        id: 1,
+        name: 'Udupi Krishna Temple Museum',
+        description: 'Ancient temple museum showcasing traditional art and artifacts',
+        category: 'Museum',
+        location: 'Udupi',
+        address: 'Krishna Temple Complex, Udupi',
+        rating: 4.6,
+        total_reviews: 245,
+        phone: '+91 8202 523456',
+        opening_hours: '6:00 AM - 9:00 PM',
+        price_range: '₹50 - ₹100',
+        services: 'Guided tours, Cultural shows',
+        image_url: 'https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=400&h=300&fit=crop'
+      },
+      {
+        id: 2,
+        name: 'Manipal Heritage Village',
+        description: 'Experience traditional coastal Karnataka culture and heritage',
+        category: 'Heritage Site',
+        location: 'Manipal',
+        address: 'Heritage Village Road, Manipal',
+        rating: 4.3,
+        total_reviews: 128,
+        phone: '+91 8202 923456',
+        opening_hours: '9:00 AM - 6:00 PM',
+        price_range: '₹100 - ₹200',
+        services: 'Cultural performances, Art workshops',
+        image_url: 'https://images.unsplash.com/photo-1539650116574-75c0c6d6d4c7?w=400&h=300&fit=crop'
+      }
+    ],
+    'beauty-wellness': [
+      {
+        id: 1,
+        name: 'Coastal Spa & Wellness',
+        description: 'Luxury spa offering traditional Ayurvedic treatments',
+        category: 'Spa',
+        location: 'Udupi',
+        address: 'Service Road, Udupi',
+        rating: 4.5,
+        total_reviews: 186,
+        phone: '+91 8202 234567',
+        opening_hours: '9:00 AM - 8:00 PM',
+        price_range: '₹1000 - ₹3000',
+        services: 'Ayurvedic massage, Facials, Body treatments',
+        image_url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&h=300&fit=crop'
+      },
+      {
+        id: 2,
+        name: 'Elite Beauty Salon',
+        description: 'Modern beauty salon with expert stylists',
+        category: 'Salon',
+        location: 'Manipal',
+        address: 'Tiger Circle, Manipal',
+        rating: 4.2,
+        total_reviews: 94,
+        phone: '+91 8202 345678',
+        opening_hours: '10:00 AM - 7:00 PM',
+        price_range: '₹500 - ₹2000',
+        services: 'Hair styling, Makeup, Nail art',
+        image_url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop'
+      }
+    ],
+    'nightlife': [
+      {
+        id: 1,
+        name: 'Ocean View Lounge',
+        description: 'Beachside lounge with live music and great ambiance',
+        category: 'Lounge',
+        location: 'Malpe',
+        address: 'Malpe Beach Road',
+        rating: 4.1,
+        total_reviews: 156,
+        phone: '+91 8202 456789',
+        opening_hours: '6:00 PM - 1:00 AM',
+        price_range: '₹800 - ₹2000',
+        services: 'Live music, DJ nights, Cocktails',
+        image_url: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=300&fit=crop'
+      }
+    ],
+    'shopping': [
+      {
+        id: 1,
+        name: 'Udupi Traditional Market',
+        description: 'Local market for traditional crafts and spices',
+        category: 'Market',
+        location: 'Udupi',
+        address: 'Market Street, Udupi',
+        rating: 4.0,
+        total_reviews: 78,
+        phone: '+91 8202 567890',
+        opening_hours: '8:00 AM - 8:00 PM',
+        price_range: '₹100 - ₹1000',
+        services: 'Local crafts, Spices, Traditional items',
+        image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop'
+      }
+    ],
+    'entertainment': [
+      {
+        id: 1,
+        name: 'Adventure Sports Center',
+        description: 'Water sports and adventure activities',
+        category: 'Adventure',
+        location: 'Malpe',
+        address: 'Malpe Beach, Udupi',
+        rating: 4.4,
+        total_reviews: 203,
+        phone: '+91 8202 678901',
+        opening_hours: '8:00 AM - 6:00 PM',
+        price_range: '₹500 - ₹2000',
+        services: 'Jet skiing, Parasailing, Banana boat',
+        image_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&h=300&fit=crop'
+      }
+    ],
+    'event-management': [
+      {
+        id: 1,
+        name: 'Coastal Events & Weddings',
+        description: 'Complete event management for weddings and celebrations',
+        category: 'Event Planning',
+        location: 'Udupi',
+        address: 'Event Plaza, Udupi',
+        rating: 4.7,
+        total_reviews: 67,
+        phone: '+91 8202 789012',
+        opening_hours: '9:00 AM - 6:00 PM',
+        price_range: '₹50000 - ₹500000',
+        services: 'Wedding planning, Corporate events, Catering',
+        image_url: 'https://images.unsplash.com/photo-1519167758481-83f29c81c2e2?w=400&h=300&fit=crop'
+      }
+    ],
+    'other-services': [
+      {
+        id: 1,
+        name: 'Quick Fix Services',
+        description: 'Home repair and maintenance services',
+        category: 'Home Services',
+        location: 'Udupi',
+        address: 'Service available across Udupi',
+        rating: 4.0,
+        total_reviews: 45,
+        phone: '+91 8202 890123',
+        opening_hours: '8:00 AM - 8:00 PM',
+        price_range: '₹200 - ₹1000',
+        services: 'Plumbing, Electrical, Carpentry',
+        image_url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=300&fit=crop'
+      }
+    ]
+  };
+
+  // Return the services for the category, or generate generic ones if not found
+  if (serviceData[categoryId]) {
+    return serviceData[categoryId];
+  }
+
+  // Generate generic services if category not found in data
+  return Array.from({ length: Math.min(count, 5) }, (_, i) => ({
+    id: i + 1,
+    name: `Service Provider ${i + 1}`,
+    description: `Professional service provider in the ${categoryId} category`,
+    category: categoryId,
+    location: 'Udupi',
+    rating: 4.0 + Math.random(),
+    total_reviews: Math.floor(Math.random() * 100) + 20,
+    phone: '+91 8202 000000',
+    opening_hours: '9:00 AM - 6:00 PM',
+    price_range: '₹500 - ₹2000',
+    image_url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'
+  }));
+}
+
 // Get service categories
 export const getServiceCategories: RequestHandler = async (req, res) => {
   try {
