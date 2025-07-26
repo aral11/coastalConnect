@@ -136,17 +136,19 @@ export const submitContactForm: RequestHandler = async (req, res) => {
 
     try {
       // Send email to admin
-      await sendEmail(
+      await EmailService.sendEmail(
         'hello@coastalconnect.in',
         `New Contact Form: ${subject}`,
-        adminEmailContent
+        adminEmailContent,
+        `New contact form submission from ${name} (${email})\n\nSubject: ${subject}\nCategory: ${category}\n\nMessage:\n${message}`
       );
 
       // Send acknowledgment email to customer
-      await sendEmail(
+      await EmailService.sendEmail(
         email,
         'Thank you for contacting Coastal Connect',
-        customerEmailContent
+        customerEmailContent,
+        `Hi ${name},\n\nThank you for contacting Coastal Connect! We have received your message and will respond within 24 hours.\n\nYour message details:\nSubject: ${subject}\nCategory: ${category}\n\nBest regards,\nCoastal Connect Team`
       );
 
       res.json({
