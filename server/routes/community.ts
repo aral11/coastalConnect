@@ -122,7 +122,7 @@ export const getLocalEvents: RequestHandler = async (req, res) => {
         category: "religious",
         location: "Udupi",
         address: "Sri Krishna Temple, Car Street, Udupi",
-        event_date: "2024-01-18",
+        event_date: getEventDate(5),
         start_time: "06:00",
         end_time: "22:00",
         organizer: "Sri Krishna Temple Committee",
