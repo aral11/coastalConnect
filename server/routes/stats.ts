@@ -4,8 +4,6 @@ import { getConnection } from "../db/connection";
 // Get platform statistics
 export const getPlatformStats: RequestHandler = async (req, res) => {
   try {
-    const pool = await getConnection();
-    
     // Initialize default stats for when database is not available
     let stats = {
       totalVendors: 0,
@@ -18,6 +16,7 @@ export const getPlatformStats: RequestHandler = async (req, res) => {
     };
 
     try {
+      const pool = await getConnection();
       // Query homestays
       const homestaysResult = await pool.request().query(
         'SELECT COUNT(*) as count FROM homestays WHERE is_active = 1'
