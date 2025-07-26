@@ -20,34 +20,33 @@ export default function PlaceholderPage({
   icon = <Construction className="h-16 w-16 text-orange-500" />
 }: PlaceholderPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
       {/* Navigation */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-coastal-200 sticky top-0 z-50">
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
-                alt="coastalConnect"
-                className="logo-brand h-10"
-              />
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">C</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">Coastal Connect</span>
             </Link>
-            
+
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/hotels" className="text-gray-600 hover:text-coastal-600 transition-colors">Hotels</Link>
-              <Link to="/drivers" className="text-gray-600 hover:text-coastal-600 transition-colors">Drivers</Link>
-              <Link to="/about" className="text-gray-600 hover:text-coastal-600 transition-colors">About</Link>
-              <Link to="/contact" className="text-gray-600 hover:text-coastal-600 transition-colors">Contact</Link>
+              <Link to="/homestays" className="text-gray-600 hover:text-orange-600 transition-colors">Homestays</Link>
+              <Link to="/drivers" className="text-gray-600 hover:text-orange-600 transition-colors">Drivers</Link>
+              <Link to="/about" className="text-gray-600 hover:text-orange-600 transition-colors">About</Link>
+              <Link to="/contact" className="text-gray-600 hover:text-orange-600 transition-colors">Contact</Link>
             </div>
 
             <div className="flex items-center space-x-4">
               <Link to="/login">
-                <Button variant="ghost" className="text-coastal-600 hover:text-coastal-700">
+                <Button variant="ghost" className="text-orange-600 hover:text-orange-700">
                   Sign In
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button className="btn-coastal">Get Started</Button>
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white">Get Started</Button>
               </Link>
             </div>
           </div>
