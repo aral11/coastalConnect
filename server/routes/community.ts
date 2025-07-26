@@ -142,7 +142,7 @@ export const getLocalEvents: RequestHandler = async (req, res) => {
         category: "festival",
         location: "Manipal",
         address: "Manipal University Campus, Karnataka",
-        event_date: "2024-02-25",
+        event_date: getEventDate(15),
         start_time: "11:00",
         end_time: "21:00",
         organizer: "Manipal Food Association",
