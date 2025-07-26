@@ -20,9 +20,43 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
   const [stats, setStats] = useState<PlatformStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   useEffect(() => {
     fetchStats();
+
+    // Set up auto-refresh every 2 minutes for real-time updates
+    const refreshInterval = setInterval(() => {
+      fetchStats();
+    }, 120000); // 2 minutes
+
+    // Listen for real-time events that should trigger stats refresh
+    const handleBookingEvent = () => {
+      console.log('📈 Booking event detected, refreshing stats...');
+      setTimeout(() => fetchStats(), 1000); // Small delay to ensure DB is updated
+    };
+
+    const handleVendorApproval = () => {
+      console.log('✅ Vendor approval detected, refreshing stats...');
+      setTimeout(() => fetchStats(), 1000);
+    };
+
+    const handleCreatorRegistration = () => {
+      console.log('👥 Creator registration detected, refreshing stats...');
+      setTimeout(() => fetchStats(), 1000);
+    };
+
+    // Add event listeners for real-time updates
+    window.addEventListener('booking-confirmed', handleBookingEvent);
+    window.addEventListener('vendor-approved', handleVendorApproval);
+    window.addEventListener('creator-registered', handleCreatorRegistration);
+
+    return () => {
+      clearInterval(refreshInterval);
+      window.removeEventListener('booking-confirmed', handleBookingEvent);
+      window.removeEventListener('vendor-approved', handleVendorApproval);
+      window.removeEventListener('creator-registered', handleCreatorRegistration);
+    };
   }, []);
 
   const fetchStats = async () => {
