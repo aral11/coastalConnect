@@ -145,7 +145,7 @@ function Footer() {
             <div className="lg:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2Fa92c07345b2448db8df3322125c3b3e6%2Fd353be6a54374bebb7d9c1f516095097?format=webp&width=800"
+                  src="/coastalconnect-logo.svg"
                   alt="coastalConnect"
                   className="h-10"
                 />
