@@ -161,7 +161,10 @@ export default function CommunityFeatures() {
             </div>
 
             <div className="space-y-2">
-              <Button className="w-full bg-orange-600 hover:bg-orange-700">
+              <Button
+                className="w-full bg-orange-600 hover:bg-orange-700"
+                onClick={() => window.location.href = '/organizer-dashboard'}
+              >
                 View All Events <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
