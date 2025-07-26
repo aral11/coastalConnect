@@ -193,14 +193,27 @@ function getCreatorEmail(username: string): string | undefined {
 }
 
 function getDefaultAvatar(username: string): string {
-  const avatars: { [key: string]: string } = {
-    'shutterboxfilms_official': 'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face',
-    'priya_coastal_arts': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
-    'coastal_flavor_stories': 'https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face',
-    'beach_vibes_karnataka': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
-    'udupi_traditions': 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop&crop=face'
+  // Generate professional initials-based avatar URLs using UI Avatars service
+  const names: { [key: string]: string } = {
+    'shutterboxfilms_official': 'Shutterbox Films',
+    'priya_coastal_arts': 'Priya Coastal Arts',
+    'coastal_flavor_stories': 'Coastal Flavor Stories',
+    'beach_vibes_karnataka': 'Beach Vibes Karnataka',
+    'udupi_traditions': 'Udupi Traditions'
   };
-  return avatars[username] || 'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face';
+
+  const colors: { [key: string]: string } = {
+    'shutterboxfilms_official': '4F46E5-FFFFFF', // Indigo
+    'priya_coastal_arts': 'EC4899-FFFFFF', // Pink
+    'coastal_flavor_stories': 'F59E0B-FFFFFF', // Orange
+    'beach_vibes_karnataka': '0EA5E9-FFFFFF', // Blue
+    'udupi_traditions': '10B981-FFFFFF' // Green
+  };
+
+  const name = names[username] || 'Creator';
+  const color = colors[username] || '6B7280-FFFFFF'; // Gray fallback
+
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=200&background=${color.split('-')[0]}&color=${color.split('-')[1]}&bold=true&format=png`;
 }
 
 function getCoverImage(username: string): string {
