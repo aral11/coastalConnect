@@ -61,7 +61,7 @@ export default function PageHeader({
           {showBackButton && (
             <Link
               to="/"
-              className="inline-flex items-center text-blue-100 hover:text-white transition-colors mb-6 group"
+              className="inline-flex items-center text-orange-100 hover:text-white transition-colors mb-6 group"
             >
               <ArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" />
               Back to Home
