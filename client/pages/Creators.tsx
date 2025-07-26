@@ -238,6 +238,16 @@ export default function Creators() {
     return { label: 'Average', color: 'text-gray-600' };
   };
 
+  const getSpecialtyGradient = (specialty: string) => {
+    const lower = specialty.toLowerCase();
+    if (lower.includes('photo') || lower.includes('video')) return 'bg-gradient-to-r from-indigo-500 to-purple-600';
+    if (lower.includes('art') || lower.includes('craft')) return 'bg-gradient-to-r from-pink-500 to-rose-600';
+    if (lower.includes('food') || lower.includes('culinary')) return 'bg-gradient-to-r from-orange-500 to-amber-600';
+    if (lower.includes('travel') || lower.includes('lifestyle')) return 'bg-gradient-to-r from-blue-500 to-cyan-600';
+    if (lower.includes('heritage') || lower.includes('tradition')) return 'bg-gradient-to-r from-emerald-500 to-teal-600';
+    return 'bg-gradient-to-r from-slate-500 to-gray-600';
+  };
+
   const filteredCreators = selectedCategory === 'all' 
     ? creators 
     : creators.filter(creator => 
