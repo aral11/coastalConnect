@@ -168,6 +168,9 @@ export function createServer() {
   // Search API routes
   app.use("/api/search", searchRouter);
 
+  // Subscription API routes
+  app.use("/api/subscription", subscriptionRouter);
+
   // Service categories
 app.get("/api/services", getServiceCategories);
 app.get("/api/services/:categoryId", getServiceCategory);
