@@ -152,27 +152,9 @@ const App = () => (
           />
 
           {/* Support & Help Routes */}
-          <Route path="/support" element={
-            <PlaceholderPage
-              title="Customer Support"
-              description="Get dedicated support for your bookings and account issues."
-              icon={<HeadphonesIcon className="h-16 w-16 text-orange-500" />}
-            />
-          } />
-          <Route path="/safety" element={
-            <PlaceholderPage
-              title="Safety Guidelines"
-              description="Important safety information for your coastal travels."
-              icon={<Shield className="h-16 w-16 text-orange-500" />}
-            />
-          } />
-          <Route path="/feedback" element={
-            <PlaceholderPage
-              title="Feedback"
-              description="Share your thoughts and help us improve our services."
-              icon={<MessageCircle className="h-16 w-16 text-orange-500" />}
-            />
-          } />
+          <Route path="/support" element={<Support />} />
+          <Route path="/safety" element={<SafetyGuidelines />} />
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/report-issue" element={
             <PlaceholderPage
               title="Report an Issue"
