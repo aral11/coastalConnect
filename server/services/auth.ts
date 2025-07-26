@@ -145,31 +145,49 @@ export class AuthService {
     }
   }
 
-  static async authenticateWithGoogle(googleToken: string): Promise<AuthToken> {
+  static async authenticateWithGoogle(googleToken: string, userInfo?: any): Promise<AuthToken> {
     // In a real implementation, you would verify the Google token with Google's API
     // For demo purposes, we simulate a successful Google authentication
     console.log('Processing Google OAuth token:', googleToken.substring(0, 20) + '...');
 
-    // Generate a more realistic user based on the token
-    const userNames = ['Priya Sharma', 'Ravi Kumar', 'Anitha Rao', 'Suresh Nayak', 'Deepa Hegde'];
-    const domains = ['gmail.com', 'googlemail.com'];
+    let mockGoogleUser;
 
-    const randomName = userNames[Math.floor(Math.random() * userNames.length)];
-    const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-    const randomEmail = randomName.toLowerCase().replace(/\s+/g, '.') + '@' + randomDomain;
+    if (userInfo) {
+      // Use provided user info from the frontend simulation
+      mockGoogleUser = {
+        email: userInfo.email,
+        name: userInfo.name,
+        provider: 'google' as const,
+        provider_id: googleToken.split('_')[1] || ('google_' + Date.now()),
+        avatar_url: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=4285f4&color=fff&size=150`
+      };
+    } else {
+      // Generate realistic fallback user data
+      const userNames = ['Priya Sharma', 'Ravi Kumar', 'Anitha Rao', 'Suresh Nayak', 'Deepa Hegde'];
+      const domains = ['gmail.com', 'googlemail.com'];
 
-    const mockGoogleUser = {
-      email: randomEmail,
-      name: randomName,
-      provider: 'google' as const,
-      provider_id: googleToken.split('_')[1] || ('google_' + Date.now()),
-      avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(randomName)}&background=4285f4&color=fff&size=150`
-    };
+      const randomName = userNames[Math.floor(Math.random() * userNames.length)];
+      const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+      const randomEmail = randomName.toLowerCase().replace(/\s+/g, '.') + '@' + randomDomain;
+
+      mockGoogleUser = {
+        email: randomEmail,
+        name: randomName,
+        provider: 'google' as const,
+        provider_id: googleToken.split('_')[1] || ('google_' + Date.now()),
+        avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(randomName)}&background=4285f4&color=fff&size=150`
+      };
+    }
+
+    console.log('Google authentication for:', mockGoogleUser.email);
 
     let user = await this.findUserByEmail(mockGoogleUser.email);
 
     if (!user) {
+      console.log('Creating new user for Google authentication');
       user = await this.createUser(mockGoogleUser);
+    } else {
+      console.log('Existing user found, logging in');
     }
 
     const token = this.generateToken(user);
