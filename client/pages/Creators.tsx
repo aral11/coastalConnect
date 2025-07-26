@@ -395,6 +395,19 @@ export default function Creators() {
                           src={creator.profile_image}
                           alt={creator.name}
                           className="h-16 w-16 rounded-full object-cover border-4 border-white shadow-lg"
+                          onError={(e) => {
+                            console.log(`❌ Failed to load profile image for ${creator.name}: ${creator.profile_image}`);
+                            const fallbackImages = [
+                              'https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=300&h=300&fit=crop&crop=face',
+                              'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
+                              'https://images.unsplash.com/photo-1559829175-0d0535334ecb?w=300&h=300&fit=crop&crop=face',
+                              'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
+                              'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop&crop=face'
+                            ];
+                            const randomFallback = fallbackImages[creator.id % fallbackImages.length];
+                            e.currentTarget.src = randomFallback;
+                          }}
+                          onLoad={() => console.log(`�� Successfully loaded profile image for ${creator.name}`)}
                         />
                         
                         <div className="flex-1 pt-2">
