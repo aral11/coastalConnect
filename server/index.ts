@@ -18,6 +18,8 @@ import { getServiceCategories, getServiceCategory } from "./routes/services";
 import { submitContactForm, getContactInfo } from "./routes/contact";
 import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBookingStatus, getBusinessAnalytics } from "./routes/business";
 import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
+import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
+import { submitFeedback, getFeedbacks, getFeedbackStats } from "./routes/feedback";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { authenticateToken } from "./middleware/auth";
