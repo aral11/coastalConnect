@@ -18,6 +18,7 @@ import { getServiceCategories, getServiceCategory } from "./routes/services";
 import { submitContactForm, getContactInfo } from "./routes/contact";
 import searchRouter from "./routes/search";
 import subscriptionRouter from "./routes/subscription";
+import adminRouter from "./routes/admin";
 import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBookingStatus, getBusinessAnalytics } from "./routes/business";
 import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
 import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
