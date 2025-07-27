@@ -28,6 +28,7 @@ import {
 export default function Index() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Udupi, Karnataka');
+  const [locationsLoaded, setLocationsLoaded] = useState(false);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -40,6 +41,14 @@ export default function Index() {
       handleSearch();
     }
   };
+
+  // Simulate loading for popular locations
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLocationsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Layout fullWidth>
@@ -359,8 +368,15 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
+          {!locationsLoaded ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={`skeleton-${index}`} className="bg-gray-200 rounded-xl h-64 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
               {
                 name: 'Malpe Beach Area',
                 description: 'Beach resorts, water sports, seafood',
@@ -446,7 +462,8 @@ export default function Index() {
                 <div className="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Link>
             ))}
-          </div>
+            </div>
+          )}
 
           {/* View All Locations Link */}
           <div className="text-center mt-8">
