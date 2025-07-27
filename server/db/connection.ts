@@ -5,7 +5,7 @@ dotenv.config();
 
 const config: sql.config = {
   server: process.env.DB_SERVER || 'DESKTOP-6FSVDEL\\SQLEXPRESS',
-  database: process.env.DB_DATABASE || 'inspectiondb',
+  database: process.env.DB_DATABASE || 'CoastalConnectUdupi',
   driver: 'msnodesqlv8' as any,
   options: {
     trustedConnection: true,
