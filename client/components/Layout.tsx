@@ -192,31 +192,39 @@ function Footer() {
 
               {/* Social Media */}
               <div className="flex space-x-4">
-                <a 
-                  href="#" 
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
-                  aria-label="Instagram"
+                <a
+                  href="https://instagram.com/coastalvibes.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-pink-600 transition-colors"
+                  aria-label="Follow us on Instagram"
                 >
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a 
-                  href="#" 
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
-                  aria-label="Facebook"
+                <a
+                  href="https://facebook.com/coastalconnect.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors"
+                  aria-label="Like us on Facebook"
                 >
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a 
-                  href="#" 
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
-                  aria-label="Twitter"
+                <a
+                  href="https://twitter.com/coastalconnect"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-400 transition-colors"
+                  aria-label="Follow us on Twitter"
                 >
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a 
-                  href="#" 
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors"
-                  aria-label="Youtube"
+                <a
+                  href="https://youtube.com/c/coastalvibes"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-red-600 transition-colors"
+                  aria-label="Subscribe to our YouTube channel"
                 >
                   <Youtube className="h-5 w-5" />
                 </a>
@@ -264,7 +272,11 @@ function Footer() {
                 <span>Support</span>
               </div>
               <div className="text-sm text-gray-400">
-                <div>📞 +91 8105003858</div>
+                <div>
+                  <a href="tel:+918105003858" className="hover:text-white transition-colors">
+                    📞 +91 8105 003 858
+                  </a>
+                </div>
                 <div>⏰ 24/7 Available</div>
               </div>
             </div>
@@ -275,8 +287,16 @@ function Footer() {
                 <span>Email</span>
               </div>
               <div className="text-sm text-gray-400">
-                <div>📧 admin@coastalconnect.in</div>
-                <div>🌐 www.coastalconnect.in</div>
+                <div>
+                  <a href="mailto:admin@coastalconnect.in" className="hover:text-white transition-colors">
+                    📧 admin@coastalconnect.in
+                  </a>
+                </div>
+                <div>
+                  <a href="https://www.coastalconnect.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                    🌐 www.coastalconnect.in
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -286,8 +306,16 @@ function Footer() {
                 <span>Community</span>
               </div>
               <div className="text-sm text-gray-400">
-                <div>📸 @coastalvibes.in</div>
-                <div>🎬 Coastal Vibes Channel</div>
+                <div>
+                  <a href="https://instagram.com/coastalvibes.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                    📸 @coastalvibes.in
+                  </a>
+                </div>
+                <div>
+                  <a href="https://youtube.com/c/coastalvibes" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                    🎬 Coastal Vibes Channel
+                  </a>
+                </div>
               </div>
             </div>
           </div>
