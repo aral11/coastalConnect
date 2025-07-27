@@ -238,7 +238,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'EXPLORE NOW',
         active: true,
         order: 4,
-        count: 8
+        count: 8,
+        serviceCount: 8,
+        averageRating: 4.8,
+        priceRange: '₹1000-5000',
+        topServices: ['Photography', 'Content Creation', 'Local Guides']
       },
       {
         id: 'events',
