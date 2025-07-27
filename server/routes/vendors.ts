@@ -118,6 +118,41 @@ router.post('/register', async (req: Request, res: Response) => {
     // Generate registration reference
     const registrationRef = `VR${Date.now().toString().slice(-6)}${registrationId}`;
 
+    // Send notification emails/SMS
+    try {
+      // Email notification to vendor
+      await EmailService.sendVendorRegistrationConfirmation({
+        vendorEmail: email,
+        businessName: business_name,
+        ownerName: owner_name,
+        registrationRef,
+        category,
+        submissionDate: new Date().toISOString()
+      });
+
+      // SMS notification to vendor
+      await SMSService.sendVendorRegistrationConfirmation(phone, {
+        businessName: business_name,
+        registrationRef,
+        category
+      });
+
+      // Admin notification
+      await EmailService.sendAdminVendorNotification({
+        businessName: business_name,
+        ownerName: owner_name,
+        category,
+        registrationRef,
+        vendorEmail: email,
+        vendorPhone: phone
+      });
+
+      console.log('✅ Vendor registration notifications sent successfully');
+    } catch (notificationError) {
+      console.error('⚠️ Notification sending failed:', notificationError);
+      // Don't fail the registration if notifications fail
+    }
+
     res.status(201).json({
       success: true,
       data: {
