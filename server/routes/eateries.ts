@@ -66,36 +66,6 @@ const mockEateries: Eatery[] = [
     is_active: true
   },
   {
-    id: 3,
-    name: "Dollops Restaurant",
-    description: "Modern restaurant offering fusion of coastal Karnataka and international cuisines.",
-    location: "Manipal, Udupi",
-    address: "Manipal University Road, Manipal, Karnataka 576104",
-    cuisine_type: "Multi-cuisine",
-    rating: 4.5,
-    total_reviews: 334,
-    phone: "+91 820 292 3456",
-    opening_hours: "11:00 AM - 11:00 PM",
-    price_range: "₹300-600 per person",
-    image_url: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
-    is_active: true
-  },
-  {
-    id: 4,
-    name: "Malpe Sea Food Restaurant",
-    description: "Fresh seafood restaurant with variety of coastal Karnataka fish preparations.",
-    location: "Malpe, Udupi",
-    address: "Malpe Beach Road, Malpe, Udupi, Karnataka 576103",
-    cuisine_type: "Seafood, Coastal Karnataka",
-    rating: 4.6,
-    total_reviews: 445,
-    phone: "+91 820 252 8901",
-    opening_hours: "11:30 AM - 3:00 PM, 6:30 PM - 10:00 PM",
-    price_range: "₹400-800 per person",
-    image_url: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop",
-    is_active: true
-  },
-  {
     id: 5,
     name: "Hotel Janatha Deluxe",
     description: "Local favorite for traditional Udupi breakfast, dosas, and filter coffee.",
