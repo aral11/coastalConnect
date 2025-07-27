@@ -194,8 +194,8 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
       },
       {
         id: 'eateries',
-        title: 'EATERIES',
-        description: 'LOCAL CUISINE & DINING',
+        title: 'RESTAURANTS',
+        description: 'LOCAL DINING & CUISINE',
         icon: 'ChefHat',
         link: '/eateries',
         color: 'from-green-500 to-green-600',
