@@ -624,6 +624,27 @@ export const initializeDatabase = async (): Promise<void> => {
       IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_DriverBookings_User')
       CREATE INDEX IX_DriverBookings_User ON DriverBookings(user_id);
     `);
+
+    // Coupon system indexes
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Coupons_Code')
+      CREATE UNIQUE INDEX IX_Coupons_Code ON Coupons(code);
+    `);
+
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Coupons_Active_Valid')
+      CREATE INDEX IX_Coupons_Active_Valid ON Coupons(is_active, valid_from, valid_until);
+    `);
+
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_CouponUsage_User_Coupon')
+      CREATE INDEX IX_CouponUsage_User_Coupon ON CouponUsage(user_id, coupon_id);
+    `);
+
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_PersonalizedOffers_User')
+      CREATE INDEX IX_PersonalizedOffers_User ON PersonalizedOffers(user_id);
+    `);
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
