@@ -34,6 +34,7 @@ interface Driver {
 }
 
 export default function Drivers() {
+  const { id } = useParams();
   const { isAuthenticated } = useAuth();
   
   const [drivers, setDrivers] = useState<Driver[]>([]);
