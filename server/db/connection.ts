@@ -4,20 +4,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config: sql.config = {
-  server: process.env.DB_SERVER || 'localhost\\SQLEXPRESS',
-  database: process.env.DB_DATABASE || 'CoastalConnectUdupi',
-  authentication: {
-    type: 'ntlm',
-    options: {
-      userName: process.env.DB_USER || 'DESKTOP-6FSVDEL\\Aral',
-      password: process.env.DB_PASSWORD || '',
-      domain: process.env.DB_DOMAIN || 'DESKTOP-6FSVDEL'
-    }
-  },
+  server: process.env.DB_SERVER || 'DESKTOP-6FSVDEL\\SQLEXPRESS',
+  database: process.env.DB_DATABASE || 'inspectiondb',
+  driver: 'msnodesqlv8' as any,
   options: {
-    encrypt: process.env.DB_ENCRYPT === 'true' || false,
-    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true' || true,
+    trustedConnection: true,
     enableArithAbort: true,
+    trustServerCertificate: true,
     instanceName: 'SQLEXPRESS'
   },
   pool: {
