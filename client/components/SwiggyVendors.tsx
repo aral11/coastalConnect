@@ -60,7 +60,7 @@ const SAMPLE_VENDORS: Vendor[] = [
     category: 'Vegetarian Restaurant',
     location: 'Udupi City',
     distance: 1.5,
-    deliveryTime: 25,
+    responseTime: 25,
     price: 200,
     offers: ['20% off', 'Free Delivery'],
     features: ['Pure Veg', 'Traditional', 'Family Dining'],
