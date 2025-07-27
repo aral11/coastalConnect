@@ -270,7 +270,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'DISCOVER',
         active: true,
         order: 6,
-        count: 18
+        count: 18,
+        serviceCount: 18,
+        averageRating: 4.4,
+        priceRange: '₹200-1000',
+        topServices: ['Home Services', 'Repairs', 'Maintenance']
       }
     ];
 
