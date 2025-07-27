@@ -14,7 +14,12 @@ const PlatformStats: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchStats();
+    // Add a delay to spread out API calls
+    const timeoutId = setTimeout(() => {
+      fetchStats();
+    }, 500); // 500ms delay for stats
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const fetchStats = async () => {
