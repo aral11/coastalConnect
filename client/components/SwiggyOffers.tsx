@@ -60,19 +60,19 @@ const OFFERS: Offer[] = [
   },
   {
     id: 'food25',
-    title: 'Food Delivery',
+    title: 'Restaurant Dining',
     subtitle: '25% OFF',
-    description: 'Free delivery included',
+    description: 'On dining bookings',
     discount: '25% OFF',
     type: 'percentage',
     minOrder: 300,
     validUntil: '2024-12-20',
-    code: 'FOODIE25',
+    code: 'DINE25',
     gradient: 'from-green-400 to-teal-500',
     textColor: 'text-white',
     icon: <Zap className="h-6 w-6" />,
     category: 'Restaurants',
-    link: '/eateries?offer=FOODIE25'
+    link: '/eateries?offer=DINE25'
   },
   {
     id: 'ride20',
