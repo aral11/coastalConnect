@@ -66,7 +66,7 @@ export default function Index() {
                   in coastal Karnataka
                 </h1>
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Book authentic homestays, discover local restaurants, hire trusted drivers, and connect with talented creators.
+                  Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators.
                   Your complete guide to coastal Karnataka.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export default function Index() {
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <Input
                       type="text"
-                      placeholder="Search for homestays, restaurants, drivers, experiences..."
+                      placeholder="Search for hotels, resorts, homestays, restaurants, drivers, experiences..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={handleKeyPress}
@@ -107,7 +107,7 @@ export default function Index() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="text-sm text-gray-500">Popular:</span>
                   {[
-                    'Beachside homestays',
+                    'Beachside hotels & resorts',
                     'Udupi restaurants',
                     'Local drivers',
                     'Wedding photography'
@@ -191,10 +191,10 @@ export default function Index() {
         className="py-12 lg:py-16 bg-gray-50"
       />
 
-      {/* Homestays Section */}
-      <SwiggyVendors 
-        title="Best homestays"
-        subtitle="Authentic local stays"
+      {/* Hotels, Resorts & Homestays Section */}
+      <SwiggyVendors
+        title="Best hotels, resorts & homestays"
+        subtitle="Authentic accommodations & local stays"
         type="homestay"
         className="py-12 lg:py-16 bg-white"
         maxItems={6}
