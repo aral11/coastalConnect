@@ -86,7 +86,15 @@ export default function SwiggyVendors({
           break;
       }
 
-      const response = await fetch(apiEndpoint);
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch(apiEndpoint, {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -104,10 +112,13 @@ export default function SwiggyVendors({
         throw new Error('API not available');
       }
     } catch (error) {
-      console.error('Failed to fetch vendors:', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('API request timed out for', type);
+      } else {
+        console.error('Failed to fetch vendors:', error);
+      }
 
       // Use fallback data when API is not available
-      console.warn('API not available, using fallback vendor data for', type);
       setVendors(getFallbackVendors(type, maxItems));
     } finally {
       setLoading(false);
