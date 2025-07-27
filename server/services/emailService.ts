@@ -613,6 +613,26 @@ export class EmailService {
     );
   }
 
+  static async sendVendorRegistrationConfirmation(vendor: any) {
+    const template = emailTemplates.vendorRegistrationConfirmation(vendor);
+    return this.sendEmail(
+      vendor.vendorEmail,
+      template.subject,
+      template.html,
+      ''
+    );
+  }
+
+  static async sendAdminVendorNotification(vendor: any) {
+    const template = emailTemplates.adminVendorNotification(vendor);
+    return this.sendEmail(
+      'admin@coastalconnect.in',
+      template.subject,
+      template.html,
+      ''
+    );
+  }
+
   // Send bulk emails (for newsletters, announcements)
   static async sendBulkEmail(recipients: string[], subject: string, html: string, text: string) {
     const results = [];
