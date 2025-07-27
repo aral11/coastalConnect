@@ -105,9 +105,9 @@ router.get('/platform', async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('Error fetching platform stats:', error);
-    
-    // Return zeros instead of mock data for production
-    res.json({
+
+    // Always return a valid JSON response, never let it fall through
+    res.status(200).json({
       success: true,
       data: {
         vendors: 0,
@@ -115,7 +115,8 @@ router.get('/platform', async (req: Request, res: Response) => {
         rating: 0,
         cities: 0
       },
-      message: 'Platform statistics retrieved (database unavailable)'
+      message: 'Platform statistics retrieved (error occurred)',
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
 });
