@@ -294,7 +294,7 @@ export const getServiceCategory: RequestHandler = async (req, res) => {
       },
       {
         id: 'eateries',
-        title: 'Eateries',
+        title: 'Restaurants',
         description: 'Discover authentic local cuisine with traditional Udupi flavors',
         icon: 'ChefHat',
         features: ['Traditional recipes', 'Fresh ingredients', 'Local specialties', 'Authentic taste'],
