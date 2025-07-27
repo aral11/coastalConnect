@@ -21,32 +21,62 @@ const config: sql.config = {
 };
 
 let pool: sql.ConnectionPool | null = null;
+let lastConnectionAttempt = 0;
+let consecutiveFailures = 0;
+const MAX_CONSECUTIVE_FAILURES = 5;
+const CIRCUIT_BREAKER_TIMEOUT = 30000; // 30 seconds
 
 export const getConnection = async (): Promise<sql.ConnectionPool> => {
+  const now = Date.now();
+
+  // Circuit breaker: if we've had too many consecutive failures, don't try again for a while
+  if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES &&
+      now - lastConnectionAttempt < CIRCUIT_BREAKER_TIMEOUT) {
+    throw new Error('Database connection circuit breaker is open. Too many recent failures.');
+  }
+
   try {
     if (!pool) {
-      console.log(`🔗 Connecting to SQL Server: ${config.server}`);
-      console.log(`📁 Database: ${config.database}`);
-      console.log(`🔧 Driver: msnodesqlv8`);
-      console.log(`🔐 Authentication: Trusted Connection (Windows Authentication)`);
+      // Only log connection attempts occasionally to reduce spam
+      if (consecutiveFailures === 0 || now - lastConnectionAttempt > 60000) {
+        console.log(`🔗 Connecting to SQL Server: ${config.server}`);
+        console.log(`📁 Database: ${config.database}`);
+        console.log(`🔧 Driver: msnodesqlv8`);
+        console.log(`🔐 Authentication: Trusted Connection (Windows Authentication)`);
+      }
 
       pool = new sql.ConnectionPool(config);
       await pool.connect();
       console.log('✅ Connected to SQL Server successfully');
+      consecutiveFailures = 0; // Reset on successful connection
     }
 
     // Check if the pool is still connected
     if (!pool.connected) {
-      console.log('🔄 Pool disconnected, reconnecting...');
+      if (consecutiveFailures === 0) {
+        console.log('🔄 Pool disconnected, reconnecting...');
+      }
       await pool.connect();
+      consecutiveFailures = 0; // Reset on successful reconnection
     }
 
     return pool;
   } catch (error) {
-    console.error('❌ Database connection failed');
-    console.error('💡 Make sure SQL Server Express is running and Windows Authentication is enabled');
-    console.error('🔧 Try running: sqlcmd -S DESKTOP-6FSVDEL\\SQLEXPRESS -E');
-    console.error('🔧 Ensure CoastalConnectUdupi database exists');
+    lastConnectionAttempt = now;
+    consecutiveFailures++;
+
+    // Only log errors occasionally to reduce spam
+    if (consecutiveFailures <= 3 || consecutiveFailures % 10 === 0) {
+      console.error('❌ Database connection failed');
+      if (consecutiveFailures === 1) {
+        console.error('💡 Make sure SQL Server Express is running and Windows Authentication is enabled');
+        console.error('🔧 Try running: sqlcmd -S DESKTOP-6FSVDEL\\SQLEXPRESS -E');
+        console.error('🔧 Ensure CoastalConnectUdupi database exists');
+      }
+      if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+        console.error(`⚠️ Circuit breaker activated after ${consecutiveFailures} failures. Will retry in ${CIRCUIT_BREAKER_TIMEOUT/1000} seconds.`);
+      }
+    }
 
     // Reset pool on connection failure
     pool = null;
