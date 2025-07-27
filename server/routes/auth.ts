@@ -129,7 +129,7 @@ export const register: RequestHandler = async (req, res) => {
 export const verifyToken: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
-    
+
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -139,7 +139,7 @@ export const verifyToken: RequestHandler = async (req, res) => {
 
     const decoded = AuthService.verifyToken(token);
     const user = await AuthService.findUserById(decoded.userId);
-    
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -157,6 +157,24 @@ export const verifyToken: RequestHandler = async (req, res) => {
     res.status(401).json({
       success: false,
       message: 'Invalid token',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+export const logout: RequestHandler = async (req, res) => {
+  try {
+    // For JWT tokens, we just need to tell the client to delete the token
+    // In a more advanced implementation, we might maintain a blacklist of tokens
+    res.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Logout failed',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
