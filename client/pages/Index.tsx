@@ -124,24 +124,7 @@ export default function Index() {
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-4 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">500+</div>
-                  <div className="text-sm text-gray-600">Vendors</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">10k+</div>
-                  <div className="text-sm text-gray-600">Orders</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">4.8★</div>
-                  <div className="text-sm text-gray-600">Rating</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">25</div>
-                  <div className="text-sm text-gray-600">Cities</div>
-                </div>
-              </div>
+              <PlatformStats />
             </div>
 
             {/* Right Image */}
