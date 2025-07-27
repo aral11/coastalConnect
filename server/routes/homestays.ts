@@ -97,8 +97,8 @@ export const getHomestays: RequestHandler = async (req, res) => {
     try {
       const connection = await getConnection();
       const result = await connection.request().query(`
-        SELECT * FROM Homestays 
-        WHERE is_active = 1 
+        SELECT * FROM Homestays
+        WHERE is_active = 1 AND admin_approval_status = 'approved'
         ORDER BY rating DESC, name ASC
       `);
       
