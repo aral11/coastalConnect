@@ -192,9 +192,9 @@ export default function Index() {
       />
 
       {/* Restaurants Section */}
-      <SwiggyVendors 
-        title="Best food near you"
-        subtitle="Top restaurants and cafes"
+      <SwiggyVendors
+        title="Top restaurants & cafes"
+        subtitle="Discover authentic local dining"
         type="restaurant"
         className="py-12 lg:py-16 bg-gray-50"
         maxItems={6}
