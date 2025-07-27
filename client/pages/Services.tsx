@@ -239,9 +239,16 @@ export default function Services() {
       
       if (response.ok) {
         const data = await response.json();
-        if (data.success && data.data) {
-          // Map API data to our format
-          setServiceCategories(data.data);
+        if (data.success && data.data && Array.isArray(data.data)) {
+          // Ensure each category has required fields with fallbacks
+          const validatedCategories = data.data.map((category: any) => ({
+            ...category,
+            topServices: category.topServices || [],
+            serviceCount: category.serviceCount || 0,
+            averageRating: category.averageRating || 4.0,
+            priceRange: category.priceRange || 'Contact for pricing'
+          }));
+          setServiceCategories(validatedCategories);
         } else {
           throw new Error('API data not available');
         }
