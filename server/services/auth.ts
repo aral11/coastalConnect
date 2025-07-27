@@ -119,15 +119,15 @@ export class AuthService {
   static async findUserById(id: number): Promise<User | null> {
     try {
       const connection = await getConnection();
-      
+
       const result = await connection.request()
         .input('id', id)
         .query('SELECT * FROM Users WHERE id = @id');
 
       return result.recordset[0] || null;
     } catch (error) {
-      console.log('Database not available for user lookup');
-      return null;
+      console.error('Error finding user by ID:', error);
+      throw new Error('Database error during user lookup');
     }
   }
 
