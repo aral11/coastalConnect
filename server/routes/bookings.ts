@@ -130,7 +130,9 @@ export const createDriverBooking: RequestHandler = async (req: AuthenticatedRequ
       pickup_datetime,
       passenger_name,
       passenger_phone,
-      passengers_count
+      passengers_count,
+      coupon_code,
+      original_amount
     } = req.body;
 
     // Get user ID from authentication middleware
@@ -150,6 +152,30 @@ export const createDriverBooking: RequestHandler = async (req: AuthenticatedRequ
       });
     }
 
+    let couponValidation = null;
+    let finalAmount = original_amount;
+    let discountAmount = 0;
+
+    // Validate coupon if provided
+    if (coupon_code && original_amount) {
+      couponValidation = await CouponService.validateCoupon(
+        coupon_code,
+        user_id,
+        original_amount,
+        'transport'
+      );
+
+      if (!couponValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: couponValidation.message || 'Invalid coupon code'
+        });
+      }
+
+      finalAmount = couponValidation.finalAmount!;
+      discountAmount = couponValidation.discountAmount!;
+    }
+
     const result = await BookingService.createDriverBooking({
       user_id,
       driver_id: parseInt(driver_id),
@@ -158,8 +184,22 @@ export const createDriverBooking: RequestHandler = async (req: AuthenticatedRequ
       pickup_datetime: new Date(pickup_datetime),
       passenger_name,
       passenger_phone,
-      passengers_count: parseInt(passengers_count) || 1
+      passengers_count: parseInt(passengers_count) || 1,
+      final_amount: finalAmount
     });
+
+    // Apply coupon if validation was successful
+    if (couponValidation && couponValidation.isValid && couponValidation.coupon) {
+      await CouponService.applyCoupon({
+        couponId: couponValidation.coupon.id,
+        userId: user_id,
+        bookingId: result.booking.id,
+        bookingType: 'transport',
+        discountAmount: discountAmount,
+        originalAmount: original_amount,
+        finalAmount: finalAmount
+      });
+    }
 
     // Get driver details for SMS
     const driverPhone = await BookingService.getDriverPhone(parseInt(driver_id));
@@ -185,7 +225,14 @@ export const createDriverBooking: RequestHandler = async (req: AuthenticatedRequ
       success: true,
       data: {
         booking: result.booking,
-        payment_intent: result.payment_intent
+        payment_intent: result.payment_intent,
+        coupon: couponValidation ? {
+          code: coupon_code,
+          discountAmount: discountAmount,
+          originalAmount: original_amount,
+          finalAmount: finalAmount,
+          savings: discountAmount
+        } : null
       },
       message: 'Driver booking created successfully'
     });
