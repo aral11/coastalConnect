@@ -29,7 +29,14 @@ import {
   UserPlus,
   ChevronDown,
   ShoppingBag,
-  Camera
+  Camera,
+  Globe,
+  Compass,
+  Bed,
+  ChefHat,
+  Sparkles,
+  Store,
+  MoreHorizontal
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -41,6 +48,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [businessDropdownOpen, setBusinessDropdownOpen] = useState(false);
 
   // Handle scroll effect
   useEffect(() => {
@@ -55,45 +63,73 @@ export default function Navigation({ className = '' }: NavigationProps) {
   // Close mobile menu when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
+    setBusinessDropdownOpen(false);
   }, [location.pathname]);
 
-  const navItems = [
+  // Consumer-focused main navigation
+  const mainNavItems = [
     {
-      label: 'Homestays',
+      label: 'Stays',
       href: '/homestays',
-      icon: <Building className="h-4 w-4" />,
-      description: 'Authentic local stays'
+      icon: <Bed className="h-4 w-4" />,
+      description: 'Cozy homestays & accommodations',
+      color: 'text-blue-600'
     },
     {
-      label: 'Eateries',
-      href: '/eateries',
-      icon: <UtensilsCrossed className="h-4 w-4" />,
-      description: 'Local cuisine experiences'
+      label: 'Food',
+      href: '/eateries', 
+      icon: <ChefHat className="h-4 w-4" />,
+      description: 'Local restaurants & cuisine',
+      color: 'text-orange-600'
     },
     {
-      label: 'Drivers',
+      label: 'Rides',
       href: '/drivers',
       icon: <Car className="h-4 w-4" />,
-      description: 'Trusted transportation'
+      description: 'Trusted local transport',
+      color: 'text-green-600'
+    },
+    {
+      label: 'Experiences',
+      href: '/events',
+      icon: <Calendar className="h-4 w-4" />,
+      description: 'Events & cultural activities',
+      color: 'text-purple-600'
     },
     {
       label: 'Creators',
       href: '/creators',
       icon: <Camera className="h-4 w-4" />,
-      description: 'Local content creators'
+      description: 'Photography & content',
+      color: 'text-pink-600'
     }
   ];
 
-  const secondaryNavItems = [
+  // Business/vendor related items (hidden in dropdown)
+  const businessNavItems = [
     {
-      label: 'About',
-      href: '/about',
-      icon: <Mail className="h-4 w-4" />
+      label: 'List Your Business',
+      href: '/vendor-register',
+      icon: <Store className="h-4 w-4" />,
+      description: 'Register your homestay, restaurant, or service'
     },
     {
-      label: 'Contact',
-      href: '/contact',
-      icon: <Phone className="h-4 w-4" />
+      label: 'Event Organizer',
+      href: '/organizer-register',
+      icon: <Calendar className="h-4 w-4" />,
+      description: 'Organize and promote local events'
+    },
+    {
+      label: 'Business Dashboard',
+      href: '/business-dashboard',
+      icon: <Briefcase className="h-4 w-4" />,
+      description: 'Manage your business listings'
+    },
+    {
+      label: 'Partner Portal',
+      href: '/partner-with-us',
+      icon: <Users className="h-4 w-4" />,
+      description: 'Join our partner network'
     }
   ];
 
@@ -137,63 +173,134 @@ export default function Navigation({ className = '' }: NavigationProps) {
             </div>
             <div className="hidden sm:block">
               <div className="font-bold text-gray-900 text-xl">coastalConnect</div>
-              <div className="text-xs text-gray-500 -mt-1">Udupi • Manipal</div>
+              <div className="text-xs text-gray-500 -mt-1">Coastal Karnataka • Live</div>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Consumer Focused */}
           <div className="hidden lg:flex items-center space-x-1" role="menubar">
-            {navItems.map((item) => (
+            {mainNavItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
                 className={`group relative px-4 py-2 rounded-xl transition-all duration-200 ${
                   isActiveRoute(item.href)
-                    ? 'text-orange-600 bg-orange-50'
-                    : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                    ? `${item.color} bg-${item.color.split('-')[1]}-50`
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
                 role="menuitem"
               >
                 <div className="flex items-center space-x-2">
-                  {item.icon}
+                  <span className={isActiveRoute(item.href) ? item.color : 'text-gray-500 group-hover:text-gray-700'}>
+                    {item.icon}
+                  </span>
                   <span className="font-medium">{item.label}</span>
                 </div>
                 
                 {/* Hover tooltip */}
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
                   {item.description}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900"></div>
                 </div>
               </Link>
             ))}
+
+            {/* Explore More Dropdown */}
+            <div className="relative group">
+              <button className="flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="font-medium">More</span>
+                <ChevronDown className="h-3 w-3" />
+              </button>
+
+              {/* More Services Dropdown */}
+              <div className="absolute left-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                <div className="p-2">
+                  <Link to="/services" className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <div className="p-2 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg">
+                      <Sparkles className="h-4 w-4 text-teal-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">All Services</div>
+                      <div className="text-xs text-gray-500">Beauty, wellness, shopping & more</div>
+                    </div>
+                  </Link>
+                  <Link to="/search" className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
+                      <Search className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">Advanced Search</div>
+                      <div className="text-xs text-gray-500">Find exactly what you're looking for</div>
+                    </div>
+                  </Link>
+                  <Link to="/about" className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <div className="p-2 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg">
+                      <Globe className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">About Us</div>
+                      <div className="text-xs text-gray-500">Our story & mission</div>
+                    </div>
+                  </Link>
+                  <Link to="/contact" className="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <div className="p-2 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
+                      <Phone className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">Contact</div>
+                      <div className="text-xs text-gray-500">Get in touch with us</div>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Right side actions */}
           <div className="flex items-center space-x-3">
-            {/* Secondary nav items (desktop only) */}
-            <div className="hidden lg:flex items-center space-x-2">
-              {secondaryNavItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className="px-3 py-2 text-gray-600 hover:text-orange-600 transition-colors duration-200 text-sm font-medium"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-
-            {/* Vendor registration */}
-            <Link to="/vendor-register" className="hidden lg:block">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white font-medium px-4 py-2 rounded-xl transition-all duration-200"
+            {/* Business Portal (Hidden Dropdown) */}
+            <div className="hidden lg:block relative group">
+              <button 
+                className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-all duration-200"
+                onMouseEnter={() => setBusinessDropdownOpen(true)}
+                onMouseLeave={() => setBusinessDropdownOpen(false)}
               >
-                <ShoppingBag className="h-4 w-4 mr-2" />
-                For Vendors
-              </Button>
-            </Link>
+                <Briefcase className="h-4 w-4" />
+                <span className="font-medium">Business</span>
+                <ChevronDown className="h-3 w-3" />
+              </button>
+
+              {/* Business Dropdown */}
+              <div 
+                className={`absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 transition-all duration-200 z-10 ${
+                  businessDropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
+                onMouseEnter={() => setBusinessDropdownOpen(true)}
+                onMouseLeave={() => setBusinessDropdownOpen(false)}
+              >
+                <div className="p-4">
+                  <div className="text-sm font-semibold text-gray-900 mb-3">Partner with coastalConnect</div>
+                  <div className="space-y-1">
+                    {businessNavItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className="flex items-center space-x-3 px-3 py-3 rounded-xl hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
+                          {item.icon}
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-900 text-sm">{item.label}</div>
+                          <div className="text-xs text-gray-500">{item.description}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Auth buttons */}
             {isAuthenticated ? (
@@ -202,7 +309,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="hidden lg:flex relative p-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-xl"
+                  className="hidden lg:flex relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl"
                 >
                   <Bell className="h-5 w-5" />
                   <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
@@ -212,9 +319,9 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 <div className="relative group">
                   <Button 
                     variant="ghost" 
-                    className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl"
+                    className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         {user?.name?.charAt(0) || 'U'}
                       </span>
@@ -224,7 +331,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                   </Button>
 
                   {/* Dropdown menu */}
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                     <div className="p-4 border-b border-gray-100">
                       <div className="font-semibold text-gray-900">{user?.name}</div>
                       <div className="text-sm text-gray-500">{user?.email}</div>
@@ -232,21 +339,21 @@ export default function Navigation({ className = '' }: NavigationProps) {
                     <div className="py-2">
                       <Link 
                         to="/dashboard" 
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                       >
                         <User className="h-4 w-4 mr-3" />
                         My Profile
                       </Link>
                       <Link 
                         to="/dashboard" 
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                       >
                         <Calendar className="h-4 w-4 mr-3" />
                         My Bookings
                       </Link>
                       <Link 
                         to="/dashboard" 
-                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
                       >
                         <Heart className="h-4 w-4 mr-3" />
                         Favorites
@@ -269,14 +376,14 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 <Link to="/login">
                   <Button 
                     variant="ghost" 
-                    className="font-medium text-gray-700 hover:text-orange-600 px-4 py-2 rounded-xl"
+                    className="font-medium text-gray-700 hover:text-gray-900 px-4 py-2 rounded-xl"
                   >
                     Sign In
                   </Button>
                 </Link>
                 <Link to="/signup">
                   <Button 
-                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     Get Started
                   </Button>
@@ -290,7 +397,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="lg:hidden p-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl"
+                  className="lg:hidden p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl"
                   aria-label="Open menu"
                 >
                   <Menu className="h-6 w-6" />
@@ -313,7 +420,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                       />
                       <div>
                         <div className="font-bold text-gray-900">coastalConnect</div>
-                        <div className="text-xs text-gray-500">Udupi • Manipal</div>
+                        <div className="text-xs text-gray-500">Coastal Karnataka</div>
                       </div>
                     </Link>
                   </div>
@@ -321,18 +428,20 @@ export default function Navigation({ className = '' }: NavigationProps) {
                   {/* Navigation Items */}
                   <div className="flex-1 py-6">
                     <div className="space-y-2">
-                      {navItems.map((item) => (
+                      {mainNavItems.map((item) => (
                         <Link
                           key={item.href}
                           to={item.href}
                           onClick={handleMobileMenuClose}
                           className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                             isActiveRoute(item.href)
-                              ? 'text-orange-600 bg-orange-50'
-                              : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                              ? `${item.color} bg-gray-50`
+                              : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                           }`}
                         >
-                          {item.icon}
+                          <span className={isActiveRoute(item.href) ? item.color : 'text-gray-500'}>
+                            {item.icon}
+                          </span>
                           <div>
                             <div className="font-medium">{item.label}</div>
                             <div className="text-xs text-gray-500">{item.description}</div>
@@ -343,16 +452,41 @@ export default function Navigation({ className = '' }: NavigationProps) {
 
                     <Separator className="my-6" />
 
+                    {/* More Services */}
                     <div className="space-y-2">
-                      {secondaryNavItems.map((item) => (
+                      <div className="px-4 py-2 text-sm font-semibold text-gray-900">More Services</div>
+                      <Link to="/services" onClick={handleMobileMenuClose} className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Sparkles className="h-4 w-4" />
+                        <span>All Services</span>
+                      </Link>
+                      <Link to="/search" onClick={handleMobileMenuClose} className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Search className="h-4 w-4" />
+                        <span>Search</span>
+                      </Link>
+                      <Link to="/about" onClick={handleMobileMenuClose} className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Globe className="h-4 w-4" />
+                        <span>About</span>
+                      </Link>
+                      <Link to="/contact" onClick={handleMobileMenuClose} className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Phone className="h-4 w-4" />
+                        <span>Contact</span>
+                      </Link>
+                    </div>
+
+                    <Separator className="my-6" />
+
+                    {/* Business Portal (Mobile) */}
+                    <div className="space-y-2">
+                      <div className="px-4 py-2 text-sm font-semibold text-gray-900">For Business</div>
+                      {businessNavItems.slice(0, 2).map((item) => (
                         <Link
                           key={item.href}
                           to={item.href}
                           onClick={handleMobileMenuClose}
-                          className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-colors"
+                          className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors"
                         >
                           {item.icon}
-                          <span>{item.label}</span>
+                          <span className="text-sm">{item.label}</span>
                         </Link>
                       ))}
                     </div>
@@ -363,7 +497,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                     {isAuthenticated ? (
                       <div className="space-y-3">
                         <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl">
-                          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                             <span className="text-white font-semibold">
                               {user?.name?.charAt(0) || 'U'}
                             </span>
@@ -387,14 +521,14 @@ export default function Navigation({ className = '' }: NavigationProps) {
                         <Link to="/login" onClick={handleMobileMenuClose}>
                           <Button 
                             variant="outline" 
-                            className="w-full border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white rounded-xl"
+                            className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 rounded-xl"
                           >
                             Sign In
                           </Button>
                         </Link>
                         <Link to="/signup" onClick={handleMobileMenuClose}>
                           <Button 
-                            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl"
+                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl"
                           >
                             Get Started
                           </Button>
