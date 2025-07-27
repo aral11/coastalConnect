@@ -5,7 +5,7 @@ import { getHomestays, getHomestayById, searchHomestays } from "./routes/homesta
 import { getEateries, getEateryById, searchEateries } from "./routes/eateries";
 import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
 import { getCreators, getCreatorById, searchCreators, getInstagramStats } from "./routes/creators";
-import { googleAuth, appleAuth, emailAuth, register, verifyToken } from "./routes/auth";
+import { googleAuth, appleAuth, emailAuth, register, verifyToken, logout } from "./routes/auth";
 import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
 // Old services route removed - replaced with new service categories
 import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
