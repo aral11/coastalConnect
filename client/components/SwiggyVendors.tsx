@@ -53,7 +53,12 @@ export default function SwiggyVendors({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchVendors();
+    // Add a small delay to prevent simultaneous API calls
+    const timeoutId = setTimeout(() => {
+      fetchVendors();
+    }, Math.random() * 1000); // Random delay 0-1 second
+
+    return () => clearTimeout(timeoutId);
   }, [type, maxItems]);
 
   const fetchVendors = async () => {
