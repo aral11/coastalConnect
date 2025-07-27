@@ -5,6 +5,15 @@ import { SMSService } from '../services/smsService';
 
 const router = Router();
 
+// Test route to verify router is working
+router.get('/test', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Vendors API is working',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Register new vendor
 router.post('/register', async (req: Request, res: Response) => {
   try {
