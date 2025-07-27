@@ -97,14 +97,21 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
       setLoading(true);
       setError(null);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch('/api/stats', {
+        signal: controller.signal,
         // Add cache-busting to ensure fresh data
         cache: 'no-cache',
         headers: {
           'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
+          'Pragma': 'no-cache',
+          'Content-Type': 'application/json'
         }
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
