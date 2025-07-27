@@ -323,13 +323,13 @@ export default function SwiggyVendors({
                     </div>
                   )}
 
-                  {/* Delivery Time (for restaurants) */}
-                  {vendor.deliveryTime && (
+                  {/* Response Time (for restaurants) */}
+                  {vendor.responseTime && (
                     <div className="absolute bottom-3 right-3">
                       <div className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1">
                         <Clock className="h-3 w-3 text-gray-600" />
                         <span className="text-xs font-medium text-gray-800">
-                          {vendor.deliveryTime} mins
+                          {vendor.responseTime} mins
                         </span>
                       </div>
                     </div>
