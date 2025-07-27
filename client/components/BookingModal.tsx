@@ -32,7 +32,7 @@ declare global {
   }
 }
 
-export default function BookingModal({ homestay, isOpen, onClose }: BookingModalProps) {
+export default function BookingModal({ homestay, isOpen, onClose, onBookingSuccess }: BookingModalProps) {
   const [step, setStep] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
@@ -295,7 +295,7 @@ export default function BookingModal({ homestay, isOpen, onClose }: BookingModal
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 mt-1">
-                  {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} nights × ��{homestay.price_per_night}
+                  {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} nights × ₹{homestay.price_per_night}
                 </div>
               </div>
             )}
