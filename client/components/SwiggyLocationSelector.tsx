@@ -116,40 +116,85 @@ export default function SwiggyLocationSelector({
     setSearchQuery('');
   };
 
+  const getLocationErrorMessage = (error: GeolocationPositionError): LocationError => {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        return {
+          message: "Location access denied. Please enable location services and try again.",
+          type: 'permission'
+        };
+      case error.POSITION_UNAVAILABLE:
+        return {
+          message: "Location information is unavailable. Please select manually.",
+          type: 'unavailable'
+        };
+      case error.TIMEOUT:
+        return {
+          message: "Location request timed out. Please try again or select manually.",
+          type: 'timeout'
+        };
+      default:
+        return {
+          message: "Unable to detect location. Please select manually.",
+          type: 'unknown'
+        };
+    }
+  };
+
   const detectLocation = async () => {
     setIsDetecting(true);
-    
-    try {
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            // In a real app, you'd reverse geocode these coordinates
-            // For now, we'll default to Udupi if location is in the area
-            const { latitude, longitude } = position.coords;
-            
-            // Check if location is near Udupi area (basic proximity check)
-            const isNearUdupi = latitude > 13.0 && latitude < 14.0 && 
-                               longitude > 74.0 && longitude < 75.0;
-            
-            if (isNearUdupi) {
-              onLocationChange('Udupi, Karnataka');
-            } else {
-              // Default to first available location
-              onLocationChange('Udupi, Karnataka');
-            }
-            
-            setIsDetecting(false);
-          },
-          (error) => {
-            console.error('Error detecting location:', error);
-            setIsDetecting(false);
-          }
-        );
-      }
-    } catch (error) {
-      console.error('Geolocation error:', error);
+    setLocationError(null);
+
+    if (!('geolocation' in navigator)) {
+      setLocationError({
+        message: "Geolocation is not supported by this browser.",
+        type: 'unavailable'
+      });
       setIsDetecting(false);
+      return;
     }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000, // 10 seconds
+      maximumAge: 300000 // 5 minutes
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+
+          // Check if location is near Udupi area (basic proximity check)
+          const isNearUdupi = latitude > 13.0 && latitude < 14.0 &&
+                             longitude > 74.0 && longitude < 75.0;
+
+          if (isNearUdupi) {
+            onLocationChange('Udupi, Karnataka');
+          } else {
+            // Default to first available location
+            onLocationChange('Udupi, Karnataka');
+          }
+
+          setIsDetecting(false);
+          setLocationError(null);
+        } catch (err) {
+          console.error('Error processing location:', err);
+          setLocationError({
+            message: "Error processing location data.",
+            type: 'unknown'
+          });
+          setIsDetecting(false);
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        const locationError = getLocationErrorMessage(error);
+        setLocationError(locationError);
+        setIsDetecting(false);
+      },
+      options
+    );
   };
 
   return (
