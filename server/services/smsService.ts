@@ -18,6 +18,9 @@ const smsConfig: SMSConfig = {
   templateId: process.env.SMS_TEMPLATE_ID || 'template-id'
 };
 
+// SMS sending configuration
+const disableSMSSending = process.env.DISABLE_SMS_SENDING === 'true';
+
 // SMS Templates
 const smsTemplates = {
   bookingConfirmation: (booking: any) => {
