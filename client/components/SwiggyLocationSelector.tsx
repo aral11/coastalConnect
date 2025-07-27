@@ -19,6 +19,11 @@ interface SwiggyLocationSelectorProps {
   className?: string;
 }
 
+interface LocationError {
+  message: string;
+  type: 'permission' | 'unavailable' | 'timeout' | 'unknown';
+}
+
 const POPULAR_LOCATIONS: Location[] = [
   {
     id: 'udupi-main',
