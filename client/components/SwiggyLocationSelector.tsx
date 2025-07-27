@@ -271,6 +271,36 @@ export default function SwiggyLocationSelector({
                 </div>
               </div>
             </Button>
+
+            {/* Error Message */}
+            {locationError && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-start space-x-2">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <X className="h-4 w-4 text-red-500" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-red-800">
+                      Location Error
+                    </div>
+                    <div className="text-xs text-red-600 mt-1">
+                      {locationError.message}
+                    </div>
+                    {locationError.type === 'permission' && (
+                      <div className="text-xs text-red-500 mt-2">
+                        💡 Tip: Click the location icon in your browser's address bar to allow location access.
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setLocationError(null)}
+                    className="flex-shrink-0 ml-auto"
+                  >
+                    <X className="h-3 w-3 text-red-400 hover:text-red-600" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Locations List */}
