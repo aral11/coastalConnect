@@ -142,6 +142,9 @@ export const initializeDatabase = async (): Promise<void> => {
         languages NVARCHAR(200),
         is_available BIT DEFAULT 1,
         is_active BIT DEFAULT 1,
+        admin_approval_status NVARCHAR(20) DEFAULT 'approved',
+        admin_approval_reason NVARCHAR(MAX),
+        admin_approved_at DATETIME,
         created_at DATETIME DEFAULT GETDATE(),
         updated_at DATETIME DEFAULT GETDATE()
       )
