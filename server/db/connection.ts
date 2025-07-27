@@ -115,6 +115,9 @@ export const initializeDatabase = async (): Promise<void> => {
         latitude DECIMAL(10,8),
         longitude DECIMAL(11,8),
         is_active BIT DEFAULT 1,
+        admin_approval_status NVARCHAR(20) DEFAULT 'approved',
+        admin_approval_reason NVARCHAR(MAX),
+        admin_approved_at DATETIME,
         created_at DATETIME DEFAULT GETDATE(),
         updated_at DATETIME DEFAULT GETDATE()
       )
