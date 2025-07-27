@@ -64,36 +64,6 @@ const mockEateries: Eatery[] = [
     price_range: "₹300 for two",
     image_url: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop",
     is_active: true
-  },
-  {
-    id: 5,
-    name: "Hotel Janatha Deluxe",
-    description: "Local favorite for traditional Udupi breakfast, dosas, and filter coffee.",
-    location: "Udupi Bus Stand",
-    address: "Near Bus Stand, Udupi, Karnataka 576101",
-    cuisine_type: "South Indian Breakfast",
-    rating: 4.4,
-    total_reviews: 278,
-    phone: "+91 820 252 1234",
-    opening_hours: "6:30 AM - 12:00 PM, 3:00 PM - 9:00 PM",
-    price_range: "₹100-250 per person",
-    image_url: "https://images.unsplash.com/photo-1630409346253-6d74b5e49fd1?w=600&h=400&fit=crop",
-    is_active: true
-  },
-  {
-    id: 6,
-    name: "Gokul Vegetarian",
-    description: "Popular vegetarian restaurant known for North Indian and Chinese dishes.",
-    location: "Service Bus Stand, Udupi",
-    address: "Service Bus Stand Road, Udupi, Karnataka 576101",
-    cuisine_type: "North Indian, Chinese, South Indian",
-    rating: 4.3,
-    total_reviews: 567,
-    phone: "+91 820 252 7890",
-    opening_hours: "10:00 AM - 10:30 PM",
-    price_range: "₹200-450 per person",
-    image_url: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&h=400&fit=crop",
-    is_active: true
   }
 ];
 
