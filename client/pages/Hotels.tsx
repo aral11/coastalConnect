@@ -50,13 +50,61 @@ export default function Hotels() {
   ];
 
   useEffect(() => {
-    fetchHomestays();
+    if (id) {
+      fetchHomestayById(parseInt(id));
+    } else {
+      fetchHomestays();
+    }
     loadFavorites();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     setFilteredHomestays(homestays);
   }, [homestays]);
+
+  const fetchHomestayById = async (homestayId: number) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/homestays/${homestayId}`);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Homestay not found');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        const homestay = {
+          ...data.data,
+          features: extractHomestayFeatures(data.data),
+          trending: false,
+          featured: true,
+          offers: []
+        };
+
+        setHomestays([homestay]);
+        setSelectedHomestay(homestay);
+        setIsBookingModalOpen(true); // Auto-open booking modal for detail view
+      } else {
+        throw new Error('Failed to fetch homestay details');
+      }
+    } catch (error) {
+      console.error('❌ Error fetching homestay:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load homestay details');
+
+      // Fallback: try to find in existing data or redirect to list view
+      if (homestays.length === 0) {
+        await fetchHomestays(); // Load all homestays as fallback
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchHomestays = async () => {
     try {
