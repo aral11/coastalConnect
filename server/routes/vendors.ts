@@ -306,4 +306,63 @@ router.get('/category/:category', async (req: Request, res: Response) => {
   }
 });
 
+// Get mixed vendors from all categories for homepage
+router.get('/mixed', async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 20;
+
+    let mixedVendors: any[] = [];
+
+    try {
+      const pool = await getConnection();
+
+      // Get a mix of vendors from different tables
+      const queries = [
+        `SELECT TOP(3) id, name, description, location, phone, email, rating, total_reviews, 'homestay' as type, price_per_night as price FROM Homestays WHERE admin_approval_status = 'approved' AND is_active = 1 ORDER BY rating DESC`,
+        `SELECT TOP(3) id, name, description, location, phone, email, rating, total_reviews, 'restaurant' as type, NULL as price FROM Eateries WHERE admin_approval_status = 'approved' AND is_active = 1 ORDER BY rating DESC`,
+        `SELECT TOP(3) id, name, description, location, phone, email, rating, total_reviews, 'driver' as type, hourly_rate as price FROM Drivers WHERE admin_approval_status = 'approved' AND is_active = 1 ORDER BY rating DESC`,
+        `SELECT TOP(2) id, name, description, location, contact_phone as phone, contact_email as email, 0 as rating, 0 as total_reviews, 'creator' as type, NULL as price FROM Creators WHERE is_active = 1 ORDER BY followers_count DESC`
+      ];
+
+      const results = await Promise.all(
+        queries.map(query => pool.request().query(query))
+      );
+
+      // Combine results from all tables
+      results.forEach(result => {
+        mixedVendors = mixedVendors.concat(result.recordset);
+      });
+
+      // Shuffle the array to show random mix
+      mixedVendors = mixedVendors.sort(() => Math.random() - 0.5);
+
+      // Limit the results
+      if (limit && mixedVendors.length > limit) {
+        mixedVendors = mixedVendors.slice(0, limit);
+      }
+
+    } catch (dbError) {
+      console.error('Database error in mixed vendors:', dbError);
+      // Return empty array instead of fallback data
+      mixedVendors = [];
+    }
+
+    res.json({
+      success: true,
+      data: mixedVendors,
+      count: mixedVendors.length,
+      message: `Found ${mixedVendors.length} mixed vendors`
+    });
+
+  } catch (error) {
+    console.error('Error fetching mixed vendors:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch mixed vendors',
+      data: [],
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 export default router;
