@@ -3,19 +3,25 @@ import { getConnection } from '../db/connection';
 
 const router = Router();
 
-// Admin authentication middleware (simplified for demo)
+// Admin authentication middleware (enhanced security)
 const requireAdmin = (req: Request, res: Response, next: any) => {
   const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
-  
-  // In production, implement proper admin authentication
-  if (adminKey === 'admin123' || adminKey === process.env.ADMIN_SECRET_KEY) {
-    next();
-  } else {
+  const requiredAdminKey = process.env.ADMIN_SECRET_KEY || 'admin123';
+
+  // Warn if using default key in production
+  if (process.env.NODE_ENV === 'production' && requiredAdminKey === 'admin123') {
+    console.warn('⚠️ SECURITY WARNING: Using default admin key in production. Set ADMIN_SECRET_KEY environment variable immediately.');
+  }
+
+  if (!adminKey || adminKey !== requiredAdminKey) {
     res.status(403).json({
       success: false,
-      message: 'Admin access required'
+      message: 'Admin access required - Invalid credentials'
     });
+    return;
   }
+
+  next();
 };
 
 // Get all pending approvals across all content types
