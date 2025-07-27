@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Homestay, HomestayResponse } from '@shared/api';
 import ServicePageLayout from '@/components/ServicePageLayout';
@@ -6,6 +7,7 @@ import BookingModal from '@/components/BookingModal';
 import { Building } from 'lucide-react';
 
 export default function Hotels() {
+  const { id } = useParams();
   const [homestays, setHomestays] = useState<Homestay[]>([]);
   const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>([]);
   const [loading, setLoading] = useState(true);
