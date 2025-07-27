@@ -164,8 +164,13 @@ export default function Hotels() {
         throw new Error('Failed to fetch homestays - invalid response format');
       }
     } catch (error) {
-      console.error('❌ Error fetching homestays:', error);
-      setError(error instanceof Error ? error.message : 'An unknown error occurred');
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('Homestays API request timed out');
+        setError('Request timed out. Please try again.');
+      } else {
+        console.error('❌ Error fetching homestays:', error);
+        setError(error instanceof Error ? error.message : 'An unknown error occurred');
+      }
 
       // Use fallback data if API fails
       const fallbackData: Homestay[] = [
