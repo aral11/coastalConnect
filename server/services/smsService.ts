@@ -84,6 +84,16 @@ Confirmation email sent.
 Please try again or contact support.
 📞 8105003858
 - coastalConnect`;
+  },
+
+  vendorRegistration: (vendor: any) => {
+    return `🎉 Registration Submitted!
+📋 ID: ${vendor.registrationRef}
+🏢 ${vendor.businessName}
+📧 Check email for details
+⏱️ Review: 24-48 hours
+📞 Support: 8105003858
+- coastalConnect`;
   }
 };
 
