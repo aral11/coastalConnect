@@ -104,15 +104,15 @@ export class AuthService {
   static async findUserByEmail(email: string): Promise<User | null> {
     try {
       const connection = await getConnection();
-      
+
       const result = await connection.request()
         .input('email', email)
         .query('SELECT * FROM Users WHERE email = @email');
 
       return result.recordset[0] || null;
     } catch (error) {
-      console.log('Database not available for user lookup');
-      return null;
+      console.error('Error finding user by email:', error);
+      throw new Error('Database error during user lookup');
     }
   }
 
