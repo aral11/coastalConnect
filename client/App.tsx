@@ -78,6 +78,8 @@ const App = () => (
           <Route path="/services/:id" element={<Services />} />
           <Route path="/creators" element={<Creators />} />
           <Route path="/creators/:id" element={<Creators />} />
+          <Route path="/offers" element={<Services />} />
+          <Route path="/offers/:code" element={<Services />} />
           <Route path="/driver-app" element={<DriverApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
