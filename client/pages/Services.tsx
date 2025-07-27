@@ -264,15 +264,15 @@ export default function Services() {
     }
   };
 
-  const filteredCategories = serviceCategories.filter(category =>
-    category.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCategories = (serviceCategories || []).filter(category =>
+    category?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    category?.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredProviders = featuredProviders.filter(provider =>
-    provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    provider.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    provider.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProviders = (featuredProviders || []).filter(provider =>
+    provider?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    provider?.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    provider?.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
