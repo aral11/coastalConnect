@@ -23,13 +23,6 @@ const config: sql.config = {
 let pool: sql.ConnectionPool | null = null;
 
 export const getConnection = async (): Promise<sql.ConnectionPool> => {
-  // Check if we're in development mode and should skip real database
-  if (process.env.NODE_ENV === 'development' && process.env.DB_MODE === 'mock') {
-    console.log('🔧 Development Mode: Skipping real database connection');
-    console.log('📊 Using fallback/mock data for all database operations');
-    throw new Error('Development mode - using mock data');
-  }
-
   try {
     if (!pool) {
       console.log(`🔗 Connecting to SQL Server: ${config.server}`);
@@ -50,19 +43,14 @@ export const getConnection = async (): Promise<sql.ConnectionPool> => {
 
     return pool;
   } catch (error) {
-    console.log('❌ Database connection failed - falling back to mock data');
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔧 Development Mode: This is normal - using fallback data');
-      console.log('💡 To use real database, install SQL Server Express and update .env file');
-    } else {
-      console.error('💡 Make sure SQL Server Express is running and Windows Authentication is enabled');
-      console.error('🔧 Try running: sqlcmd -S localhost\\SQLEXPRESS -E');
-    }
+    console.error('❌ Database connection failed');
+    console.error('💡 Make sure SQL Server Express is running and Windows Authentication is enabled');
+    console.error('🔧 Try running: sqlcmd -S DESKTOP-6FSVDEL\\SQLEXPRESS -E');
+    console.error('🔧 Ensure CoastalConnectUdupi database exists');
 
     // Reset pool on connection failure
     pool = null;
-    throw error;
+    throw new Error(`Database connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
 
