@@ -77,6 +77,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
+          <Route path="/vendor-registration" element={<VendorRegister />} />
 
           {/* Event Organizer Routes */}
           <Route path="/organizer-register" element={<EventOrganizerRegister />} />
