@@ -44,6 +44,7 @@ interface Eatery {
 }
 
 export default function Eateries() {
+  const { id } = useParams();
   const [eateries, setEateries] = useState<Eatery[]>([]);
   const [filteredEateries, setFilteredEateries] = useState<Eatery[]>([]);
   const [loading, setLoading] = useState(true);
