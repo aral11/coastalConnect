@@ -308,49 +308,58 @@ export default function Index() {
         </div>
       </section>
 
-      {/* App Download Section */}
+      {/* Mobile App Coming Soon Section */}
       <section className="py-12 lg:py-16 bg-gradient-to-r from-orange-500 to-red-500 text-white">
         <div className={swiggyTheme.layouts.container.xl}>
           <div className="text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Get the CoastalConnect app
-            </h2>
-            <p className="text-lg mb-8 text-orange-100">
-              We will send you a link, open it on your phone to download the app
-            </p>
+            <div className="mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-4">
+                📱 Coming Soon
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+                CoastalConnect Mobile App
+              </h2>
+              <p className="text-lg mb-8 text-orange-100 max-w-2xl mx-auto">
+                We're working on native mobile apps for iOS and Android to make booking coastal Karnataka experiences even easier. Stay tuned for launch updates!
+              </p>
+            </div>
 
-            <div className="max-w-md mx-auto mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <div className="bg-black/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg flex items-center space-x-3 opacity-75">
+                <Download className="h-5 w-5" />
+                <div className="text-left">
+                  <div className="text-xs">Coming to</div>
+                  <div className="font-semibold">App Store</div>
+                </div>
+              </div>
+              <div className="bg-black/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg flex items-center space-x-3 opacity-75">
+                <Download className="h-5 w-5" />
+                <div className="text-left">
+                  <div className="text-xs">Coming to</div>
+                  <div className="font-semibold">Google Play</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 max-w-lg mx-auto">
+              <h3 className="text-lg font-semibold mb-3">Get Notified When We Launch</h3>
+              <p className="text-sm text-orange-100 mb-4">
+                Be the first to know when our mobile apps go live
+              </p>
               <div className="flex gap-3">
                 <Input
-                  type="tel"
-                  placeholder="Enter phone number"
+                  type="email"
+                  placeholder="Enter your email address"
                   className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:border-white focus:ring-white"
                 />
                 <Button className="bg-white text-orange-500 hover:bg-gray-100 font-semibold px-6">
-                  Send Link
+                  Notify Me
                 </Button>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-black text-white px-6 py-3 rounded-lg flex items-center space-x-3 hover:bg-gray-800 transition-colors">
-                <Download className="h-5 w-5" />
-                <div className="text-left">
-                  <div className="text-xs">Download on the</div>
-                  <div className="font-semibold">App Store</div>
-                </div>
-              </button>
-              <button className="bg-black text-white px-6 py-3 rounded-lg flex items-center space-x-3 hover:bg-gray-800 transition-colors">
-                <Download className="h-5 w-5" />
-                <div className="text-left">
-                  <div className="text-xs">Get it on</div>
-                  <div className="font-semibold">Google Play</div>
-                </div>
-              </button>
-            </div>
-
             <p className="text-sm text-orange-100 mt-6">
-              📱 Coming Soon - Native mobile apps for iOS and Android
+              ⚡ Meanwhile, enjoy the full experience on our web platform
             </p>
           </div>
         </div>
