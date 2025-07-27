@@ -192,22 +192,44 @@ export class BookingService {
                     @passenger_name, @passenger_phone, @passengers_count, @trip_code, @booking_reference)
           `);
 
-        mockBooking.id = result.recordset[0].id;
+        bookingId = result.recordset[0].id;
       } catch (dbError) {
-        console.log('Database not available, using mock booking data');
+        console.error('Database error creating driver booking:', dbError);
+        throw new Error('Failed to create driver booking - database unavailable');
       }
+
+      // Create the booking object with the real ID
+      const booking: DriverBooking = {
+        id: bookingId,
+        user_id: bookingData.user_id,
+        driver_id: bookingData.driver_id,
+        pickup_location: bookingData.pickup_location,
+        dropoff_location: bookingData.dropoff_location,
+        pickup_datetime: bookingData.pickup_datetime,
+        estimated_duration: estimatedDuration,
+        total_amount: totalAmount,
+        booking_status: 'pending',
+        payment_status: 'pending',
+        passenger_name: bookingData.passenger_name,
+        passenger_phone: bookingData.passenger_phone,
+        passengers_count: bookingData.passengers_count,
+        trip_code: tripCode,
+        booking_reference: bookingReference,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
 
       // Create payment intent
       const paymentIntent = await PaymentService.createPaymentIntent(
         totalAmount,
         'INR',
-        mockBooking.id,
+        booking.id,
         'driver',
         bookingData.user_id
       );
 
       return {
-        booking: mockBooking,
+        booking,
         payment_intent: paymentIntent
       };
     } catch (error) {
