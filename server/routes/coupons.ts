@@ -564,6 +564,119 @@ router.post('/admin/create', async (req: Request, res: Response) => {
   }
 });
 
+// Get all coupons for admin
+router.get('/admin/all', async (req: Request, res: Response) => {
+  try {
+    const connection = await getConnection();
+    const result = await connection.request().query(`
+      SELECT
+        id,
+        code,
+        title,
+        subtitle,
+        description,
+        discount_type,
+        discount_value,
+        min_order_amount,
+        max_discount_amount,
+        valid_from,
+        valid_until,
+        category,
+        usage_limit,
+        usage_per_user,
+        current_usage,
+        is_active,
+        is_popular,
+        is_limited_time,
+        gradient_class,
+        text_color_class,
+        icon_type,
+        created_at
+      FROM Coupons
+      ORDER BY created_at DESC
+    `);
+
+    res.json({
+      success: true,
+      data: result.recordset
+    });
+  } catch (error) {
+    console.error('Error fetching admin coupons:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch coupons',
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+});
+
+// Toggle coupon active status
+router.put('/admin/:id/toggle', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { is_active } = req.body;
+
+    const connection = await getConnection();
+    await connection.request()
+      .input('id', sql.Int, parseInt(id))
+      .input('isActive', sql.Bit, is_active)
+      .query(`
+        UPDATE Coupons
+        SET is_active = @isActive, updated_at = GETDATE()
+        WHERE id = @id
+      `);
+
+    res.json({
+      success: true,
+      message: 'Coupon status updated successfully'
+    });
+  } catch (error) {
+    console.error('Error toggling coupon:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update coupon status',
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+});
+
+// Delete coupon
+router.delete('/admin/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await getConnection();
+
+    // Check if coupon has been used
+    const usageResult = await connection.request()
+      .input('id', sql.Int, parseInt(id))
+      .query(`SELECT COUNT(*) as usage_count FROM CouponUsage WHERE coupon_id = @id`);
+
+    if (usageResult.recordset[0].usage_count > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot delete coupon that has been used. Consider deactivating it instead.'
+      });
+    }
+
+    await connection.request()
+      .input('id', sql.Int, parseInt(id))
+      .query(`DELETE FROM Coupons WHERE id = @id`);
+
+    res.json({
+      success: true,
+      message: 'Coupon deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting coupon:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete coupon',
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+});
+
 // Helper functions
 function getIconComponent(iconType: string): string {
   const iconMap: { [key: string]: string } = {
