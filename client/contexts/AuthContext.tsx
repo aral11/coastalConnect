@@ -77,10 +77,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(userData);
   };
 
-  const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('pendingBooking');
-    setUser(null);
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // Call server logout endpoint
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Server logout failed:', error);
+      // Continue with client logout even if server call fails
+    } finally {
+      // Always clear client-side data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('pendingBooking');
+      setUser(null);
+
+      // Redirect to home page
+      window.location.href = '/';
+    }
   };
 
   const value = {
