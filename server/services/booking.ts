@@ -71,25 +71,7 @@ export class BookingService {
 
       const bookingReference = this.generateBookingReference();
 
-      // For cloud environment, create mock booking
-      const mockBooking: HomestayBooking = {
-        id: Date.now(),
-        user_id: bookingData.user_id,
-        homestay_id: bookingData.homestay_id,
-        check_in_date: bookingData.check_in_date,
-        check_out_date: bookingData.check_out_date,
-        guests: bookingData.guests,
-        total_amount: totalAmount,
-        booking_status: 'pending',
-        payment_status: 'pending',
-        guest_name: bookingData.guest_name,
-        guest_phone: bookingData.guest_phone,
-        guest_email: bookingData.guest_email,
-        special_requests: bookingData.special_requests,
-        booking_reference: bookingReference,
-        created_at: new Date(),
-        updated_at: new Date()
-      };
+      let bookingId: number;
 
       try {
         const connection = await getConnection();
