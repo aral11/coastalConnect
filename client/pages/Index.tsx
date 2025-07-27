@@ -7,6 +7,7 @@ import SwiggyLocationSelector from '@/components/SwiggyLocationSelector';
 import SwiggyCategories from '@/components/SwiggyCategories';
 import SwiggyOffers from '@/components/SwiggyOffers';
 import SwiggyVendors from '@/components/SwiggyVendors';
+import PlatformStats from '@/components/PlatformStats';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
 import {
   Search,
@@ -342,7 +343,7 @@ export default function Index() {
             </div>
 
             <p className="text-sm text-orange-100 mt-6">
-              ⚡ Meanwhile, enjoy the full experience on our web platform
+              ��� Meanwhile, enjoy the full experience on our web platform
             </p>
           </div>
         </div>
