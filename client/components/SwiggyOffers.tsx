@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Percent, Gift, Clock, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Offer {
   id: string;
@@ -21,108 +22,11 @@ interface Offer {
   link: string;
   popular?: boolean;
   limitedTime?: boolean;
+  usageLimit?: number;
+  currentUsage?: number;
+  usagePerUser?: number;
+  maxDiscount?: number;
 }
-
-const OFFERS: Offer[] = [
-  {
-    id: 'welcomeback50',
-    title: 'Welcome Back!',
-    subtitle: 'FLAT ₹100 OFF',
-    description: 'On orders above ₹499',
-    discount: '₹100 OFF',
-    type: 'amount',
-    minOrder: 499,
-    validUntil: '2024-12-31',
-    code: 'WELCOME100',
-    gradient: 'from-orange-400 to-red-500',
-    textColor: 'text-white',
-    icon: <Gift className="h-6 w-6" />,
-    category: 'All Services',
-    link: '/offers/welcome100',
-    popular: true
-  },
-  {
-    id: 'homestay40',
-    title: 'Homestay Special',
-    subtitle: '40% OFF',
-    description: 'On weekend bookings',
-    discount: '40% OFF',
-    type: 'percentage',
-    minOrder: 2000,
-    validUntil: '2024-12-25',
-    code: 'STAYHOME40',
-    gradient: 'from-blue-400 to-purple-500',
-    textColor: 'text-white',
-    icon: <Percent className="h-6 w-6" />,
-    category: 'Homestays',
-    link: '/homestays?offer=STAYHOME40',
-    limitedTime: true
-  },
-  {
-    id: 'food25',
-    title: 'Restaurant Dining',
-    subtitle: '25% OFF',
-    description: 'On dining bookings',
-    discount: '25% OFF',
-    type: 'percentage',
-    minOrder: 300,
-    validUntil: '2024-12-20',
-    code: 'DINE25',
-    gradient: 'from-green-400 to-teal-500',
-    textColor: 'text-white',
-    icon: <Zap className="h-6 w-6" />,
-    category: 'Restaurants',
-    link: '/eateries?offer=DINE25'
-  },
-  {
-    id: 'ride20',
-    title: 'Ride Anywhere',
-    subtitle: '₹50 OFF',
-    description: 'On rides above ₹200',
-    discount: '₹50 OFF',
-    type: 'amount',
-    minOrder: 200,
-    validUntil: '2024-12-30',
-    code: 'RIDE50',
-    gradient: 'from-yellow-400 to-orange-500',
-    textColor: 'text-white',
-    icon: <Clock className="h-6 w-6" />,
-    category: 'Transport',
-    link: '/drivers?offer=RIDE50'
-  },
-  {
-    id: 'creator30',
-    title: 'Photography',
-    subtitle: '30% OFF',
-    description: 'Professional shoots',
-    discount: '30% OFF',
-    type: 'percentage',
-    minOrder: 1500,
-    validUntil: '2024-12-28',
-    code: 'CAPTURE30',
-    gradient: 'from-purple-400 to-pink-500',
-    textColor: 'text-white',
-    icon: <Gift className="h-6 w-6" />,
-    category: 'Creators',
-    link: '/creators?offer=CAPTURE30'
-  },
-  {
-    id: 'event35',
-    title: 'Event Special',
-    subtitle: '₹200 OFF',
-    description: 'On event bookings',
-    discount: '₹200 OFF',
-    type: 'amount',
-    minOrder: 1000,
-    validUntil: '2024-12-31',
-    code: 'EVENT200',
-    gradient: 'from-indigo-400 to-blue-500',
-    textColor: 'text-white',
-    icon: <Percent className="h-6 w-6" />,
-    category: 'Events',
-    link: '/events?offer=EVENT200'
-  }
-];
 
 interface SwiggyOffersProps {
   title?: string;
@@ -140,7 +44,53 @@ export default function SwiggyOffers({
   className = ''
 }: SwiggyOffersProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const displayOffers = maxItems ? OFFERS.slice(0, maxItems) : OFFERS;
+  const { user } = useAuth();
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchOffers();
+  }, [user]);
+
+  const fetchOffers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Try to get personalized offers if user is logged in
+      const endpoint = user?.id
+        ? `/api/coupons/personalized/${user.id}`
+        : '/api/coupons';
+
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch offers');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        const formattedOffers = data.data.map((offer: any) => ({
+          ...offer,
+          icon: getIconComponent(offer.icon || '🎁')
+        }));
+        setOffers(formattedOffers);
+      } else {
+        throw new Error(data.message || 'Failed to load offers');
+      }
+    } catch (error) {
+      console.error('Error fetching offers:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load offers');
+      // Set empty array on error - no fallback data
+      setOffers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayOffers = maxItems ? offers.slice(0, maxItems) : offers;
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -154,6 +104,112 @@ export default function SwiggyOffers({
       });
     }
   };
+
+  // Helper function to get icon component
+  const getIconComponent = (iconText: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      '🎁': <Gift className="h-6 w-6" />,
+      '💯': <Percent className="h-6 w-6" />,
+      '⏰': <Clock className="h-6 w-6" />,
+      '⚡': <Zap className="h-6 w-6" />,
+      '🔥': <Gift className="h-6 w-6" />,
+      '💰': <Gift className="h-6 w-6" />
+    };
+    return iconMap[iconText] || <Gift className="h-6 w-6" />;
+  };
+
+  if (loading) {
+    return (
+      <section className={`${className}`}>
+        <div className={swiggyTheme.layouts.container.xl}>
+          {showTitle && (
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                  {title}
+                </h2>
+                {subtitle && (
+                  <p className="text-gray-600">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex-shrink-0 w-80 lg:w-72 h-64 bg-gray-200 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className={`${className}`}>
+        <div className={swiggyTheme.layouts.container.xl}>
+          {showTitle && (
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                  {title}
+                </h2>
+                {subtitle && (
+                  <p className="text-gray-600">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="flex items-center justify-center h-64 bg-gray-50 rounded-xl">
+            <div className="text-center">
+              <Gift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Unable to load offers at the moment</p>
+              <button
+                onClick={fetchOffers}
+                className="mt-2 text-sm text-orange-600 hover:text-orange-700"
+              >
+                Try again
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (offers.length === 0) {
+    return (
+      <section className={`${className}`}>
+        <div className={swiggyTheme.layouts.container.xl}>
+          {showTitle && (
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                  {title}
+                </h2>
+                {subtitle && (
+                  <p className="text-gray-600">
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="flex items-center justify-center h-64 bg-gray-50 rounded-xl">
+            <div className="text-center">
+              <Gift className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">No offers available right now</p>
+              <p className="text-sm text-gray-500 mt-1">Check back later for exciting deals!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={`${className}`}>
@@ -328,11 +384,70 @@ export default function SwiggyOffers({
 
 // Compact Offers Component (for smaller spaces)
 export function CompactOffers() {
-  const topOffers = OFFERS.slice(0, 3);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCompactOffers();
+  }, []);
+
+  const fetchCompactOffers = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/coupons');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch offers');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        const formattedOffers = data.data.slice(0, 3).map((offer: any) => ({
+          ...offer,
+          icon: getIconComponent(offer.icon || '🎁')
+        }));
+        setOffers(formattedOffers);
+      }
+    } catch (error) {
+      console.error('Error fetching compact offers:', error);
+      setOffers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getIconComponent = (iconText: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      '🎁': <Gift className="h-6 w-6" />,
+      '💯': <Percent className="h-6 w-6" />,
+      '⏰': <Clock className="h-6 w-6" />,
+      '⚡': <Zap className="h-6 w-6" />
+    };
+    return iconMap[iconText] || <Gift className="h-6 w-6" />;
+  };
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="h-24 bg-gray-200 rounded-lg animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  if (offers.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-24 bg-gray-50 rounded-lg">
+        <p className="text-gray-600 text-sm">No offers available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {topOffers.map((offer) => (
+      {offers.map((offer) => (
         <Link
           key={offer.id}
           to={offer.link}
