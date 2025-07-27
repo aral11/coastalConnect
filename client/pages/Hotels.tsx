@@ -107,8 +107,13 @@ export default function Hotels() {
         throw new Error('Failed to fetch homestay details');
       }
     } catch (error) {
-      console.error('❌ Error fetching homestay:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load homestay details');
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('Homestay API request timed out');
+        setError('Request timed out. Please try again.');
+      } else {
+        console.error('❌ Error fetching homestay:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load homestay details');
+      }
 
       // Fallback: try to find in existing data or redirect to list view
       if (homestays.length === 0) {
