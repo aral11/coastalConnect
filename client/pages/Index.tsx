@@ -155,8 +155,24 @@ export default function Index() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // Implement search functionality
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(selectedLocation)}`;
+      // Determine best search destination based on query
+      const query = searchQuery.toLowerCase();
+      let destination = '/search';
+
+      if (query.includes('homestay') || query.includes('stay') || query.includes('accommodation')) {
+        destination = '/homestays';
+      } else if (query.includes('restaurant') || query.includes('food') || query.includes('eat')) {
+        destination = '/eateries';
+      } else if (query.includes('driver') || query.includes('taxi') || query.includes('transport')) {
+        destination = '/drivers';
+      } else if (query.includes('creator') || query.includes('photographer') || query.includes('content')) {
+        destination = '/creators';
+      } else if (query.includes('event') || query.includes('festival') || query.includes('activity')) {
+        destination = '/events';
+      }
+
+      // Navigate with search parameters
+      window.location.href = `${destination}?q=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(selectedLocation)}`;
     }
   };
 
