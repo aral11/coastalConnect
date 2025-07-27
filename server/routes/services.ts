@@ -190,7 +190,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'UPTO 40% OFF',
         active: true,
         order: 1,
-        count: 15
+        count: 15,
+        serviceCount: 15,
+        averageRating: 4.6,
+        priceRange: '₹1500-3000',
+        topServices: ['Heritage Homes', 'Beachside Stay', 'Traditional Experience']
       },
       {
         id: 'eateries',
@@ -202,7 +206,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'UPTO 50% OFF',
         active: true,
         order: 2,
-        count: 23
+        count: 23,
+        serviceCount: 23,
+        averageRating: 4.5,
+        priceRange: '₹200-500',
+        topServices: ['Udupi Cuisine', 'South Indian', 'Coastal Seafood']
       },
       {
         id: 'drivers',
