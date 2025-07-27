@@ -1,95 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { TrendingUp, Users, Star, Award } from 'lucide-react';
+import { TrendingUp, Users, Star, MapPin } from 'lucide-react';
 
-interface PlatformStats {
-  totalVendors: number;
-  totalBookings: number;
-  totalCreators: number;
-  averageRating: number;
-  activeVendors: number;
-  totalUsers: number;
-  totalReviews: number;
+interface PlatformStatsData {
+  vendors: number;
+  orders: number;
+  rating: number;
+  cities: number;
 }
 
-interface PlatformStatsProps {
-  className?: string;
-}
-
-export default function PlatformStats({ className = '' }: PlatformStatsProps) {
-  const [stats, setStats] = useState<PlatformStats | null>(null);
+const PlatformStats: React.FC = () => {
+  const [stats, setStats] = useState<PlatformStatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     fetchStats();
-
-    // Set up auto-refresh every 2 minutes for real-time updates
-    const refreshInterval = setInterval(() => {
-      fetchStats();
-    }, 120000); // 2 minutes
-
-    // Listen for real-time events that should trigger stats refresh
-    const handleBookingEvent = () => {
-      console.log('📈 Booking event detected, refreshing stats...');
-      setIsUpdating(true);
-      setTimeout(() => {
-        fetchStats();
-        setTimeout(() => setIsUpdating(false), 1000);
-      }, 1000); // Small delay to ensure DB is updated
-    };
-
-    const handleVendorApproval = () => {
-      console.log('✅ Vendor approval detected, refreshing stats...');
-      setIsUpdating(true);
-      setTimeout(() => {
-        fetchStats();
-        setTimeout(() => setIsUpdating(false), 1000);
-      }, 1000);
-    };
-
-    const handleCreatorRegistration = () => {
-      console.log('👥 Creator registration detected, refreshing stats...');
-      setIsUpdating(true);
-      setTimeout(() => {
-        fetchStats();
-        setTimeout(() => setIsUpdating(false), 1000);
-      }, 1000);
-    };
-
-    const handleDataCleared = () => {
-      console.log('🗑️ Data cleared detected, resetting stats...');
-      setIsUpdating(true);
-      setStats({
-        totalVendors: 0,
-        totalBookings: 0,
-        totalCreators: 0,
-        averageRating: 0,
-        activeVendors: 0,
-        totalUsers: 0,
-        totalReviews: 0
-      });
-      setTimeout(() => {
-        fetchStats();
-        setTimeout(() => setIsUpdating(false), 1000);
-      }, 1000);
-    };
-
-    // Add event listeners for real-time updates
-    window.addEventListener('booking-confirmed', handleBookingEvent);
-    window.addEventListener('vendor-approved', handleVendorApproval);
-    window.addEventListener('creator-registered', handleCreatorRegistration);
-    window.addEventListener('data-cleared', handleDataCleared);
-
-    return () => {
-      clearInterval(refreshInterval);
-      window.removeEventListener('booking-confirmed', handleBookingEvent);
-      window.removeEventListener('vendor-approved', handleVendorApproval);
-      window.removeEventListener('creator-registered', handleCreatorRegistration);
-      window.removeEventListener('data-cleared', handleDataCleared);
-    };
   }, []);
 
   const fetchStats = async () => {
@@ -98,192 +23,117 @@ export default function PlatformStats({ className = '' }: PlatformStatsProps) {
       setError(null);
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch('/api/stats', {
+      const response = await fetch('/api/stats/platform', {
         signal: controller.signal,
-        // Add cache-busting to ensure fresh data
-        cache: 'no-cache',
         headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.data) {
-        setStats(data.data);
-        setLastUpdated(new Date());
-        console.log('📊 Platform stats updated:', {
-          vendors: data.data.activeVendors,
-          bookings: data.data.totalBookings,
-          creators: data.data.totalCreators,
-          rating: data.data.averageRating,
-          source: data.source || 'api',
-          timestamp: data.timestamp
-        });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          setStats(data.data);
+          console.log('✅ Platform stats loaded successfully');
+        } else {
+          throw new Error('Invalid response format');
+        }
       } else {
-        throw new Error('Failed to fetch platform statistics');
+        throw new Error(`Stats API returned ${response.status}`);
       }
     } catch (error) {
-      console.error('Error fetching platform stats:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load statistics');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Stats API unavailable:', errorMessage);
+      setStats(null);
+      setError('Unable to load platform statistics');
     } finally {
       setLoading(false);
     }
   };
 
   const formatNumber = (num: number) => {
-    if (num === 0) return '0';
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+      return `${(num / 1000000).toFixed(1)}M+`;
     } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return `${(num / 1000).toFixed(1)}k+`;
+    } else if (num > 0) {
+      return num.toString();
     }
-    return num.toString();
+    return '0';
   };
 
   const formatRating = (rating: number) => {
-    if (rating === 0) return '0';
-    return rating.toFixed(1) + '★';
+    return rating > 0 ? `${rating.toFixed(1)}★` : 'New';
   };
 
-  // Show error state with fallback data
-  if (error || (!loading && !stats)) {
-    console.log('PlatformStats: Using fallback data due to:', error || 'No stats available');
-
-    // Provide fallback stats to prevent blank cards
-    const fallbackStats = {
-      totalVendors: 18,
-      totalBookings: 45,
-      totalCreators: 8,
-      averageRating: 4.3,
-      activeVendors: 21,
-      totalUsers: 156,
-      totalReviews: 89
-    };
-
-    const statsToShow = [
-      {
-        value: formatNumber(fallbackStats.activeVendors),
-        label: 'Active Vendors',
-        icon: <Award className="h-4 w-4 mr-1" />
-      },
-      {
-        value: formatNumber(fallbackStats.totalBookings),
-        label: 'Bookings Made',
-        icon: <TrendingUp className="h-4 w-4 mr-1" />
-      },
-      {
-        value: formatNumber(fallbackStats.totalCreators),
-        label: 'Local Creators',
-        icon: <Users className="h-4 w-4 mr-1" />
-      },
-      {
-        value: formatRating(fallbackStats.averageRating),
-        label: 'Average Rating',
-        icon: <Star className="h-4 w-4 mr-1" />
-      }
-    ];
-
-    return (
-      <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto ${className}`}>
-        {statsToShow.map((stat, index) => (
-          <div key={index} className="text-center relative">
-            <div className={`text-3xl font-bold text-white mb-1 flex items-center justify-center transition-all duration-500 ${
-              isUpdating ? 'scale-110 animate-pulse' : ''
-            }`}>
-              {stat.icon}
-              {stat.value}
-            </div>
-            <div className="text-orange-100 text-sm">{stat.label}</div>
-            {isUpdating && (
-              <div className="absolute -top-2 -right-2">
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  // Show loading state
   if (loading) {
     return (
-      <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto ${className}`}>
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="text-center">
-            <Skeleton className="h-8 w-16 mx-auto mb-2 bg-white/20" />
-            <Skeleton className="h-4 w-20 mx-auto bg-white/10" />
+      <div className="grid grid-cols-4 gap-4 text-center">
+        {[...Array(4)].map((_, index) => (
+          <div key={index} className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
           </div>
         ))}
       </div>
     );
   }
 
-  // Show stats if we have real data
-  if (!stats) return null;
-
-  const statsToShow = [];
-  
-  // Only show non-zero stats
-  if (stats.activeVendors > 0) {
-    statsToShow.push({
-      value: formatNumber(stats.activeVendors),
-      label: 'Active Vendors',
-      icon: <Award className="h-4 w-4 mr-1" />
-    });
-  }
-  
-  if (stats.totalBookings > 0) {
-    statsToShow.push({
-      value: formatNumber(stats.totalBookings),
-      label: 'Bookings Made',
-      icon: <TrendingUp className="h-4 w-4 mr-1" />
-    });
-  }
-  
-  if (stats.totalCreators > 0) {
-    statsToShow.push({
-      value: formatNumber(stats.totalCreators),
-      label: 'Local Creators',
-      icon: <Users className="h-4 w-4 mr-1" />
-    });
-  }
-  
-  if (stats.averageRating > 0) {
-    statsToShow.push({
-      value: formatRating(stats.averageRating),
-      label: 'Average Rating',
-      icon: <Star className="h-4 w-4 mr-1" />
-    });
-  }
-
-  // Don't render if no meaningful stats
-  if (statsToShow.length === 0) {
-    return null;
+  if (error || !stats) {
+    return (
+      <div className="grid grid-cols-4 gap-4 text-center">
+        <div>
+          <div className="text-2xl font-bold text-gray-900">Growing</div>
+          <div className="text-sm text-gray-600">Vendors</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-gray-900">Starting</div>
+          <div className="text-sm text-gray-600">Orders</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-gray-900">New</div>
+          <div className="text-sm text-gray-600">Platform</div>
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-gray-900">Expanding</div>
+          <div className="text-sm text-gray-600">Cities</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto ${className}`}>
-      {statsToShow.map((stat, index) => (
-        <div key={index} className="text-center">
-          <div className="text-3xl font-bold text-white mb-1 flex items-center justify-center">
-            {stat.icon}
-            {stat.value}
-          </div>
-          <div className="text-orange-100 text-sm">{stat.label}</div>
+    <div className="grid grid-cols-4 gap-4 text-center">
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.vendors > 0 ? formatNumber(stats.vendors) : 'Growing'}
         </div>
-      ))}
+        <div className="text-sm text-gray-600">Vendors</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.orders > 0 ? formatNumber(stats.orders) : 'Starting'}
+        </div>
+        <div className="text-sm text-gray-600">Orders</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {formatRating(stats.rating)}
+        </div>
+        <div className="text-sm text-gray-600">Rating</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.cities > 0 ? stats.cities : 'Expanding'}
+        </div>
+        <div className="text-sm text-gray-600">Cities</div>
+      </div>
     </div>
   );
-}
+};
+
+export default PlatformStats;
