@@ -50,12 +50,17 @@ export default function Hotels() {
   ];
 
   useEffect(() => {
-    if (id) {
-      fetchHomestayById(parseInt(id));
-    } else {
-      fetchHomestays();
-    }
-    loadFavorites();
+    // Add debouncing to prevent rapid API calls
+    const timeoutId = setTimeout(() => {
+      if (id) {
+        fetchHomestayById(parseInt(id));
+      } else {
+        fetchHomestays();
+      }
+      loadFavorites();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [id]);
 
   useEffect(() => {
