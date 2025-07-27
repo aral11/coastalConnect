@@ -19,7 +19,7 @@ export const getCategories: RequestHandler = async (req, res) => {
       ],
       creators: [
         { id: 'photography', name: 'Photography', count: 15 },
-        { id: 'food', name: 'Food & Dining', count: 23 },
+        { id: 'dining', name: 'Restaurants & Dining', count: 23 },
         { id: 'travel', name: 'Travel & Adventure', count: 18 },
         { id: 'lifestyle', name: 'Lifestyle', count: 12 },
         { id: 'culture', name: 'Culture & Heritage', count: 8 },
