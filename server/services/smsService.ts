@@ -228,18 +228,20 @@ export class SMSService {
     // Ensure Indian number format
     const formattedPhone = cleanPhone.startsWith('91') ? cleanPhone : `91${cleanPhone.slice(-10)}`;
 
-    // If in development mode or no API key, just log the SMS
-    if (disableSMSSending || !smsConfig.apiKey || smsConfig.apiKey === 'your-api-key') {
-      console.log('📱 [DEVELOPMENT MODE] SMS would be sent:');
-      console.log(`   To: +${formattedPhone}`);
-      console.log(`   Message: ${message.substring(0, 100)}${message.length > 100 ? '...' : ''}`);
-      console.log(`   Timestamp: ${new Date().toISOString()}`);
+    // Check if SMS sending is explicitly disabled
+    if (disableSMSSending) {
+      console.log('📱 [SMS DISABLED] SMS sending is disabled in configuration');
       return {
-        success: true,
-        messageId: `dev_${Date.now()}`,
-        provider: 'development',
-        developmentMode: true
+        success: false,
+        error: 'SMS sending is disabled',
+        disabled: true
       };
+    }
+
+    // Check if SMS API is configured
+    if (!smsConfig.apiKey || smsConfig.apiKey === 'your-api-key') {
+      console.error('❌ SMS service not configured - missing API key');
+      throw new Error('SMS service not configured. Please set SMS_API_KEY environment variable.');
     }
 
     try {
