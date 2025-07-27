@@ -75,14 +75,15 @@ const POPULAR_LOCATIONS: Location[] = [
   }
 ];
 
-export default function SwiggyLocationSelector({ 
-  selectedLocation, 
-  onLocationChange, 
-  className = '' 
+export default function SwiggyLocationSelector({
+  selectedLocation,
+  onLocationChange,
+  className = ''
 }: SwiggyLocationSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDetecting, setIsDetecting] = useState(false);
+  const [locationError, setLocationError] = useState<LocationError | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
