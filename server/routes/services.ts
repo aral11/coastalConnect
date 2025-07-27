@@ -222,7 +222,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'UPTO 30% OFF',
         active: true,
         order: 3,
-        count: 12
+        count: 12,
+        serviceCount: 12,
+        averageRating: 4.7,
+        priceRange: '₹300-800',
+        topServices: ['Local Tours', 'Airport Transfer', 'City Rides']
       },
       {
         id: 'creators',
