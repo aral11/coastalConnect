@@ -23,6 +23,7 @@ interface DriverBookingModalProps {
   driver: Driver;
   isOpen: boolean;
   onClose: () => void;
+  onBookingSuccess?: () => void;
 }
 
 declare global {
