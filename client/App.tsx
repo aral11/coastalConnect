@@ -71,9 +71,13 @@ const App = () => (
           <Route path="/drivers" element={<Drivers />} />
           <Route path="/drivers/:id" element={<Drivers />} />
           <Route path="/eateries" element={<Eateries />} />
+          <Route path="/eateries/:id" element={<Eateries />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<Events />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:id" element={<Services />} />
           <Route path="/creators" element={<Creators />} />
+          <Route path="/creators/:id" element={<Creators />} />
           <Route path="/driver-app" element={<DriverApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
