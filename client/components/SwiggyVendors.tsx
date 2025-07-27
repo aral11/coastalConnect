@@ -16,7 +16,7 @@ interface Vendor {
   category: string;
   location: string;
   distance: number;
-  deliveryTime?: number;
+  responseTime?: number;
   price: number;
   originalPrice?: number;
   discount?: number;
