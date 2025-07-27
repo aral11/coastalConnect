@@ -21,6 +21,7 @@ import searchRouter from "./routes/search";
 import subscriptionRouter from "./routes/subscription";
 import adminRouter from "./routes/admin";
 import testNotificationsRouter from "./routes/test-notifications";
+import couponRouter from "./routes/coupons";
 import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBookingStatus, getBusinessAnalytics } from "./routes/business";
 import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
 import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
@@ -175,6 +176,9 @@ export function createServer() {
 
   // Admin API routes
   app.use("/api/admin", adminRouter);
+
+  // Coupon API routes
+  app.use("/api/coupons", couponRouter);
 
   // Test notifications API routes (for development/testing)
   app.use("/api/test-notifications", testNotificationsRouter);
