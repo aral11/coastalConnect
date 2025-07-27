@@ -1,81 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { Homestay, HomestayResponse } from '@shared/api';
-import Layout from '@/components/Layout';
-import PageHeader from '@/components/PageHeader';
-import SearchSection from '@/components/SearchSection';
+import ServicePageLayout from '@/components/ServicePageLayout';
 import BookingModal from '@/components/BookingModal';
-import { designSystem, layouts, statusColors } from '@/lib/design-system';
-import {
-  Search,
-  MapPin,
-  Star,
-  ArrowLeft,
-  Filter,
-  Heart,
-  IndianRupee,
-  Phone,
-  Waves,
-  Building,
-  Users,
-  Wifi,
-  Car,
-  Coffee,
-  Utensils,
-  Shield,
-  Clock,
-  Calendar,
-  ExternalLink,
-  Share2,
-  Bookmark,
-  Loader2,
-  CheckCircle,
-  Award,
-  Camera,
-  Navigation
-} from 'lucide-react';
+import { Building } from 'lucide-react';
 
 export default function Hotels() {
   const [homestays, setHomestays] = useState<Homestay[]>([]);
+  const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedHomestay, setSelectedHomestay] = useState<Homestay | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
 
-  const { isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  // Filter data
+  const categories = [
+    { id: 'heritage', name: 'Heritage Homes', count: 12 },
+    { id: 'beachside', name: 'Beachside', count: 8 },
+    { id: 'traditional', name: 'Traditional', count: 15 },
+    { id: 'modern', name: 'Modern', count: 10 },
+    { id: 'family', name: 'Family-friendly', count: 20 },
+    { id: 'luxury', name: 'Luxury', count: 6 },
+  ];
+
+  const locations = [
+    { id: 'udupi', name: 'Udupi City', count: 25 },
+    { id: 'malpe', name: 'Malpe Beach', count: 15 },
+    { id: 'manipal', name: 'Manipal', count: 12 },
+    { id: 'kaup', name: 'Kaup', count: 8 },
+    { id: 'karkala', name: 'Karkala', count: 5 },
+  ];
+
+  const amenities = [
+    { id: 'wifi', name: 'Free WiFi' },
+    { id: 'parking', name: 'Free Parking' },
+    { id: 'ac', name: 'Air Conditioning' },
+    { id: 'breakfast', name: 'Complimentary Breakfast' },
+    { id: 'beach_access', name: 'Beach Access' },
+    { id: 'kitchen', name: 'Kitchen Access' },
+    { id: 'laundry', name: 'Laundry Service' },
+    { id: 'pickup', name: 'Airport Pickup' },
+  ];
 
   useEffect(() => {
     fetchHomestays();
+    loadFavorites();
   }, []);
+
+  useEffect(() => {
+    setFilteredHomestays(homestays);
+  }, [homestays]);
 
   const fetchHomestays = async () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('🏠 Fetching homestays...');
-
+      
       const response = await fetch('/api/homestays');
-      console.log('📡 Response status:', response.status);
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data: HomestayResponse = await response.json();
-      console.log('📊 Data received:', data);
 
       if (data.success && data.data) {
-        setHomestays(data.data);
-        console.log('✅ Homestays loaded successfully:', data.data.length, 'items');
+        // Enhance homestays with additional features
+        const enhancedHomestays = data.data.map((homestay) => ({
+          ...homestay,
+          features: extractHomestayFeatures(homestay),
+          trending: Math.random() > 0.8,
+          featured: Math.random() > 0.9,
+          offers: Math.random() > 0.7 ? [{
+            type: 'discount',
+            description: '15% off on bookings above 3 nights',
+            discount: 15
+          }] : []
+        }));
+        
+        setHomestays(enhancedHomestays);
       } else {
         throw new Error('Failed to fetch homestays - invalid response format');
       }
@@ -88,7 +96,7 @@ export default function Hotels() {
         {
           id: 1,
           name: "Coastal Heritage Homestay",
-          description: "Experience traditional Udupi hospitality in our heritage home.",
+          description: "Experience traditional Udupi hospitality in our heritage home with authentic local cuisine and modern amenities.",
           location: "Malpe Beach Road, Udupi",
           address: "Near Malpe Beach, Udupi, Karnataka 576103",
           price_per_night: 2500,
@@ -101,63 +109,127 @@ export default function Hotels() {
           latitude: 13.3494,
           longitude: 74.7421,
           is_active: true
+        },
+        {
+          id: 2,
+          name: "Udupi Traditional Home",
+          description: "Stay with a local family and experience authentic Udupi culture, cuisine, and hospitality.",
+          location: "Car Street, Udupi",
+          address: "Near Krishna Temple, Car Street, Udupi, Karnataka 576101",
+          price_per_night: 2000,
+          rating: 4.6,
+          total_reviews: 89,
+          phone: "+91 94834 56789",
+          email: "info@udupihome.com",
+          amenities: "Traditional Breakfast, WiFi, Cultural Tours, Temple Nearby",
+          image_url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop",
+          latitude: 13.3389,
+          longitude: 74.7421,
+          is_active: true
+        },
+        {
+          id: 3,
+          name: "Manipal Comfort Stay",
+          description: "Modern homestay perfect for families and students visiting Manipal University.",
+          location: "Manipal University Road",
+          address: "Tiger Circle, Manipal, Karnataka 576104",
+          price_per_night: 1800,
+          rating: 4.4,
+          total_reviews: 156,
+          phone: "+91 91234 56789",
+          email: "stay@manipalcomfort.com",
+          amenities: "AC Rooms, WiFi, Study Area, University Pickup",
+          image_url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop",
+          latitude: 13.3525,
+          longitude: 74.7864,
+          is_active: true
         }
       ];
-      setHomestays(fallbackData);
+      
+      const enhancedFallback = fallbackData.map((homestay) => ({
+        ...homestay,
+        features: extractHomestayFeatures(homestay),
+        trending: Math.random() > 0.7,
+        featured: Math.random() > 0.8,
+        offers: Math.random() > 0.6 ? [{
+          type: 'discount',
+          description: '20% off on extended stays',
+          discount: 20
+        }] : []
+      }));
+      
+      setHomestays(enhancedFallback);
       setError(null); // Clear error since we have fallback data
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = async () => {
-    if (searchQuery.trim()) {
-      console.log('🔍 Searching homestays for:', searchQuery);
-
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/homestays/search?q=${encodeURIComponent(searchQuery)}`);
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data) {
-            setHomestays(data.data);
-            console.log('✅ Search results:', data.data.length, 'homestays found');
-          }
-        } else {
-          // Fallback to client-side filtering
-          const filtered = homestays.filter(homestay =>
-            homestay.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            homestay.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            homestay.description.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-          setHomestays(filtered);
-        }
-      } catch (error) {
-        console.error('Search failed, using client-side filtering:', error);
-        // Client-side fallback
-        const filtered = homestays.filter(homestay =>
-          homestay.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          homestay.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          homestay.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setHomestays(filtered);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      // Reset to all homestays
-      fetchHomestays();
+  const loadFavorites = () => {
+    const saved = localStorage.getItem('homestay_favorites');
+    if (saved) {
+      setFavorites(JSON.parse(saved));
     }
   };
 
-  const handleBookHomestay = (homestay: Homestay) => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
+  const toggleFavorite = (homestayId: number) => {
+    const newFavorites = favorites.includes(homestayId)
+      ? favorites.filter(id => id !== homestayId)
+      : [...favorites, homestayId];
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('homestay_favorites', JSON.stringify(newFavorites));
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      const filtered = homestays.filter(homestay =>
+        homestay.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        homestay.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        homestay.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        homestay.amenities?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredHomestays(filtered);
+    } else {
+      setFilteredHomestays(homestays);
     }
-    setSelectedHomestay(homestay);
-    setIsBookingModalOpen(true);
+  };
+
+  const handleFilterChange = (filters: any) => {
+    // Apply multiple filters - in a real app this would be more sophisticated
+    let filtered = [...homestays];
+    
+    if (filters.category && filters.category !== 'all') {
+      // Filter by category based on amenities or description
+      filtered = filtered.filter(homestay => {
+        const description = homestay.description?.toLowerCase() || '';
+        const amenities = homestay.amenities?.toLowerCase() || '';
+        return description.includes(filters.category) || amenities.includes(filters.category);
+      });
+    }
+    
+    if (filters.location && filters.location !== 'all') {
+      filtered = filtered.filter(homestay => 
+        homestay.location.toLowerCase().includes(filters.location)
+      );
+    }
+    
+    if (filters.priceRange && filters.priceRange[0] !== undefined) {
+      filtered = filtered.filter(homestay => {
+        const price = homestay.price_per_night || 0;
+        return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+      });
+    }
+    
+    setFilteredHomestays(filtered);
+  };
+
+  const handleBookHomestay = (item: any) => {
+    const homestay = homestays.find(h => h.id === item.id);
+    if (homestay) {
+      setSelectedHomestay(homestay);
+      setIsBookingModalOpen(true);
+    }
   };
 
   const closeBookingModal = () => {
@@ -167,243 +239,76 @@ export default function Hotels() {
 
   const handleBookingSuccess = () => {
     closeBookingModal();
-    // TODO: Show success message
   };
 
-  const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'text-green-600 bg-green-50';
-    if (rating >= 4.0) return 'text-blue-600 bg-blue-50';
-    if (rating >= 3.5) return 'text-yellow-600 bg-yellow-50';
-    return 'text-gray-600 bg-gray-50';
+  const handleSortChange = (sortBy: string) => {
+    let sorted = [...filteredHomestays];
+    
+    switch (sortBy) {
+      case 'rating':
+        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'price_low':
+        sorted.sort((a, b) => (a.price_per_night || 0) - (b.price_per_night || 0));
+        break;
+      case 'price_high':
+        sorted.sort((a, b) => (b.price_per_night || 0) - (a.price_per_night || 0));
+        break;
+      case 'reviews':
+        sorted.sort((a, b) => (b.total_reviews || 0) - (a.total_reviews || 0));
+        break;
+      default:
+        // Keep recommended order (featured first, then trending, then by rating)
+        sorted.sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          if (a.trending && !b.trending) return -1;
+          if (!a.trending && b.trending) return 1;
+          return (b.rating || 0) - (a.rating || 0);
+        });
+    }
+    
+    setFilteredHomestays(sorted);
   };
-
-  const getAvailabilityBadge = (available: boolean) => {
-    return available ? (
-      <Badge className="bg-green-100 text-green-800 border-green-200">
-        <CheckCircle className="h-3 w-3 mr-1" />
-        Available
-      </Badge>
-    ) : (
-      <Badge variant="secondary" className="bg-red-100 text-red-800 border-red-200">
-        Fully Booked
-      </Badge>
-    );
-  };
-
-  if (error) {
-    return (
-      <Layout>
-        <PageHeader
-          title="Homestays"
-          description="Experience authentic Udupi hospitality"
-          icon={<Building className="h-8 w-8" />}
-        />
-        <div className={layouts.container}>
-          <div className="py-16 text-center">
-            <div className="max-w-md mx-auto">
-              <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-4">
-                <p className="font-medium">Failed to load homestays</p>
-                <p className="text-sm text-red-600 mt-1">{error}</p>
-              </div>
-              <Button onClick={fetchHomestays} className="w-full">
-                Try Again
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
 
   return (
-    <Layout fullWidth>
-      <PageHeader
+    <>
+      <ServicePageLayout
         title="Udupi Homestays"
         description="Experience authentic Udupi hospitality in traditional family homes with home-cooked meals and modern amenities"
         icon={<Building className="h-8 w-8" />}
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Homestays' }
-        ]}
-      />
-
-      <SearchSection
+        serviceType="homestay"
+        items={filteredHomestays.map(homestay => ({
+          ...homestay,
+          type: 'homestay' as const,
+          price: homestay.price_per_night
+        }))}
+        loading={loading}
+        error={error}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onSearch={handleSearch}
-        placeholder="Search by location in Udupi..."
+        searchPlaceholder="Search by location, amenities, or homestay name..."
         showFilters={true}
-        onFiltersClick={() => setShowFilters(!showFilters)}
         filtersActive={showFilters}
+        onFiltersToggle={() => setShowFilters(!showFilters)}
+        filterCategories={categories}
+        filterLocations={locations}
+        filterAmenities={amenities}
+        onFilterChange={handleFilterChange}
+        onItemAction={handleBookHomestay}
+        onFavorite={toggleFavorite}
+        favorites={favorites}
+        onRefresh={fetchHomestays}
+        sortOptions={[
+          { value: 'recommended', label: 'Recommended' },
+          { value: 'rating', label: 'Highest Rated' },
+          { value: 'reviews', label: 'Most Reviewed' },
+          { value: 'price_low', label: 'Price: Low to High' },
+          { value: 'price_high', label: 'Price: High to Low' },
+        ]}
+        onSortChange={handleSortChange}
       />
-
-      <main className="bg-white">
-        <div className={layouts.container}>
-          <div className="py-8">
-            {/* Results Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Available Homestays</h2>
-                <p className="text-gray-600 mt-1">
-                  {loading ? 'Loading...' : `${homestays.length} homestays found`}
-                </p>
-              </div>
-              
-              {!loading && homestays.length > 0 && (
-                <div className="hidden lg:flex items-center gap-4">
-                  <span className="text-sm text-gray-500">Sort by:</span>
-                  <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    <option>Recommended</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Rating</option>
-                    <option>Distance</option>
-                  </select>
-                </div>
-              )}
-            </div>
-
-            {/* Loading State */}
-            {loading && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <Skeleton className="h-48 w-full" />
-                    <CardContent className="p-4">
-                      <Skeleton className="h-6 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-full mb-4" />
-                      <div className="flex justify-between items-center">
-                        <Skeleton className="h-4 w-20" />
-                        <Skeleton className="h-9 w-24" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Homestays Grid */}
-            {!loading && homestays.length > 0 && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {homestays.map((homestay) => (
-                  <Card key={homestay.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-                    <div className="relative">
-                      <img
-                        src={homestay.image_url || '/placeholder.svg'}
-                        alt={homestay.name}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      
-                      {/* Overlay Actions */}
-                      <div className="absolute top-3 right-3 flex gap-2">
-                        <Button size="sm" variant="secondary" className="h-8 w-8 p-0 bg-white/90 hover:bg-white">
-                          <Heart className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="secondary" className="h-8 w-8 p-0 bg-white/90 hover:bg-white">
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-
-                      {/* Availability Badge */}
-                      <div className="absolute top-3 left-3">
-                        {getAvailabilityBadge(true)}
-                      </div>
-
-                      {/* Photo Count */}
-                      <div className="absolute bottom-3 right-3">
-                        <Badge variant="secondary" className="bg-black/50 text-white border-0">
-                          <Camera className="h-3 w-3 mr-1" />
-                          12 photos
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-5">
-                      <div className="space-y-3">
-                        {/* Rating & Location */}
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRatingColor(homestay.rating || 4.5)}`}>
-                              <Star className="h-3 w-3 fill-current" />
-                              {homestay.rating || '4.5'}
-                            </div>
-                            <span className="text-xs text-gray-500">
-                              ({homestay.total_reviews || 156} reviews)
-                            </span>
-                          </div>
-                          <Award className="h-4 w-4 text-yellow-500" />
-                        </div>
-
-                        {/* Title & Description */}
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {homestay.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                            {homestay.description}
-                          </p>
-                        </div>
-
-                        {/* Location */}
-                        <div className="flex items-center gap-1 text-sm text-gray-500">
-                          <MapPin className="h-4 w-4" />
-                          {homestay.location}
-                        </div>
-
-                        {/* Amenities */}
-                        <div className="flex items-center gap-3 text-xs text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <Wifi className="h-3 w-3" />
-                            WiFi
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Car className="h-3 w-3" />
-                            Parking
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Utensils className="h-3 w-3" />
-                            Meals
-                          </div>
-                        </div>
-
-                        {/* Price & Booking */}
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                          <div className="flex items-center gap-1">
-                            <IndianRupee className="h-4 w-4 text-gray-700" />
-                            <span className="font-bold text-lg text-gray-900">
-                              {homestay.price_per_night || 2500}
-                            </span>
-                            <span className="text-sm text-gray-500">/night</span>
-                          </div>
-                          
-                          <Button 
-                            onClick={() => handleBookHomestay(homestay)}
-                            className="bg-blue-600 hover:bg-blue-700 px-6"
-                          >
-                            Book Now
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Empty State */}
-            {!loading && homestays.length === 0 && (
-              <div className="text-center py-16">
-                <Building className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No homestays found</h3>
-                <p className="text-gray-600 mb-6">Try adjusting your search criteria or check back later.</p>
-                <Button onClick={fetchHomestays}>
-                  Refresh Results
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
 
       {/* Booking Modal */}
       {selectedHomestay && (
@@ -414,6 +319,33 @@ export default function Hotels() {
           onBookingSuccess={handleBookingSuccess}
         />
       )}
-    </Layout>
+    </>
   );
+}
+
+// Helper function to extract features from homestay data
+function extractHomestayFeatures(homestay: Homestay): string[] {
+  const features: string[] = [];
+  const amenities = homestay.amenities?.toLowerCase() || '';
+  
+  if (amenities.includes('wifi') || amenities.includes('internet')) {
+    features.push('WiFi');
+  }
+  if (amenities.includes('parking')) {
+    features.push('Parking');
+  }
+  if (amenities.includes('ac') || amenities.includes('air conditioning')) {
+    features.push('AC');
+  }
+  if (amenities.includes('breakfast')) {
+    features.push('Breakfast');
+  }
+  if (amenities.includes('beach')) {
+    features.push('Beach Access');
+  }
+  if (amenities.includes('kitchen')) {
+    features.push('Kitchen');
+  }
+  
+  return features;
 }
