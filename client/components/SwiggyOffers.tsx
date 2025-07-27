@@ -50,7 +50,12 @@ export default function SwiggyOffers({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchOffers();
+    // Add a small delay to prevent simultaneous API calls
+    const timeoutId = setTimeout(() => {
+      fetchOffers();
+    }, 200); // Small delay for offers
+
+    return () => clearTimeout(timeoutId);
   }, [user]);
 
   const fetchOffers = async () => {
