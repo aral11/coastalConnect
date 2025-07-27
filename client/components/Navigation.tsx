@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { designSystem, layouts, swiggyTheme } from '@/lib/design-system';
+import { swiggyTheme } from '@/lib/swiggy-design-system';
+import { layouts } from '@/lib/design-system';
 import {
   Menu,
   X,
@@ -154,8 +155,8 @@ export default function Navigation({ className = '' }: NavigationProps) {
       <div className={layouts.container}>
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center space-x-3 group"
             aria-label="coastalConnect home"
           >
@@ -166,7 +167,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 className="h-12 w-12 object-contain"
               />
               <div className="absolute -top-1 -right-1">
-                <Badge className="bg-green-500 text-white text-xs px-1 py-0 h-4 text-[10px] font-bold rounded-full">
+                <Badge className="bg-orange-500 text-white text-xs px-1 py-0 h-4 text-[10px] font-bold rounded-full">
                   LIVE
                 </Badge>
               </div>
@@ -185,13 +186,13 @@ export default function Navigation({ className = '' }: NavigationProps) {
                 to={item.href}
                 className={`group relative px-4 py-2 rounded-xl transition-all duration-200 ${
                   isActiveRoute(item.href)
-                    ? `${item.color} bg-${item.color.split('-')[1]}-50`
+                    ? 'text-orange-600 bg-orange-50'
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
                 role="menuitem"
               >
                 <div className="flex items-center space-x-2">
-                  <span className={isActiveRoute(item.href) ? item.color : 'text-gray-500 group-hover:text-gray-700'}>
+                  <span className={isActiveRoute(item.href) ? 'text-orange-600' : 'text-gray-500 group-hover:text-gray-700'}>
                     {item.icon}
                   </span>
                   <span className="font-medium">{item.label}</span>
@@ -321,7 +322,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                     variant="ghost" 
                     className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-semibold">
                         {user?.name?.charAt(0) || 'U'}
                       </span>
@@ -382,8 +383,8 @@ export default function Navigation({ className = '' }: NavigationProps) {
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button 
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                  <Button
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     Get Started
                   </Button>
@@ -435,11 +436,11 @@ export default function Navigation({ className = '' }: NavigationProps) {
                           onClick={handleMobileMenuClose}
                           className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                             isActiveRoute(item.href)
-                              ? `${item.color} bg-gray-50`
+                              ? 'text-orange-600 bg-orange-50'
                               : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                           }`}
                         >
-                          <span className={isActiveRoute(item.href) ? item.color : 'text-gray-500'}>
+                          <span className={isActiveRoute(item.href) ? 'text-orange-600' : 'text-gray-500'}>
                             {item.icon}
                           </span>
                           <div>
@@ -497,7 +498,7 @@ export default function Navigation({ className = '' }: NavigationProps) {
                     {isAuthenticated ? (
                       <div className="space-y-3">
                         <div className="flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                          <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
                             <span className="text-white font-semibold">
                               {user?.name?.charAt(0) || 'U'}
                             </span>
@@ -527,8 +528,8 @@ export default function Navigation({ className = '' }: NavigationProps) {
                           </Button>
                         </Link>
                         <Link to="/signup" onClick={handleMobileMenuClose}>
-                          <Button 
-                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl"
+                          <Button
+                            className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-xl"
                           >
                             Get Started
                           </Button>
