@@ -28,6 +28,7 @@ import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupport
 import { submitFeedback, getFeedbacks, getFeedbackStats } from "./routes/feedback";
 import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
+import { seedCoupons } from "./seedCoupons";
 import { authenticateToken } from "./middleware/auth";
 
 export function createServer() {
@@ -81,6 +82,23 @@ export function createServer() {
       res.status(500).json({
         success: false,
         message: "Error seeding database",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Coupon seeding endpoint (for development)
+  app.post("/api/seed-coupons", async (_req, res) => {
+    try {
+      await seedCoupons();
+      res.json({
+        success: true,
+        message: "Coupons seeded successfully!"
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error seeding coupons",
         error: error instanceof Error ? error.message : "Unknown error"
       });
     }
