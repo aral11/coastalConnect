@@ -122,6 +122,110 @@ export default function SwiggyOffers({
     return iconMap[iconText] || <Gift className="h-6 w-6" />;
   };
 
+  // Fallback data when API is not available
+  const getFallbackOffers = (): Offer[] => {
+    return [
+      {
+        id: 'welcome100',
+        title: 'Welcome Back!',
+        subtitle: 'FLAT ₹100 OFF',
+        description: 'On orders above ₹499',
+        discount: '₹100 OFF',
+        type: 'amount',
+        minOrder: 499,
+        validUntil: '2024-12-31',
+        code: 'WELCOME100',
+        gradient: 'from-orange-400 to-red-500',
+        textColor: 'text-white',
+        icon: <Gift className="h-6 w-6" />,
+        category: 'All Services',
+        link: '/offers/welcome100',
+        popular: true
+      },
+      {
+        id: 'stayhome40',
+        title: 'Homestay Special',
+        subtitle: '40% OFF',
+        description: 'On weekend bookings',
+        discount: '40% OFF',
+        type: 'percentage',
+        minOrder: 2000,
+        validUntil: '2024-12-25',
+        code: 'STAYHOME40',
+        gradient: 'from-blue-400 to-purple-500',
+        textColor: 'text-white',
+        icon: <Percent className="h-6 w-6" />,
+        category: 'Homestays',
+        link: '/homestays?offer=STAYHOME40',
+        limitedTime: true
+      },
+      {
+        id: 'dine25',
+        title: 'Restaurant Dining',
+        subtitle: '25% OFF',
+        description: 'On dining bookings',
+        discount: '25% OFF',
+        type: 'percentage',
+        minOrder: 300,
+        validUntil: '2024-12-20',
+        code: 'DINE25',
+        gradient: 'from-green-400 to-teal-500',
+        textColor: 'text-white',
+        icon: <Zap className="h-6 w-6" />,
+        category: 'Restaurants',
+        link: '/eateries?offer=DINE25'
+      },
+      {
+        id: 'ride50',
+        title: 'Ride Anywhere',
+        subtitle: '₹50 OFF',
+        description: 'On rides above ₹200',
+        discount: '₹50 OFF',
+        type: 'amount',
+        minOrder: 200,
+        validUntil: '2024-12-30',
+        code: 'RIDE50',
+        gradient: 'from-yellow-400 to-orange-500',
+        textColor: 'text-white',
+        icon: <Clock className="h-6 w-6" />,
+        category: 'Transport',
+        link: '/drivers?offer=RIDE50'
+      },
+      {
+        id: 'capture30',
+        title: 'Photography',
+        subtitle: '30% OFF',
+        description: 'Professional shoots',
+        discount: '30% OFF',
+        type: 'percentage',
+        minOrder: 1500,
+        validUntil: '2024-12-28',
+        code: 'CAPTURE30',
+        gradient: 'from-purple-400 to-pink-500',
+        textColor: 'text-white',
+        icon: <Gift className="h-6 w-6" />,
+        category: 'Creators',
+        link: '/creators?offer=CAPTURE30'
+      },
+      {
+        id: 'event200',
+        title: 'Event Special',
+        subtitle: '₹200 OFF',
+        description: 'On event bookings',
+        discount: '₹200 OFF',
+        type: 'amount',
+        minOrder: 1000,
+        validUntil: '2024-12-31',
+        code: 'EVENT200',
+        gradient: 'from-indigo-400 to-blue-500',
+        textColor: 'text-white',
+        icon: <Percent className="h-6 w-6" />,
+        category: 'Events',
+        link: '/events?offer=EVENT200'
+      }
+    ];
+  };
+
   if (loading) {
     return (
       <section className={`${className}`}>
