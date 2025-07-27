@@ -100,9 +100,10 @@ export default function SwiggyVendors({
       }
     } catch (error) {
       console.error('Failed to fetch vendors:', error);
-      
-      // Don't use fallback data in production - show empty state
-      setVendors([]);
+
+      // Use fallback data when API is not available
+      console.warn('API not available, using fallback vendor data for', type);
+      setVendors(getFallbackVendors(type, maxItems));
     } finally {
       setLoading(false);
     }
