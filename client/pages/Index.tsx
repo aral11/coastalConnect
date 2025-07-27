@@ -472,3 +472,90 @@ export default function Index() {
     </Layout>
   );
 }
+
+// Dynamic Platform Stats Component
+function PlatformStats() {
+  const [stats, setStats] = useState({
+    vendors: 0,
+    orders: 0,
+    rating: 0,
+    cities: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/stats/platform');
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data.data);
+      } else {
+        // If API fails, show zeros instead of hardcoded values
+        setStats({ vendors: 0, orders: 0, rating: 0, cities: 0 });
+      }
+    } catch (error) {
+      console.error('Failed to fetch platform stats:', error);
+      // Show zeros instead of hardcoded fallback values
+      setStats({ vendors: 0, orders: 0, rating: 0, cities: 0 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}k+`;
+    }
+    return num.toString();
+  };
+
+  const formatRating = (rating: number) => {
+    return rating > 0 ? `${rating.toFixed(1)}★` : 'New';
+  };
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-4 gap-4 text-center">
+        {[...Array(4)].map((_, index) => (
+          <div key={index} className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-4 gap-4 text-center">
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.vendors > 0 ? formatNumber(stats.vendors) : 'Growing'}
+        </div>
+        <div className="text-sm text-gray-600">Vendors</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.orders > 0 ? formatNumber(stats.orders) : 'Starting'}
+        </div>
+        <div className="text-sm text-gray-600">Orders</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {formatRating(stats.rating)}
+        </div>
+        <div className="text-sm text-gray-600">Rating</div>
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-gray-900">
+          {stats.cities > 0 ? stats.cities : 'Expanding'}
+        </div>
+        <div className="text-sm text-gray-600">Cities</div>
+      </div>
+    </div>
+  );
+}
