@@ -357,6 +357,117 @@ router.post('/apply', async (req: Request, res: Response) => {
   }
 });
 
+// Analytics endpoints
+router.get('/analytics', async (req: Request, res: Response) => {
+  try {
+    const connection = await getConnection();
+
+    // Get overall statistics
+    const statsResult = await connection.request().query(`
+      SELECT
+        COUNT(*) as total_coupons,
+        SUM(CASE WHEN is_active = 1 AND valid_from <= GETDATE() AND valid_until >= GETDATE() THEN 1 ELSE 0 END) as active_coupons
+      FROM Coupons
+    `);
+
+    const usageStatsResult = await connection.request().query(`
+      SELECT
+        COUNT(*) as total_usage,
+        SUM(discount_amount) as total_discount_given,
+        AVG(discount_amount) as avg_discount
+      FROM CouponUsage
+    `);
+
+    // Get popular coupons
+    const popularResult = await connection.request().query(`
+      SELECT TOP(5)
+        c.code,
+        c.title,
+        COUNT(cu.id) as usage_count,
+        SUM(cu.discount_amount) as total_discount
+      FROM Coupons c
+      LEFT JOIN CouponUsage cu ON c.id = cu.coupon_id
+      WHERE c.is_active = 1
+      GROUP BY c.id, c.code, c.title
+      ORDER BY usage_count DESC
+    `);
+
+    // Get category breakdown
+    const categoryResult = await connection.request().query(`
+      SELECT
+        COALESCE(cu.booking_type, 'unknown') as category,
+        COUNT(*) as usage_count
+      FROM CouponUsage cu
+      GROUP BY cu.booking_type
+    `);
+
+    const stats = statsResult.recordset[0];
+    const usageStats = usageStatsResult.recordset[0];
+    const categoryBreakdown: { [key: string]: number } = {};
+
+    categoryResult.recordset.forEach(row => {
+      categoryBreakdown[row.category] = row.usage_count;
+    });
+
+    res.json({
+      success: true,
+      data: {
+        totalCoupons: stats.total_coupons,
+        activeCoupons: stats.active_coupons,
+        totalUsage: usageStats.total_usage || 0,
+        totalDiscountGiven: usageStats.total_discount_given || 0,
+        avgDiscount: usageStats.avg_discount || 0,
+        popularCoupons: popularResult.recordset,
+        categoryBreakdown
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching analytics:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch analytics',
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+});
+
+router.get('/usage/recent', async (req: Request, res: Response) => {
+  try {
+    const connection = await getConnection();
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const result = await connection.request()
+      .input('limit', sql.Int, limit)
+      .query(`
+        SELECT TOP(@limit)
+          cu.id,
+          c.code,
+          u.name as userName,
+          cu.discount_amount,
+          cu.original_amount,
+          cu.final_amount,
+          cu.used_at,
+          cu.booking_type
+        FROM CouponUsage cu
+        INNER JOIN Coupons c ON cu.coupon_id = c.id
+        INNER JOIN Users u ON cu.user_id = u.id
+        ORDER BY cu.used_at DESC
+      `);
+
+    res.json({
+      success: true,
+      data: result.recordset
+    });
+  } catch (error) {
+    console.error('Error fetching recent usage:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch recent usage',
+      error: process.env.NODE_ENV === 'development' ? error : 'Internal server error'
+    });
+  }
+});
+
 // Admin endpoints (require authentication)
 router.post('/admin/create', async (req: Request, res: Response) => {
   try {
