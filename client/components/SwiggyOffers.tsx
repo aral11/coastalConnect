@@ -505,7 +505,10 @@ export function CompactOffers() {
       const response = await fetch('/api/coupons');
 
       if (!response.ok) {
-        throw new Error('Failed to fetch offers');
+        // Use fallback data if API is not available
+        const fallbackOffers = getFallbackCompactOffers();
+        setOffers(fallbackOffers);
+        return;
       }
 
       const data = await response.json();
@@ -519,10 +522,56 @@ export function CompactOffers() {
       }
     } catch (error) {
       console.error('Error fetching compact offers:', error);
-      setOffers([]);
+      // Use fallback data on error
+      const fallbackOffers = getFallbackCompactOffers();
+      setOffers(fallbackOffers);
     } finally {
       setLoading(false);
     }
+  };
+
+  const getFallbackCompactOffers = (): Offer[] => {
+    return [
+      {
+        id: 'welcome100',
+        title: 'Welcome Back!',
+        subtitle: 'FLAT ₹100 OFF',
+        description: 'On orders above ₹499',
+        discount: '₹100 OFF',
+        type: 'amount',
+        gradient: 'from-orange-400 to-red-500',
+        textColor: 'text-white',
+        icon: <Gift className="h-6 w-6" />,
+        category: 'All Services',
+        link: '/offers/welcome100'
+      },
+      {
+        id: 'stayhome40',
+        title: 'Homestay Special',
+        subtitle: '40% OFF',
+        description: 'On weekend bookings',
+        discount: '40% OFF',
+        type: 'percentage',
+        gradient: 'from-blue-400 to-purple-500',
+        textColor: 'text-white',
+        icon: <Percent className="h-6 w-6" />,
+        category: 'Homestays',
+        link: '/homestays?offer=STAYHOME40'
+      },
+      {
+        id: 'dine25',
+        title: 'Restaurant Dining',
+        subtitle: '25% OFF',
+        description: 'On dining bookings',
+        discount: '25% OFF',
+        type: 'percentage',
+        gradient: 'from-green-400 to-teal-500',
+        textColor: 'text-white',
+        icon: <Zap className="h-6 w-6" />,
+        category: 'Restaurants',
+        link: '/eateries?offer=DINE25'
+      }
+    ];
   };
 
   const getIconComponent = (iconText: string) => {
