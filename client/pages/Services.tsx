@@ -358,11 +358,11 @@ export default function Services() {
                           <div>
                             <p className="text-xs text-gray-500 mb-2">Popular Services:</p>
                             <div className="flex flex-wrap gap-1">
-                              {category.topServices.slice(0, 3).map((service, index) => (
+                              {category.topServices?.slice(0, 3).map((service, index) => (
                                 <Badge key={index} variant="secondary" className="text-xs">
                                   {service}
                                 </Badge>
-                              ))}
+                              )) || []}
                             </div>
                           </div>
                         </div>
