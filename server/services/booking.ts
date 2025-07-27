@@ -99,22 +99,43 @@ export class BookingService {
                     @guest_email, @special_requests, @booking_reference)
           `);
 
-        mockBooking.id = result.recordset[0].id;
+        bookingId = result.recordset[0].id;
       } catch (dbError) {
-        console.log('Database not available, using mock booking data');
+        console.error('Database error creating homestay booking:', dbError);
+        throw new Error('Failed to create homestay booking - database unavailable');
       }
+
+      // Create the booking object with the real ID
+      const booking: HomestayBooking = {
+        id: bookingId,
+        user_id: bookingData.user_id,
+        homestay_id: bookingData.homestay_id,
+        check_in_date: bookingData.check_in_date,
+        check_out_date: bookingData.check_out_date,
+        guests: bookingData.guests,
+        total_amount: totalAmount,
+        booking_status: 'pending',
+        payment_status: 'pending',
+        guest_name: bookingData.guest_name,
+        guest_phone: bookingData.guest_phone,
+        guest_email: bookingData.guest_email,
+        special_requests: bookingData.special_requests,
+        booking_reference: bookingReference,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
 
       // Create payment intent
       const paymentIntent = await PaymentService.createPaymentIntent(
         totalAmount,
         'INR',
-        mockBooking.id,
+        booking.id,
         'homestay',
         bookingData.user_id
       );
 
       return {
-        booking: mockBooking,
+        booking,
         payment_intent: paymentIntent
       };
     } catch (error) {
