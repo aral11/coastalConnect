@@ -54,15 +54,31 @@ export default function CommunityFeatures() {
 
       // Try to fetch featured events with proper error handling
       try {
-        const eventsResponse = await fetch('/api/community/events/featured');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+        const eventsResponse = await fetch('/api/community/events/featured', {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        clearTimeout(timeoutId);
+
         if (eventsResponse.ok) {
           const eventsData = await eventsResponse.json();
-          setFeaturedEvents(eventsData.data || []);
+          if (eventsData.success && eventsData.data) {
+            setFeaturedEvents(eventsData.data || []);
+            console.log('✅ Featured events loaded successfully');
+          } else {
+            throw new Error('Invalid response format');
+          }
         } else {
           throw new Error(`Events API returned ${eventsResponse.status}`);
         }
       } catch (eventsError) {
-        console.log('Events API unavailable, using fallback data');
+        console.log('Events API unavailable, using fallback data:', eventsError instanceof Error ? eventsError.message : 'Unknown error');
         // Set fallback featured events
         setFeaturedEvents([
           {
@@ -106,15 +122,31 @@ export default function CommunityFeatures() {
 
       // Try to fetch religious services with proper error handling
       try {
-        const religiousResponse = await fetch('/api/community/religious-services?limit=6');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+        const religiousResponse = await fetch('/api/community/religious-services?limit=6', {
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        clearTimeout(timeoutId);
+
         if (religiousResponse.ok) {
           const religiousData = await religiousResponse.json();
-          setReligiousServices(religiousData.data ? religiousData.data.slice(0, 6) : []);
+          if (religiousData.success && religiousData.data) {
+            setReligiousServices(religiousData.data ? religiousData.data.slice(0, 6) : []);
+            console.log('✅ Religious services loaded successfully');
+          } else {
+            throw new Error('Invalid response format');
+          }
         } else {
           throw new Error(`Religious services API returned ${religiousResponse.status}`);
         }
       } catch (religiousError) {
-        console.log('Religious services API unavailable, using fallback data');
+        console.log('Religious services API unavailable, using fallback data:', religiousError instanceof Error ? religiousError.message : 'Unknown error');
         // Set fallback religious services
         setReligiousServices([
           {
