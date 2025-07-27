@@ -237,7 +237,7 @@ export async function seedCoupons(): Promise<void> {
 }
 
 // Run directly if called as script
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   seedCoupons()
     .then(() => {
       console.log('🎉 Coupon seeding completed!');
