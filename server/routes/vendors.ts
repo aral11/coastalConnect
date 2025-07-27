@@ -314,7 +314,18 @@ router.get('/mixed', async (req: Request, res: Response) => {
     let mixedVendors: any[] = [];
 
     try {
-      const pool = await getConnection();
+      let pool;
+      try {
+        pool = await getConnection();
+      } catch (dbError) {
+        console.log('Database connection failed for mixed vendors, returning empty array');
+        return res.json({
+          success: true,
+          data: [],
+          count: 0,
+          message: 'No vendors available (database unavailable)'
+        });
+      }
 
       // Get a mix of vendors from different tables
       const queries = [
