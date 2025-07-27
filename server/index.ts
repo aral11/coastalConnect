@@ -113,6 +113,7 @@ export function createServer() {
   app.post("/api/auth/email", emailAuth);
   app.post("/api/auth/register", register);
   app.get("/api/auth/verify", verifyToken);
+  app.post("/api/auth/logout", logout);
 
   // Booking API routes (protected)
   app.post("/api/bookings/homestay", authenticateToken, createHomestayBooking);
