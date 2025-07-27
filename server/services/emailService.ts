@@ -16,6 +16,137 @@ const transporter = nodemailer.createTransport(emailConfig);
 
 // Email templates
 const emailTemplates = {
+  vendorRegistrationConfirmation: (vendor: any) => ({
+    subject: `Registration Submitted - ${vendor.businessName} | coastalConnect`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vendor Registration - coastalConnect</title>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+          .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+          .header { background: linear-gradient(135deg, #fb7c25 0%, #ea580c 100%); color: white; padding: 20px; text-align: center; }
+          .logo { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+          .tagline { font-size: 14px; opacity: 0.9; }
+          .content { padding: 30px; }
+          .registration-card { background: #f8fafc; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #fb7c25; }
+          .registration-id { background: #fb7c25; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
+          .details-table { width: 100%; margin: 20px 0; }
+          .details-table td { padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+          .details-table .label { font-weight: 600; color: #475569; width: 40%; }
+          .details-table .value { color: #1e293b; }
+          .alert { background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px; padding: 15px; margin: 20px 0; }
+          .footer { background: #1e293b; color: #94a3b8; padding: 20px; text-align: center; font-size: 14px; }
+          .btn { background: #fb7c25; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 10px 5px; font-weight: 600; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">coastalConnect</div>
+            <div class="tagline">Vendor Registration Confirmation</div>
+          </div>
+
+          <div class="content">
+            <h2>Hello ${vendor.ownerName},</h2>
+            <p>Thank you for registering your business with coastalConnect! Your registration has been successfully submitted and is currently under review.</p>
+
+            <div class="registration-card">
+              <div class="registration-id">Registration: ${vendor.registrationRef}</div>
+
+              <table class="details-table">
+                <tr>
+                  <td class="label">Business Name:</td>
+                  <td class="value">${vendor.businessName}</td>
+                </tr>
+                <tr>
+                  <td class="label">Category:</td>
+                  <td class="value">${vendor.category}</td>
+                </tr>
+                <tr>
+                  <td class="label">Submission Date:</td>
+                  <td class="value">${new Date(vendor.submissionDate).toLocaleDateString('en-IN')}</td>
+                </tr>
+                <tr>
+                  <td class="label">Status:</td>
+                  <td class="value">Pending Review</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="alert">
+              <strong>🕐 What happens next?</strong><br>
+              • Document verification (24-48 hours)<br>
+              • Business verification call<br>
+              • Approval notification via email<br>
+              • Payment link for subscription<br>
+              • Account activation
+            </div>
+
+            <p>We'll contact you within 24-48 hours with an update on your registration status.</p>
+
+            <a href="mailto:admin@coastalconnect.in" class="btn">Contact Support</a>
+          </div>
+
+          <div class="footer">
+            <p>© 2024 coastalConnect. All rights reserved.</p>
+            <p>📞 Support: +91 8105003858 | 📧 admin@coastalconnect.in</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
+  adminVendorNotification: (vendor: any) => ({
+    subject: `New Vendor Registration - ${vendor.businessName}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>New Vendor Registration - Admin</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+          .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; }
+          .header { background: #dc2626; color: white; padding: 15px; text-align: center; border-radius: 6px; }
+          .content { padding: 20px 0; }
+          .details { background: #f9fafb; padding: 15px; border-radius: 6px; margin: 15px 0; }
+          .btn { background: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h2>New Vendor Registration - Admin Alert</h2>
+          </div>
+
+          <div class="content">
+            <h3>New vendor registration requires approval:</h3>
+
+            <div class="details">
+              <strong>Registration ID:</strong> ${vendor.registrationRef}<br>
+              <strong>Business Name:</strong> ${vendor.businessName}<br>
+              <strong>Owner:</strong> ${vendor.ownerName}<br>
+              <strong>Category:</strong> ${vendor.category}<br>
+              <strong>Email:</strong> ${vendor.vendorEmail}<br>
+              <strong>Phone:</strong> ${vendor.vendorPhone}<br>
+              <strong>Submitted:</strong> ${new Date().toLocaleString('en-IN')}
+            </div>
+
+            <p>Please review and approve/reject this registration in the admin panel.</p>
+
+            <a href="https://coastalconnect.in/admin" class="btn">Go to Admin Panel</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
   bookingConfirmation: (booking: any) => ({
     subject: `Booking Confirmed - ${booking.item.name} | coastalConnect`,
     html: `
