@@ -63,11 +63,18 @@ export default function SwiggyOffers({
         ? `/api/coupons/personalized/${user.id}`
         : '/api/coupons';
 
-      const response = await fetch(endpoint);
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout for offers
+
+      const response = await fetch(endpoint, {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         // Use fallback data if API is not available
-        console.warn('Coupon API not available, using fallback data');
         setOffers(getFallbackOffers());
         return;
       }
@@ -84,9 +91,12 @@ export default function SwiggyOffers({
         throw new Error(data.message || 'Failed to load offers');
       }
     } catch (error) {
-      console.error('Error fetching offers:', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('Offers API request timed out');
+      } else {
+        console.error('Error fetching offers:', error);
+      }
       // Use fallback data on error
-      console.warn('Using fallback coupon data due to API error');
       setOffers(getFallbackOffers());
       setError(null); // Don't show error to user, use fallback instead
     } finally {
