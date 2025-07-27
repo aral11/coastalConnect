@@ -6,7 +6,22 @@ const router = Router();
 // Get platform statistics for homepage
 router.get('/platform', async (req: Request, res: Response) => {
   try {
-    const connection = await getConnection();
+    let connection;
+    try {
+      connection = await getConnection();
+    } catch (dbError) {
+      console.log('Database connection failed for stats, returning zeros');
+      return res.json({
+        success: true,
+        data: {
+          vendors: 0,
+          orders: 0,
+          rating: 0,
+          cities: 0
+        },
+        message: 'Platform statistics retrieved (database unavailable)'
+      });
+    }
     
     // Get vendor counts from different tables
     const vendorQueries = [
