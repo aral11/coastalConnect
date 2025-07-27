@@ -58,7 +58,7 @@ export default function Layout({
       <Navigation />
 
       {/* Main Content */}
-      <main className={`flex-1 ${className}`}>
+      <main className={`flex-1 ${className} pb-16 lg:pb-0`}>
         {fullWidth ? children : (
           <div className={layouts.container}>
             {children}
