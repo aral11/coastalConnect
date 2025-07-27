@@ -115,7 +115,7 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
 
   const processPayment = (bookingData: any) => {
     const options = {
-      key: 'rzp_test_mock_key', // This should come from environment
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
       amount: bookingData.payment_intent.amount * 100, // Amount in paise
       currency: 'INR',
       name: 'coastalConnect',
