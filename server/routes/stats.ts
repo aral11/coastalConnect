@@ -3,6 +3,15 @@ import { getConnection } from '../db/connection';
 
 const router = Router();
 
+// Test route to verify router is working
+router.get('/test', (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Stats API is working',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Get platform statistics for homepage
 router.get('/platform', async (req: Request, res: Response) => {
   try {
