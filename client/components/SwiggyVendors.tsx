@@ -205,19 +205,10 @@ export default function SwiggyVendors({
         throw new Error('API not available');
       }
     } catch (error) {
-      console.log('Using fallback vendor data');
+      console.error('Failed to fetch vendors:', error);
 
-      // Use fallback data when API is not available
-      let filteredVendors = type === 'all'
-        ? FALLBACK_VENDORS
-        : FALLBACK_VENDORS.filter(vendor => vendor.type === type);
-
-      // Limit items if maxItems is specified
-      if (maxItems) {
-        filteredVendors = filteredVendors.slice(0, maxItems);
-      }
-
-      setVendors(filteredVendors);
+      // Don't use fallback data in production - show empty state
+      setVendors([]);
     }
   };
 
