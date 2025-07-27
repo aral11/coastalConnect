@@ -170,7 +170,7 @@ export function createServer() {
   app.post("/api/notifications/test-sms", testSMS);
 
   // Platform statistics
-  app.get("/api/stats", getPlatformStats);
+  app.use("/api/stats", statsRouter);
 
   // Search API routes
   app.use("/api/search", searchRouter);
