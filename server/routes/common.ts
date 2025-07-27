@@ -6,7 +6,7 @@ export const getCategories: RequestHandler = async (req, res) => {
     const categories = {
       services: [
         { id: 'homestays', name: 'Homestays', icon: 'Bed', color: 'blue', description: 'Authentic local stays' },
-        { id: 'eateries', name: 'Eateries', icon: 'Utensils', color: 'orange', description: 'Local food experiences' },
+        { id: 'eateries', name: 'Restaurants', icon: 'Utensils', color: 'orange', description: 'Local dining experiences' },
         { id: 'drivers', name: 'Drivers', icon: 'Car', color: 'green', description: 'Transportation services' },
         { id: 'creators', name: 'Local Creators', icon: 'Camera', color: 'purple', description: 'Content creators & influencers' },
         { id: 'beauty-wellness', name: 'Beauty & Wellness', icon: 'Sparkles', color: 'pink', description: 'Beauty and wellness services' },
