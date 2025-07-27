@@ -563,13 +563,16 @@ const emailTemplates = {
 // Email service functions
 export class EmailService {
   static async sendEmail(to: string, subject: string, html: string, text: string) {
-    // If in development mode or no transporter available, just log the email
-    if (disableEmailSending || !transporter) {
-      console.log('📧 [DEVELOPMENT MODE] Email would be sent:');
-      console.log(`   To: ${to}`);
-      console.log(`   Subject: ${subject}`);
-      console.log(`   Content: ${text ? text.substring(0, 100) + '...' : 'HTML content'}`);
-      return { success: true, messageId: 'dev-mode-' + Date.now(), developmentMode: true };
+    // Check if email sending is explicitly disabled
+    if (process.env.DISABLE_EMAIL_SENDING === 'true') {
+      console.log('📧 [EMAIL DISABLED] Email sending is disabled in configuration');
+      return { success: false, error: 'Email sending is disabled', disabled: true };
+    }
+
+    // Check if SMTP credentials are configured
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+      console.error('❌ Email service not configured - missing SMTP credentials');
+      throw new Error('Email service not configured. Please set SMTP_USER and SMTP_PASSWORD environment variables.');
     }
 
     try {
