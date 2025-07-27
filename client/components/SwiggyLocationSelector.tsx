@@ -202,7 +202,12 @@ export default function SwiggyLocationSelector({
       {/* Location Button */}
       <Button
         variant="ghost"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          if (!isOpen) {
+            setLocationError(null);
+          }
+        }}
         className={`
           flex items-center space-x-2 h-auto px-3 py-2 text-left
           hover:bg-gray-50 border border-gray-200 rounded-lg
