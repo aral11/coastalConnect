@@ -100,7 +100,14 @@ export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRe
       success: true,
       data: {
         booking: result.booking,
-        payment_intent: result.payment_intent
+        payment_intent: result.payment_intent,
+        coupon: couponValidation ? {
+          code: coupon_code,
+          discountAmount: discountAmount,
+          originalAmount: original_amount,
+          finalAmount: finalAmount,
+          savings: discountAmount
+        } : null
       },
       message: 'Homestay booking created successfully'
     });
