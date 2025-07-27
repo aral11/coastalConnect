@@ -131,7 +131,18 @@ export default function ComprehensiveServices() {
       const updatedSectors = await Promise.all(
         serviceSectors.map(async (sector) => {
           try {
-            const response = await fetch(sector.apiEndpoint);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+            const response = await fetch(sector.apiEndpoint, {
+              signal: controller.signal,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            clearTimeout(timeoutId);
+
             if (response.ok) {
               const data = await response.json();
               return {
