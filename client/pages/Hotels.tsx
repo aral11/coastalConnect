@@ -110,10 +110,44 @@ export default function Hotels() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchQuery.trim()) {
-      // TODO: Implement search functionality
-      console.log('Searching for:', searchQuery);
+      console.log('🔍 Searching homestays for:', searchQuery);
+
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/homestays/search?q=${encodeURIComponent(searchQuery)}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setHomestays(data.data);
+            console.log('✅ Search results:', data.data.length, 'homestays found');
+          }
+        } else {
+          // Fallback to client-side filtering
+          const filtered = homestays.filter(homestay =>
+            homestay.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            homestay.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            homestay.description.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          setHomestays(filtered);
+        }
+      } catch (error) {
+        console.error('Search failed, using client-side filtering:', error);
+        // Client-side fallback
+        const filtered = homestays.filter(homestay =>
+          homestay.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          homestay.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          homestay.description.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setHomestays(filtered);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Reset to all homestays
+      fetchHomestays();
     }
   };
 
