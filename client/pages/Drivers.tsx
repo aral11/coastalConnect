@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import ServicePageLayout from '@/components/ServicePageLayout';
 import DriverBookingModal from '@/components/DriverBookingModal';
