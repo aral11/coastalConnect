@@ -52,9 +52,9 @@ export default function Index() {
               {/* Tagline */}
               <div className="mb-6">
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-                  Order food &<br />
+                  Discover local<br />
                   <span className="text-orange-500">experiences</span><br />
-                  from local vendors
+                  in coastal Karnataka
                 </h1>
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
                   Discover authentic homestays, restaurants, drivers, and creators in coastal Karnataka. 
