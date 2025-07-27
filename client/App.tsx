@@ -116,6 +116,7 @@ const App = () => (
           <Route path="/entertainment" element={<ServiceSector />} />
           <Route path="/event-management" element={<ServiceSector />} />
           <Route path="/other-services" element={<ServiceSector />} />
+          <Route path="/religious-services" element={<ServiceSector />} />
 
           {/* Placeholder pages */}
           <Route
