@@ -254,7 +254,11 @@ export const getServiceCategories: RequestHandler = async (req, res) => {
         offer: 'BOOK NOW',
         active: true,
         order: 5,
-        count: 5
+        count: 5,
+        serviceCount: 5,
+        averageRating: 4.6,
+        priceRange: '₹500-2000',
+        topServices: ['Cultural Events', 'Festivals', 'Workshops']
       },
       {
         id: 'services',
