@@ -235,14 +235,35 @@ export class AuthService {
 
   static async authenticateWithEmail(email: string, password: string): Promise<AuthToken> {
     const user = await this.findUserByEmail(email);
-    
+
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('Invalid email or password');
     }
 
-    // For mock implementation
+    // Verify password for email users
+    if (user.provider === 'email' && password) {
+      const connection = await getConnection();
+      const result = await connection.request()
+        .input('email', email)
+        .query('SELECT password_hash FROM Users WHERE email = @email');
+
+      if (result.recordset.length === 0) {
+        throw new Error('Invalid email or password');
+      }
+
+      const hashedPassword = result.recordset[0].password_hash;
+      if (!hashedPassword) {
+        throw new Error('Invalid email or password');
+      }
+
+      const isValidPassword = await this.comparePassword(password, hashedPassword);
+      if (!isValidPassword) {
+        throw new Error('Invalid email or password');
+      }
+    }
+
     const token = this.generateToken(user);
-    
+
     return {
       token,
       user: user
