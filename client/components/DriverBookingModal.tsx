@@ -32,7 +32,7 @@ declare global {
   }
 }
 
-export default function DriverBookingModal({ driver, isOpen, onClose }: DriverBookingModalProps) {
+export default function DriverBookingModal({ driver, isOpen, onClose, onBookingSuccess }: DriverBookingModalProps) {
   const [step, setStep] = useState(1);
   const [pickupDate, setPickupDate] = useState<Date>();
   const [pickupTime, setPickupTime] = useState('');
