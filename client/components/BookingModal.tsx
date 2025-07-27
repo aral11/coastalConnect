@@ -23,6 +23,7 @@ interface BookingModalProps {
   homestay: Homestay;
   isOpen: boolean;
   onClose: () => void;
+  onBookingSuccess?: () => void;
 }
 
 declare global {
@@ -294,7 +295,7 @@ export default function BookingModal({ homestay, isOpen, onClose }: BookingModal
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 mt-1">
-                  {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} nights × ₹{homestay.price_per_night}
+                  {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} nights × ��{homestay.price_per_night}
                 </div>
               </div>
             )}
