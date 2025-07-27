@@ -291,6 +291,14 @@ export default function SwiggyLocationSelector({
                         💡 Tip: Click the location icon in your browser's address bar to allow location access.
                       </div>
                     )}
+                    {(locationError.type === 'timeout' || locationError.type === 'unavailable') && (
+                      <button
+                        onClick={detectLocation}
+                        className="text-xs text-red-600 hover:text-red-800 underline mt-2 font-medium"
+                      >
+                        Try Again
+                      </button>
+                    )}
                   </div>
                   <button
                     onClick={() => setLocationError(null)}
