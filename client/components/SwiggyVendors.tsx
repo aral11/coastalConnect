@@ -109,6 +109,160 @@ export default function SwiggyVendors({
     }
   };
 
+  // Fallback data when API is not available
+  const getFallbackVendors = (vendorType: string, maxItems?: number): Vendor[] => {
+    let fallbackData: Vendor[] = [];
+
+    if (vendorType === 'homestay') {
+      fallbackData = [
+        {
+          id: 'coastal-heritage-homestay',
+          name: 'Coastal Heritage Homestay',
+          type: 'homestay',
+          category: 'Homestay',
+          image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
+          rating: 4.8,
+          totalRatings: 124,
+          location: 'Malpe Beach Road, Udupi',
+          distance: 2.1,
+          price: 2500,
+          features: ['AC Rooms', 'Free WiFi', 'Traditional Breakfast', '+1 more'],
+          link: '/homestays/coastal-heritage-homestay'
+        },
+        {
+          id: 'krishna-temple-view-homestay',
+          name: 'Krishna Temple View Homestay',
+          type: 'homestay',
+          category: 'Homestay',
+          image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop',
+          rating: 4.6,
+          totalRatings: 89,
+          location: 'Car Street, Udupi',
+          distance: 3.3,
+          price: 1800,
+          features: ['Temple View', 'Vegetarian Meals', 'AC', '+1 more'],
+          link: '/homestays/krishna-temple-view-homestay'
+        },
+        {
+          id: 'backwater-bliss-homestay',
+          name: 'Backwater Bliss Homestay',
+          type: 'homestay',
+          category: 'Homestay',
+          image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&h=300&fit=crop',
+          rating: 4.7,
+          totalRatings: 67,
+          location: 'Brahmavar, Udupi',
+          distance: 0.9,
+          price: 2200,
+          features: ['Backwater View', 'Kayaking', 'Traditional Food', '+1 more'],
+          link: '/homestays/backwater-bliss-homestay'
+        },
+        {
+          id: 'kaup-beach-cottage',
+          name: 'Kaup Beach Cottage',
+          type: 'homestay',
+          category: 'Homestay',
+          image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&h=300&fit=crop',
+          rating: 4.9,
+          totalRatings: 156,
+          location: 'Kaup, Udupi',
+          distance: 2.5,
+          price: 3000,
+          features: ['Beach Access', 'Lighthouse View', 'Seafood', '+1 more'],
+          link: '/homestays/kaup-beach-cottage'
+        },
+        {
+          id: 'manipal-university-guest-house',
+          name: 'Manipal University Guest House',
+          type: 'homestay',
+          category: 'Homestay',
+          image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop',
+          rating: 4.5,
+          totalRatings: 203,
+          location: 'Manipal, Udupi',
+          distance: 1.8,
+          price: 2000,
+          features: ['University Access', 'Student Friendly', 'AC', '+1 more'],
+          link: '/homestays/manipal-university-guest-house'
+        }
+      ];
+    } else if (vendorType === 'restaurant') {
+      fallbackData = [
+        {
+          id: 'shree-krishna-boarding-lodge',
+          name: 'Shree Krishna Boarding & Lodge',
+          type: 'restaurant',
+          category: 'Udupi Traditional',
+          cuisine: 'Udupi Traditional',
+          image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop',
+          rating: 4.7,
+          totalRatings: 892,
+          location: 'Udupi',
+          distance: 3.9,
+          price: 300,
+          responseTime: 25,
+          features: ['Professional'],
+          link: '/eateries/shree-krishna-boarding-lodge'
+        },
+        {
+          id: 'mitra-samaj',
+          name: 'Mitra Samaj',
+          type: 'restaurant',
+          category: 'South Indian',
+          cuisine: 'South Indian',
+          image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=300&fit=crop',
+          rating: 4.6,
+          totalRatings: 1567,
+          location: 'Udupi',
+          distance: 1.3,
+          price: 300,
+          responseTime: 25,
+          features: ['Professional'],
+          link: '/eateries/mitra-samaj'
+        },
+        {
+          id: 'woodlands-restaurant',
+          name: 'Woodlands Restaurant',
+          type: 'restaurant',
+          category: 'South Indian',
+          cuisine: 'South Indian',
+          image: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=300&fit=crop',
+          rating: 4.5,
+          totalRatings: 1234,
+          location: 'Udupi',
+          distance: 4.3,
+          price: 300,
+          responseTime: 25,
+          features: ['Professional'],
+          link: '/eateries/woodlands-restaurant'
+        },
+        {
+          id: 'coastal-cuisine',
+          name: 'Coastal Cuisine',
+          type: 'restaurant',
+          category: 'Coastal Seafood',
+          cuisine: 'Coastal Seafood',
+          image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop',
+          rating: 4.4,
+          totalRatings: 567,
+          location: 'Malpe',
+          distance: 0.9,
+          price: 300,
+          responseTime: 25,
+          features: ['Professional'],
+          link: '/eateries/coastal-cuisine'
+        }
+      ];
+    } else if (vendorType === 'all') {
+      // Mix of different vendor types
+      const homestays = getFallbackVendors('homestay', 3);
+      const restaurants = getFallbackVendors('restaurant', 3);
+      fallbackData = [...homestays, ...restaurants];
+    }
+
+    return maxItems ? fallbackData.slice(0, maxItems) : fallbackData;
+  };
+
   // Transform API data to match our Vendor interface
   const transformApiData = (apiData: any[], vendorType: string): Vendor[] => {
     return apiData.map((item, index) => {
