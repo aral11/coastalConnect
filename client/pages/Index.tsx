@@ -283,7 +283,7 @@ export default function Index() {
                   text-sm
                   ${city.status === 'live' ? 'text-green-600' : 'text-gray-500'}
                 `}>
-                  {city.count} {city.status === 'live' ? 'vendors' : ''}
+                  {city.status === 'live' ? 'Available' : 'Coming Soon'}
                 </p>
               </div>
             ))}
