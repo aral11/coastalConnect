@@ -31,8 +31,8 @@ interface Category {
 const CATEGORIES: Category[] = [
   {
     id: 'homestays',
-    title: 'Homestays',
-    subtitle: 'Local Stays',
+    title: 'Hotels & Homestays',
+    subtitle: 'Accommodations',
     icon: <Home className="h-8 w-8" />,
     link: '/homestays',
     color: 'text-blue-600',
@@ -42,7 +42,7 @@ const CATEGORIES: Category[] = [
   {
     id: 'restaurants',
     title: 'Restaurants',
-    subtitle: 'Food Delivery',
+    subtitle: 'Dining & Cuisine',
     icon: <UtensilsCrossed className="h-8 w-8" />,
     link: '/eateries',
     color: 'text-orange-600',
