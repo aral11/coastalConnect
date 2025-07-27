@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import ServicePageLayout from '@/components/ServicePageLayout';
 import BookingFlow from '@/components/BookingFlow';
 import { ChefHat } from 'lucide-react';
