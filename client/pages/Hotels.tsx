@@ -72,7 +72,15 @@ export default function Hotels() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/homestays/${homestayId}`);
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch(`/api/homestays/${homestayId}`, {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         if (response.status === 404) {
