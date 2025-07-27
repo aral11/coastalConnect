@@ -98,10 +98,10 @@ export default function Index() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="text-sm text-gray-500">Popular:</span>
                   {[
-                    'Malpe homestays',
+                    'Beachside homestays',
                     'Udupi restaurants',
-                    'Beach photography',
-                    'Local drivers'
+                    'Local drivers',
+                    'Wedding photography'
                   ].map((search, index) => (
                     <button
                       key={index}
