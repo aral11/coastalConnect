@@ -549,7 +549,7 @@ const emailTemplates = {
       Discover:
       🏠 Authentic Homestays
       🍽️ Local Eateries  
-      ���� Reliable Transportation
+      ����� Reliable Transportation
       🎨 Local Creators
       
       Start exploring: https://coastalconnect.in
@@ -588,11 +588,8 @@ export class EmailService {
       console.log('Email sent successfully:', result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.log('📧 Email sending failed - falling back to development mode logging');
-      console.log(`   To: ${to}`);
-      console.log(`   Subject: ${subject}`);
-      console.log(`   Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      return { success: true, messageId: 'fallback-' + Date.now(), developmentMode: true };
+      console.error('❌ Email sending failed:', error);
+      throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
