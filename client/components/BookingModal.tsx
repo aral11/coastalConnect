@@ -124,7 +124,7 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
       handler: async function(response: any) {
         try {
           // Confirm payment on server
-          const token = localStorage.getItem('authToken');
+          const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
           const confirmResponse = await fetch('/api/bookings/confirm-payment', {
             method: 'POST',
             headers: {

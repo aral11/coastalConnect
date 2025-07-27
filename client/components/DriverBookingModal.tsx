@@ -58,8 +58,8 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
     setLoading(true);
 
     try {
-      // Get authentication token
-      const token = localStorage.getItem('authToken');
+      // Get authentication token (check multiple possible keys for compatibility)
+      const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
       
       if (!token) {
         alert('Please login to make a booking');
@@ -128,7 +128,7 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
       handler: async function(response: any) {
         try {
           // Confirm payment on server
-          const token = localStorage.getItem('authToken');
+          const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
           const confirmResponse = await fetch('/api/bookings/confirm-payment', {
             method: 'POST',
             headers: {
