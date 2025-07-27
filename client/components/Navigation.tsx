@@ -70,17 +70,17 @@ export default function Navigation({ className = '' }: NavigationProps) {
   // Consumer-focused main navigation
   const mainNavItems = [
     {
-      label: 'Stays',
+      label: 'Hotels & Homestays',
       href: '/homestays',
       icon: <Bed className="h-4 w-4" />,
-      description: 'Cozy homestays & accommodations',
+      description: 'Hotels, resorts & homestays',
       color: 'text-blue-600'
     },
     {
-      label: 'Food',
-      href: '/eateries', 
+      label: 'Restaurants',
+      href: '/eateries',
       icon: <ChefHat className="h-4 w-4" />,
-      description: 'Local restaurants & cuisine',
+      description: 'Local restaurants & dining',
       color: 'text-orange-600'
     },
     {
