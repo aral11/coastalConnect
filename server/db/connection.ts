@@ -538,6 +538,75 @@ export const initializeDatabase = async (): Promise<void> => {
       )
     `);
 
+    // Create Coupons table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Coupons' AND xtype='U')
+      CREATE TABLE Coupons (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        code NVARCHAR(50) UNIQUE NOT NULL,
+        title NVARCHAR(255) NOT NULL,
+        subtitle NVARCHAR(255),
+        description NVARCHAR(MAX),
+        discount_type NVARCHAR(20) NOT NULL, -- 'percentage', 'amount', 'bogo', 'free'
+        discount_value DECIMAL(10,2) NOT NULL,
+        min_order_amount DECIMAL(10,2),
+        max_discount_amount DECIMAL(10,2),
+        valid_from DATETIME NOT NULL,
+        valid_until DATETIME NOT NULL,
+        category NVARCHAR(100), -- 'All Services', 'Homestays', 'Restaurants', 'Transport', 'Creators', 'Events'
+        applicable_services NVARCHAR(MAX), -- JSON array of service IDs
+        usage_limit INT, -- Total usage limit
+        usage_per_user INT DEFAULT 1, -- Usage limit per user
+        current_usage INT DEFAULT 0,
+        is_active BIT DEFAULT 1,
+        is_popular BIT DEFAULT 0,
+        is_limited_time BIT DEFAULT 0,
+        gradient_class NVARCHAR(100), -- CSS gradient class
+        text_color_class NVARCHAR(100), -- CSS text color class
+        icon_type NVARCHAR(50), -- Icon identifier
+        image_url NVARCHAR(500),
+        created_by INT, -- Admin user ID
+        created_at DATETIME DEFAULT GETDATE(),
+        updated_at DATETIME DEFAULT GETDATE(),
+        FOREIGN KEY (created_by) REFERENCES Users(id)
+      )
+    `);
+
+    // Create Coupon Usage table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='CouponUsage' AND xtype='U')
+      CREATE TABLE CouponUsage (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        coupon_id INT NOT NULL,
+        user_id INT NOT NULL,
+        booking_id INT, -- Can be null for future use
+        booking_type NVARCHAR(50), -- 'homestay', 'driver', 'event', etc.
+        discount_amount DECIMAL(10,2) NOT NULL,
+        original_amount DECIMAL(10,2) NOT NULL,
+        final_amount DECIMAL(10,2) NOT NULL,
+        used_at DATETIME DEFAULT GETDATE(),
+        FOREIGN KEY (coupon_id) REFERENCES Coupons(id),
+        FOREIGN KEY (user_id) REFERENCES Users(id)
+      )
+    `);
+
+    // Create Personalized Offers table
+    await connection.request().query(`
+      IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PersonalizedOffers' AND xtype='U')
+      CREATE TABLE PersonalizedOffers (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        user_id INT NOT NULL,
+        coupon_id INT NOT NULL,
+        shown_count INT DEFAULT 0,
+        last_shown DATETIME,
+        is_clicked BIT DEFAULT 0,
+        clicked_at DATETIME,
+        created_at DATETIME DEFAULT GETDATE(),
+        FOREIGN KEY (user_id) REFERENCES Users(id),
+        FOREIGN KEY (coupon_id) REFERENCES Coupons(id)
+      )
+    `);
+
     console.log('Database tables initialized successfully');
 
     // Create indexes for better performance
