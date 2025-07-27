@@ -167,6 +167,7 @@ const App = () => (
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/api-test" element={<ApiTest />} />
           <Route path="/report-issue" element={
             <PlaceholderPage
               title="Report an Issue"
