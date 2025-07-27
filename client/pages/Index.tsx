@@ -350,9 +350,14 @@ export default function Index() {
       {/* Popular Locations */}
       <section className="py-12 lg:py-16 bg-white">
         <div className={swiggyTheme.layouts.container.xl}>
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
-            Popular locations
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Popular locations
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Explore the most sought-after destinations in coastal Karnataka
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -360,53 +365,98 @@ export default function Index() {
                 name: 'Malpe Beach Area',
                 description: 'Beach resorts, water sports, seafood',
                 count: '45+ places',
-                image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=200&fit=crop'
+                image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=200&fit=crop',
+                featured: true
               },
               {
                 name: 'Udupi City Center',
                 description: 'Temples, restaurants, shopping',
                 count: '120+ places',
-                image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=300&h=200&fit=crop'
+                image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=300&h=200&fit=crop',
+                featured: true
               },
               {
                 name: 'Manipal University Area',
                 description: 'Student-friendly, cafes, hostels',
                 count: '80+ places',
-                image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop'
+                image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop',
+                featured: false
               },
               {
                 name: 'Kaup Lighthouse',
                 description: 'Scenic views, photography spots',
                 count: '25+ places',
-                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop'
+                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop',
+                featured: false
               }
             ].map((location, index) => (
               <Link
-                key={index}
+                key={`location-${index}`}
                 to={`/search?location=${encodeURIComponent(location.name)}`}
-                className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 overflow-hidden"
+                className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer"
+                onClick={(e) => {
+                  // Add click feedback
+                  console.log(`Navigating to: ${location.name}`);
+                }}
               >
-                <div className="relative h-32">
+                {/* Featured Badge */}
+                {location.featured && (
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                      🔥 Popular
+                    </span>
+                  </div>
+                )}
+
+                <div className="relative h-40 lg:h-48">
                   <img
                     src={location.image}
                     alt={location.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop';
+                    }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-2 left-3 text-white">
-                    <div className="font-semibold text-sm">{location.count}</div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 text-white">
+                    <div className="font-bold text-sm bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                      {location.count}
+                    </div>
                   </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
+
+                <div className="p-5">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
                     {location.name}
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 leading-relaxed">
                     {location.description}
                   </p>
+
+                  {/* Action indicator */}
+                  <div className="mt-3 flex items-center text-orange-600 text-sm font-medium">
+                    <span>Explore now</span>
+                    <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Link>
             ))}
+          </div>
+
+          {/* View All Locations Link */}
+          <div className="text-center mt-8">
+            <Link
+              to="/search"
+              className="inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              <MapPin className="h-5 w-5 mr-2" />
+              View All Locations
+            </Link>
           </div>
         </div>
       </section>

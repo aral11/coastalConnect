@@ -99,22 +99,23 @@ function Footer() {
     {
       title: 'Services',
       links: [
-        { label: 'Homestays', href: '/hotels' },
-        { label: 'Eateries', href: '/eateries' },
-        { label: 'Drivers', href: '/drivers' },
-        { label: 'Local Creators', href: '/creators' },
-        { label: 'Event Management', href: '/event-management' },
-        { label: 'Beauty & Wellness', href: '/beauty-wellness' }
+        { label: 'Hotels & Homestays', href: '/homestays' },
+        { label: 'Restaurants & Cafes', href: '/eateries' },
+        { label: 'Local Transport', href: '/drivers' },
+        { label: 'Content Creators', href: '/creators' },
+        { label: 'Events & Experiences', href: '/events' },
+        { label: 'Beauty & Wellness', href: '/beauty-wellness' },
+        { label: 'All Services', href: '/services' }
       ]
     },
     {
       title: 'Business',
       links: [
-        { label: 'Vendor Registration', href: '/vendor-register' },
-        { label: 'Event Organizer', href: '/organizer-register' },
+        { label: 'List Your Business', href: '/vendor-register' },
+        { label: 'Event Organizer Portal', href: '/organizer-register' },
         { label: 'Business Dashboard', href: '/business-dashboard' },
-        { label: 'Partner with Us', href: '/partner' },
-        { label: 'Advertise', href: '/advertise' },
+        { label: 'Partner with Us', href: '/partner-with-us' },
+        { label: 'Advertise with Us', href: '/advertise' },
         { label: 'Bulk Bookings', href: '/bulk-bookings' }
       ]
     },
@@ -124,18 +125,18 @@ function Footer() {
         { label: 'Help Center', href: '/help' },
         { label: 'Customer Support', href: '/support' },
         { label: 'Safety Guidelines', href: '/safety' },
-        { label: 'Report Issue', href: '/report' },
-        { label: 'Feedback', href: '/feedback' },
+        { label: 'Report an Issue', href: '/report-issue' },
+        { label: 'Send Feedback', href: '/feedback' },
         { label: 'Contact Us', href: '/contact' }
       ]
     },
     {
       title: 'Company',
       links: [
-        { label: 'About Us', href: '/about' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Press', href: '/press' },
-        { label: 'Blog', href: '/blog' },
+        { label: 'About coastalConnect', href: '/about' },
+        { label: 'Join Our Team', href: '/careers' },
+        { label: 'Press & Media', href: '/press' },
+        { label: 'Travel Blog', href: '/blog' },
         { label: 'Terms of Service', href: '/terms' },
         { label: 'Privacy Policy', href: '/privacy' }
       ]
