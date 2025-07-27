@@ -58,8 +58,8 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
     setLoading(true);
 
     try {
-      // Get authentication token
-      const token = localStorage.getItem('authToken');
+      // Get authentication token (check multiple possible keys for compatibility)
+      const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
 
       if (!token) {
         alert('Please login to make a booking');

@@ -231,8 +231,16 @@ export default function BookingFlow({ item, onBookingComplete, onCancel }: Booki
         createdAt: new Date(),
       };
 
+      // Determine correct API endpoint based on item type
+      let endpoint = '/api/bookings/homestay';
+      if (item.type === 'driver' || item.category === 'Driver' || item.category === 'Transportation') {
+        endpoint = '/api/bookings/driver';
+      } else if (item.type === 'service' || item.category === 'Service') {
+        endpoint = '/api/bookings/service';
+      }
+
       // Send booking request
-      const response = await fetch('/api/bookings/create', {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
