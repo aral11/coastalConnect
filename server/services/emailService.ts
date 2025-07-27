@@ -1,5 +1,13 @@
 import nodemailer from 'nodemailer';
 
+// Check if we're in development mode and should disable email sending
+const isDevelopmentMode = process.env.NODE_ENV === 'development';
+const disableEmailSending = process.env.DISABLE_EMAIL_SENDING === 'true' || (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD);
+
+if (disableEmailSending) {
+  console.log('📧 Email Service: Running in development mode - emails will be logged instead of sent');
+}
+
 // Email configuration
 const emailConfig = {
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
