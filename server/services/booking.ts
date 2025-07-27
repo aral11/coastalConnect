@@ -163,26 +163,7 @@ export class BookingService {
       const bookingReference = this.generateBookingReference();
       const tripCode = this.generateTripCode();
 
-      // For cloud environment, create mock booking
-      const mockBooking: DriverBooking = {
-        id: Date.now(),
-        user_id: bookingData.user_id,
-        driver_id: bookingData.driver_id,
-        pickup_location: bookingData.pickup_location,
-        dropoff_location: bookingData.dropoff_location,
-        pickup_datetime: bookingData.pickup_datetime,
-        estimated_duration: estimatedDuration,
-        total_amount: totalAmount,
-        booking_status: 'pending',
-        payment_status: 'pending',
-        passenger_name: bookingData.passenger_name,
-        passenger_phone: bookingData.passenger_phone,
-        passengers_count: bookingData.passengers_count,
-        trip_code: tripCode,
-        booking_reference: bookingReference,
-        created_at: new Date(),
-        updated_at: new Date()
-      };
+      let bookingId: number;
 
       try {
         const connection = await getConnection();
