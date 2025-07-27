@@ -96,22 +96,8 @@ export class AuthService {
 
       return result.recordset[0];
     } catch (error) {
-      // Fallback for cloud environment
-      const mockUser: User = {
-        id: Date.now(),
-        email: userData.email,
-        name: userData.name,
-        phone: userData.phone,
-        provider: userData.provider,
-        provider_id: userData.provider_id,
-        role: userData.role || 'customer',
-        avatar_url: userData.avatar_url,
-        is_verified: true,
-        created_at: new Date()
-      };
-      
-      console.log('Database not available, returning mock user:', mockUser);
-      return mockUser;
+      console.error('Error creating user:', error);
+      throw new Error('Failed to create user account');
     }
   }
 
