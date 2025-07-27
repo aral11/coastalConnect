@@ -1,6 +1,10 @@
 import path from "path";
 import { createServer } from "./index";
 import * as express from "express";
+import { validateDevelopmentSetup } from "./utils/developmentStartup";
+
+// Validate development setup before starting server
+validateDevelopmentSetup();
 
 const app = createServer();
 const port = process.env.PORT || 3000;
