@@ -111,7 +111,7 @@ const SAMPLE_VENDORS: Vendor[] = [
     category: 'Cafe & Restaurant',
     location: 'Manipal',
     distance: 1.8,
-    deliveryTime: 30,
+    responseTime: 30,
     price: 350,
     offers: ['Happy Hours'],
     features: ['Outdoor Seating', 'WiFi', 'Live Music'],
