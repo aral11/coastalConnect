@@ -1,45 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import Layout from '@/components/Layout';
-import PageHeader from '@/components/PageHeader';
-import SearchSection from '@/components/SearchSection';
+import ServicePageLayout from '@/components/ServicePageLayout';
 import DriverBookingModal from '@/components/DriverBookingModal';
-import { designSystem, layouts, statusColors } from '@/lib/design-system';
-import { 
-  Search,
-  MapPin, 
-  Star, 
-  Car,
-  Clock,
-  Phone,
-  Shield,
-  Anchor,
-  ArrowLeft,
-  Calendar,
-  Users,
-  Filter,
-  RefreshCw,
-  CheckCircle,
-  Award,
-  Heart,
-  Share2,
-  Navigation,
-  Fuel,
-  Settings,
-  MessageCircle,
-  IndianRupee,
-  Camera,
-  Wifi,
-  CreditCard,
-  Route,
-  Gauge,
-  Music
-} from 'lucide-react';
+import { Car } from 'lucide-react';
 
 interface Driver {
   id: number;
@@ -65,13 +28,15 @@ interface Driver {
   vehicle_image?: string;
   distance?: number;
   estimated_arrival?: number;
+  trending?: boolean;
+  featured?: boolean;
 }
 
 export default function Drivers() {
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
   
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [filteredDrivers, setFilteredDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
@@ -80,10 +45,43 @@ export default function Drivers() {
   const [showFilters, setShowFilters] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
 
+  // Filter data
+  const categories = [
+    { id: 'sedan', name: 'Sedan', count: 25 },
+    { id: 'suv', name: 'SUV', count: 18 },
+    { id: 'hatchback', name: 'Hatchback', count: 15 },
+    { id: 'muv', name: 'MUV/MPV', count: 12 },
+    { id: 'tempo', name: 'Tempo', count: 8 },
+    { id: 'luxury', name: 'Luxury', count: 5 },
+  ];
+
+  const locations = [
+    { id: 'udupi', name: 'Udupi City', count: 35 },
+    { id: 'manipal', name: 'Manipal', count: 28 },
+    { id: 'malpe', name: 'Malpe', count: 15 },
+    { id: 'kaup', name: 'Kaup', count: 12 },
+    { id: 'kundapur', name: 'Kundapur', count: 8 },
+  ];
+
+  const amenities = [
+    { id: 'ac', name: 'Air Conditioning' },
+    { id: 'gps', name: 'GPS Navigation' },
+    { id: 'music', name: 'Music System' },
+    { id: 'english', name: 'English Speaking' },
+    { id: 'local_expert', name: 'Local Expert' },
+    { id: 'wifi', name: 'WiFi Hotspot' },
+    { id: 'phone_charger', name: 'Phone Charger' },
+    { id: 'water', name: 'Complimentary Water' },
+  ];
+
   useEffect(() => {
     fetchDrivers();
     loadFavorites();
   }, []);
+
+  useEffect(() => {
+    setFilteredDrivers(drivers);
+  }, [drivers]);
 
   const fetchDrivers = async () => {
     try {
@@ -112,7 +110,9 @@ export default function Drivers() {
           estimated_arrival: Math.floor(Math.random() * 15) + 5,
           vehicle_model: ['Maruti Dzire', 'Hyundai Xcent', 'Toyota Innova', 'Mahindra Scorpio', 'Tata Nexon'][Math.floor(Math.random() * 5)],
           profile_image: `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name)}&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png`,
-          vehicle_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`
+          vehicle_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`,
+          trending: Math.random() > 0.8,
+          featured: Math.random() > 0.9
         }));
         
         setDrivers(enhancedDrivers);
@@ -122,6 +122,85 @@ export default function Drivers() {
     } catch (error) {
       console.error('Error fetching drivers:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
+      
+      // Fallback data
+      const fallbackData: Driver[] = [
+        {
+          id: 1,
+          name: "Rajesh Kumar",
+          location: "Udupi City",
+          vehicle_type: "Sedan",
+          vehicle_model: "Maruti Dzire",
+          vehicle_number: "KA 20 AB 1234",
+          rating: 4.8,
+          total_reviews: 156,
+          hourly_rate: 350,
+          experience_years: 8,
+          languages: "English, Hindi, Kannada",
+          phone: "+91 98765 43210",
+          is_available: true,
+          ac_available: true,
+          music_system: true,
+          gps_enabled: true,
+          english_speaking: true,
+          local_expertise: true,
+          distance: 2,
+          estimated_arrival: 8,
+          trending: true,
+          featured: true
+        },
+        {
+          id: 2,
+          name: "Suresh Shetty",
+          location: "Manipal",
+          vehicle_type: "SUV",
+          vehicle_model: "Toyota Innova",
+          vehicle_number: "KA 20 CD 5678",
+          rating: 4.6,
+          total_reviews: 234,
+          hourly_rate: 450,
+          experience_years: 12,
+          languages: "English, Kannada, Tulu",
+          phone: "+91 97654 32109",
+          is_available: true,
+          ac_available: true,
+          music_system: true,
+          gps_enabled: true,
+          english_speaking: true,
+          local_expertise: true,
+          distance: 5,
+          estimated_arrival: 12,
+          trending: false,
+          featured: false
+        },
+        {
+          id: 3,
+          name: "Mohan Bhat",
+          location: "Malpe",
+          vehicle_type: "Hatchback",
+          vehicle_model: "Tata Nexon",
+          vehicle_number: "KA 20 EF 9012",
+          rating: 4.4,
+          total_reviews: 89,
+          hourly_rate: 280,
+          experience_years: 5,
+          languages: "Kannada, Hindi",
+          phone: "+91 96543 21087",
+          is_available: false,
+          ac_available: true,
+          music_system: false,
+          gps_enabled: true,
+          english_speaking: false,
+          local_expertise: true,
+          distance: 8,
+          estimated_arrival: 25,
+          trending: false,
+          featured: false
+        }
+      ];
+      
+      setDrivers(fallbackData);
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -145,18 +224,54 @@ export default function Drivers() {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // TODO: Implement search functionality
-      console.log('Searching for:', searchQuery);
+      const filtered = drivers.filter(driver =>
+        driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        driver.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        driver.vehicle_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        driver.vehicle_model?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        driver.languages?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredDrivers(filtered);
+    } else {
+      setFilteredDrivers(drivers);
     }
   };
 
-  const handleBookDriver = (driver: Driver) => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
+  const handleFilterChange = (filters: any) => {
+    let filtered = [...drivers];
+    
+    if (filters.category && filters.category !== 'all') {
+      filtered = filtered.filter(driver => 
+        driver.vehicle_type?.toLowerCase().includes(filters.category)
+      );
     }
-    setSelectedDriver(driver);
-    setIsBookingModalOpen(true);
+    
+    if (filters.location && filters.location !== 'all') {
+      filtered = filtered.filter(driver => 
+        driver.location.toLowerCase().includes(filters.location)
+      );
+    }
+    
+    if (filters.available !== undefined) {
+      filtered = filtered.filter(driver => driver.is_available === filters.available);
+    }
+    
+    if (filters.priceRange && filters.priceRange[0] !== undefined) {
+      filtered = filtered.filter(driver => {
+        const rate = driver.hourly_rate || 0;
+        return rate >= filters.priceRange[0] && rate <= filters.priceRange[1];
+      });
+    }
+    
+    setFilteredDrivers(filtered);
+  };
+
+  const handleBookDriver = (item: any) => {
+    const driver = drivers.find(d => d.id === item.id);
+    if (driver) {
+      setSelectedDriver(driver);
+      setIsBookingModalOpen(true);
+    }
   };
 
   const closeBookingModal = () => {
@@ -166,352 +281,87 @@ export default function Drivers() {
 
   const handleBookingSuccess = () => {
     closeBookingModal();
-    // TODO: Show success message
   };
 
-  const shareDriver = (driver: Driver) => {
-    if (navigator.share) {
-      navigator.share({
-        title: `${driver.name} - Driver`,
-        text: `Book ${driver.name} on coastalConnect!`,
-        url: window.location.href + `/${driver.id}`
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href + `/${driver.id}`);
-      alert('Link copied to clipboard!');
+  const handleSortChange = (sortBy: string) => {
+    let sorted = [...filteredDrivers];
+    
+    switch (sortBy) {
+      case 'rating':
+        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'price_low':
+        sorted.sort((a, b) => (a.hourly_rate || 0) - (b.hourly_rate || 0));
+        break;
+      case 'price_high':
+        sorted.sort((a, b) => (b.hourly_rate || 0) - (a.hourly_rate || 0));
+        break;
+      case 'distance':
+        sorted.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+        break;
+      case 'experience':
+        sorted.sort((a, b) => (b.experience_years || 0) - (a.experience_years || 0));
+        break;
+      default:
+        // Recommended: available first, then featured, then trending, then by rating
+        sorted.sort((a, b) => {
+          if (a.is_available && !b.is_available) return -1;
+          if (!a.is_available && b.is_available) return 1;
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          if (a.trending && !b.trending) return -1;
+          if (!a.trending && b.trending) return 1;
+          return (b.rating || 0) - (a.rating || 0);
+        });
     }
+    
+    setFilteredDrivers(sorted);
   };
-
-  const getRatingColor = (rating: number) => {
-    if (rating >= 4.5) return 'text-green-600 bg-green-50';
-    if (rating >= 4.0) return 'text-blue-600 bg-blue-50';
-    if (rating >= 3.5) return 'text-yellow-600 bg-yellow-50';
-    return 'text-gray-600 bg-gray-50';
-  };
-
-  const getVehicleTypeColor = (vehicleType: string) => {
-    const colors = {
-      'Sedan': 'bg-blue-100 text-blue-800',
-      'SUV': 'bg-green-100 text-green-800',
-      'Hatchback': 'bg-purple-100 text-purple-800',
-      'MUV': 'bg-orange-100 text-orange-800',
-      'Tempo': 'bg-red-100 text-red-800'
-    };
-    return colors[vehicleType as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getAvailabilityStatus = (driver: Driver) => {
-    if (driver.is_available) {
-      return (
-        <Badge className="bg-green-100 text-green-800 border-green-200">
-          <CheckCircle className="h-3 w-3 mr-1" />
-          Available Now
-        </Badge>
-      );
-    }
-    return (
-      <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
-        <Clock className="h-3 w-3 mr-1" />
-        Busy
-      </Badge>
-    );
-  };
-
-  if (error) {
-    return (
-      <Layout>
-        <PageHeader
-          title="Drivers"
-          description="Professional local drivers who know coastal Karnataka"
-          icon={<Car className="h-8 w-8" />}
-        />
-        <div className={layouts.container}>
-          <div className="py-16 text-center">
-            <div className="max-w-md mx-auto">
-              <div className="bg-red-50 text-red-800 p-4 rounded-lg mb-4">
-                <p className="font-medium">Failed to load drivers</p>
-                <p className="text-sm text-red-600 mt-1">{error}</p>
-              </div>
-              <Button onClick={fetchDrivers} className="w-full">
-                Try Again
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
 
   return (
-    <Layout fullWidth>
-      <PageHeader
+    <>
+      <ServicePageLayout
         title="Local Drivers"
         description="Professional local drivers who know coastal Karnataka like the back of their hand. Safe, reliable, and experienced."
         icon={<Car className="h-8 w-8" />}
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Drivers' }
-        ]}
-      >
-        <div className="flex justify-center items-center mt-6 space-x-6 text-sm text-blue-100">
-          <span className="flex items-center">
-            <Shield className="h-4 w-4 mr-1" />
-            Verified Drivers
-          </span>
-          <span className="flex items-center">
-            <Star className="h-4 w-4 mr-1" />
-            Rated & Reviewed
-          </span>
-          <span className="flex items-center">
-            <Clock className="h-4 w-4 mr-1" />
-            24/7 Available
-          </span>
-        </div>
-      </PageHeader>
-
-      <SearchSection
+        serviceType="driver"
+        items={filteredDrivers.map(driver => ({
+          ...driver,
+          type: 'driver' as const,
+          price: driver.hourly_rate,
+          features: getDriverFeatures(driver),
+          availability: {
+            available: driver.is_available || false,
+            estimated_arrival: driver.estimated_arrival
+          }
+        }))}
+        loading={loading}
+        error={error}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onSearch={handleSearch}
-        placeholder="Search by location or vehicle type..."
+        searchPlaceholder="Search by driver name, location, or vehicle type..."
         showFilters={true}
-        onFiltersClick={() => setShowFilters(!showFilters)}
         filtersActive={showFilters}
+        onFiltersToggle={() => setShowFilters(!showFilters)}
+        filterCategories={categories}
+        filterLocations={locations}
+        filterAmenities={amenities}
+        onFilterChange={handleFilterChange}
+        onItemAction={handleBookDriver}
+        onFavorite={toggleFavorite}
+        favorites={favorites}
+        onRefresh={fetchDrivers}
+        sortOptions={[
+          { value: 'recommended', label: 'Recommended' },
+          { value: 'distance', label: 'Nearest First' },
+          { value: 'rating', label: 'Highest Rated' },
+          { value: 'price_low', label: 'Price: Low to High' },
+          { value: 'price_high', label: 'Price: High to Low' },
+          { value: 'experience', label: 'Most Experienced' },
+        ]}
+        onSortChange={handleSortChange}
       />
-
-      <main className="bg-white">
-        <div className={layouts.container}>
-          <div className="py-8">
-            {/* Results Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Available Drivers</h2>
-                <p className="text-gray-600 mt-1">
-                  {loading ? 'Loading...' : `${drivers.length} drivers found`}
-                </p>
-              </div>
-              
-              {!loading && drivers.length > 0 && (
-                <div className="hidden lg:flex items-center gap-4">
-                  <span className="text-sm text-gray-500">Sort by:</span>
-                  <select className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
-                    <option>Nearest First</option>
-                    <option>Highest Rated</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Most Experienced</option>
-                  </select>
-                </div>
-              )}
-            </div>
-
-            {/* Loading State */}
-            {loading && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <div className="p-4">
-                      <div className="flex items-center space-x-4 mb-4">
-                        <Skeleton className="h-16 w-16 rounded-full" />
-                        <div className="flex-1">
-                          <Skeleton className="h-5 w-32 mb-2" />
-                          <Skeleton className="h-4 w-24" />
-                        </div>
-                      </div>
-                      <Skeleton className="h-32 w-full mb-4" />
-                      <Skeleton className="h-9 w-full" />
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Drivers Grid */}
-            {!loading && drivers.length > 0 && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {drivers.map((driver) => (
-                  <Card key={driver.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-                    <div className="p-5">
-                      {/* Driver Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="relative">
-                            <img
-                              src={driver.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name)}&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png`}
-                              alt={driver.name}
-                              className="h-16 w-16 rounded-full object-cover border-2 border-blue-100"
-                            />
-                            <div className="absolute -bottom-1 -right-1">
-                              {driver.is_available ? (
-                                <div className="h-4 w-4 bg-green-500 rounded-full border-2 border-white"></div>
-                              ) : (
-                                <div className="h-4 w-4 bg-yellow-500 rounded-full border-2 border-white"></div>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
-                              {driver.name}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRatingColor(driver.rating || 4.6)}`}>
-                                <Star className="h-3 w-3 fill-current" />
-                                {driver.rating || '4.6'}
-                              </div>
-                              <span className="text-xs text-gray-500">
-                                ({driver.total_reviews || 89} trips)
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="h-8 w-8 p-0"
-                            onClick={() => toggleFavorite(driver.id)}
-                          >
-                            <Heart className={`h-4 w-4 ${favorites.includes(driver.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="h-8 w-8 p-0"
-                            onClick={() => shareDriver(driver)}
-                          >
-                            <Share2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Availability Status */}
-                      <div className="mb-4">
-                        {getAvailabilityStatus(driver)}
-                        {driver.is_available && driver.estimated_arrival && (
-                          <span className="ml-2 text-sm text-gray-500">
-                            • {driver.estimated_arrival} mins away
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Vehicle Info */}
-                      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <Badge className={getVehicleTypeColor(driver.vehicle_type || 'Sedan')}>
-                            <Car className="h-3 w-3 mr-1" />
-                            {driver.vehicle_type || 'Sedan'}
-                          </Badge>
-                          <span className="text-sm font-medium text-gray-700">
-                            {driver.vehicle_model}
-                          </span>
-                        </div>
-                        
-                        <div className="text-sm text-gray-600 mb-2">
-                          {driver.vehicle_number || 'KA 20 AB 1234'}
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {driver.ac_available && (
-                            <Badge variant="outline" className="text-xs">
-                              <Settings className="h-3 w-3 mr-1" />
-                              AC
-                            </Badge>
-                          )}
-                          {driver.music_system && (
-                            <Badge variant="outline" className="text-xs">
-                              <Music className="h-3 w-3 mr-1" />
-                              Music
-                            </Badge>
-                          )}
-                          {driver.gps_enabled && (
-                            <Badge variant="outline" className="text-xs">
-                              <Navigation className="h-3 w-3 mr-1" />
-                              GPS
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Driver Info */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <MapPin className="h-4 w-4" />
-                          {driver.location}
-                        </div>
-                        
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Shield className="h-4 w-4" />
-                          {driver.experience_years || 8} years experience
-                        </div>
-                        
-                        {driver.languages && (
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <MessageCircle className="h-4 w-4" />
-                            {driver.languages}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Special Features */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {driver.english_speaking && (
-                          <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                            English Speaking
-                          </Badge>
-                        )}
-                        {driver.local_expertise && (
-                          <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-                            Local Expert
-                          </Badge>
-                        )}
-                        {driver.safety_rating >= 4.8 && (
-                          <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
-                            <Award className="h-3 w-3 mr-1" />
-                            Top Rated
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Price & Booking */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div className="flex items-center gap-1">
-                          <IndianRupee className="h-4 w-4 text-gray-700" />
-                          <span className="font-bold text-lg text-gray-900">
-                            {driver.hourly_rate || 350}
-                          </span>
-                          <span className="text-sm text-gray-500">/hour</span>
-                        </div>
-                        
-                        <Button 
-                          onClick={() => handleBookDriver(driver)}
-                          disabled={!driver.is_available}
-                          className="bg-blue-600 hover:bg-blue-700 px-6"
-                        >
-                          {driver.is_available ? 'Book Now' : 'Currently Busy'}
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Empty State */}
-            {!loading && drivers.length === 0 && (
-              <div className="text-center py-16">
-                <Car className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No drivers found</h3>
-                <p className="text-gray-600 mb-6">Try adjusting your search criteria or check back later.</p>
-                <Button onClick={fetchDrivers}>
-                  Refresh Results
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
 
       {/* Booking Modal */}
       {selectedDriver && (
@@ -522,6 +372,16 @@ export default function Drivers() {
           onBookingSuccess={handleBookingSuccess}
         />
       )}
-    </Layout>
+    </>
   );
+}
+
+function getDriverFeatures(driver: Driver): string[] {
+  const features: string[] = [];
+  if (driver.ac_available) features.push('AC');
+  if (driver.gps_enabled) features.push('GPS');
+  if (driver.music_system) features.push('Music');
+  if (driver.english_speaking) features.push('English');
+  if (driver.local_expertise) features.push('Local Expert');
+  return features;
 }
