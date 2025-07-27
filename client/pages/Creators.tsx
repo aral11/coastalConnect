@@ -69,6 +69,7 @@ interface InstagramStats {
 }
 
 export default function Creators() {
+  const { id } = useParams();
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
