@@ -4,6 +4,7 @@ import { PaymentService } from "../services/payments";
 import { SMSService } from "../services/sms";
 import { EmailService } from "../services/emailService";
 import { AuthenticatedRequest } from "../middleware/auth";
+import { CouponService } from "../services/couponService";
 
 export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRequest, res) => {
   try {
@@ -15,7 +16,9 @@ export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRe
       guest_name,
       guest_phone,
       guest_email,
-      special_requests
+      special_requests,
+      coupon_code,
+      original_amount
     } = req.body;
 
     // Get user ID from authentication middleware
@@ -35,6 +38,30 @@ export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRe
       });
     }
 
+    let couponValidation = null;
+    let finalAmount = original_amount;
+    let discountAmount = 0;
+
+    // Validate coupon if provided
+    if (coupon_code && original_amount) {
+      couponValidation = await CouponService.validateCoupon(
+        coupon_code,
+        user_id,
+        original_amount,
+        'homestay'
+      );
+
+      if (!couponValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: couponValidation.message || 'Invalid coupon code'
+        });
+      }
+
+      finalAmount = couponValidation.finalAmount!;
+      discountAmount = couponValidation.discountAmount!;
+    }
+
     const result = await BookingService.createHomestayBooking({
       user_id,
       homestay_id: parseInt(homestay_id),
@@ -44,8 +71,22 @@ export const createHomestayBooking: RequestHandler = async (req: AuthenticatedRe
       guest_name,
       guest_phone,
       guest_email,
-      special_requests
+      special_requests,
+      final_amount: finalAmount
     });
+
+    // Apply coupon if validation was successful
+    if (couponValidation && couponValidation.isValid && couponValidation.coupon) {
+      await CouponService.applyCoupon({
+        couponId: couponValidation.coupon.id,
+        userId: user_id,
+        bookingId: result.booking.id,
+        bookingType: 'homestay',
+        discountAmount: discountAmount,
+        originalAmount: original_amount,
+        finalAmount: finalAmount
+      });
+    }
 
     // Send confirmation SMS to customer
     await SMSService.sendCustomerBookingConfirmation(guest_phone, {
