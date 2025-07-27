@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { getConnection } from '../db/connection';
+import { EmailService } from '../services/emailService';
+import { SMSService } from '../services/smsService';
 
 const router = Router();
 
