@@ -57,8 +57,8 @@ export default function Index() {
                   in coastal Karnataka
                 </h1>
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Discover authentic homestays, restaurants, drivers, and creators in coastal Karnataka. 
-                  Your gateway to local experiences.
+                  Book authentic homestays, discover local restaurants, hire trusted drivers, and connect with talented creators.
+                  Your complete guide to coastal Karnataka.
                 </p>
               </div>
 
