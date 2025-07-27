@@ -16,6 +16,7 @@ import Eateries from "./pages/Eateries";
 import Events from "./pages/Events";
 import Services from "./pages/Services";
 import Creators from "./pages/Creators";
+import Explore from "./pages/Explore";
 import DriverApp from "./pages/DriverApp";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
