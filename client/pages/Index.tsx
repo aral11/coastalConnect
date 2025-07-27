@@ -257,12 +257,12 @@ export default function Index() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {[
-              { name: 'Udupi', status: 'live', count: '200+' },
-              { name: 'Manipal', status: 'live', count: '150+' },
-              { name: 'Malpe', status: 'live', count: '80+' },
-              { name: 'Kaup', status: 'live', count: '45+' },
-              { name: 'Kundapura', status: 'coming', count: 'Soon' },
-              { name: 'Mangalore', status: 'coming', count: 'Soon' }
+              { name: 'Udupi', status: 'live' },
+              { name: 'Manipal', status: 'live' },
+              { name: 'Malpe', status: 'live' },
+              { name: 'Kaup', status: 'live' },
+              { name: 'Kundapura', status: 'coming' },
+              { name: 'Mangalore', status: 'coming' }
             ].map((city, index) => (
               <div 
                 key={index}
