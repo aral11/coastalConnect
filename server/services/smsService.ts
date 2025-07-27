@@ -284,6 +284,11 @@ export class SMSService {
     return this.sendSMS(phone, message);
   }
 
+  static async sendVendorRegistrationConfirmation(phone: string, vendor: any) {
+    const message = smsTemplates.vendorRegistration(vendor);
+    return this.sendSMS(phone, message);
+  }
+
   static async sendCustomSMS(phone: string, message: string) {
     return this.sendSMS(phone, message);
   }
