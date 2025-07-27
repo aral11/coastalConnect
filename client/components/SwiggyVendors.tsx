@@ -160,18 +160,118 @@ export default function SwiggyVendors({
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    // Filter vendors by type if specified
-    let filteredVendors = type === 'all' 
-      ? SAMPLE_VENDORS 
-      : SAMPLE_VENDORS.filter(vendor => vendor.type === type);
-    
-    // Limit items if maxItems is specified
-    if (maxItems) {
-      filteredVendors = filteredVendors.slice(0, maxItems);
-    }
-
-    setVendors(filteredVendors);
+    fetchVendors();
   }, [type, maxItems]);
+
+  const fetchVendors = async () => {
+    try {
+      let apiEndpoint = '/api';
+
+      // Determine API endpoint based on vendor type
+      switch (type) {
+        case 'homestay':
+          apiEndpoint = '/api/homestays';
+          break;
+        case 'restaurant':
+          apiEndpoint = '/api/eateries';
+          break;
+        case 'driver':
+          apiEndpoint = '/api/drivers';
+          break;
+        case 'creator':
+          apiEndpoint = '/api/creators';
+          break;
+        default:
+          // For 'all' type, we'll fetch a mix of vendors
+          apiEndpoint = '/api/vendors/mixed';
+          break;
+      }
+
+      const response = await fetch(apiEndpoint);
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Transform API data to our Vendor interface
+        let transformedVendors = transformApiData(data.data || [], type);
+
+        // Limit items if maxItems is specified
+        if (maxItems) {
+          transformedVendors = transformedVendors.slice(0, maxItems);
+        }
+
+        setVendors(transformedVendors);
+      } else {
+        throw new Error('API not available');
+      }
+    } catch (error) {
+      console.log('Using fallback vendor data');
+
+      // Use fallback data when API is not available
+      let filteredVendors = type === 'all'
+        ? FALLBACK_VENDORS
+        : FALLBACK_VENDORS.filter(vendor => vendor.type === type);
+
+      // Limit items if maxItems is specified
+      if (maxItems) {
+        filteredVendors = filteredVendors.slice(0, maxItems);
+      }
+
+      setVendors(filteredVendors);
+    }
+  };
+
+  // Transform API data to match our Vendor interface
+  const transformApiData = (apiData: any[], vendorType: string): Vendor[] => {
+    return apiData.map((item, index) => {
+      const baseVendor = {
+        id: item.id?.toString() || `${vendorType}-${index}`,
+        name: item.name || 'Unknown Vendor',
+        rating: item.rating || 4.0,
+        totalRatings: item.total_reviews || 0,
+        location: item.location || 'Udupi',
+        distance: Math.round((Math.random() * 5 + 0.5) * 10) / 10, // Simulated distance
+        features: item.amenities ? item.amenities.split(', ').slice(0, 4) : ['Professional'],
+        image: item.image_url || `https://images.unsplash.com/photo-${1500000000000 + index}?w=400&h=300&fit=crop`
+      };
+
+      if (vendorType === 'homestay' || item.price_per_night) {
+        return {
+          ...baseVendor,
+          type: 'homestay' as const,
+          category: 'Homestay',
+          price: item.price_per_night || 2500,
+          link: `/homestays/${item.id || baseVendor.id}`
+        };
+      } else if (vendorType === 'restaurant' || item.cuisine_type) {
+        return {
+          ...baseVendor,
+          type: 'restaurant' as const,
+          category: item.cuisine_type || 'Restaurant',
+          cuisine: item.cuisine_type,
+          price: 300,
+          responseTime: 25,
+          link: `/eateries/${item.id || baseVendor.id}`
+        };
+      } else if (vendorType === 'driver' || item.vehicle_type) {
+        return {
+          ...baseVendor,
+          type: 'driver' as const,
+          category: 'Local Driver',
+          price: item.hourly_rate || 15,
+          link: `/drivers/${item.id || baseVendor.id}`
+        };
+      } else {
+        return {
+          ...baseVendor,
+          type: 'creator' as const,
+          category: 'Creator',
+          price: 5000,
+          link: `/creators/${item.id || baseVendor.id}`
+        };
+      }
+    });
+  };
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -458,7 +558,7 @@ export default function SwiggyVendors({
 
 // Quick Vendors Component (compact version)
 export function QuickVendors({ type = 'all', maxItems = 3 }: { type?: string; maxItems?: number }) {
-  const vendors = SAMPLE_VENDORS.slice(0, maxItems);
+  const vendors = FALLBACK_VENDORS.slice(0, maxItems);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
