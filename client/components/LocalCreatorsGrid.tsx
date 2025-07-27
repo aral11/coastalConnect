@@ -1,80 +1,50 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Instagram, ExternalLink, Users, Star, MapPin, Camera, Palette, Coffee, Mountain } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Instagram, 
-  ExternalLink, 
-  MapPin, 
-  Users, 
-  Verified,
-  Camera,
-  Palette,
-  UtensilsCrossed,
-  Map,
-  Building
-} from 'lucide-react';
+import { designSystem } from '@/lib/design-system';
 
 interface Creator {
-  id: number;
+  id: string;
   name: string;
   title: string;
   description: string;
   instagram_handle: string;
-  instagram_url: string;
   profile_image: string;
-  cover_image?: string;
-  followers_count?: number;
+  followers_count: number;
   specialty: string;
   location: string;
-  contact_email?: string;
-  contact_phone?: string;
-  website_url?: string;
-  featured_works: string[];
   is_verified: boolean;
-  is_active: boolean;
-  media_count?: number;
 }
 
-const getSpecialtyIcon = (specialty: string) => {
-  const lower = specialty.toLowerCase();
-  if (lower.includes('photo') || lower.includes('video')) return <Camera className="h-4 w-4" />;
-  if (lower.includes('art') || lower.includes('craft')) return <Palette className="h-4 w-4" />;
-  if (lower.includes('food') || lower.includes('culinary')) return <UtensilsCrossed className="h-4 w-4" />;
-  if (lower.includes('travel') || lower.includes('lifestyle')) return <Map className="h-4 w-4" />;
-  if (lower.includes('heritage') || lower.includes('tradition')) return <Building className="h-4 w-4" />;
-  return <Camera className="h-4 w-4" />;
-};
+interface LocalCreatorsGridProps {
+  maxItems?: number;
+  className?: string;
+}
 
-const getSpecialtyGradient = (specialty: string) => {
-  const lower = specialty.toLowerCase();
-  if (lower.includes('photo') || lower.includes('video')) return 'bg-gradient-to-r from-indigo-500 to-purple-600';
-  if (lower.includes('art') || lower.includes('craft')) return 'bg-gradient-to-r from-pink-500 to-rose-600';
-  if (lower.includes('food') || lower.includes('culinary')) return 'bg-gradient-to-r from-orange-500 to-amber-600';
-  if (lower.includes('travel') || lower.includes('lifestyle')) return 'bg-gradient-to-r from-blue-500 to-cyan-600';
-  if (lower.includes('heritage') || lower.includes('tradition')) return 'bg-gradient-to-r from-emerald-500 to-teal-600';
-  return 'bg-gradient-to-r from-slate-500 to-gray-600';
-};
-
-export default function LocalCreatorsGrid() {
+const LocalCreatorsGrid: React.FC<LocalCreatorsGridProps> = ({ 
+  maxItems = 4, 
+  className = '' 
+}) => {
   const [creators, setCreators] = useState<Creator[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCreators();
-  }, []);
+  }, [maxItems]);
 
   const fetchCreators = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Use AbortController for timeout handling
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const response = await fetch('/api/creators', {
+      const response = await fetch(`/api/creators?limit=${maxItems}`, {
         signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
@@ -83,414 +53,225 @@ export default function LocalCreatorsGrid() {
 
       clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.data) {
-        setCreators(data.data.slice(0, 4)); // Show only top 4 creators on homepage
-        console.log(`✅ Loaded ${data.data.length} creators from ${data.source} source`);
-        if (data.source === 'instagram') {
-          console.log('✅ Real Instagram data loaded successfully!');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          setCreators(data.data || []);
+          console.log('✅ Creators loaded successfully');
+        } else {
+          throw new Error('Invalid response format');
         }
       } else {
-        throw new Error(data.message || 'Invalid response format');
+        throw new Error(`Creators API returned ${response.status}`);
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-
-      // Use fallback data instead of showing error to user
-      console.log('Creators API unavailable, using fallback data:', errorMessage);
-
-      // Set fallback creators data
-      const fallbackCreators = [
-        {
-          id: 1,
-          name: "Shutterbox Films",
-          title: "Professional Photographer & Videographer",
-          description: "Capturing the essence of coastal Karnataka through lens",
-          instagram_handle: "shutterboxfilms_official",
-          instagram_url: "https://instagram.com/shutterboxfilms_official",
-          profile_image: "https://ui-avatars.com/api/?name=Shutterbox+Films&size=200&background=6B7280&color=FFFFFF&bold=true&format=png",
-          followers_count: 15000,
-          specialty: "Photography & Videography",
-          location: "Udupi, Karnataka",
-          is_verified: true,
-          is_active: true
-        },
-        {
-          id: 2,
-          name: "Priya Coastal Arts",
-          title: "Traditional Artist & Painter",
-          description: "Preserving coastal traditions through art",
-          instagram_handle: "priya_coastal_arts",
-          instagram_url: "https://instagram.com/priya_coastal_arts",
-          profile_image: "https://ui-avatars.com/api/?name=Priya+Arts&size=200&background=EC4899&color=FFFFFF&bold=true&format=png",
-          followers_count: 8500,
-          specialty: "Traditional Art",
-          location: "Mangaluru, Karnataka",
-          is_verified: false,
-          is_active: true
-        },
-        {
-          id: 3,
-          name: "Coastal Flavor Stories",
-          title: "Food Blogger & Chef",
-          description: "Exploring authentic coastal cuisine",
-          instagram_handle: "coastal_flavor_stories",
-          instagram_url: "https://instagram.com/coastal_flavor_stories",
-          profile_image: "https://ui-avatars.com/api/?name=Coastal+Flavor&size=200&background=F59E0B&color=FFFFFF&bold=true&format=png",
-          followers_count: 12000,
-          specialty: "Food & Cuisine",
-          location: "Udupi, Karnataka",
-          is_verified: true,
-          is_active: true
-        },
-        {
-          id: 4,
-          name: "Beach Vibes Karnataka",
-          title: "Travel Content Creator",
-          description: "Showcasing the beauty of Karnataka's coastline",
-          instagram_handle: "beach_vibes_karnataka",
-          instagram_url: "https://instagram.com/beach_vibes_karnataka",
-          profile_image: "https://ui-avatars.com/api/?name=Beach+Vibes&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png",
-          followers_count: 18000,
-          specialty: "Travel & Tourism",
-          location: "Malpe, Karnataka",
-          is_verified: true,
-          is_active: true
-        }
-      ];
-
-      setCreators(fallbackCreators);
-      setError(null); // Don't show error to user, just use fallback data
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Creators API unavailable:', errorMessage);
+      setCreators([]);
+      setError('Unable to load creators. Please check back later.');
     } finally {
       setLoading(false);
     }
   };
 
-  const formatFollowers = (count?: number) => {
-    if (!count) return '0';
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+  const formatFollowers = (count: number) => {
+    if (count >= 1000000) {
+      return `${(count / 1000000).toFixed(1)}M`;
+    } else if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
     return count.toString();
+  };
+
+  const getSpecialtyIcon = (specialty: string) => {
+    const lowerSpecialty = specialty.toLowerCase();
+    if (lowerSpecialty.includes('photo')) return <Camera className="h-4 w-4" />;
+    if (lowerSpecialty.includes('art')) return <Palette className="h-4 w-4" />;
+    if (lowerSpecialty.includes('food')) return <Coffee className="h-4 w-4" />;
+    if (lowerSpecialty.includes('travel')) return <Mountain className="h-4 w-4" />;
+    return <Star className="h-4 w-4" />;
+  };
+
+  const generateInitialsAvatar = (name: string, id: string) => {
+    const initials = name.split(' ').map(word => word[0]).join('').substring(0, 2).toUpperCase();
+    const colors = ['4F46E5', 'EC4899', 'F59E0B', '0EA5E9', '10B981', '8B5CF6'];
+    const colorIndex = parseInt(id, 36) % colors.length;
+    const bgColor = colors[colorIndex];
+    
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${bgColor}&color=fff&size=150&font-size=0.6`;
   };
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-coastal-600 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading local creators...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    console.log('LocalCreatorsGrid: Error occurred, showing fallback creators');
-
-    // Provide fallback creators to prevent blank cards
-    const fallbackCreators: Creator[] = [
-      {
-        id: 1,
-        name: 'Priya Shenoy',
-        title: 'Coastal Photographer',
-        description: 'Capturing the beauty of coastal Karnataka through stunning photography. Specializing in landscapes and cultural documentation.',
-        instagram_handle: '@priya_coastal',
-        instagram_url: 'https://instagram.com/priya_coastal',
-        profile_image: 'https://ui-avatars.com/api/?name=Priya+Shenoy&size=200&background=4F46E5&color=FFFFFF&bold=true&format=png',
-        cover_image: '',
-        followers_count: 5200,
-        specialty: 'Photography',
-        location: 'Udupi, Karnataka',
-        featured_works: [],
-        is_verified: true,
-        is_active: true,
-        media_count: 156
-      },
-      {
-        id: 2,
-        name: 'Arjun Kumar',
-        title: 'Food Content Creator',
-        description: 'Exploring authentic Udupi cuisine and coastal delicacies. Sharing traditional recipes and restaurant reviews.',
-        instagram_handle: '@foodie_arjun',
-        instagram_url: 'https://instagram.com/foodie_arjun',
-        profile_image: 'https://ui-avatars.com/api/?name=Arjun+Kumar&size=200&background=EC4899&color=FFFFFF&bold=true&format=png',
-        cover_image: '',
-        followers_count: 3800,
-        specialty: 'Food & Culinary',
-        location: 'Manipal, Karnataka',
-        featured_works: [],
-        is_verified: false,
-        is_active: true,
-        media_count: 89
-      },
-      {
-        id: 3,
-        name: 'Deepa Kamath',
-        title: 'Cultural Heritage Documenter',
-        description: 'Preserving and sharing the rich cultural heritage of coastal Karnataka through visual storytelling.',
-        instagram_handle: '@coastal_heritage',
-        instagram_url: 'https://instagram.com/coastal_heritage',
-        profile_image: 'https://ui-avatars.com/api/?name=Deepa+Kamath&size=200&background=F59E0B&color=FFFFFF&bold=true&format=png',
-        cover_image: '',
-        followers_count: 2100,
-        specialty: 'Heritage & Tradition',
-        location: 'Udupi, Karnataka',
-        featured_works: [],
-        is_verified: true,
-        is_active: true,
-        media_count: 203
-      },
-      {
-        id: 4,
-        name: 'Ravi D\'Souza',
-        title: 'Travel & Lifestyle Vlogger',
-        description: 'Showcasing hidden gems and travel experiences across coastal Karnataka for fellow explorers.',
-        instagram_handle: '@ravi_travels',
-        instagram_url: 'https://instagram.com/ravi_travels',
-        profile_image: 'https://ui-avatars.com/api/?name=Ravi+DSouza&size=200&background=0EA5E9&color=FFFFFF&bold=true&format=png',
-        cover_image: '',
-        followers_count: 4600,
-        specialty: 'Travel & Lifestyle',
-        location: 'Malpe, Karnataka',
-        featured_works: [],
-        is_verified: false,
-        is_active: true,
-        media_count: 134
-      }
-    ];
-
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-sm">
-            <Camera className="h-4 w-4 mr-2" />
-            Showing sample creators (API unavailable)
+      <section className={`py-12 lg:py-16 bg-white ${className}`}>
+        <div className={designSystem.layouts.container.standard}>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Local Creators
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Connect with talented creators showcasing coastal Karnataka
+            </p>
+          </div>
+          
+          {/* Loading skeleton */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(maxItems)].map((_, index) => (
+              <div key={index} className="bg-gray-200 rounded-xl h-80 animate-pulse" />
+            ))}
           </div>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {fallbackCreators.map((creator) => (
-            <Card key={creator.id} className="card-coastal overflow-hidden group hover:shadow-lg transition-all duration-300">
-              {/* Professional Cover Design */}
-              <div className={`relative h-24 overflow-hidden ${getSpecialtyGradient(creator.specialty)}`}>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
-              </div>
-
-              {/* Profile Section */}
-              <CardHeader className="pb-3 relative">
-                <div className="flex items-start space-x-3">
-                  <div className="relative">
-                    <img
-                      src={creator.profile_image}
-                      alt={creator.name}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
-                    />
-                    {creator.is_verified && (
-                      <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
-                        <Verified className="h-3 w-3 text-white fill-current" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg font-bold truncate">{creator.name}</CardTitle>
-                    <CardDescription className="text-sm">{creator.title}</CardDescription>
-
-                    <div className="flex items-center mt-2 text-xs text-gray-600">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="truncate">{creator.location}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-3">
-                {/* Specialty Badge */}
-                <div className="flex items-center">
-                  <Badge variant="secondary" className="text-xs">
-                    {getSpecialtyIcon(creator.specialty)}
-                    <span className="ml-1">{creator.specialty}</span>
-                  </Badge>
-                </div>
-
-                {/* Description */}
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {creator.description}
-                </p>
-
-                {/* Instagram Stats */}
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  {creator.followers_count && (
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      <span>{formatFollowers(creator.followers_count)} followers</span>
-                    </div>
-                  )}
-                  {creator.media_count && (
-                    <div className="flex items-center">
-                      <Camera className="h-4 w-4 mr-1" />
-                      <span>{creator.media_count} posts</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-2 pt-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 text-xs"
-                    onClick={() => window.open(creator.instagram_url, '_blank')}
-                  >
-                    <Instagram className="h-3 w-3 mr-1" />
-                    Follow
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="flex-1 text-xs btn-coastal"
-                  >
-                    <ExternalLink className="h-3 w-3 mr-1" />
-                    View
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (creators.length === 0) {
-    return (
-      <div className="text-center py-12 bg-gray-50 rounded-xl">
-        <Camera className="h-16 w-16 mx-auto text-coastal-400 mb-4" />
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">No Creators Found</h3>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          We're building our creators community. Check back soon!
-        </p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {creators.map((creator) => (
-        <Card key={creator.id} className="card-coastal overflow-hidden group hover:shadow-lg transition-all duration-300">
-          {/* Professional Cover Design */}
-          <div className={`relative h-24 overflow-hidden ${getSpecialtyGradient(creator.specialty)}`}>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+    <section className={`py-12 lg:py-16 bg-white ${className}`}>
+      <div className={designSystem.layouts.container.standard}>
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            Local Creators
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Connect with talented creators showcasing coastal Karnataka
+          </p>
+        </div>
+
+        {/* Creators Content */}
+        {error ? (
+          <div className="text-center py-16 bg-gray-50 rounded-xl">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No Creators Available</h3>
+            <p className="text-gray-500 mb-4">{error}</p>
+            <Button onClick={fetchCreators} variant="outline">
+              Try Again
+            </Button>
           </div>
-
-          {/* Profile Section */}
-          <CardHeader className="pb-3 relative">
-            <div className="flex items-start space-x-3">
-              <div className="relative">
-                <img
-                  src={creator.profile_image}
-                  alt={creator.name}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm"
-                  onError={(e) => {
-                    console.log(`Failed to load image: ${creator.profile_image}`);
-                    // Generate professional initials avatar as fallback
-                    const colors = ['4F46E5', 'EC4899', 'F59E0B', '0EA5E9', '10B981', '8B5CF6'];
-                    const bgColor = colors[creator.id % colors.length];
-                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(creator.name)}&size=200&background=${bgColor}&color=FFFFFF&bold=true&format=png`;
-                  }}
-                  onLoad={() => console.log(`Successfully loaded image for ${creator.name}`)}
-                />
-                {creator.is_verified && (
-                  <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
-                    <Verified className="h-3 w-3 text-white fill-current" />
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-lg font-bold truncate">{creator.name}</CardTitle>
-                <CardDescription className="text-sm">{creator.title}</CardDescription>
-                
-                <div className="flex items-center mt-2 text-xs text-gray-600">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  <span className="truncate">{creator.location}</span>
-                </div>
-              </div>
+        ) : creators.length === 0 ? (
+          <div className="text-center py-16 bg-gray-50 rounded-xl">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
-          </CardHeader>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No Creators Listed</h3>
+            <p className="text-gray-500 mb-4">Creators will appear here once they join the platform</p>
+            <Link to="/creators">
+              <Button variant="outline">Browse All Creators</Button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {creators.map((creator) => (
+                <Card key={creator.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+                  <CardContent className="p-0">
+                    {/* Profile Image */}
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-orange-400 to-red-500">
+                      <img
+                        src={creator.profile_image}
+                        alt={creator.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.src = generateInitialsAvatar(creator.name, creator.id);
+                        }}
+                      />
+                      
+                      {/* Verified Badge */}
+                      {creator.is_verified && (
+                        <div className="absolute top-3 right-3">
+                          <div className="bg-blue-500 text-white p-1 rounded-full">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
 
-          <CardContent className="space-y-3">
-            {/* Specialty Badge */}
-            <div className="flex items-center">
-              <Badge variant="secondary" className="text-xs">
-                {getSpecialtyIcon(creator.specialty)}
-                <span className="ml-1">{creator.specialty}</span>
-              </Badge>
+                      {/* Followers Count */}
+                      <div className="absolute bottom-3 left-3">
+                        <div className="bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs flex items-center">
+                          <Users className="h-3 w-3 mr-1" />
+                          {formatFollowers(creator.followers_count)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Creator Info */}
+                    <div className="p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 text-lg group-hover:text-orange-600 transition-colors line-clamp-1">
+                            {creator.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-2">{creator.title}</p>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                        {creator.description}
+                      </p>
+
+                      {/* Specialty & Location */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                          {getSpecialtyIcon(creator.specialty)}
+                          {creator.specialty}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        {creator.location}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex gap-2">
+                        <a
+                          href={`https://instagram.com/${creator.instagram_handle.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                        >
+                          <Button size="sm" variant="outline" className="w-full text-xs">
+                            <Instagram className="h-3 w-3 mr-1" />
+                            Follow
+                          </Button>
+                        </a>
+                        <Link to={`/creators/${creator.id}`} className="flex-1">
+                          <Button size="sm" className="w-full text-xs bg-orange-500 hover:bg-orange-600">
+                            <ExternalLink className="h-3 w-3 mr-1" />
+                            View
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            {/* Description */}
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {creator.description}
-            </p>
-
-            {/* Instagram Stats */}
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              {creator.followers_count && (
-                <div className="flex items-center">
-                  <Users className="h-4 w-4 mr-1" />
-                  <span>{formatFollowers(creator.followers_count)} followers</span>
-                </div>
-              )}
-              {creator.media_count && (
-                <div className="flex items-center">
-                  <Camera className="h-3 w-3 mr-1" />
-                  <span>{creator.media_count} posts</span>
-                </div>
-              )}
-            </div>
-
-            {/* Featured Works Preview */}
-            {creator.featured_works && creator.featured_works.length > 0 && (
-              <div className="grid grid-cols-3 gap-1 mt-3">
-                {creator.featured_works.slice(0, 3).map((work, index) => (
-                  <div key={index} className="aspect-square overflow-hidden rounded">
-                    <img 
-                      src={work} 
-                      alt={`Work ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-200"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex space-x-2 pt-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 text-pink-600 border-pink-200 hover:bg-pink-50"
-                onClick={() => window.open(creator.instagram_url, '_blank')}
-              >
-                <Instagram className="h-3 w-3 mr-1" />
-                @{creator.instagram_handle}
-              </Button>
-
-              {creator.website_url && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => window.open(creator.website_url, '_blank')}
-                >
-                  <ExternalLink className="h-3 w-3" />
+            {/* View All Button */}
+            <div className="text-center mt-10">
+              <Link to="/creators">
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3">
+                  View All Creators
+                  <ExternalLink className="h-4 w-4 ml-2" />
                 </Button>
-              )}
+              </Link>
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+          </>
+        )}
+      </div>
+    </section>
   );
-}
+};
+
+export default LocalCreatorsGrid;
