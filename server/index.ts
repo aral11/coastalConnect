@@ -180,6 +180,9 @@ export function createServer() {
   // Admin API routes
   app.use("/api/admin", adminRouter);
 
+  // Test notifications API routes (for development/testing)
+  app.use("/api/test-notifications", testNotificationsRouter);
+
   // Service categories
 app.get("/api/services", getServiceCategories);
 app.get("/api/services/:categoryId", getServiceCategory);
