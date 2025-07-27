@@ -30,7 +30,8 @@ interface Vendor {
   link: string;
 }
 
-const SAMPLE_VENDORS: Vendor[] = [
+// Fallback data when API is not available
+const FALLBACK_VENDORS: Vendor[] = [
   {
     id: 'mitra-homestay',
     name: 'Mitra Samudra Homestay',
