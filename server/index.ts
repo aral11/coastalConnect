@@ -39,6 +39,7 @@ import { healthCheck, databaseStatus } from "./routes/health";
 import { createPayment, verifyRazorpayPayment, verifyStripePayment, processRefund, getPaymentMethods, stripeWebhook } from "./routes/payments";
 import { setupPaymentSystem, validatePaymentEnvironment } from "./utils/setupPaymentSystem";
 import { initializeCompleteDatabase, getPlatformStats } from "./utils/initializeDatabase";
+import { getRealPlatformStats, getRealServices, getRealEvents, getUserDashboardData, getVendorApplications } from "./routes/realData";
 
 export function createServer() {
   const app = express();
