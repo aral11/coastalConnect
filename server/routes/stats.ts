@@ -32,25 +32,24 @@ router.get('/platform', async (req: Request, res: Response) => {
       });
     }
     
-    // Get vendor counts from different tables
+    // Get vendor counts from different tables (gracefully handle missing tables)
+    let totalVendors = 0;
+
     const vendorQueries = [
-      'SELECT COUNT(*) as count FROM Homestays WHERE admin_approval_status = \'approved\' AND is_active = 1',
-      'SELECT COUNT(*) as count FROM Eateries WHERE admin_approval_status = \'approved\' AND is_active = 1', 
-      'SELECT COUNT(*) as count FROM Drivers WHERE admin_approval_status = \'approved\' AND is_active = 1',
-      'SELECT COUNT(*) as count FROM Creators WHERE is_active = 1',
-      'SELECT COUNT(*) as count FROM BeautyWellness WHERE is_active = 1',
-      'SELECT COUNT(*) as count FROM Entertainment WHERE is_active = 1',
-      'SELECT COUNT(*) as count FROM EventManagement WHERE is_active = 1',
-      'SELECT COUNT(*) as count FROM OtherServices WHERE is_active = 1'
+      'SELECT COUNT(*) as count FROM Homestays WHERE is_active = 1',
+      'SELECT COUNT(*) as count FROM Restaurants WHERE is_active = 1',
+      'SELECT COUNT(*) as count FROM Drivers WHERE is_active = 1'
     ];
 
-    const vendorResults = await Promise.all(
-      vendorQueries.map(query => connection.request().query(query))
-    );
-
-    const totalVendors = vendorResults.reduce((sum, result) => 
-      sum + (result.recordset[0]?.count || 0), 0
-    );
+    for (const query of vendorQueries) {
+      try {
+        const result = await connection.request().query(query);
+        totalVendors += result.recordset[0]?.count || 0;
+      } catch (queryError) {
+        console.log(`Table query failed (table may not exist): ${query}`);
+        // Continue with other queries
+      }
+    }
 
     // Get total bookings
     const bookingQueries = [
