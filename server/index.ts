@@ -198,6 +198,9 @@ export function createServer() {
   // Coupon API routes
   app.use("/api/coupons", couponRouter);
 
+  // Professional Booking API routes
+  app.use("/api/bookings", bookingApiRouter);
+
   // Test notifications API routes (for development/testing)
   app.use("/api/test-notifications", testNotificationsRouter);
 
