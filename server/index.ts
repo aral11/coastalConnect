@@ -127,6 +127,14 @@ export function createServer() {
   app.get("/api/auth/verify", verifyToken);
   app.post("/api/auth/logout", logout);
 
+  // Payment API routes (live gateways)
+  app.post("/api/payments/create", createPayment);
+  app.post("/api/payments/verify/razorpay", verifyRazorpayPayment);
+  app.post("/api/payments/verify/stripe", verifyStripePayment);
+  app.post("/api/payments/refund", processRefund);
+  app.get("/api/payments/methods", getPaymentMethods);
+  app.post("/api/payments/webhook/stripe", express.raw({type: 'application/json'}), stripeWebhook);
+
   // Booking API routes (protected)
   app.post("/api/bookings/homestay", authenticateToken, createHomestayBooking);
   app.post("/api/bookings/driver", authenticateToken, createDriverBooking);
