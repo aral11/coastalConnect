@@ -507,36 +507,403 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
-            {/* Other tabs content would go here */}
-            <TabsContent value="vendors">
+            {/* Vendors Tab */}
+            <TabsContent value="vendors" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Building className="h-5 w-5" />
+                      Active Vendors
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {[
+                        { name: 'Paradise Beach Resort', type: 'Homestay', location: 'Malpe Beach', status: 'Active', revenue: 45000 },
+                        { name: 'Udupi Grand Restaurant', type: 'Restaurant', location: 'Car Street', status: 'Active', revenue: 28000 },
+                        { name: 'Coastal Tours & Travels', type: 'Driver', location: 'Udupi', status: 'Active', revenue: 15000 },
+                        { name: 'Heritage Photo Studio', type: 'Creator', location: 'Manipal', status: 'Active', revenue: 12000 }
+                      ].map((vendor, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <h4 className="font-medium">{vendor.name}</h4>
+                            <p className="text-sm text-gray-600">{vendor.type} • {vendor.location}</p>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant="secondary" className="mb-1">{vendor.status}</Badge>
+                            <p className="text-sm font-medium">₹{vendor.revenue.toLocaleString()}/month</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Vendor Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Top Rated Vendors</span>
+                        <Badge variant="outline">4.8+ Rating</Badge>
+                      </div>
+                      {[
+                        { name: 'Paradise Beach Resort', rating: 4.9, bookings: 156 },
+                        { name: 'Udupi Grand Restaurant', rating: 4.8, bookings: 234 },
+                        { name: 'Heritage Photo Studio', rating: 4.8, bookings: 89 }
+                      ].map((vendor, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-sm">{vendor.name}</p>
+                            <div className="flex items-center gap-1">
+                              <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                              <span className="text-xs">{vendor.rating}</span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm">{vendor.bookings} bookings</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               <Card>
                 <CardHeader>
-                  <CardTitle>Vendor Management</CardTitle>
+                  <CardTitle>Vendor Actions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Vendor management interface coming soon...</p>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Download className="h-4 w-4" />
+                      Export Vendor List
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Bell className="h-4 w-4" />
+                      Send Notifications
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4" />
+                      Sync Vendor Data
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="bookings">
+            {/* Bookings Tab */}
+            <TabsContent value="bookings" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Recent Bookings</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { id: 'CB001', customer: 'Arjun Patel', service: 'Paradise Beach Resort', amount: 2500, status: 'Confirmed' },
+                        { id: 'CB002', customer: 'Priya Sharma', service: 'Udupi Grand Restaurant', amount: 850, status: 'Completed' },
+                        { id: 'CB003', customer: 'Rajesh Kumar', service: 'Coastal Tours', amount: 1200, status: 'Pending' },
+                        { id: 'CB004', customer: 'Meera Nair', service: 'Heritage Photo', amount: 3500, status: 'Confirmed' }
+                      ].map((booking) => (
+                        <div key={booking.id} className="flex items-center justify-between p-2 border rounded">
+                          <div>
+                            <p className="font-medium text-sm">{booking.id}</p>
+                            <p className="text-xs text-gray-600">{booking.customer}</p>
+                            <p className="text-xs">{booking.service}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium text-sm">₹{booking.amount}</p>
+                            <Badge variant={booking.status === 'Completed' ? 'default' : booking.status === 'Confirmed' ? 'secondary' : 'destructive'} className="text-xs">
+                              {booking.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Booking Statistics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Today's Bookings</span>
+                        <span className="font-medium">47</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">This Week</span>
+                        <span className="font-medium">312</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">This Month</span>
+                        <span className="font-medium">1,247</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Cancellation Rate</span>
+                        <span className="font-medium text-red-600">3.2%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Average Booking Value</span>
+                        <span className="font-medium">₹1,850</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Service Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { service: 'Homestays', bookings: 145, revenue: 362500 },
+                        { service: 'Restaurants', bookings: 234, revenue: 187200 },
+                        { service: 'Drivers', bookings: 89, revenue: 106800 },
+                        { service: 'Events', bookings: 67, revenue: 201000 },
+                        { service: 'Creators', bookings: 43, revenue: 129000 }
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-sm">{item.service}</p>
+                            <p className="text-xs text-gray-600">{item.bookings} bookings</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium text-sm">₹{item.revenue.toLocaleString()}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               <Card>
                 <CardHeader>
-                  <CardTitle>Booking Management</CardTitle>
+                  <CardTitle>Booking Management Actions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Booking management interface coming soon...</p>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Download className="h-4 w-4" />
+                      Export Bookings
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4" />
+                      Refresh Data
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      Advanced Filters
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="analytics">
+            {/* Analytics Tab */}
+            <TabsContent value="analytics" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Revenue Analytics
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-4 bg-green-50 rounded-lg">
+                          <p className="text-2xl font-bold text-green-600">₹2.34L</p>
+                          <p className="text-sm text-gray-600">This Month</p>
+                          <p className="text-xs text-green-600">+23.7% vs last month</p>
+                        </div>
+                        <div className="text-center p-4 bg-blue-50 rounded-lg">
+                          <p className="text-2xl font-bold text-blue-600">₹28.4L</p>
+                          <p className="text-sm text-gray-600">This Year</p>
+                          <p className="text-xs text-blue-600">+45.2% vs last year</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="font-medium">Revenue by Service</h4>
+                        {[
+                          { service: 'Homestays', amount: 85600, percentage: 36.5 },
+                          { service: 'Restaurants', amount: 67400, percentage: 28.8 },
+                          { service: 'Events', amount: 48200, percentage: 20.6 },
+                          { service: 'Drivers', amount: 22100, percentage: 9.4 },
+                          { service: 'Creators', amount: 11200, percentage: 4.7 }
+                        ].map((item, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <span className="text-sm">{item.service}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 bg-gray-200 rounded-full h-2">
+                                <div
+                                  className="bg-orange-500 h-2 rounded-full"
+                                  style={{ width: `${item.percentage}%` }}
+                                ></div>
+                              </div>
+                              <span className="text-sm font-medium">₹{item.amount.toLocaleString()}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>User Analytics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-4 bg-purple-50 rounded-lg">
+                          <p className="text-2xl font-bold text-purple-600">1,247</p>
+                          <p className="text-sm text-gray-600">Total Users</p>
+                          <p className="text-xs text-purple-600">+15.4% this month</p>
+                        </div>
+                        <div className="text-center p-4 bg-indigo-50 rounded-lg">
+                          <p className="text-2xl font-bold text-indigo-600">89</p>
+                          <p className="text-sm text-gray-600">Active Vendors</p>
+                          <p className="text-xs text-indigo-600">+8.5% this month</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="font-medium">User Engagement</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm">Daily Active Users</span>
+                            <span className="font-medium">342</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm">Weekly Active Users</span>
+                            <span className="font-medium">856</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm">Monthly Active Users</span>
+                            <span className="font-medium">1,247</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm">User Retention Rate</span>
+                            <span className="font-medium text-green-600">78.5%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Platform Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Average Page Load</span>
+                        <span className="font-medium text-green-600">1.2s</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">API Response Time</span>
+                        <span className="font-medium text-green-600">0.8s</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Uptime</span>
+                        <span className="font-medium text-green-600">99.8%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Error Rate</span>
+                        <span className="font-medium text-red-600">0.2%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Geographic Distribution</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {[
+                        { location: 'Udupi', users: 456, percentage: 36.6 },
+                        { location: 'Manipal', users: 234, percentage: 18.8 },
+                        { location: 'Mangalore', users: 189, percentage: 15.2 },
+                        { location: 'Kundapur', users: 145, percentage: 11.6 },
+                        { location: 'Other', users: 223, percentage: 17.8 }
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <span className="text-sm">{item.location}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs">{item.percentage}%</span>
+                            <span className="text-sm font-medium">{item.users}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Top Referral Sources</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {[
+                        { source: 'Direct', visits: 445, percentage: 35.7 },
+                        { source: 'Google Search', visits: 298, percentage: 23.9 },
+                        { source: 'Social Media', visits: 189, percentage: 15.2 },
+                        { source: 'Word of Mouth', visits: 156, percentage: 12.5 },
+                        { source: 'Other', visits: 159, percentage: 12.7 }
+                      ].map((item, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <span className="text-sm">{item.source}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs">{item.percentage}%</span>
+                            <span className="text-sm font-medium">{item.visits}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               <Card>
                 <CardHeader>
-                  <CardTitle>Platform Analytics</CardTitle>
+                  <CardTitle>Analytics Actions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Advanced analytics dashboard coming soon...</p>
+                  <div className="flex gap-4">
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Download className="h-4 w-4" />
+                      Export Analytics Report
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4" />
+                      Refresh Data
+                    </Button>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Bell className="h-4 w-4" />
+                      Setup Alerts
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
