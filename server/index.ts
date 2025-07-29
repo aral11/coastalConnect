@@ -218,6 +218,9 @@ export function createServer() {
   app.use("/api/stats", statsRouter);
 
   // Real data API routes (replacing dummy data)
+  app.get("/api/real/test", (req, res) => {
+    res.json({ success: true, message: "Real data API is working" });
+  });
   app.get("/api/real/stats", getRealPlatformStats);
   app.get("/api/real/services", getRealServices);
   app.get("/api/real/events", getRealEvents);
