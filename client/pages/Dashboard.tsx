@@ -112,8 +112,9 @@ export default function Dashboard() {
           }
           // Format 2: Array of bookings with service_type
           else if (Array.isArray(data.data)) {
-            combinedBookings = data.data.map((b: any) => ({
+            combinedBookings = data.data.map((b: any, index: number) => ({
               ...b,
+              id: b.id || `booking-${index}`, // Ensure unique ID
               type: b.service_type || b.type || 'unknown',
               location: b.service_type === 'homestay'
                 ? `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date || b.created_at).toLocaleDateString()}`
