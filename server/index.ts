@@ -223,6 +223,15 @@ export function createServer() {
   app.get("/api/real/dashboard", authenticateToken, getUserDashboardData);
   app.get("/api/real/vendor-applications", getVendorApplications);
 
+  // Admin approval workflow routes
+  app.get("/api/admin/vendor-applications", authenticateToken, getPendingVendorApplications);
+  app.post("/api/admin/vendor-applications/:applicationId/approve", authenticateToken, approveVendorApplication);
+  app.post("/api/admin/vendor-applications/:applicationId/reject", authenticateToken, rejectVendorApplication);
+  app.get("/api/admin/pending-events", authenticateToken, getPendingEvents);
+  app.post("/api/admin/events/:eventId/approve", authenticateToken, approveEvent);
+  app.post("/api/admin/events/:eventId/reject", authenticateToken, rejectEvent);
+  app.get("/api/admin/approval-stats", authenticateToken, getApprovalStats);
+
   // Search API routes
   app.use("/api/search", searchRouter);
 
