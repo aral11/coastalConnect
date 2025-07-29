@@ -119,7 +119,7 @@ export default function Signup() {
   const handleGoogleSignup = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Mock Google signup process
       const response = await fetch('/api/auth/google', {
@@ -132,6 +132,19 @@ export default function Signup() {
         })
       });
 
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        let errorMessage = 'Google signup failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (jsonError) {
+          errorMessage = response.statusText || errorMessage;
+        }
+        setError(errorMessage);
+        return;
+      }
+
       const data = await response.json();
 
       if (data.success) {
@@ -141,6 +154,7 @@ export default function Signup() {
         setError(data.message || 'Google signup failed');
       }
     } catch (err) {
+      console.error('Google signup error:', err);
       setError('Google signup failed. Please try again.');
     } finally {
       setLoading(false);
