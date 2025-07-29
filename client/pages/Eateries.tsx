@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ServicePageLayout from '@/components/ServicePageLayout';
-import BookingFlow from '@/components/BookingFlow';
+import ProfessionalBookingModal from '@/components/ProfessionalBookingModal';
 import { ChefHat } from 'lucide-react';
 
 interface Eatery {
