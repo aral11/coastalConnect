@@ -87,6 +87,17 @@ export function createServer() {
     res.json({ message: "coastalConnect Udupi API v1.0 - Server is running!" });
   });
 
+  // Debug route for stats issue
+  app.get("/api/debug/stats", (_req, res) => {
+    console.log("🔍 Debug stats route called");
+    res.json({
+      success: true,
+      debug: true,
+      message: "Debug stats endpoint working",
+      timestamp: new Date().toISOString()
+    });
+  });
+
   app.get("/api/health", healthCheck);
   app.get("/api/database-status", databaseStatus);
 
