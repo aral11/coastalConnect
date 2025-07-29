@@ -51,23 +51,8 @@ export function createServer() {
     res.json({ message: "coastalConnect Udupi API v1.0 - Server is running!" });
   });
 
-  app.get("/api/health", async (_req, res) => {
-    try {
-      await getConnection();
-      res.json({ 
-        status: "healthy", 
-        database: "connected",
-        location: "Udupi, Karnataka, India",
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      res.status(503).json({ 
-        status: "unhealthy", 
-        database: "disconnected",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
+  app.get("/api/health", healthCheck);
+  app.get("/api/database-status", databaseStatus);
 
   // Legacy demo route
   app.get("/api/demo", handleDemo);
