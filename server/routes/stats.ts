@@ -52,18 +52,21 @@ router.get('/platform', async (req: Request, res: Response) => {
     }
 
     // Get total bookings
+    let totalOrders = 0;
+
     const bookingQueries = [
-      'SELECT COUNT(*) as count FROM HomestayBookings',
-      'SELECT COUNT(*) as count FROM DriverBookings'
+      'SELECT COUNT(*) as count FROM Bookings WHERE status IN (\'confirmed\', \'completed\')'
     ];
 
-    const bookingResults = await Promise.all(
-      bookingQueries.map(query => connection.request().query(query))
-    );
-
-    const totalOrders = bookingResults.reduce((sum, result) => 
-      sum + (result.recordset[0]?.count || 0), 0
-    );
+    for (const query of bookingQueries) {
+      try {
+        const result = await connection.request().query(query);
+        totalOrders += result.recordset[0]?.count || 0;
+      } catch (queryError) {
+        console.log(`Booking query failed (table may not exist): ${query}`);
+        // Continue
+      }
+    }
 
     // Calculate average rating across all vendor types
     const ratingQueries = [
