@@ -198,6 +198,9 @@ export function createServer() {
   // Development seeding routes
   app.use("/api/dev", seedingRouter);
 
+  // Dynamic services routes (database-driven)
+  app.use("/api", dynamicServicesRouter);
+
   // Service categories
 app.get("/api/services", getServiceCategories);
 app.get("/api/services/:categoryId", getServiceCategory);
