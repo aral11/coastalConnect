@@ -164,6 +164,16 @@ export function createServer() {
   app.get("/api/payments/methods", getPaymentMethods);
   app.post("/api/payments/webhook/stripe", express.raw({type: 'application/json'}), stripeWebhook);
 
+  // Real data API routes (moved higher to avoid conflicts)
+  app.get("/api/real/test", (req, res) => {
+    res.json({ success: true, message: "Real data API is working" });
+  });
+  app.get("/api/real/stats", getRealPlatformStats);
+  app.get("/api/real/services", getRealServices);
+  app.get("/api/real/events", getRealEvents);
+  app.get("/api/real/dashboard", authenticateToken, getUserDashboardData);
+  app.get("/api/real/vendor-applications", getVendorApplications);
+
   // Booking API routes (protected)
   app.post("/api/bookings/homestay", authenticateToken, createHomestayBooking);
   app.post("/api/bookings/driver", authenticateToken, createDriverBooking);
