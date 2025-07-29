@@ -318,29 +318,7 @@ export default function Eateries() {
     setFilteredEateries(sorted);
   };
 
-  if (showBookingFlow && selectedEatery) {
-    return (
-      <BookingFlow
-        item={{
-          id: selectedEatery.id.toString(),
-          name: selectedEatery.name,
-          type: 'restaurant',
-          price: selectedEatery.price_range || 500,
-          image: selectedEatery.image_url || 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop',
-          rating: selectedEatery.rating || 4,
-          location: selectedEatery.location,
-          description: selectedEatery.description || '',
-          cancellationPolicy: '24 hours free cancellation',
-          amenities: getAmenities(selectedEatery)
-        }}
-        onBookingComplete={handleBookingComplete}
-        onCancel={() => {
-          setShowBookingFlow(false);
-          setSelectedEatery(null);
-        }}
-      />
-    );
-  }
+
 
   return (
     <ServicePageLayout
