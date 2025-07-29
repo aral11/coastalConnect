@@ -233,6 +233,10 @@ export function createServer() {
   app.post("/api/admin/events/:eventId/reject", authenticateToken, rejectEvent);
   app.get("/api/admin/approval-stats", authenticateToken, getApprovalStats);
 
+  // Vendor application routes
+  app.post("/api/vendor-applications", authenticateToken, submitVendorApplication);
+  app.get("/api/vendor-applications/my-application", authenticateToken, getUserVendorApplication);
+
   // Search API routes
   app.use("/api/search", searchRouter);
 
