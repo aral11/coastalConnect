@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Homestay, HomestayResponse } from '@shared/api';
 import ServicePageLayout from '@/components/ServicePageLayout';
-import BookingModal from '@/components/BookingModal';
+import ProfessionalBookingModal from '@/components/ProfessionalBookingModal';
 import { Building } from 'lucide-react';
 
 export default function Hotels() {
