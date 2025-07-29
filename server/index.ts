@@ -55,6 +55,18 @@ export function createServer() {
     console.log('📋 Database: costalConnectDEV, Server: 127.0.0.1, User: aral21');
   });
 
+  // Initialize complete database schema
+  initializeCompleteDatabase().then(result => {
+    if (result.success) {
+      console.log('🗄️  Complete database schema initialized successfully');
+      if (result.stats) {
+        console.log('📊 Current database stats:', result.stats);
+      }
+    } else {
+      console.log('⚠️ Database using fallback mode');
+    }
+  });
+
   // Initialize payment system
   setupPaymentSystem().then(result => {
     if (result.success) {
