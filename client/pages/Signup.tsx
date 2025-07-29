@@ -69,17 +69,32 @@ export default function Signup() {
         })
       });
 
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        // Handle non-JSON error responses
+        let errorMessage = 'Account creation failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (jsonError) {
+          // If JSON parsing fails, use the status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        setError(errorMessage);
+        return;
+      }
+
       const data = await response.json();
 
       if (data.success) {
         login(data.data.token, data.data.user);
-        
+
         // Check for pending booking
         const pendingBooking = localStorage.getItem('pendingBooking');
         if (pendingBooking) {
           const booking = JSON.parse(pendingBooking);
           localStorage.removeItem('pendingBooking');
-          
+
           if (booking.type === 'homestay') {
             navigate('/hotels');
           } else if (booking.type === 'driver') {
@@ -94,8 +109,8 @@ export default function Signup() {
         setError(data.message || 'Account creation failed');
       }
     } catch (err) {
-      setError('Network error. Please try again.');
       console.error('Signup error:', err);
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
