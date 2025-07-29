@@ -215,6 +215,13 @@ export function createServer() {
   // Platform statistics
   app.use("/api/stats", statsRouter);
 
+  // Real data API routes (replacing dummy data)
+  app.get("/api/real/stats", getRealPlatformStats);
+  app.get("/api/real/services", getRealServices);
+  app.get("/api/real/events", getRealEvents);
+  app.get("/api/real/dashboard", authenticateToken, getUserDashboardData);
+  app.get("/api/real/vendor-applications", getVendorApplications);
+
   // Search API routes
   app.use("/api/search", searchRouter);
 
