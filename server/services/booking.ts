@@ -330,7 +330,7 @@ export class BookingService {
       // Return mock bookings for demo purposes
       const mockHomestays: HomestayBooking[] = [
         {
-          id: 1,
+          id: 1001, // Changed to unique ID
           user_id: userId,
           homestay_id: 1,
           booking_reference: `HB${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
@@ -352,7 +352,7 @@ export class BookingService {
 
       const mockDrivers: DriverBooking[] = [
         {
-          id: 1,
+          id: 2001, // Changed to unique ID
           user_id: userId,
           driver_id: 1,
           booking_reference: `DB${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
