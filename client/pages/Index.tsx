@@ -239,9 +239,37 @@ export default function Index() {
       </section>
 
       {/* Categories Section */}
-      <SwiggyCategories 
+      <SwiggyCategories
         className="py-12 lg:py-16 bg-gray-50"
         maxItems={8}
+      />
+
+      {/* Featured Homestays Section */}
+      <RealDataVendors
+        title="Featured Hotels & Homestays"
+        subtitle="Top-rated accommodations in coastal Karnataka"
+        serviceType="homestay"
+        maxItems={6}
+        showFeatured={true}
+        className="bg-white"
+      />
+
+      {/* Popular Restaurants Section */}
+      <RealDataVendors
+        title="Popular Restaurants & Cafes"
+        subtitle="Authentic local dining experiences"
+        serviceType="restaurant"
+        maxItems={6}
+        className="bg-gray-50"
+      />
+
+      {/* Trusted Drivers Section */}
+      <RealDataVendors
+        title="Trusted Local Drivers"
+        subtitle="Professional transportation services"
+        serviceType="driver"
+        maxItems={4}
+        className="bg-white"
       />
 
 
