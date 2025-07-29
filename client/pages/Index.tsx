@@ -10,18 +10,8 @@ import { swiggyTheme } from '@/lib/swiggy-design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Search,
-  Star,
-  Users,
-  Award,
-  TrendingUp,
   MapPin,
-  Clock,
-  Shield,
-  Heart,
   ChevronRight,
-  Percent,
-  Zap,
-  Download,
   PlayCircle,
   Calendar,
   Home,
