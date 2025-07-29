@@ -96,13 +96,15 @@ export default function Dashboard() {
             const drivers = data.data.drivers || [];
 
             combinedBookings = [
-              ...homestays.map((b: any) => ({
+              ...homestays.map((b: any, index: number) => ({
                 ...b,
+                id: b.id || `homestay-${index}`, // Ensure unique ID
                 type: 'homestay' as const,
                 location: `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date).toLocaleDateString()}`
               })),
-              ...drivers.map((b: any) => ({
+              ...drivers.map((b: any, index: number) => ({
                 ...b,
+                id: b.id || `driver-${index}`, // Ensure unique ID
                 type: 'driver' as const,
                 location: `${b.pickup_location || 'Pickup'} to ${b.dropoff_location || 'Destination'}`
               }))
