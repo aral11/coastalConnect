@@ -80,8 +80,16 @@ export const appleAuth: RequestHandler = async (req, res) => {
 
 export const emailAuth: RequestHandler = async (req, res) => {
   try {
+    // Check if request body exists
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid request body'
+      });
+    }
+
     const { email, password } = req.body;
-    
+
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -89,8 +97,8 @@ export const emailAuth: RequestHandler = async (req, res) => {
       });
     }
 
-    const authResult = await AuthService.authenticateWithEmail(email, password);
-    
+    const authResult = await AuthService.authenticateWithEmail(email.toLowerCase().trim(), password);
+
     res.json({
       success: true,
       data: authResult,
@@ -98,6 +106,23 @@ export const emailAuth: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error('Email auth error:', error);
+
+    // Handle specific error types
+    if (error instanceof Error) {
+      if (error.message.includes('Invalid email or password')) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid email or password'
+        });
+      }
+      if (error.message.includes('Database error')) {
+        return res.status(503).json({
+          success: false,
+          message: 'Service temporarily unavailable. Please try again.'
+        });
+      }
+    }
+
     res.status(401).json({
       success: false,
       message: 'Authentication failed',
