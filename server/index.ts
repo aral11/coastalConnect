@@ -188,6 +188,7 @@ export function createServer() {
 
   // Professional Booking API routes
   app.use("/api/bookings", bookingApiRouter);
+  app.use("/api/bookings", professionalBookingsRouter);
 
   // Test notifications API routes (for development/testing)
   app.use("/api/test-notifications", testNotificationsRouter);
