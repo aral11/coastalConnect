@@ -61,7 +61,9 @@ export class AuthService {
     phone?: string;
     provider: 'email' | 'google' | 'apple';
     provider_id?: string;
-    role?: 'customer' | 'driver' | 'host';
+    role?: 'admin' | 'vendor' | 'customer' | 'event_organizer';
+    business_name?: string;
+    business_type?: 'homestay' | 'restaurant' | 'driver' | 'event_services';
     avatar_url?: string;
     password?: string;
   }): Promise<User> {
