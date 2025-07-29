@@ -321,43 +321,63 @@ export default function Eateries() {
 
 
   return (
-    <ServicePageLayout
-      title="Udupi Eateries"
-      description="Discover authentic local cuisine experiences with traditional Udupi flavors and coastal Karnataka specialties"
-      icon={<ChefHat className="h-8 w-8" />}
-      serviceType="eatery"
-      items={filteredEateries.map(eatery => ({
-        ...eatery,
-        type: 'eatery' as const,
-        price: eatery.price_range,
-        features: getAmenities(eatery)
-      }))}
-      loading={loading}
-      error={error}
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
-      onSearch={handleSearch}
-      searchPlaceholder="Search restaurants by name, cuisine, or location..."
-      showFilters={true}
-      filtersActive={showFilters}
-      onFiltersToggle={() => setShowFilters(!showFilters)}
-      filterCategories={categories}
-      filterLocations={locations}
-      filterAmenities={amenities}
-      onFilterChange={handleFilterChange}
-      onItemAction={bookEatery}
-      onFavorite={toggleFavorite}
-      favorites={favorites}
-      onRefresh={fetchEateries}
-      sortOptions={[
-        { value: 'recommended', label: 'Recommended' },
-        { value: 'rating', label: 'Highest Rated' },
-        { value: 'distance', label: 'Distance' },
-        { value: 'price_low', label: 'Price: Low to High' },
-        { value: 'price_high', label: 'Price: High to Low' },
-      ]}
-      onSortChange={handleSortChange}
-    />
+    <>
+      <ServicePageLayout
+        title="Udupi Eateries"
+        description="Discover authentic local cuisine experiences with traditional Udupi flavors and coastal Karnataka specialties"
+        icon={<ChefHat className="h-8 w-8" />}
+        serviceType="eatery"
+        items={filteredEateries.map(eatery => ({
+          ...eatery,
+          type: 'eatery' as const,
+          price: eatery.price_range,
+          features: getAmenities(eatery)
+        }))}
+        loading={loading}
+        error={error}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+        searchPlaceholder="Search restaurants by name, cuisine, or location..."
+        showFilters={true}
+        filtersActive={showFilters}
+        onFiltersToggle={() => setShowFilters(!showFilters)}
+        filterCategories={categories}
+        filterLocations={locations}
+        filterAmenities={amenities}
+        onFilterChange={handleFilterChange}
+        onItemAction={bookEatery}
+        onFavorite={toggleFavorite}
+        favorites={favorites}
+        onRefresh={fetchEateries}
+        sortOptions={[
+          { value: 'recommended', label: 'Recommended' },
+          { value: 'rating', label: 'Highest Rated' },
+          { value: 'distance', label: 'Distance' },
+          { value: 'price_low', label: 'Price: Low to High' },
+          { value: 'price_high', label: 'Price: High to Low' },
+        ]}
+        onSortChange={handleSortChange}
+      />
+
+      {/* Professional Table Reservation Modal */}
+      {selectedEatery && (
+        <ProfessionalBookingModal
+          isOpen={isBookingModalOpen}
+          onClose={closeBookingModal}
+          service={{
+            id: selectedEatery.id,
+            name: selectedEatery.name,
+            type: 'restaurant',
+            price: selectedEatery.price_range || 500,
+            location: selectedEatery.location,
+            rating: selectedEatery.rating,
+            image: selectedEatery.image_url,
+            description: selectedEatery.description
+          }}
+        />
+      )}
+    </>
   );
 }
 
