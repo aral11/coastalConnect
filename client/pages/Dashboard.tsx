@@ -54,41 +54,87 @@ export default function Dashboard() {
   const fetchUserBookings = async () => {
     try {
       setLoading(true);
+      setError(null);
       const token = localStorage.getItem('authToken');
-      
+
+      if (!token) {
+        setError('Authentication token not found');
+        setBookings([]);
+        return;
+      }
+
       const response = await fetch('/api/bookings/user', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch bookings');
+        if (response.status === 401) {
+          setError('Authentication expired. Please login again.');
+          // Could redirect to login here
+          return;
+        } else if (response.status === 503) {
+          setError('Service temporarily unavailable. Please try again later.');
+        } else {
+          setError(`Server error (${response.status}). Please try again.`);
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
-        // Combine homestay and driver bookings with proper typing
-        const combinedBookings: Booking[] = [
-          ...data.data.homestays.map((b: any) => ({
-            ...b,
-            type: 'homestay' as const,
-            location: `${b.guest_name} - Check-in: ${new Date(b.check_in_date).toLocaleDateString()}`
-          })),
-          ...data.data.drivers.map((b: any) => ({
-            ...b,
-            type: 'driver' as const,
-            location: `${b.pickup_location} to ${b.dropoff_location}`
-          }))
-        ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        
+        let combinedBookings: Booking[] = [];
+
+        // Handle different response formats
+        if (data.data && typeof data.data === 'object') {
+          // Format 1: { homestays: [], drivers: [] }
+          if (data.data.homestays || data.data.drivers) {
+            const homestays = data.data.homestays || [];
+            const drivers = data.data.drivers || [];
+
+            combinedBookings = [
+              ...homestays.map((b: any) => ({
+                ...b,
+                type: 'homestay' as const,
+                location: `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date).toLocaleDateString()}`
+              })),
+              ...drivers.map((b: any) => ({
+                ...b,
+                type: 'driver' as const,
+                location: `${b.pickup_location || 'Pickup'} to ${b.dropoff_location || 'Destination'}`
+              }))
+            ];
+          }
+          // Format 2: Array of bookings with service_type
+          else if (Array.isArray(data.data)) {
+            combinedBookings = data.data.map((b: any) => ({
+              ...b,
+              type: b.service_type || b.type || 'unknown',
+              location: b.service_type === 'homestay'
+                ? `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date || b.created_at).toLocaleDateString()}`
+                : `${b.pickup_location || 'Pickup'} to ${b.dropoff_location || 'Destination'}`
+            }));
+          }
+        }
+
+        // Sort by creation date
+        combinedBookings.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
         setBookings(combinedBookings);
+
+        if (combinedBookings.length === 0) {
+          setError('No bookings found. Start exploring to make your first booking!');
+        }
+      } else {
+        setError(data.message || 'Failed to load bookings');
+        setBookings([]);
       }
     } catch (err) {
       console.error('Error fetching bookings:', err);
-      setError('Failed to load bookings');
-      setBookings([]); // Set empty array instead of dummy data
+      setError(err instanceof Error ? err.message : 'Failed to load bookings. Please check your connection and try again.');
+      setBookings([]);
     } finally {
       setLoading(false);
     }
