@@ -26,7 +26,8 @@ import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBooking
 import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
 import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
 import { submitFeedback, getFeedbacks, getFeedbackStats } from "./routes/feedback";
-import { initializeDatabase, getConnection } from "./db/connection";
+import { getConnection } from "./db/connection";
+import { connectDB } from "./config/database";
 import { seedDatabase } from "./seedData";
 import { seedCoupons } from "./seedCoupons";
 import { authenticateToken } from "./middleware/auth";
