@@ -1,655 +1,515 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { 
-  ArrowLeft,
+  Building2, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  FileText, 
   Upload,
   CheckCircle,
-  Clock,
   AlertCircle,
-  Store,
-  IndianRupee,
-  Phone,
-  Mail,
-  MapPin,
-  FileText,
-  CreditCard,
-  Shield
+  ArrowRight,
+  Home,
+  ChefHat,
+  Car,
+  Calendar
 } from 'lucide-react';
+import Layout from '@/components/Layout';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface VendorFormData {
   businessName: string;
-  ownerName: string;
-  category: string;
-  subcategory: string;
-  description: string;
-  address: string;
+  businessType: 'homestay' | 'restaurant' | 'driver' | 'event_services';
+  businessDescription: string;
+  businessAddress: string;
   city: string;
-  phone: string;
-  email: string;
-  website: string;
-  aadharNumber: string;
+  state: string;
+  contactPerson: string;
+  contactPhone: string;
+  contactEmail: string;
+  businessLicense: string;
   gstNumber: string;
-  subscriptionPlan: 'monthly' | 'annual';
+  panNumber: string;
+  aadharNumber: string;
 }
 
-// Service categories will be loaded dynamically from server
+const businessTypes = [
+  {
+    value: 'homestay',
+    label: 'Hotels & Homestays',
+    icon: <Home className="h-6 w-6" />,
+    description: 'Accommodation services, hotels, resorts, homestays'
+  },
+  {
+    value: 'restaurant',
+    label: 'Restaurants & Cafes',
+    icon: <ChefHat className="h-6 w-6" />,
+    description: 'Food & beverage services, restaurants, cafes, catering'
+  },
+  {
+    value: 'driver',
+    label: 'Transportation',
+    icon: <Car className="h-6 w-6" />,
+    description: 'Local transport, taxi services, tour operators'
+  },
+  {
+    value: 'event_services',
+    label: 'Event Services',
+    icon: <Calendar className="h-6 w-6" />,
+    description: 'Photography, decorations, event planning services'
+  }
+];
 
 export default function VendorRegister() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
   const [formData, setFormData] = useState<VendorFormData>({
     businessName: '',
-    ownerName: '',
-    category: '',
-    subcategory: '',
-    description: '',
-    address: '',
-    city: 'udupi',
-    phone: '',
-    email: '',
-    website: '',
-    aadharNumber: '',
+    businessType: 'homestay',
+    businessDescription: '',
+    businessAddress: '',
+    city: 'Udupi',
+    state: 'Karnataka',
+    contactPerson: user?.name || '',
+    contactPhone: user?.phone || '',
+    contactEmail: user?.email || '',
+    businessLicense: '',
     gstNumber: '',
-    subscriptionPlan: 'annual'
+    panNumber: '',
+    aadharNumber: ''
   });
-  
-  const [documents, setDocuments] = useState({
-    aadharFront: null as File | null,
-    aadharBack: null as File | null,
-    businessProof: null as File | null,
-    gstCertificate: null as File | null
-  });
-  
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [serviceCategories, setServiceCategories] = useState<any>({});
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
-  useEffect(() => {
-    fetchServiceCategories();
-  }, []);
-
-  const fetchServiceCategories = async () => {
-    try {
-      const response = await fetch('/api/vendors/categories');
-      const data = await response.json();
-
-      if (data.success && data.data) {
-        setServiceCategories(data.data);
-      } else {
-        // Fallback categories in case API fails
-        setServiceCategories({
-          'eateries': {
-            label: 'Eateries',
-            subcategories: ['Restaurant', 'Cafe', 'Bar', 'Fast Food', 'Catering', 'Sweet Shop', 'Bakery']
-          },
-          'arts-history': {
-            label: 'Arts & History',
-            subcategories: ['Museum', 'Heritage Site', 'Art Gallery', 'Cultural Center', 'Traditional Crafts']
-          },
-          'beauty-wellness': {
-            label: 'Beauty & Wellness',
-            subcategories: ['Salon', 'Spa', 'Gym', 'Ayurveda Center', 'Yoga Studio', 'Massage Center']
-          },
-          'nightlife': {
-            label: 'Nightlife',
-            subcategories: ['Bar', 'Pub', 'Club', 'Lounge', 'Live Music Venue']
-          },
-          'shopping': {
-            label: 'Shopping',
-            subcategories: ['Market', 'Store', 'Boutique', 'Handicrafts', 'Electronics', 'Clothing']
-          },
-          'entertainment': {
-            label: 'Entertainment',
-            subcategories: ['Cinema', 'Gaming Zone', 'Sports Complex', 'Water Sports', 'Adventure Sports']
-          },
-          'event-management': {
-            label: 'Event Management',
-            subcategories: ['Wedding Planner', 'Corporate Events', 'Party Planning', 'Catering Services']
-          },
-          'transportation': {
-            label: 'Transportation',
-            subcategories: ['Taxi Service', 'Car Rental', 'Bike Rental', 'Auto Rickshaw', 'Bus Service']
-          },
-          'other-services': {
-            label: 'Other Services',
-            subcategories: ['Plumber', 'Electrician', 'Carpenter', 'Home Cleaning', 'Repair Services', 'IT Services']
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      // Use fallback categories
-      setServiceCategories({
-        'eateries': { label: 'Eateries', subcategories: ['Restaurant', 'Cafe', 'Bar'] },
-        'beauty-wellness': { label: 'Beauty & Wellness', subcategories: ['Salon', 'Spa', 'Gym'] },
-        'other-services': { label: 'Other Services', subcategories: ['Repair Services', 'IT Services'] }
-      });
-    } finally {
-      setCategoriesLoading(false);
-    }
-  };
-
-  const handleInputChange = (field: keyof VendorFormData, value: string) => {
+  const updateFormData = (field: keyof VendorFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (field: keyof typeof documents, file: File | null) => {
-    setDocuments(prev => ({ ...prev, [field]: file }));
+  const validateStep = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.businessName && formData.businessType && formData.businessDescription;
+      case 2:
+        return formData.businessAddress && formData.city && formData.contactPerson && 
+               formData.contactPhone && formData.contactEmail;
+      case 3:
+        return formData.businessLicense && formData.gstNumber && formData.panNumber;
+      default:
+        return false;
+    }
+  };
+
+  const nextStep = () => {
+    if (validateStep() && currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
+    if (!isAuthenticated) {
+      setError('Please login to submit vendor application');
+      return;
+    }
 
     try {
-      // Prepare form data for submission
-      const submissionData = {
-        business_name: formData.businessName,
-        owner_name: formData.ownerName,
-        category: formData.category,
-        subcategory: formData.subcategory,
-        description: formData.description,
-        address: formData.address,
-        city: formData.city,
-        phone: formData.phone,
-        email: formData.email,
-        website: formData.website,
-        aadhar_number: formData.aadharNumber,
-        gst_number: formData.gstNumber,
-        subscription_plan: formData.subscriptionPlan,
-        admin_approval_status: 'pending'
-      };
+      setLoading(true);
+      setError(null);
 
-      // Submit vendor registration
-      const response = await fetch('/api/vendors/register', {
+      const response = await fetch('/api/vendor-applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
-        body: JSON.stringify(submissionData)
+        body: JSON.stringify({
+          business_name: formData.businessName,
+          business_type: formData.businessType,
+          business_description: formData.businessDescription,
+          business_address: formData.businessAddress,
+          city: formData.city,
+          state: formData.state,
+          contact_person: formData.contactPerson,
+          contact_phone: formData.contactPhone,
+          contact_email: formData.contactEmail,
+          business_license: formData.businessLicense,
+          gst_number: formData.gstNumber,
+          pan_number: formData.panNumber,
+          aadhar_number: formData.aadharNumber
+        })
       });
 
       const data = await response.json();
 
       if (data.success) {
-        console.log('✅ Vendor registration submitted successfully:', data.data);
-        setSubmitted(true);
+        setSuccess(true);
       } else {
-        throw new Error(data.message || 'Registration submission failed');
+        throw new Error(data.message || 'Failed to submit application');
       }
     } catch (error) {
-      console.error('❌ Vendor registration error:', error);
-      alert('Registration submission failed. Please try again.');
+      setError(error instanceof Error ? error.message : 'Failed to submit application');
     } finally {
       setLoading(false);
     }
   };
 
-  const selectedCategory = serviceCategories[formData.category as keyof typeof serviceCategories];
-
-  // Calculate subscription pricing based on registration timing
-  const calculateSubscriptionPrice = () => {
-    const launchDate = new Date('2024-01-01'); // Platform launch date
-    const currentDate = new Date();
-    const registrationDate = new Date();
-
-    // First month after launch (January 2024): ₹99/month
-    // After first month: ₹199/month
-    const monthsSinceLaunch = (currentDate.getFullYear() - launchDate.getFullYear()) * 12 +
-                             (currentDate.getMonth() - launchDate.getMonth());
-
-    const isFirstMonth = monthsSinceLaunch === 0;
-
-    if (formData.subscriptionPlan === 'monthly') {
-      return isFirstMonth ? 99 : 199;
-    } else {
-      // Annual plan: Always ₹199 (special pricing)
-      return 199;
-    }
-  };
-
-  const subscriptionPrice = calculateSubscriptionPrice();
-  const isLaunchOffer = subscriptionPrice === 99;
-
-  if (submitted) {
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="max-w-md w-full mx-4">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-gray-900">Registration Submitted!</CardTitle>
-            <CardDescription>
-              Your vendor registration has been submitted successfully. Our admin team will verify your documents and approve your account within 24-48 hours.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center text-blue-800 mb-2">
-                <Clock className="h-4 w-4 mr-2" />
-                <span className="font-medium">What's Next?</span>
-              </div>
-              <ul className="text-sm text-blue-700 space-y-1">
-                <li>• Document verification (24-48 hours)</li>
-                <li>• Admin approval notification via email</li>
-                <li>• Payment link for subscription</li>
-                <li>• Account activation</li>
-              </ul>
-            </div>
-            <Link to="/">
-              <Button className="w-full btn-coastal">
-                Back to Home
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <section className="py-12 bg-gradient-to-r from-coastal-500 to-ocean-600 text-white">
-        <div className="container mx-auto px-4">
-          <Link to="/" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Link>
-          
-          <div className="flex items-center mb-6">
-            <div className="bg-white/20 rounded-lg p-4 mr-6">
-              <Store className="h-8 w-8" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold mb-2">Vendor Registration</h1>
-              <p className="text-xl text-white/90">Join coastalConnect - Udupi & Manipal's trusted platform</p>
-            </div>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="text-2xl font-bold">₹99</div>
-              <div className="text-sm opacity-90">Monthly Plan</div>
-            </div>
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="text-2xl font-bold">₹199</div>
-              <div className="text-sm opacity-90">Annual Plan (Save ₹989!)</div>
-            </div>
-            <div className="bg-white/10 rounded-lg p-4">
-              <div className="text-sm font-medium">Admin Verified</div>
-              <div className="text-xs opacity-90">Quick approval process</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl mx-auto">
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center space-x-4">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 1 ? 'bg-coastal-600 text-white' : 'bg-gray-200'}`}>
-                1
-              </div>
-              <div className={`w-16 h-1 ${step >= 2 ? 'bg-coastal-600' : 'bg-gray-200'}`}></div>
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 2 ? 'bg-coastal-600 text-white' : 'bg-gray-200'}`}>
-                2
-              </div>
-              <div className={`w-16 h-1 ${step >= 3 ? 'bg-coastal-600' : 'bg-gray-200'}`}></div>
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 3 ? 'bg-coastal-600 text-white' : 'bg-gray-200'}`}>
-                3
-              </div>
-            </div>
-          </div>
-
+      <Layout>
+        <div className="max-w-2xl mx-auto py-12">
           <Card>
-            <CardHeader>
-              <CardTitle>
-                {step === 1 && 'Business Information'}
-                {step === 2 && 'Document Upload'}
-                {step === 3 && 'Review & Payment'}
-              </CardTitle>
-              <CardDescription>
-                {step === 1 && 'Tell us about your business and select your category'}
-                {step === 2 && 'Upload required documents for verification'}
-                {step === 3 && 'Review your information and complete registration'}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-6">
-              {step === 1 && (
-                <div className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="businessName">Business Name *</Label>
-                      <Input
-                        id="businessName"
-                        value={formData.businessName}
-                        onChange={(e) => handleInputChange('businessName', e.target.value)}
-                        placeholder="Enter your business name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="ownerName">Owner Name *</Label>
-                      <Input
-                        id="ownerName"
-                        value={formData.ownerName}
-                        onChange={(e) => handleInputChange('ownerName', e.target.value)}
-                        placeholder="Enter owner's full name"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="category">Business Category *</Label>
-                      <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Object.entries(serviceCategories).map(([key, category]) => (
-                            <SelectItem key={key} value={key}>
-                              {category.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="subcategory">Subcategory *</Label>
-                      <Select 
-                        value={formData.subcategory} 
-                        onValueChange={(value) => handleInputChange('subcategory', value)}
-                        disabled={!selectedCategory}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select subcategory" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {selectedCategory?.subcategories.map((sub) => (
-                            <SelectItem key={sub} value={sub}>
-                              {sub}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description">Business Description *</Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Describe your business, services, and specialties"
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="city">City *</Label>
-                      <Select value={formData.city} onValueChange={(value) => handleInputChange('city', value)}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="udupi">Udupi</SelectItem>
-                          <SelectItem value="manipal">Manipal</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">Phone Number *</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="Enter phone number"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="address">Complete Address *</Label>
-                    <Textarea
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => handleInputChange('address', e.target.value)}
-                      placeholder="Enter complete business address"
-                      rows={2}
-                    />
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="website">Website (Optional)</Label>
-                      <Input
-                        id="website"
-                        value={formData.website}
-                        onChange={(e) => handleInputChange('website', e.target.value)}
-                        placeholder="Enter website URL"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {step === 2 && (
-                <div className="space-y-6">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <div className="flex items-center text-blue-800 mb-2">
-                      <Shield className="h-4 w-4 mr-2" />
-                      <span className="font-medium">Required Documents</span>
-                    </div>
-                    <p className="text-sm text-blue-700">
-                      Upload clear, readable copies of all required documents for verification.
-                    </p>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="aadharNumber">Aadhar Number *</Label>
-                      <Input
-                        id="aadharNumber"
-                        value={formData.aadharNumber}
-                        onChange={(e) => handleInputChange('aadharNumber', e.target.value)}
-                        placeholder="Enter Aadhar number"
-                        maxLength={12}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="gstNumber">GST Number (if applicable)</Label>
-                      <Input
-                        id="gstNumber"
-                        value={formData.gstNumber}
-                        onChange={(e) => handleInputChange('gstNumber', e.target.value)}
-                        placeholder="Enter GST number"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label>Aadhar Card Front *</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          className="hidden"
-                          onChange={(e) => handleFileUpload('aadharFront', e.target.files?.[0] || null)}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>Aadhar Card Back *</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          className="hidden"
-                          onChange={(e) => handleFileUpload('aadharBack', e.target.files?.[0] || null)}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>Business Registration/License *</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600">Shop license, trade license, or business registration</p>
-                        <input
-                          type="file"
-                          accept="image/*,.pdf"
-                          className="hidden"
-                          onChange={(e) => handleFileUpload('businessProof', e.target.files?.[0] || null)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="space-y-6">
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    <h3 className="font-semibold text-gray-900 mb-4">Business Summary</h3>
-                    <div className="grid md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-600">Business Name:</span>
-                        <div className="font-medium">{formData.businessName}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Category:</span>
-                        <div className="font-medium">{selectedCategory?.label} - {formData.subcategory}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Location:</span>
-                        <div className="font-medium">{formData.city === 'udupi' ? 'Udupi' : 'Manipal'}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Phone:</span>
-                        <div className="font-medium">{formData.phone}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label>Select Subscription Plan *</Label>
-                    <div className="grid md:grid-cols-2 gap-4 mt-2">
-                      <div
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                          formData.subscriptionPlan === 'monthly' ? 'border-coastal-500 bg-coastal-50' : 'border-gray-200'
-                        }`}
-                        onClick={() => handleInputChange('subscriptionPlan', 'monthly')}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">
-                            {isLaunchOffer ? 'Launch Offer' : 'Monthly Plan'}
-                          </span>
-                          <span className="text-2xl font-bold text-coastal-600">
-                            ₹{formData.subscriptionPlan === 'monthly' ? calculateSubscriptionPrice() : 199}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {isLaunchOffer ? 'First month special price' : 'Regular monthly rate'}
-                        </p>
-                        {isLaunchOffer && (
-                          <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs mt-1">
-                            Limited Time
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <div
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                          formData.subscriptionPlan === 'annual' ? 'border-coastal-500 bg-coastal-50' : 'border-gray-200'
-                        }`}
-                        onClick={() => handleInputChange('subscriptionPlan', 'annual')}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">Annual Plan</span>
-                          <span className="text-2xl font-bold text-coastal-600">
-                            ₹{formData.subscriptionPlan === 'annual' ? calculateSubscriptionPrice() : 199}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">Special annual rate</p>
-                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs mt-1">
-                          Best Value
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-yellow-50 p-4 rounded-lg">
-                    <div className="flex items-center text-yellow-800 mb-2">
-                      <AlertCircle className="h-4 w-4 mr-2" />
-                      <span className="font-medium">Payment Process</span>
-                    </div>
-                    <p className="text-sm text-yellow-700">
-                      After admin approval, you'll receive a payment link via email to complete your subscription.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-between pt-6">
-                {step > 1 && (
-                  <Button variant="outline" onClick={() => setStep(step - 1)}>
-                    Previous
-                  </Button>
-                )}
-                
-                {step < 3 ? (
-                  <Button 
-                    className="btn-coastal ml-auto" 
-                    onClick={() => setStep(step + 1)}
-                    disabled={
-                      (step === 1 && (!formData.businessName || !formData.category || !formData.phone)) ||
-                      (step === 2 && (!formData.aadharNumber))
-                    }
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button 
-                    className="btn-coastal ml-auto" 
-                    onClick={handleSubmit}
-                    disabled={loading}
-                  >
-                    {loading ? 'Submitting...' : 'Submit Registration'}
-                  </Button>
-                )}
+            <CardContent className="p-8 text-center">
+              <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+              <h2 className="text-xl font-bold mb-2">Login Required</h2>
+              <p className="text-gray-600 mb-6">
+                You need to be logged in to register as a vendor
+              </p>
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => navigate('/login')}
+                  className="w-full bg-orange-500 hover:bg-orange-600"
+                >
+                  Login to Continue
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/signup')}
+                  className="w-full"
+                >
+                  Create Account
+                </Button>
               </div>
             </CardContent>
           </Card>
         </div>
+      </Layout>
+    );
+  }
+
+  if (success) {
+    return (
+      <Layout>
+        <div className="max-w-2xl mx-auto py-12">
+          <Card>
+            <CardContent className="p-8 text-center">
+              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
+              <p className="text-gray-600 mb-6">
+                Your vendor application has been submitted successfully. Our team will review your 
+                application and get back to you within 2-3 business days.
+              </p>
+              
+              <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                <h3 className="font-semibold text-blue-900 mb-2">What happens next?</h3>
+                <ul className="text-sm text-blue-800 space-y-1 text-left">
+                  <li>• Our team will verify your business documents</li>
+                  <li>• We may contact you for additional information</li>
+                  <li>• Once approved, you'll get access to the vendor dashboard</li>
+                  <li>• You can then start listing your services</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => navigate('/dashboard')}
+                  className="w-full bg-orange-500 hover:bg-orange-600"
+                >
+                  Go to Dashboard
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/')}
+                  className="w-full"
+                >
+                  Return to Homepage
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
+
+  const renderBusinessTypeStep = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Business Information</h2>
+        <p className="text-gray-600">Tell us about your business</p>
+      </div>
+
+      <div>
+        <Label htmlFor="businessName">Business Name *</Label>
+        <Input
+          id="businessName"
+          value={formData.businessName}
+          onChange={(e) => updateFormData('businessName', e.target.value)}
+          placeholder="Enter your business name"
+        />
+      </div>
+
+      <div>
+        <Label>Business Type *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+          {businessTypes.map((type) => (
+            <button
+              key={type.value}
+              type="button"
+              onClick={() => updateFormData('businessType', type.value as any)}
+              className={`p-4 border-2 rounded-lg text-left transition-colors ${
+                formData.businessType === type.value
+                  ? 'border-orange-500 bg-orange-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <div className={`${formData.businessType === type.value ? 'text-orange-600' : 'text-gray-400'}`}>
+                  {type.icon}
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">{type.label}</div>
+                  <div className="text-sm text-gray-600">{type.description}</div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="businessDescription">Business Description *</Label>
+        <Textarea
+          id="businessDescription"
+          value={formData.businessDescription}
+          onChange={(e) => updateFormData('businessDescription', e.target.value)}
+          placeholder="Describe your business, services offered, and what makes you unique"
+          rows={4}
+        />
       </div>
     </div>
+  );
+
+  const renderContactStep = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Contact & Location</h2>
+        <p className="text-gray-600">Where can customers find you?</p>
+      </div>
+
+      <div>
+        <Label htmlFor="businessAddress">Business Address *</Label>
+        <Textarea
+          id="businessAddress"
+          value={formData.businessAddress}
+          onChange={(e) => updateFormData('businessAddress', e.target.value)}
+          placeholder="Enter complete business address"
+          rows={3}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="city">City *</Label>
+          <Input
+            id="city"
+            value={formData.city}
+            onChange={(e) => updateFormData('city', e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="state">State *</Label>
+          <Input
+            id="state"
+            value={formData.state}
+            onChange={(e) => updateFormData('state', e.target.value)}
+          />
+        </div>
+      </div>
+
+      <Separator />
+
+      <div>
+        <Label htmlFor="contactPerson">Contact Person *</Label>
+        <Input
+          id="contactPerson"
+          value={formData.contactPerson}
+          onChange={(e) => updateFormData('contactPerson', e.target.value)}
+          placeholder="Primary contact person name"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="contactPhone">Phone Number *</Label>
+          <Input
+            id="contactPhone"
+            type="tel"
+            value={formData.contactPhone}
+            onChange={(e) => updateFormData('contactPhone', e.target.value)}
+            placeholder="+91-9876543210"
+          />
+        </div>
+        <div>
+          <Label htmlFor="contactEmail">Email Address *</Label>
+          <Input
+            id="contactEmail"
+            type="email"
+            value={formData.contactEmail}
+            onChange={(e) => updateFormData('contactEmail', e.target.value)}
+            placeholder="business@example.com"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDocumentsStep = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Business Documents</h2>
+        <p className="text-gray-600">We need these details for verification</p>
+      </div>
+
+      <div>
+        <Label htmlFor="businessLicense">Business License Number *</Label>
+        <Input
+          id="businessLicense"
+          value={formData.businessLicense}
+          onChange={(e) => updateFormData('businessLicense', e.target.value)}
+          placeholder="Business license or shop act number"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="gstNumber">GST Number *</Label>
+        <Input
+          id="gstNumber"
+          value={formData.gstNumber}
+          onChange={(e) => updateFormData('gstNumber', e.target.value)}
+          placeholder="22AAAAA0000A1Z5"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="panNumber">PAN Number *</Label>
+        <Input
+          id="panNumber"
+          value={formData.panNumber}
+          onChange={(e) => updateFormData('panNumber', e.target.value)}
+          placeholder="ABCDE1234F"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="aadharNumber">Aadhar Number (Optional)</Label>
+        <Input
+          id="aadharNumber"
+          value={formData.aadharNumber}
+          onChange={(e) => updateFormData('aadharNumber', e.target.value)}
+          placeholder="1234 5678 9012"
+        />
+      </div>
+
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="flex items-center space-x-2">
+          <AlertCircle className="h-5 w-5 text-yellow-600" />
+          <div className="text-sm text-yellow-800">
+            <strong>Note:</strong> All information will be verified during the approval process. 
+            Please ensure all details are accurate and up-to-date.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Layout>
+      <div className="max-w-2xl mx-auto py-12">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-3">
+              <Building2 className="h-6 w-6 text-orange-600" />
+              <span>Become a Vendor</span>
+            </CardTitle>
+            
+            {/* Progress Steps */}
+            <div className="flex items-center justify-between mt-6">
+              {[1, 2, 3].map((step) => (
+                <div key={step} className="flex items-center">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    currentStep >= step ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {currentStep > step ? <CheckCircle className="h-4 w-4" /> : step}
+                  </div>
+                  {step < 3 && (
+                    <div className={`w-12 h-0.5 mx-2 ${
+                      currentStep > step ? 'bg-orange-500' : 'bg-gray-200'
+                    }`} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-8">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {currentStep === 1 && renderBusinessTypeStep()}
+            {currentStep === 2 && renderContactStep()}
+            {currentStep === 3 && renderDocumentsStep()}
+
+            <div className="flex justify-between pt-6 border-t">
+              <Button
+                variant="outline"
+                onClick={currentStep === 1 ? () => navigate('/') : prevStep}
+                disabled={loading}
+              >
+                {currentStep === 1 ? 'Cancel' : 'Back'}
+              </Button>
+
+              {currentStep < 3 ? (
+                <Button
+                  onClick={nextStep}
+                  disabled={!validateStep() || loading}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
+                  Continue
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!validateStep() || loading}
+                  className="bg-orange-500 hover:bg-orange-600"
+                >
+                  {loading ? 'Submitting...' : 'Submit Application'}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </Layout>
   );
 }
