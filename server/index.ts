@@ -33,6 +33,7 @@ import { authenticateToken } from "./middleware/auth";
 import bookingApiRouter from "./routes/bookingApi";
 import professionalBookingsRouter from "./routes/professionalBookings";
 import seedingRouter from "./routes/seeding";
+import dynamicServicesRouter from "./routes/dynamicServices";
 import { healthCheck, databaseStatus } from "./routes/health";
 
 export function createServer() {
