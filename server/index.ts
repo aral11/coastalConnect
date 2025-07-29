@@ -30,6 +30,7 @@ import { initializeDatabase, getConnection } from "./db/connection";
 import { seedDatabase } from "./seedData";
 import { seedCoupons } from "./seedCoupons";
 import { authenticateToken } from "./middleware/auth";
+import bookingApiRouter from "./routes/bookingApi";
 
 export function createServer() {
   const app = express();
