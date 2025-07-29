@@ -9,6 +9,7 @@ import SwiggyOffers from '@/components/SwiggyOffers';
 import SwiggyVendors from '@/components/SwiggyVendors';
 import PlatformStats from '@/components/PlatformStats';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Search,
   Star,
@@ -27,9 +28,12 @@ import {
 } from 'lucide-react';
 
 export default function Index() {
+  const { user, isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Udupi, Karnataka');
   const [locationsLoaded, setLocationsLoaded] = useState(false);
+  const [userBookings, setUserBookings] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -43,13 +47,44 @@ export default function Index() {
     }
   };
 
-  // Simulate loading for popular locations
+  // Load user-specific data and locations
   useEffect(() => {
     const timer = setTimeout(() => {
       setLocationsLoaded(true);
     }, 100);
+
+    // Load user-specific data if authenticated
+    if (isAuthenticated && user) {
+      loadUserData();
+    }
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [isAuthenticated, user]);
+
+  const loadUserData = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      // Load user bookings
+      const bookingsResponse = await fetch('/api/bookings/user', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (bookingsResponse.ok) {
+        const bookingsData = await bookingsResponse.json();
+        if (bookingsData.success) {
+          const allBookings = [
+            ...(bookingsData.data.homestays || []),
+            ...(bookingsData.data.drivers || [])
+          ];
+          setUserBookings(allBookings.slice(0, 3)); // Show only latest 3
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
 
   return (
     <Layout fullWidth>
@@ -59,17 +94,33 @@ export default function Index() {
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Content */}
             <div>
-              {/* Tagline */}
+              {/* Personalized Tagline */}
               <div className="mb-6">
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-                  Discover local<br />
-                  <span className="text-orange-500">experiences</span><br />
-                  in coastal Karnataka
-                </h1>
-                <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators.
-                  Your complete guide to coastal Karnataka.
-                </p>
+                {isAuthenticated ? (
+                  <>
+                    <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                      Welcome back,<br />
+                      <span className="text-orange-500">{user?.name?.split(' ')[0] || 'Explorer'}</span>!<br />
+                      <span className="text-3xl lg:text-4xl xl:text-5xl">Ready for your next adventure?</span>
+                    </h1>
+                    <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
+                      Continue exploring coastal Karnataka with personalized recommendations based on your preferences.
+                      {userBookings.length > 0 && ` You have ${userBookings.length} recent booking${userBookings.length > 1 ? 's' : ''}.`}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
+                      Discover local<br />
+                      <span className="text-orange-500">experiences</span><br />
+                      in coastal Karnataka
+                    </h1>
+                    <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
+                      Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators.
+                      Your complete guide to coastal Karnataka.
+                    </p>
+                  </>
+                )}
               </div>
 
               {/* Search Section */}
@@ -124,8 +175,43 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <PlatformStats />
+              {/* User-specific content or Platform Stats */}
+              {isAuthenticated && userBookings.length > 0 ? (
+                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border border-orange-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-orange-600" />
+                    Your Recent Bookings
+                  </h3>
+                  <div className="space-y-3">
+                    {userBookings.map((booking: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between bg-white rounded-lg p-3 shadow-sm">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                            {booking.type === 'homestay' ? <Home className="h-5 w-5 text-orange-600" /> : <Car className="h-5 w-5 text-orange-600" />}
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">
+                              {booking.type === 'homestay' ? 'Homestay Booking' : 'Driver Trip'}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {booking.booking_reference}
+                            </div>
+                          </div>
+                        </div>
+                        <Link to="/dashboard" className="text-orange-600 hover:text-orange-700 text-sm font-medium">
+                          View Details
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                  <Link to="/dashboard" className="inline-flex items-center mt-4 text-orange-600 hover:text-orange-700 font-medium">
+                    View All Bookings
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              ) : (
+                <PlatformStats />
+              )}
             </div>
 
             {/* Right Image */}
