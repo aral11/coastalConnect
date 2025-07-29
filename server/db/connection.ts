@@ -3,15 +3,19 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Use the user's database configuration
 const config: sql.config = {
-  server: process.env.DB_SERVER || 'DESKTOP-6FSVDEL\\SQLEXPRESS',
-  database: process.env.DB_DATABASE || 'CoastalConnectUdupi',
-  driver: 'msnodesqlv8' as any,
+  server: process.env.DB_SERVER || '127.0.0.1',
+  port: parseInt(process.env.DB_PORT || '1433'),
+  database: process.env.DB_DATABASE || 'costalConnectDEV',
+  user: process.env.DB_USER || 'aral21',
+  password: process.env.DB_PASSWORD || 'Aral@1234',
   options: {
-    trustedConnection: true,
-    enableArithAbort: true,
+    encrypt: false,
     trustServerCertificate: true,
-    instanceName: 'SQLEXPRESS'
+    enableArithAbort: true,
+    connectTimeout: 60000,
+    requestTimeout: 60000
   },
   pool: {
     max: 10,
