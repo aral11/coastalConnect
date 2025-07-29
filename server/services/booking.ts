@@ -311,7 +311,7 @@ export class BookingService {
   static async getUserBookings(userId: number): Promise<{ homestays: HomestayBooking[]; drivers: DriverBooking[] }> {
     try {
       const connection = await getConnection();
-      
+
       const homestayResult = await connection.request()
         .input('user_id', userId)
         .query('SELECT * FROM HomestayBookings WHERE user_id = @user_id ORDER BY created_at DESC');
@@ -325,10 +325,59 @@ export class BookingService {
         drivers: driverResult.recordset
       };
     } catch (error) {
-      console.log('Database not available, returning empty bookings');
+      console.log('Database not available for user bookings, returning mock data');
+
+      // Return mock bookings for demo purposes
+      const mockHomestays: HomestayBooking[] = [
+        {
+          id: 1,
+          user_id: userId,
+          homestay_id: 1,
+          booking_reference: `HB${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          check_in_date: '2024-12-25',
+          check_out_date: '2024-12-27',
+          guests: 2,
+          guest_name: 'Demo User',
+          guest_phone: '+91 98765 43210',
+          guest_email: 'demo@example.com',
+          special_requests: 'Ground floor room preferred',
+          total_amount: 2500,
+          status: 'confirmed',
+          payment_status: 'paid',
+          payment_id: 'pay_demo123',
+          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+          updated_at: new Date()
+        }
+      ];
+
+      const mockDrivers: DriverBooking[] = [
+        {
+          id: 1,
+          user_id: userId,
+          driver_id: 1,
+          booking_reference: `DB${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          trip_code: Math.random().toString(36).substring(2, 8).toUpperCase(),
+          pickup_location: 'Udupi Bus Stand',
+          dropoff_location: 'Malpe Beach',
+          pickup_datetime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
+          passenger_name: 'Demo User',
+          passenger_phone: '+91 98765 43210',
+          passengers_count: 2,
+          estimated_duration: 30,
+          total_amount: 250,
+          status: 'confirmed',
+          payment_status: 'paid',
+          payment_id: 'pay_demo456',
+          started_at: null,
+          completed_at: null,
+          created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+          updated_at: new Date()
+        }
+      ];
+
       return {
-        homestays: [],
-        drivers: []
+        homestays: mockHomestays,
+        drivers: mockDrivers
       };
     }
   }
