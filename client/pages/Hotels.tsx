@@ -391,13 +391,21 @@ export default function Hotels() {
         onSortChange={handleSortChange}
       />
 
-      {/* Booking Modal */}
+      {/* Professional Booking Modal */}
       {selectedHomestay && (
-        <BookingModal
-          homestay={selectedHomestay}
+        <ProfessionalBookingModal
           isOpen={isBookingModalOpen}
           onClose={closeBookingModal}
-          onBookingSuccess={handleBookingSuccess}
+          service={{
+            id: selectedHomestay.id,
+            name: selectedHomestay.name,
+            type: 'homestay',
+            price: selectedHomestay.price_per_night || 0,
+            location: selectedHomestay.location,
+            rating: selectedHomestay.rating,
+            image: selectedHomestay.image_url,
+            description: selectedHomestay.description
+          }}
         />
       )}
     </>
