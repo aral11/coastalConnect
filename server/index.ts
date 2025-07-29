@@ -31,6 +31,7 @@ import { seedDatabase } from "./seedData";
 import { seedCoupons } from "./seedCoupons";
 import { authenticateToken } from "./middleware/auth";
 import bookingApiRouter from "./routes/bookingApi";
+import professionalBookingsRouter from "./routes/professionalBookings";
 import { healthCheck, databaseStatus } from "./routes/health";
 
 export function createServer() {
