@@ -40,6 +40,7 @@ import { createPayment, verifyRazorpayPayment, verifyStripePayment, processRefun
 import { setupPaymentSystem, validatePaymentEnvironment } from "./utils/setupPaymentSystem";
 import { initializeCompleteDatabase, getPlatformStats } from "./utils/initializeDatabase";
 import { getRealPlatformStats, getRealServices, getRealEvents, getUserDashboardData, getVendorApplications } from "./routes/realData";
+import { getPendingVendorApplications, approveVendorApplication, rejectVendorApplication, getPendingEvents, approveEvent, rejectEvent, getApprovalStats } from "./routes/adminApprovals";
 
 export function createServer() {
   const app = express();
