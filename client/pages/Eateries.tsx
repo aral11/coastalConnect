@@ -279,12 +279,12 @@ export default function Eateries() {
     const eatery = eateries.find(e => e.id === item.id);
     if (eatery) {
       setSelectedEatery(eatery);
-      setShowBookingFlow(true);
+      setIsBookingModalOpen(true);
     }
   };
 
-  const handleBookingComplete = () => {
-    setShowBookingFlow(false);
+  const closeBookingModal = () => {
+    setIsBookingModalOpen(false);
     setSelectedEatery(null);
   };
 
