@@ -10,8 +10,13 @@ import { swiggyTheme } from '@/lib/swiggy-design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Search,
+  Star,
+  Clock,
+  Shield,
+  Heart,
   MapPin,
   ChevronRight,
+  Download,
   PlayCircle,
   Calendar,
   Home,
