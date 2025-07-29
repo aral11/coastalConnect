@@ -237,38 +237,7 @@ export default function Index() {
         maxItems={8}
       />
 
-      {/* Popular Vendors Section */}
-      <SwiggyVendors 
-        title="Popular near you"
-        subtitle="Top-rated services in your area"
-        className="py-12 lg:py-16 bg-white"
-        maxItems={8}
-      />
 
-      {/* Offers Section */}
-      <SwiggyOffers 
-        title="Deals for you"
-        subtitle="Curated offers just for you"
-        className="py-12 lg:py-16 bg-gray-50"
-      />
-
-      {/* Hotels, Resorts & Homestays Section */}
-      <SwiggyVendors
-        title="Best hotels, resorts & homestays"
-        subtitle="Authentic accommodations & local stays"
-        type="homestay"
-        className="py-12 lg:py-16 bg-white"
-        maxItems={6}
-      />
-
-      {/* Restaurants Section */}
-      <SwiggyVendors
-        title="Top restaurants & cafes"
-        subtitle="Discover authentic local dining"
-        type="restaurant"
-        className="py-12 lg:py-16 bg-gray-50"
-        maxItems={6}
-      />
 
       {/* Trust & Safety Section */}
       <section className="py-12 lg:py-16 bg-white">
