@@ -54,6 +54,18 @@ export function createServer() {
     console.log('📋 Database: costalConnectDEV, Server: 127.0.0.1, User: aral21');
   });
 
+  // Initialize payment system
+  setupPaymentSystem().then(result => {
+    if (result.success) {
+      console.log('💳 Payment system initialized successfully');
+    } else {
+      console.log('⚠️ Payment system using fallback mode');
+    }
+  });
+
+  // Validate payment gateway configuration
+  validatePaymentEnvironment();
+
   // Health check routes
   app.get("/api/ping", (_req, res) => {
     res.json({ message: "coastalConnect Udupi API v1.0 - Server is running!" });
