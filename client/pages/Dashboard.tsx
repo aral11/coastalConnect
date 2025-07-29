@@ -337,7 +337,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4">
                     {bookings.map((booking, index) => (
-                      <div key={`${booking.type}-${booking.id}-${index}`} className="border rounded-lg p-4 space-y-3">
+                      <div key={`booking-${booking.type || 'unknown'}-${booking.id || index}-${index}`} className="border rounded-lg p-4 space-y-3">
                         <div className="flex justify-between items-start">
                           <div className="flex items-center space-x-3">
                             {booking.type === 'homestay' ? (
