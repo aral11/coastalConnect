@@ -9,9 +9,12 @@ export interface User {
   phone?: string;
   provider: 'email' | 'google' | 'apple';
   provider_id?: string;
-  role: 'customer' | 'driver' | 'host';
+  role: 'admin' | 'vendor' | 'customer' | 'event_organizer';
   avatar_url?: string;
   is_verified: boolean;
+  vendor_status?: 'pending' | 'approved' | 'rejected';
+  business_name?: string;
+  business_type?: 'homestay' | 'restaurant' | 'driver' | 'event_services';
   created_at: Date;
 }
 
