@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import Layout from '@/components/Layout';
 import SwiggyLocationSelector from '@/components/SwiggyLocationSelector';
 import SwiggyCategories from '@/components/SwiggyCategories';
+import RealDataVendors from '@/components/RealDataVendors';
+import PlatformStats from '@/components/PlatformStats';
 import PlatformStats from '@/components/PlatformStats';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
 import { useAuth } from '@/contexts/AuthContext';
