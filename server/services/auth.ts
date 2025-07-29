@@ -93,10 +93,14 @@ export class AuthService {
         .input('role', userData.role || 'customer')
         .input('avatar_url', userData.avatar_url || null)
         .input('password_hash', hashedPassword)
+        .input('business_name', userData.business_name || null)
+        .input('business_type', userData.business_type || null)
         .query(`
-          INSERT INTO Users (email, name, phone, provider, provider_id, role, avatar_url, password_hash, is_verified)
+          INSERT INTO Users (email, name, phone, provider, provider_id, role, avatar_url, password_hash, is_verified,
+                           vendor_status, business_name, business_type)
           OUTPUT INSERTED.*
-          VALUES (@email, @name, @phone, @provider, @provider_id, @role, @avatar_url, @password_hash, 1)
+          VALUES (@email, @name, @phone, @provider, @provider_id, @role, @avatar_url, @password_hash, 1,
+                  CASE WHEN @role = 'vendor' THEN 'pending' ELSE NULL END, @business_name, @business_type)
         `);
 
       return result.recordset[0];
