@@ -36,6 +36,7 @@ import professionalBookingsRouter from "./routes/professionalBookings";
 import seedingRouter from "./routes/seeding";
 import dynamicServicesRouter from "./routes/dynamicServices";
 import { healthCheck, databaseStatus } from "./routes/health";
+import { createPayment, verifyRazorpayPayment, verifyStripePayment, processRefund, getPaymentMethods, stripeWebhook } from "./routes/payments";
 
 export function createServer() {
   const app = express();
