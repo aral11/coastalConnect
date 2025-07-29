@@ -3,6 +3,14 @@ import { AuthService } from "../services/auth";
 
 export const googleAuth: RequestHandler = async (req, res) => {
   try {
+    // Check if request body exists
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid request body'
+      });
+    }
+
     const { token, userInfo } = req.body;
 
     if (!token) {
@@ -25,6 +33,15 @@ export const googleAuth: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error('Google auth error:', error);
+
+    // Handle specific error types
+    if (error instanceof Error && error.message.includes('Database error')) {
+      return res.status(503).json({
+        success: false,
+        message: 'Service temporarily unavailable. Please try again.'
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Google authentication failed',
