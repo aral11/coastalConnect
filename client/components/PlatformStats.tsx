@@ -103,8 +103,26 @@ export default function PlatformStats() {
   const fetchRealStats = async () => {
     try {
       setError(null);
-      
+
+      // First test if API is reachable
+      console.log('Testing API connectivity...');
+      const debugResponse = await fetch('/api/debug/stats');
+      console.log('Debug response status:', debugResponse.status);
+
+      if (debugResponse.status === 404) {
+        throw new Error('API endpoints not found - check server routes');
+      }
+
       const response = await fetch('/api/real/stats');
+      console.log('Stats response status:', response.status);
+      console.log('Stats response content-type:', response.headers.get('content-type'));
+
+      if (!response.ok) {
+        const text = await response.text();
+        console.log('Response text:', text.substring(0, 200));
+        throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+      }
+
       const data = await response.json();
       
       if (data.success) {
