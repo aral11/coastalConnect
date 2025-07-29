@@ -41,6 +41,7 @@ import { setupPaymentSystem, validatePaymentEnvironment } from "./utils/setupPay
 import { initializeCompleteDatabase, getPlatformStats } from "./utils/initializeDatabase";
 import { getRealPlatformStats, getRealServices, getRealEvents, getUserDashboardData, getVendorApplications } from "./routes/realData";
 import { getPendingVendorApplications, approveVendorApplication, rejectVendorApplication, getPendingEvents, approveEvent, rejectEvent, getApprovalStats } from "./routes/adminApprovals";
+import { submitVendorApplication, getUserVendorApplication } from "./routes/vendorApplications";
 
 export function createServer() {
   const app = express();
