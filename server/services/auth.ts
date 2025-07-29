@@ -118,7 +118,10 @@ export class AuthService {
           phone: userData.phone || null,
           provider: userData.provider,
           provider_id: userData.provider_id || null,
-          role: (userData.role || 'customer') as 'customer' | 'driver' | 'host',
+          role: (userData.role || 'customer') as 'admin' | 'vendor' | 'customer' | 'event_organizer',
+          vendor_status: userData.role === 'vendor' ? 'pending' : undefined,
+          business_name: userData.business_name || null,
+          business_type: userData.business_type || null,
           avatar_url: userData.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=0ea5e9&color=fff&size=150`,
           is_verified: true,
           created_at: new Date()
