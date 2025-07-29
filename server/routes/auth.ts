@@ -91,8 +91,16 @@ export const emailAuth: RequestHandler = async (req, res) => {
 
 export const register: RequestHandler = async (req, res) => {
   try {
+    // Check if request body exists
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid request body'
+      });
+    }
+
     const { email, password, name, phone, role } = req.body;
-    
+
     if (!email || !password || !name) {
       return res.status(400).json({
         success: false,
@@ -100,17 +108,34 @@ export const register: RequestHandler = async (req, res) => {
       });
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid email format'
+      });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+
     const user = await AuthService.createUser({
-      email,
-      name,
-      phone,
+      email: email.toLowerCase().trim(),
+      name: name.trim(),
+      phone: phone?.trim(),
       provider: 'email',
       role: role || 'customer',
       password
     });
 
     const token = AuthService.generateToken(user);
-    
+
     res.status(201).json({
       success: true,
       data: { token, user },
@@ -118,9 +143,26 @@ export const register: RequestHandler = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
+
+    // Handle specific error types
+    if (error instanceof Error) {
+      if (error.message.includes('already exists')) {
+        return res.status(409).json({
+          success: false,
+          message: 'An account with this email already exists'
+        });
+      }
+      if (error.message.includes('Database error') || error.message.includes('connection')) {
+        return res.status(503).json({
+          success: false,
+          message: 'Service temporarily unavailable. Please try again.'
+        });
+      }
+    }
+
     res.status(400).json({
       success: false,
-      message: 'Registration failed',
+      message: 'Registration failed. Please try again.',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }
