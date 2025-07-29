@@ -50,7 +50,7 @@ export default function Eateries() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedEatery, setSelectedEatery] = useState<Eatery | null>(null);
-  const [showBookingFlow, setShowBookingFlow] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
