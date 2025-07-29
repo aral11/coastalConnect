@@ -129,6 +129,19 @@ export default function Login() {
         }),
       });
 
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        let errorMessage = 'Google login failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (jsonError) {
+          errorMessage = response.statusText || errorMessage;
+        }
+        setError(errorMessage);
+        return;
+      }
+
       const data = await response.json();
 
       if (data.success) {
