@@ -24,7 +24,10 @@ import {
   Percent,
   Zap,
   Download,
-  PlayCircle
+  PlayCircle,
+  Calendar,
+  Home,
+  Car
 } from 'lucide-react';
 
 export default function Index() {
