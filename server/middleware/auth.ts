@@ -79,17 +79,29 @@ export const optionalAuth = async (req: AuthenticatedRequest, res: Response, nex
       const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
       const decoded = jwt.verify(token, JWT_SECRET) as any;
 
-      const connection = await getConnection();
-      const result = await connection.request()
-        .input('userId', decoded.userId)
-        .query(`
-          SELECT id, email, name, phone, role, avatar_url
-          FROM Users 
-          WHERE id = @userId AND is_active = 1
-        `);
+      try {
+        const connection = await getConnection();
+        const result = await connection.request()
+          .input('userId', decoded.userId)
+          .query(`
+            SELECT id, email, name, phone, role, avatar_url
+            FROM Users
+            WHERE id = @userId AND is_active = 1
+          `);
 
-      if (result.recordset.length > 0) {
-        req.user = result.recordset[0];
+        if (result.recordset.length > 0) {
+          req.user = result.recordset[0];
+        }
+      } catch (dbError) {
+        // Fallback: Use token data when database unavailable
+        req.user = {
+          id: decoded.userId,
+          email: decoded.email,
+          name: decoded.name || `User ${decoded.userId}`,
+          phone: null,
+          role: decoded.role || 'customer',
+          avatar_url: `https://ui-avatars.com/api/?name=${encodeURIComponent(decoded.name || `User ${decoded.userId}`)}&background=0ea5e9&color=fff&size=150`
+        };
       }
     }
 
