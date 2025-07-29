@@ -194,6 +194,9 @@ export function createServer() {
   // Test notifications API routes (for development/testing)
   app.use("/api/test-notifications", testNotificationsRouter);
 
+  // Development seeding routes
+  app.use("/api/dev", seedingRouter);
+
   // Service categories
 app.get("/api/services", getServiceCategories);
 app.get("/api/services/:categoryId", getServiceCategory);
