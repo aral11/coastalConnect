@@ -45,9 +45,11 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Initialize database connection (optional - fallback data available)
-  initializeDatabase().catch(error => {
-    console.log('Database initialization failed, using fallback data:', error.message);
+  // Initialize database connection with user's configuration
+  connectDB().catch(error => {
+    console.log('Database connection failed, using fallback data:', error.message);
+    console.log('💡 Make sure your SQL Server is running and credentials are correct');
+    console.log('📋 Database: costalConnectDEV, Server: 127.0.0.1, User: aral21');
   });
 
   // Health check routes
