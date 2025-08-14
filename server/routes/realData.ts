@@ -367,8 +367,119 @@ function getDefaultEventImage(category?: string): string {
     sports: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400&h=300&fit=crop',
     community: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=300&fit=crop'
   };
-  
+
   return imageMap[category] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop';
+}
+
+// Generate fallback services data when database is unavailable
+function generateFallbackServices(serviceType: string, limit: number) {
+  const fallbackData = {
+    homestay: [
+      {
+        id: 1,
+        name: 'Coastal Paradise Villa',
+        description: 'Beautiful beachside villa with modern amenities and stunning ocean views',
+        price: 3500,
+        pricePerUnit: 3500,
+        location: 'Malpe Beach Road, Udupi',
+        city: 'Udupi',
+        rating: 4.5,
+        reviews: 23,
+        image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
+        vendor: { name: 'Coastal Hospitality', phone: '+91-9876543210', id: 1 },
+        features: { rooms: 3, amenities: ['WiFi', 'AC', 'Parking', 'Beach Access'] },
+        completedBookings: 45,
+        isFeatured: true
+      },
+      {
+        id: 2,
+        name: 'Heritage Homestay',
+        description: 'Traditional Karnataka style homestay with authentic local experience',
+        price: 2800,
+        pricePerUnit: 2800,
+        location: 'Car Street, Udupi',
+        city: 'Udupi',
+        rating: 4.2,
+        reviews: 18,
+        image: 'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&h=300&fit=crop',
+        vendor: { name: 'Heritage Homes', phone: '+91-9876543211', id: 2 },
+        features: { rooms: 2, amenities: ['WiFi', 'Traditional Food', 'Cultural Tours'] },
+        completedBookings: 32,
+        isFeatured: false
+      }
+    ],
+    restaurant: [
+      {
+        id: 3,
+        name: 'Sea Breeze Restaurant',
+        description: 'Authentic coastal Karnataka cuisine with fresh seafood specialties',
+        price: 500,
+        pricePerUnit: 500,
+        location: 'Temple Street, Udupi',
+        city: 'Udupi',
+        rating: 4.3,
+        reviews: 156,
+        image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
+        vendor: { name: 'Coastal Cuisine', phone: '+91-9876543212', id: 3 },
+        features: { cuisine: 'South Indian', seating: 50, specialties: ['Fish Curry', 'Neer Dosa'] },
+        completedBookings: 89,
+        isFeatured: true
+      },
+      {
+        id: 4,
+        name: 'Udupi Palace',
+        description: 'Traditional vegetarian restaurant famous for authentic Udupi cuisine',
+        price: 300,
+        pricePerUnit: 300,
+        location: 'Market Road, Udupi',
+        city: 'Udupi',
+        rating: 4.1,
+        reviews: 203,
+        image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop',
+        vendor: { name: 'Traditional Tastes', phone: '+91-9876543213', id: 4 },
+        features: { cuisine: 'Vegetarian', seating: 80, specialties: ['Masala Dosa', 'Sambar'] },
+        completedBookings: 134,
+        isFeatured: false
+      }
+    ],
+    driver: [
+      {
+        id: 5,
+        name: 'Udupi Tour Services',
+        description: 'Professional driver services for local tours and airport transfers',
+        price: 2000,
+        pricePerUnit: 2000,
+        location: 'Bus Stand, Udupi',
+        city: 'Udupi',
+        rating: 4.7,
+        reviews: 67,
+        image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop',
+        vendor: { name: 'Reliable Rides', phone: '+91-9876543214', id: 5 },
+        features: { vehicle_type: 'SUV', capacity: 7, services: ['Airport Transfer', 'Local Tours'] },
+        completedBookings: 78,
+        isFeatured: true
+      },
+      {
+        id: 6,
+        name: 'Coastal Cabs',
+        description: 'Comfortable and safe transportation for all your travel needs',
+        price: 1500,
+        pricePerUnit: 1500,
+        location: 'Railway Station, Udupi',
+        city: 'Udupi',
+        rating: 4.4,
+        reviews: 45,
+        image: 'https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=400&h=300&fit=crop',
+        vendor: { name: 'Safe Travels', phone: '+91-9876543215', id: 6 },
+        features: { vehicle_type: 'Sedan', capacity: 4, services: ['City Rides', 'Outstation'] },
+        completedBookings: 56,
+        isFeatured: false
+      }
+    ]
+  };
+
+  const services = fallbackData[serviceType] || fallbackData.homestay;
+  return services.slice(0, limit);
 }
 
 // Get real vendor applications for admin
