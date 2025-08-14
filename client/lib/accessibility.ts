@@ -3,7 +3,7 @@
  * Provides WCAG 2.1 AA compliance utilities and helpers
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // ==============================================
 // ARIA UTILITIES
@@ -40,18 +40,7 @@ export const useAriaLive = () => {
     }, 1000);
   };
 
-  const LiveRegion: React.FC<{ priority?: 'polite' | 'assertive' }> = ({ priority = 'polite' }) => (
-    <div
-      aria-live={priority}
-      aria-atomic="true"
-      className="sr-only"
-      role="status"
-    >
-      {announcement}
-    </div>
-  );
-
-  return { announce, LiveRegion };
+  return { announce, announcement };
 };
 
 /**
@@ -181,172 +170,52 @@ export const useKeyboardNavigation = (options: {
 };
 
 // ==============================================
-// SCREEN READER UTILITIES
+// CONTRAST AND COLOR UTILITIES
 // ==============================================
 
 /**
- * Screen reader only text component
+ * Calculate color contrast ratio
  */
-export const ScreenReaderOnly: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="sr-only">{children}</span>
-);
+export const getContrastRatio = (color1: string, color2: string): number => {
+  const getLuminance = (color: string): number => {
+    // Convert hex to RGB
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16) / 255;
+    const g = parseInt(hex.substr(2, 2), 16) / 255;
+    const b = parseInt(hex.substr(4, 2), 16) / 255;
 
-/**
- * Visually hidden but accessible to screen readers
- */
-export const VisuallyHidden: React.FC<{ 
-  children: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements;
-}> = ({ children, as: Component = 'span' }) => {
-  const Element = Component;
-  return (
-    <Element className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0">
-      {children}
-    </Element>
-  );
+    // Calculate relative luminance
+    const getRgbLuminance = (c: number) => {
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+
+    return 0.2126 * getRgbLuminance(r) + 0.7152 * getRgbLuminance(g) + 0.0722 * getRgbLuminance(b);
+  };
+
+  const lum1 = getLuminance(color1);
+  const lum2 = getLuminance(color2);
+  const lightest = Math.max(lum1, lum2);
+  const darkest = Math.min(lum1, lum2);
+
+  return (lightest + 0.05) / (darkest + 0.05);
 };
 
 /**
- * Skip link component for keyboard navigation
+ * Check if color combination meets WCAG contrast requirements
  */
-export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = ({ 
-  href, 
-  children 
-}) => (
-  <a
-    href={href}
-    className="absolute top-0 left-0 bg-orange-600 text-white px-4 py-2 z-50 transform -translate-y-full focus:translate-y-0 transition-transform"
-  >
-    {children}
-  </a>
-);
-
-// ==============================================
-// FORM ACCESSIBILITY UTILITIES
-// ==============================================
-
-/**
- * Enhanced form field with accessibility features
- */
-interface AccessibleFormFieldProps {
-  id: string;
-  label: string;
-  error?: string;
-  description?: string;
-  required?: boolean;
-  children: React.ReactNode;
-}
-
-export const AccessibleFormField: React.FC<AccessibleFormFieldProps> = ({
-  id,
-  label,
-  error,
-  description,
-  required,
-  children
-}) => {
-  const descriptionId = description ? `${id}-description` : undefined;
-  const errorId = error ? `${id}-error` : undefined;
-  const ariaDescribedBy = [descriptionId, errorId].filter(Boolean).join(' ');
-
-  return (
-    <div className="space-y-1">
-      <label 
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {label}
-        {required && (
-          <span className="text-red-500 ml-1" aria-label="required">
-            *
-          </span>
-        )}
-      </label>
-      
-      {description && (
-        <p id={descriptionId} className="text-sm text-gray-500">
-          {description}
-        </p>
-      )}
-      
-      <div>
-        {React.cloneElement(children as React.ReactElement, {
-          id,
-          'aria-describedby': ariaDescribedBy || undefined,
-          'aria-invalid': error ? 'true' : undefined,
-          'aria-required': required ? 'true' : undefined
-        })}
-      </div>
-      
-      {error && (
-        <p id={errorId} className="text-sm text-red-600" role="alert">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-};
-
-// ==============================================
-// IMAGE ACCESSIBILITY
-// ==============================================
-
-/**
- * Accessible image component with automatic alt text validation
- */
-interface AccessibleImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string;
-  alt: string;
-  decorative?: boolean;
-  caption?: string;
-}
-
-export const AccessibleImage: React.FC<AccessibleImageProps> = ({
-  src,
-  alt,
-  decorative = false,
-  caption,
-  className,
-  ...props
-}) => {
-  // Warn in development if alt text is missing or inadequate
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      if (!decorative && (!alt || alt.length < 3)) {
-        console.warn(`Image ${src} has inadequate alt text: "${alt}"`);
-      }
-      if (decorative && alt) {
-        console.warn(`Decorative image ${src} should have empty alt text`);
-      }
-    }
-  }, [src, alt, decorative]);
-
-  const imageElement = (
-    <img
-      src={src}
-      alt={decorative ? '' : alt}
-      className={className}
-      {...props}
-    />
-  );
-
-  if (caption) {
-    const figureId = generateId('figure');
-    const captionId = generateId('caption');
-    
-    return (
-      <figure id={figureId} className="space-y-2">
-        {React.cloneElement(imageElement, {
-          'aria-labelledby': captionId
-        })}
-        <figcaption id={captionId} className="text-sm text-gray-600">
-          {caption}
-        </figcaption>
-      </figure>
-    );
+export const meetsContrastRequirement = (
+  foreground: string,
+  background: string,
+  level: 'AA' | 'AAA' = 'AA',
+  size: 'normal' | 'large' = 'normal'
+): boolean => {
+  const ratio = getContrastRatio(foreground, background);
+  
+  if (level === 'AAA') {
+    return size === 'large' ? ratio >= 4.5 : ratio >= 7;
+  } else {
+    return size === 'large' ? ratio >= 3 : ratio >= 4.5;
   }
-
-  return imageElement;
 };
 
 // ==============================================
@@ -374,62 +243,40 @@ export const useReducedMotion = (): boolean => {
   return prefersReducedMotion;
 };
 
+// ==============================================
+// FORM ACCESSIBILITY UTILITIES
+// ==============================================
+
 /**
- * Conditional animation wrapper
+ * Generate accessible form field IDs and ARIA attributes
  */
-export const RespectMotionPrefs: React.FC<{
-  children: React.ReactNode;
-  animated: string;
-  static: string;
-}> = ({ children, animated, static: staticClass }) => {
-  const prefersReducedMotion = useReducedMotion();
+export const generateFormFieldProps = (
+  id: string,
+  options: {
+    required?: boolean;
+    error?: string;
+    description?: string;
+  } = {}
+) => {
+  const { required, error, description } = options;
   
-  return (
-    <div className={prefersReducedMotion ? staticClass : animated}>
-      {children}
-    </div>
-  );
-};
+  const descriptionId = description ? `${id}-description` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
+  const ariaDescribedBy = [descriptionId, errorId].filter(Boolean).join(' ');
 
-// ==============================================
-// ACCESSIBLE BUTTON VARIANTS
-// ==============================================
-
-/**
- * Icon button with proper accessibility
- */
-interface AccessibleIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon: React.ReactNode;
-  label: string;
-  description?: string;
-}
-
-export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
-  icon,
-  label,
-  description,
-  className,
-  ...props
-}) => {
-  const descriptionId = description ? generateId('btn-desc') : undefined;
-
-  return (
-    <>
-      <button
-        className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${className}`}
-        aria-label={label}
-        aria-describedby={descriptionId}
-        {...props}
-      >
-        {React.cloneElement(icon as React.ReactElement, { 'aria-hidden': true })}
-      </button>
-      {description && (
-        <VisuallyHidden as="span">
-          <span id={descriptionId}>{description}</span>
-        </VisuallyHidden>
-      )}
-    </>
-  );
+  return {
+    fieldProps: {
+      id,
+      'aria-describedby': ariaDescribedBy || undefined,
+      'aria-invalid': error ? 'true' : undefined,
+      'aria-required': required ? 'true' : undefined
+    },
+    labelProps: {
+      htmlFor: id
+    },
+    descriptionId,
+    errorId
+  };
 };
 
 // ==============================================
@@ -470,18 +317,150 @@ export const useA11yWarnings = (element: React.RefObject<HTMLElement>) => {
   }, [element]);
 };
 
+// ==============================================
+// SCREEN READER UTILITIES
+// ==============================================
+
+/**
+ * Get screen reader friendly text for common UI patterns
+ */
+export const getScreenReaderText = {
+  loading: 'Loading content, please wait',
+  error: 'An error occurred',
+  success: 'Action completed successfully',
+  required: 'required field',
+  optional: 'optional field',
+  newWindow: 'opens in new window',
+  download: 'download file',
+  expand: 'expand section',
+  collapse: 'collapse section',
+  sortAscending: 'sort ascending',
+  sortDescending: 'sort descending',
+  currentPage: 'current page',
+  goToPage: 'go to page',
+  nextPage: 'next page',
+  previousPage: 'previous page',
+  closeDialog: 'close dialog',
+  openMenu: 'open menu',
+  closeMenu: 'close menu'
+};
+
+// ==============================================
+// FOCUS MANAGEMENT UTILITIES
+// ==============================================
+
+/**
+ * Focus management utilities for complex interactions
+ */
+export const focusManagement = {
+  /**
+   * Focus the first focusable element in a container
+   */
+  focusFirst: (container: HTMLElement): void => {
+    const focusable = container.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    ) as HTMLElement;
+    focusable?.focus();
+  },
+
+  /**
+   * Focus the last focusable element in a container
+   */
+  focusLast: (container: HTMLElement): void => {
+    const focusableElements = container.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    lastElement?.focus();
+  },
+
+  /**
+   * Check if an element is focusable
+   */
+  isFocusable: (element: HTMLElement): boolean => {
+    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    return element.matches(focusableSelector);
+  },
+
+  /**
+   * Get all focusable elements in a container
+   */
+  getFocusableElements: (container: HTMLElement): HTMLElement[] => {
+    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    return Array.from(container.querySelectorAll(focusableSelector)) as HTMLElement[];
+  }
+};
+
+// ==============================================
+// COMMON ACCESSIBILITY PATTERNS
+// ==============================================
+
+/**
+ * Common accessibility patterns and utilities
+ */
+export const a11yPatterns = {
+  /**
+   * Get props for an accessible button that toggles a panel
+   */
+  getDisclosureButtonProps: (isExpanded: boolean, controlsId: string) => ({
+    'aria-expanded': isExpanded,
+    'aria-controls': controlsId,
+    'aria-label': isExpanded ? 'Collapse section' : 'Expand section'
+  }),
+
+  /**
+   * Get props for a modal dialog
+   */
+  getModalProps: (titleId: string, descriptionId?: string) => ({
+    role: 'dialog',
+    'aria-modal': 'true',
+    'aria-labelledby': titleId,
+    'aria-describedby': descriptionId
+  }),
+
+  /**
+   * Get props for a tab panel
+   */
+  getTabPanelProps: (tabId: string, panelId: string, isSelected: boolean) => ({
+    role: 'tabpanel',
+    id: panelId,
+    'aria-labelledby': tabId,
+    hidden: !isSelected,
+    tabIndex: isSelected ? 0 : -1
+  }),
+
+  /**
+   * Get props for a tab button
+   */
+  getTabProps: (tabId: string, panelId: string, isSelected: boolean) => ({
+    role: 'tab',
+    id: tabId,
+    'aria-controls': panelId,
+    'aria-selected': isSelected,
+    tabIndex: isSelected ? 0 : -1
+  }),
+
+  /**
+   * Get props for a table cell that can be sorted
+   */
+  getSortableColumnProps: (sortDirection?: 'asc' | 'desc') => ({
+    'aria-sort': sortDirection === 'asc' ? 'ascending' : 
+                 sortDirection === 'desc' ? 'descending' : 'none',
+    role: 'columnheader'
+  })
+};
+
 export default {
   generateId,
   useAriaLive,
   useFocusTrap,
   useKeyboardNavigation,
-  ScreenReaderOnly,
-  VisuallyHidden,
-  SkipLink,
-  AccessibleFormField,
-  AccessibleImage,
+  getContrastRatio,
+  meetsContrastRequirement,
   useReducedMotion,
-  RespectMotionPrefs,
-  AccessibleIconButton,
-  useA11yWarnings
+  generateFormFieldProps,
+  useA11yWarnings,
+  getScreenReaderText,
+  focusManagement,
+  a11yPatterns
 };
