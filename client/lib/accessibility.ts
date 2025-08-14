@@ -3,7 +3,7 @@
  * Provides WCAG 2.1 AA compliance utilities and helpers
  */
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // ==============================================
 // ARIA UTILITIES
@@ -40,7 +40,7 @@ export const useAriaLive = () => {
     }, 1000);
   };
 
-  const LiveRegion = ({ priority = 'polite' }: { priority?: 'polite' | 'assertive' }) => (
+  const LiveRegion: React.FC<{ priority?: 'polite' | 'assertive' }> = ({ priority = 'polite' }) => (
     <div
       aria-live={priority}
       aria-atomic="true"
@@ -181,55 +181,6 @@ export const useKeyboardNavigation = (options: {
 };
 
 // ==============================================
-// CONTRAST AND COLOR UTILITIES
-// ==============================================
-
-/**
- * Calculate color contrast ratio
- */
-export const getContrastRatio = (color1: string, color2: string): number => {
-  const getLuminance = (color: string): number => {
-    // Convert hex to RGB
-    const hex = color.replace('#', '');
-    const r = parseInt(hex.substr(0, 2), 16) / 255;
-    const g = parseInt(hex.substr(2, 2), 16) / 255;
-    const b = parseInt(hex.substr(4, 2), 16) / 255;
-
-    // Calculate relative luminance
-    const getRgbLuminance = (c: number) => {
-      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-    };
-
-    return 0.2126 * getRgbLuminance(r) + 0.7152 * getRgbLuminance(g) + 0.0722 * getRgbLuminance(b);
-  };
-
-  const lum1 = getLuminance(color1);
-  const lum2 = getLuminance(color2);
-  const lightest = Math.max(lum1, lum2);
-  const darkest = Math.min(lum1, lum2);
-
-  return (lightest + 0.05) / (darkest + 0.05);
-};
-
-/**
- * Check if color combination meets WCAG contrast requirements
- */
-export const meetsContrastRequirement = (
-  foreground: string,
-  background: string,
-  level: 'AA' | 'AAA' = 'AA',
-  size: 'normal' | 'large' = 'normal'
-): boolean => {
-  const ratio = getContrastRatio(foreground, background);
-  
-  if (level === 'AAA') {
-    return size === 'large' ? ratio >= 4.5 : ratio >= 7;
-  } else {
-    return size === 'large' ? ratio >= 3 : ratio >= 4.5;
-  }
-};
-
-// ==============================================
 // SCREEN READER UTILITIES
 // ==============================================
 
@@ -246,11 +197,14 @@ export const ScreenReaderOnly: React.FC<{ children: React.ReactNode }> = ({ chil
 export const VisuallyHidden: React.FC<{ 
   children: React.ReactNode;
   as?: keyof JSX.IntrinsicElements;
-}> = ({ children, as: Component = 'span' }) => (
-  <Component className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0 clip-[rect(0,0,0,0)]">
-    {children}
-  </Component>
-);
+}> = ({ children, as: Component = 'span' }) => {
+  const Element = Component;
+  return (
+    <Element className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0">
+      {children}
+    </Element>
+  );
+};
 
 /**
  * Skip link component for keyboard navigation
@@ -470,81 +424,11 @@ export const AccessibleIconButton: React.FC<AccessibleIconButtonProps> = ({
         {React.cloneElement(icon as React.ReactElement, { 'aria-hidden': true })}
       </button>
       {description && (
-        <VisuallyHidden as="span" id={descriptionId}>
-          {description}
+        <VisuallyHidden as="span">
+          <span id={descriptionId}>{description}</span>
         </VisuallyHidden>
       )}
     </>
-  );
-};
-
-// ==============================================
-// ACCESSIBLE DROPDOWN/MENU
-// ==============================================
-
-/**
- * Accessible dropdown menu with keyboard navigation
- */
-interface AccessibleDropdownProps {
-  trigger: React.ReactNode;
-  children: React.ReactNode;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  align?: 'start' | 'center' | 'end';
-}
-
-export const AccessibleDropdown: React.FC<AccessibleDropdownProps> = ({
-  trigger,
-  children,
-  isOpen,
-  onOpenChange,
-  align = 'start'
-}) => {
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const menuId = generateId('menu');
-
-  const { handleKeyDown } = useKeyboardNavigation({
-    onEscape: () => {
-      onOpenChange(false);
-      triggerRef.current?.focus();
-    },
-    onArrowDown: () => {
-      if (!isOpen) {
-        onOpenChange(true);
-      } else {
-        // Focus first menu item
-        const firstItem = menuRef.current?.querySelector('[role="menuitem"]') as HTMLElement;
-        firstItem?.focus();
-      }
-    }
-  });
-
-  return (
-    <div className="relative">
-      {React.cloneElement(trigger as React.ReactElement, {
-        ref: triggerRef,
-        'aria-expanded': isOpen,
-        'aria-haspopup': 'menu',
-        'aria-controls': isOpen ? menuId : undefined,
-        onKeyDown: handleKeyDown,
-        onClick: () => onOpenChange(!isOpen)
-      })}
-      
-      {isOpen && (
-        <div
-          ref={menuRef}
-          id={menuId}
-          role="menu"
-          className={`absolute top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 ${
-            align === 'end' ? 'right-0' : align === 'center' ? 'left-1/2 -translate-x-1/2' : 'left-0'
-          }`}
-          onKeyDown={handleKeyDown}
-        >
-          {children}
-        </div>
-      )}
-    </div>
   );
 };
 
@@ -591,8 +475,6 @@ export default {
   useAriaLive,
   useFocusTrap,
   useKeyboardNavigation,
-  getContrastRatio,
-  meetsContrastRequirement,
   ScreenReaderOnly,
   VisuallyHidden,
   SkipLink,
@@ -601,6 +483,5 @@ export default {
   useReducedMotion,
   RespectMotionPrefs,
   AccessibleIconButton,
-  AccessibleDropdown,
   useA11yWarnings
 };
