@@ -15,7 +15,7 @@ import seedingRoutes from './routes/seeding.js';
 import statsRoutes from './routes/stats.js';
 import subscriptionRoutes from './routes/subscription.js';
 import vendorsRoutes from './routes/vendors.js';
-import analyticsRoutes from './routes/analytics.js';
+// import analyticsRoutes from './routes/analytics.js'; // Temporarily disabled
 
 // Load environment variables
 dotenv.config();
