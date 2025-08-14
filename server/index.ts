@@ -26,19 +26,17 @@ import realDataRoutes from './routes/realData.js';
 import homestayRoutes from './routes/homestays.js';
 import eateryRoutes from './routes/eateries.js';
 import driverRoutes from './routes/drivers.js';
-import eventRoutes from './routes/events.js';
 import eventOrganizerRoutes from './routes/eventOrganizers.js';
 import organizerEventsRoutes from './routes/organizerEvents.js';
 import feedbackRoutes from './routes/feedback.js';
 import commonRoutes from './routes/common.js';
-import uploadRoutes from './routes/upload.js';
 import paymentRoutes from './routes/payments.js';
-import instagramRoutes from './routes/instagram.js';
 import servicesRoutes from './routes/services.js';
 import couponRoutes from './routes/coupons.js';
 import contactRoutes from './routes/contact.js';
 import supportRoutes from './routes/support.js';
 import bookingApiRoutes from './routes/bookingApi.js';
+import analyticsRoutes from './routes/analytics.js';
 
 // Load environment variables
 dotenv.config();
@@ -122,19 +120,20 @@ app.use('/api/real', realDataRoutes);
 app.use('/api/homestays', homestayRoutes);
 app.use('/api/eateries', eateryRoutes);
 app.use('/api/drivers', driverRoutes);
-app.use('/api/events', eventRoutes);
+// Events handled by organizerEvents route
 app.use('/api/event-organizers', eventOrganizerRoutes);
 app.use('/api/organizer-events', organizerEventsRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/common', commonRoutes);
-app.use('/api/upload', uploadRoutes);
+// Upload functionality integrated into other routes
 app.use('/api/payments', paymentRoutes);
-app.use('/api/instagram', instagramRoutes);
+// Instagram functionality integrated into other routes
 app.use('/api/services', servicesRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/booking', bookingApiRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Serve client build files (in production)
 if (process.env.NODE_ENV === 'production') {
