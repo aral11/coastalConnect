@@ -142,7 +142,9 @@ export const getRealServices: RequestHandler = async (req, res) => {
     console.error('Error getting services:', error);
 
     // Return fallback services data instead of error
-    const fallbackServices = generateFallbackServices(type as string, Math.min(Number(limit), 10));
+    const serviceType = req.query.type as string || 'homestay';
+    const serviceLimit = Math.min(Number(req.query.limit) || 10, 10);
+    const fallbackServices = generateFallbackServices(serviceType, serviceLimit);
 
     res.json({
       success: true,
@@ -150,11 +152,11 @@ export const getRealServices: RequestHandler = async (req, res) => {
       totalCount: fallbackServices.length,
       fallback: true,
       filters: {
-        type: type,
-        city: city,
-        featured: featured
+        type: req.query.type,
+        city: req.query.city,
+        featured: req.query.featured
       },
-      message: `Fallback ${type} services (database unavailable)`
+      message: `Fallback ${serviceType} services (database unavailable)`
     });
   }
 };
