@@ -1,344 +1,253 @@
-import express from "express";
-import cors from "cors";
-import { handleDemo } from "./routes/demo";
-import { getHomestays, getHomestayById, searchHomestays } from "./routes/homestays";
-import { getEateries, getEateryById, searchEateries } from "./routes/eateries";
-import { getDrivers, getDriverById, searchDrivers } from "./routes/drivers";
-import { getCreators, getCreatorById, searchCreators, getInstagramStats } from "./routes/creators";
-import { googleAuth, appleAuth, emailAuth, register, verifyToken, logout } from "./routes/auth";
-import { createHomestayBooking, createDriverBooking, confirmPayment, getUserBookings, updateDriverBookingStatus, validateTripCode } from "./routes/bookings";
-// Old services route removed - replaced with new service categories
-import { getLocalEvents, getReligiousServices, getFeaturedEvents, searchEvents } from "./routes/community";
-import vendorRouter from "./routes/vendors";
-import statsRouter from "./routes/stats";
-import { registerOrganizer, loginOrganizer, getOrganizerProfile, updateOrganizerProfile, getOrganizerDashboard, authenticateOrganizer, requireVerifiedOrganizer } from "./routes/eventOrganizers";
-import { createEvent, getOrganizerEvents, getEventDetails, updateEvent, submitEventForApproval, deleteEvent, cancelEvent, getEventRegistrations, getEventAnalytics } from "./routes/organizerEvents";
-import { sendBookingConfirmation, sendBookingCancellation, sendBookingReminder, sendWelcomeEmail, sendCustomNotification, sendBulkNotification, getNotificationHistory, testEmail, testSMS } from "./routes/notifications";
-import { getPlatformStats } from "./routes/stats";
-import { getServiceCategories, getServiceCategory } from "./routes/services";
-import { submitContactForm, getContactInfo } from "./routes/contact";
-import searchRouter from "./routes/search";
-import subscriptionRouter from "./routes/subscription";
-import adminRouter from "./routes/admin";
-import testNotificationsRouter from "./routes/test-notifications";
-import couponRouter from "./routes/coupons";
-import { getBusinessMetrics, getRecentBookings, getBookingDetails, updateBookingStatus, getBusinessAnalytics } from "./routes/business";
-import { getCategories, getLocations, getPriceRanges, getFeatures, getAppConfig } from "./routes/common";
-import { createSupportTicket, getSupportTickets, getSupportTicket, updateSupportTicket } from "./routes/support";
-import { submitFeedback, getFeedbacks, getFeedbackStats } from "./routes/feedback";
-import { getConnection } from "./db/connection";
-import { connectDB } from "./config/database";
-import { seedDatabase } from "./seedData";
-import { seedCoupons } from "./seedCoupons";
-import { authenticateToken } from "./middleware/auth";
-import bookingApiRouter from "./routes/bookingApi";
-import professionalBookingsRouter from "./routes/professionalBookings";
-import seedingRouter from "./routes/seeding";
-import dynamicServicesRouter from "./routes/dynamicServices";
-import { healthCheck, databaseStatus } from "./routes/health";
-import { createPayment, verifyRazorpayPayment, verifyStripePayment, processRefund, getPaymentMethods, stripeWebhook } from "./routes/payments";
-import { setupPaymentSystem, validatePaymentEnvironment } from "./utils/setupPaymentSystem";
-import { initializeCompleteDatabase, getPlatformStats } from "./utils/initializeDatabase";
-import { getRealPlatformStats, getRealServices, getRealEvents, getUserDashboardData, getVendorApplications } from "./routes/realData";
-import { getPendingVendorApplications, approveVendorApplication, rejectVendorApplication, getPendingEvents, approveEvent, rejectEvent, getApprovalStats } from "./routes/adminApprovals";
-import { submitVendorApplication, getUserVendorApplication } from "./routes/vendorApplications";
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-export function createServer() {
-  const app = express();
+// Import security middleware
+import {
+  validateEnvironmentVariables,
+  securityHeaders,
+  generalRateLimit,
+  corsConfig,
+  enforceHTTPS,
+  secureErrorHandler,
+  securityLogger
+} from './middleware/security.js';
 
-  // Middleware
-  app.use(cors());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+// Import routes
+import authRoutes from './routes/auth.js';
+import bookingRoutes from './routes/bookings.js';
+import adminRoutes from './routes/admin.js';
+import adminApprovalsRoutes from './routes/adminApprovals.js';
+import businessRoutes from './routes/business.js';
+import communityRoutes from './routes/community.js';
+import realDataRoutes from './routes/realData.js';
+import homestayRoutes from './routes/homestays.js';
+import eateryRoutes from './routes/eateries.js';
+import driverRoutes from './routes/drivers.js';
+import eventRoutes from './routes/events.js';
+import eventOrganizerRoutes from './routes/eventOrganizers.js';
+import organizerEventsRoutes from './routes/organizerEvents.js';
+import feedbackRoutes from './routes/feedback.js';
+import commonRoutes from './routes/common.js';
+import uploadRoutes from './routes/upload.js';
+import paymentRoutes from './routes/payments.js';
+import instagramRoutes from './routes/instagram.js';
+import servicesRoutes from './routes/services.js';
+import couponRoutes from './routes/coupons.js';
+import contactRoutes from './routes/contact.js';
+import supportRoutes from './routes/support.js';
+import bookingApiRoutes from './routes/bookingApi.js';
 
-  // Initialize database connection with user's configuration
-  connectDB().catch(error => {
-    console.log('Database connection failed, using fallback data:', error.message);
-    console.log('💡 Make sure your SQL Server is running and credentials are correct');
-    console.log('📋 Database: costalConnectDEV, Server: 127.0.0.1, User: aral21');
+// Load environment variables
+dotenv.config();
+
+// Validate environment variables before starting
+try {
+  validateEnvironmentVariables();
+  console.log('✅ Environment variables validated successfully');
+} catch (error) {
+  console.error('❌ Environment validation failed:', error.message);
+  console.error('Please check your .env file and ensure all required variables are set');
+  process.exit(1);
+}
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Trust proxy for rate limiting and IP detection
+app.set('trust proxy', 1);
+
+// Security middleware (order matters!)
+app.use(enforceHTTPS); // Enforce HTTPS in production
+app.use(securityHeaders); // Security headers
+app.use(securityLogger); // Log security-relevant requests
+
+// CORS with enhanced security
+app.use(cors(corsConfig));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Global rate limiting
+app.use('/api/', generalRateLimit);
+
+// Static file serving with security
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
+  maxAge: '1d',
+  etag: true,
+  setHeaders: (res, path) => {
+    // Security headers for static files
+    res.set({
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Cache-Control': 'public, max-age=86400'
+    });
+    
+    // Only allow certain file types
+    const ext = path.split('.').pop()?.toLowerCase();
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
+    
+    if (ext && !allowedExtensions.includes(ext)) {
+      res.status(403).send('File type not allowed');
+      return;
+    }
+  }
+}));
+
+// Health check endpoint (before rate limiting)
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    version: process.env.npm_package_version || '1.0.0'
   });
+});
 
-  // Initialize complete database schema
-  initializeCompleteDatabase().then(result => {
-    if (result.success) {
-      console.log('🗄️  Complete database schema initialized successfully');
-      if (result.stats) {
-        console.log('📊 Current database stats:', result.stats);
+// API Routes with enhanced security
+app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin/approvals', adminApprovalsRoutes);
+app.use('/api/business', businessRoutes);
+app.use('/api/community', communityRoutes);
+app.use('/api/real', realDataRoutes);
+app.use('/api/homestays', homestayRoutes);
+app.use('/api/eateries', eateryRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/event-organizers', eventOrganizerRoutes);
+app.use('/api/organizer-events', organizerEventsRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/common', commonRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/instagram', instagramRoutes);
+app.use('/api/services', servicesRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/support', supportRoutes);
+app.use('/api/booking', bookingApiRoutes);
+
+// Serve client build files (in production)
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '../client/dist');
+  
+  app.use(express.static(clientBuildPath, {
+    maxAge: '1y',
+    etag: true,
+    setHeaders: (res, path) => {
+      // Security headers for client files
+      res.set({
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY'
+      });
+      
+      // Cache static assets
+      if (path.includes('static/')) {
+        res.set('Cache-Control', 'public, max-age=31536000'); // 1 year
+      } else {
+        res.set('Cache-Control', 'public, max-age=86400'); // 1 day
       }
-    } else {
-      console.log('⚠️ Database using fallback mode');
     }
-  });
+  }));
 
-  // Initialize payment system
-  setupPaymentSystem().then(result => {
-    if (result.success) {
-      console.log('💳 Payment system initialized successfully');
-    } else {
-      console.log('⚠️ Payment system using fallback mode');
+  // Handle client-side routing
+  app.get('*', (req, res) => {
+    // Security check for path traversal
+    if (req.path.includes('..') || req.path.includes('//')) {
+      return res.status(400).send('Invalid path');
     }
-  });
-
-  // Validate payment gateway configuration
-  validatePaymentEnvironment();
-
-  // Health check routes
-  app.get("/api/ping", (_req, res) => {
-    res.json({ message: "coastalConnect Udupi API v1.0 - Server is running!" });
-  });
-
-  // Debug route for stats issue
-  app.get("/api/debug/stats", (_req, res) => {
-    console.log("🔍 Debug stats route called");
-    res.json({
-      success: true,
-      debug: true,
-      message: "Debug stats endpoint working",
-      timestamp: new Date().toISOString()
+    
+    res.sendFile(path.join(clientBuildPath, 'index.html'), {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Cache-Control': 'no-cache'
+      }
     });
   });
-
-  app.get("/api/health", healthCheck);
-  app.get("/api/database-status", databaseStatus);
-
-  // Legacy demo route
-  app.get("/api/demo", handleDemo);
-
-  // Database seeding endpoint (for development)
-  app.post("/api/seed", async (_req, res) => {
-    try {
-      await seedDatabase();
-      res.json({
-        success: true,
-        message: "Database seeded successfully with Udupi data!"
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error seeding database",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-  // Coupon seeding endpoint (for development)
-  app.post("/api/seed-coupons", async (_req, res) => {
-    try {
-      await seedCoupons();
-      res.json({
-        success: true,
-        message: "Coupons seeded successfully!"
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: "Error seeding coupons",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-  // Homestays API routes
-  app.get("/api/homestays", getHomestays);
-  app.get("/api/homestays/search", searchHomestays);
-  app.get("/api/homestays/:id", getHomestayById);
-
-  // Eateries API routes
-  app.get("/api/eateries", getEateries);
-  app.get("/api/eateries/search", searchEateries);
-  app.get("/api/eateries/:id", getEateryById);
-
-  // Drivers API routes
-  app.get("/api/drivers", getDrivers);
-  app.get("/api/drivers/search", searchDrivers);
-  app.get("/api/drivers/:id", getDriverById);
-
-  // Creators API routes
-  app.get("/api/creators", getCreators);
-  app.get("/api/creators/search", searchCreators);
-  app.get("/api/creators/:id", getCreatorById);
-  app.get("/api/creators/instagram/:username", getInstagramStats);
-
-  // Authentication API routes
-  app.post("/api/auth/google", googleAuth);
-  app.post("/api/auth/apple", appleAuth);
-  app.post("/api/auth/email", emailAuth);
-  app.post("/api/auth/register", register);
-  app.get("/api/auth/verify", verifyToken);
-  app.post("/api/auth/logout", logout);
-
-  // Payment API routes (live gateways)
-  app.post("/api/payments/create", createPayment);
-  app.post("/api/payments/verify/razorpay", verifyRazorpayPayment);
-  app.post("/api/payments/verify/stripe", verifyStripePayment);
-  app.post("/api/payments/refund", processRefund);
-  app.get("/api/payments/methods", getPaymentMethods);
-  app.post("/api/payments/webhook/stripe", express.raw({type: 'application/json'}), stripeWebhook);
-
-  // Real data API routes (moved higher to avoid conflicts)
-  app.get("/api/real/test", (req, res) => {
-    res.json({ success: true, message: "Real data API is working" });
-  });
-  app.get("/api/real/stats", async (req, res) => {
-    try {
-      console.log("📊 Direct stats endpoint called");
-      res.json({
-        success: true,
-        data: {
-          totalVendors: 25,
-          totalBookings: 134,
-          totalCustomers: 289,
-          totalEvents: 18,
-          averageRating: 4.3,
-          totalReviews: 156,
-          citiesServed: 5,
-          totalRevenue: 245000,
-          bookingsThisMonth: 42,
-          conversionRate: '15.2',
-          averageOrderValue: '1830',
-          customerSatisfaction: '86'
-        },
-        message: 'Platform statistics retrieved successfully'
-      });
-    } catch (error) {
-      console.error("Error in stats endpoint:", error);
-      res.status(500).json({
-        success: false,
-        message: 'Failed to get statistics',
-        error: String(error)
-      });
-    }
-  });
-  app.get("/api/real/services", getRealServices);
-  app.get("/api/real/events", getRealEvents);
-  app.get("/api/real/dashboard", authenticateToken, getUserDashboardData);
-  app.get("/api/real/vendor-applications", getVendorApplications);
-
-  // Booking API routes (protected)
-  app.post("/api/bookings/homestay", authenticateToken, createHomestayBooking);
-  app.post("/api/bookings/driver", authenticateToken, createDriverBooking);
-  app.post("/api/bookings/confirm-payment", confirmPayment);
-  app.get("/api/bookings/user", authenticateToken, getUserBookings);
-  app.put("/api/bookings/driver/:booking_id/status", updateDriverBookingStatus);
-  app.post("/api/bookings/validate-trip-code", validateTripCode);
-
-  // Old service routes removed - replaced with new service categories API
-
-  // Community API routes - Events & Religious Services
-  app.get("/api/community/events", getLocalEvents);
-  app.get("/api/community/events/featured", getFeaturedEvents);
-  app.get("/api/community/events/search", searchEvents);
-  app.get("/api/community/religious-services", getReligiousServices);
-
-  // Vendor Management API routes
-  app.use("/api/vendors", vendorRouter);
-
-  // Platform statistics - handled by statsRouter
-
-  // Event Organizer Authentication routes
-  app.post("/api/organizers/register", registerOrganizer);
-  app.post("/api/organizers/login", loginOrganizer);
-  app.get("/api/organizers/profile", authenticateOrganizer, getOrganizerProfile);
-  app.put("/api/organizers/profile", authenticateOrganizer, updateOrganizerProfile);
-  app.get("/api/organizers/dashboard", authenticateOrganizer, getOrganizerDashboard);
-
-  // Event Management routes (for organizers)
-  app.post("/api/organizers/events", authenticateOrganizer, requireVerifiedOrganizer, createEvent);
-  app.get("/api/organizers/events", authenticateOrganizer, getOrganizerEvents);
-  app.get("/api/organizers/events/:id", authenticateOrganizer, getEventDetails);
-  app.put("/api/organizers/events/:id", authenticateOrganizer, updateEvent);
-  app.post("/api/organizers/events/:id/submit", authenticateOrganizer, submitEventForApproval);
-  app.delete("/api/organizers/events/:id", authenticateOrganizer, deleteEvent);
-  app.post("/api/organizers/events/:id/cancel", authenticateOrganizer, cancelEvent);
-  app.get("/api/organizers/events/:id/registrations", authenticateOrganizer, getEventRegistrations);
-  app.get("/api/organizers/events/:id/analytics", authenticateOrganizer, getEventAnalytics);
-
-  // Notification API routes
-  app.post("/api/notifications/booking-confirmation", sendBookingConfirmation);
-  app.post("/api/notifications/booking-cancellation", sendBookingCancellation);
-  app.post("/api/notifications/booking-reminder", sendBookingReminder);
-  app.post("/api/notifications/welcome-email", sendWelcomeEmail);
-  app.post("/api/notifications/custom", sendCustomNotification);
-  app.post("/api/notifications/bulk", sendBulkNotification);
-  app.get("/api/notifications/history", getNotificationHistory);
-  app.post("/api/notifications/test-email", testEmail);
-  app.post("/api/notifications/test-sms", testSMS);
-
-  // Platform statistics
-  app.use("/api/stats", statsRouter);
-
-
-
-  // Admin approval workflow routes
-  app.get("/api/admin/vendor-applications", authenticateToken, getPendingVendorApplications);
-  app.post("/api/admin/vendor-applications/:applicationId/approve", authenticateToken, approveVendorApplication);
-  app.post("/api/admin/vendor-applications/:applicationId/reject", authenticateToken, rejectVendorApplication);
-  app.get("/api/admin/pending-events", authenticateToken, getPendingEvents);
-  app.post("/api/admin/events/:eventId/approve", authenticateToken, approveEvent);
-  app.post("/api/admin/events/:eventId/reject", authenticateToken, rejectEvent);
-  app.get("/api/admin/approval-stats", authenticateToken, getApprovalStats);
-
-  // Vendor application routes
-  app.post("/api/vendor-applications", authenticateToken, submitVendorApplication);
-  app.get("/api/vendor-applications/my-application", authenticateToken, getUserVendorApplication);
-
-  // Search API routes
-  app.use("/api/search", searchRouter);
-
-  // Subscription API routes
-  app.use("/api/subscription", subscriptionRouter);
-
-  // Admin API routes
-  app.use("/api/admin", adminRouter);
-
-  // Coupon API routes
-  app.use("/api/coupons", couponRouter);
-
-  // Professional Booking API routes
-  app.use("/api/bookings", bookingApiRouter);
-  app.use("/api/bookings", professionalBookingsRouter);
-
-  // Test notifications API routes (for development/testing)
-  app.use("/api/test-notifications", testNotificationsRouter);
-
-  // Development seeding routes
-  app.use("/api/dev", seedingRouter);
-
-  // Dynamic services routes (database-driven)
-  app.use("/api", dynamicServicesRouter);
-
-  // Service categories
-app.get("/api/services", getServiceCategories);
-app.get("/api/services/:categoryId", getServiceCategory);
-
-// Contact form
-app.post("/api/contact", submitContactForm);
-app.get("/api/contact/info", getContactInfo);
-
-// Business dashboard
-app.get("/api/business/metrics", getBusinessMetrics);
-app.get("/api/business/recent-bookings", getRecentBookings);
-app.get("/api/business/bookings/:bookingId", getBookingDetails);
-app.put("/api/business/bookings/:bookingId/status", updateBookingStatus);
-app.get("/api/business/analytics", getBusinessAnalytics);
-
-// Common data (categories, locations, etc.)
-app.get("/api/categories", getCategories);
-app.get("/api/locations", getLocations);
-app.get("/api/price-ranges", getPriceRanges);
-app.get("/api/features", getFeatures);
-app.get("/api/config", getAppConfig);
-
-// Support tickets
-app.post("/api/support/tickets", createSupportTicket);
-app.get("/api/support/tickets", getSupportTickets);
-app.get("/api/support/tickets/:ticketId", getSupportTicket);
-app.put("/api/support/tickets/:ticketId", updateSupportTicket);
-
-// Feedback
-app.post("/api/feedback", submitFeedback);
-app.get("/api/feedback", getFeedbacks);
-app.get("/api/feedback/stats", getFeedbackStats);
-
-  return app;
 }
+
+// Security middleware for unknown routes
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
+  });
+});
+
+// Global error handler (must be last)
+app.use(secureErrorHandler);
+
+// Graceful shutdown handling
+const shutdown = (signal: string) => {
+  console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
+  
+  const server = app.listen(PORT);
+  
+  server.close(() => {
+    console.log('✅ HTTP server closed');
+    
+    // Close database connections, cleanup resources here
+    
+    console.log('✅ Graceful shutdown completed');
+    process.exit(0);
+  });
+  
+  // Force shutdown after 30 seconds
+  setTimeout(() => {
+    console.error('❌ Forced shutdown due to timeout');
+    process.exit(1);
+  }, 30000);
+};
+
+// Handle shutdown signals
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+// Handle uncaught exceptions and rejections
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`
+🚀 CoastalConnect Server Started Successfully!
+
+📍 Environment: ${process.env.NODE_ENV || 'development'}
+🌐 Server URL: http://localhost:${PORT}
+🔒 Security: Enhanced protection enabled
+📊 Health Check: http://localhost:${PORT}/health
+🕒 Started at: ${new Date().toISOString()}
+
+🔐 Security Features Enabled:
+  ✅ HTTPS Enforcement (production)
+  ✅ Security Headers (Helmet)
+  ✅ Rate Limiting
+  ✅ CORS Protection
+  ✅ Input Validation
+  ✅ Environment Variable Validation
+  ✅ Secure Error Handling
+  ✅ Request Logging
+
+⚡ Ready to serve secure requests!
+  `);
+});
+
+// Export for testing
+export default app;
