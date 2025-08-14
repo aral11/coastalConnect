@@ -140,10 +140,21 @@ export const getRealServices: RequestHandler = async (req, res) => {
     
   } catch (error) {
     console.error('Error getting services:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get services',
-      error: error instanceof Error ? error.message : 'Unknown error'
+
+    // Return fallback services data instead of error
+    const fallbackServices = generateFallbackServices(type as string, Math.min(Number(limit), 10));
+
+    res.json({
+      success: true,
+      data: fallbackServices,
+      totalCount: fallbackServices.length,
+      fallback: true,
+      filters: {
+        type: type,
+        city: city,
+        featured: featured
+      },
+      message: `Fallback ${type} services (database unavailable)`
     });
   }
 };
