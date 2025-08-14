@@ -245,10 +245,21 @@ export const getRealEvents: RequestHandler = async (req, res) => {
     
   } catch (error) {
     console.error('Error getting events:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get events',
-      error: error instanceof Error ? error.message : 'Unknown error'
+
+    // Return fallback events data instead of error
+    const fallbackEvents = generateFallbackEvents(Math.min(Number(limit), 10));
+
+    res.json({
+      success: true,
+      data: fallbackEvents,
+      totalCount: fallbackEvents.length,
+      fallback: true,
+      filters: {
+        status: status,
+        city: city,
+        featured: featured
+      },
+      message: 'Fallback events data (database unavailable)'
     });
   }
 };
