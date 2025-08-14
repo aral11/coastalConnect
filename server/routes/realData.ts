@@ -493,6 +493,88 @@ function generateFallbackServices(serviceType: string, limit: number) {
   return services.slice(0, limit);
 }
 
+// Generate fallback events data when database is unavailable
+function generateFallbackEvents(limit: number) {
+  const fallbackEvents = [
+    {
+      id: 1,
+      title: 'Udupi Cultural Festival',
+      description: 'Annual cultural festival showcasing local arts, music, and traditions of coastal Karnataka',
+      category: 'cultural',
+      date: '2024-02-15',
+      startTime: '18:00',
+      endTime: '22:00',
+      duration: 4,
+      venue: {
+        name: 'Udupi Town Hall',
+        address: 'Town Hall Road, Udupi',
+        city: 'Udupi'
+      },
+      pricing: {
+        ticketPrice: 100,
+        currency: 'INR'
+      },
+      capacity: {
+        max: 200,
+        current: 45,
+        available: 155
+      },
+      organizer: {
+        name: 'Cultural Society',
+        organization: 'Udupi Cultural Trust',
+        id: 1
+      },
+      media: {
+        featuredImage: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=400&h=300&fit=crop',
+        gallery: []
+      },
+      isFeatured: true,
+      status: 'published',
+      createdAt: '2024-01-15T10:00:00.000Z',
+      publishedAt: '2024-01-20T10:00:00.000Z'
+    },
+    {
+      id: 2,
+      title: 'Beach Cleanup Drive',
+      description: 'Community beach cleanup and environmental awareness event at Malpe Beach',
+      category: 'community',
+      date: '2024-02-20',
+      startTime: '07:00',
+      endTime: '10:00',
+      duration: 3,
+      venue: {
+        name: 'Malpe Beach',
+        address: 'Malpe Beach, Udupi',
+        city: 'Udupi'
+      },
+      pricing: {
+        ticketPrice: 0,
+        currency: 'INR'
+      },
+      capacity: {
+        max: 100,
+        current: 23,
+        available: 77
+      },
+      organizer: {
+        name: 'Green Warriors',
+        organization: 'Environmental Society',
+        id: 2
+      },
+      media: {
+        featuredImage: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=300&fit=crop',
+        gallery: []
+      },
+      isFeatured: false,
+      status: 'published',
+      createdAt: '2024-01-10T10:00:00.000Z',
+      publishedAt: '2024-01-18T10:00:00.000Z'
+    }
+  ];
+
+  return fallbackEvents.slice(0, limit);
+}
+
 // Get real vendor applications for admin
 export const getVendorApplications: RequestHandler = async (req, res) => {
   try {
