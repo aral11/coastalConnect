@@ -249,7 +249,8 @@ export const getRealEvents: RequestHandler = async (req, res) => {
     console.error('Error getting events:', error);
 
     // Return fallback events data instead of error
-    const fallbackEvents = generateFallbackEvents(Math.min(Number(limit), 10));
+    const eventLimit = Math.min(Number(req.query.limit) || 10, 10);
+    const fallbackEvents = generateFallbackEvents(eventLimit);
 
     res.json({
       success: true,
@@ -257,9 +258,9 @@ export const getRealEvents: RequestHandler = async (req, res) => {
       totalCount: fallbackEvents.length,
       fallback: true,
       filters: {
-        status: status,
-        city: city,
-        featured: featured
+        status: req.query.status,
+        city: req.query.city,
+        featured: req.query.featured
       },
       message: 'Fallback events data (database unavailable)'
     });
