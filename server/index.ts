@@ -66,7 +66,7 @@ app.use('/api/seeding', seedingRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/vendors', vendorsRoutes);
-app.use('/api/analytics', analyticsRoutes);
+// app.use('/api/analytics', analyticsRoutes); // Temporarily disabled
 
 // Basic API endpoints for missing functionality
 app.get('/api/homestays', (req, res) => {
