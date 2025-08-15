@@ -109,6 +109,7 @@ export default function SwiggyStyleIndex() {
 
   const loadInitialData = async () => {
     try {
+      console.log('Starting loadInitialData');
       setLoading(true);
 
       // Track page view
