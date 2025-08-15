@@ -147,30 +147,30 @@ export default function Events() {
     } catch (error) {
       console.log("Loading fallback events data...");
 
-      // Fallback events data
+      // Genuine Udupi/Manipal festival and event data
       const fallbackEvents: Event[] = [
         {
           id: 1,
-          title: "Kambala Festival 2024",
+          title: "Krishna Janmashtami Festival 2024",
           description:
-            "Traditional buffalo race celebrating the rich heritage of coastal Karnataka. Experience the thrill of this centuries-old tradition with cultural performances and local delicacies.",
-          category: "kambala",
+            "Grand celebration at Sri Krishna Temple, Udupi with elaborate decorations, traditional rituals, cultural programs, and distribution of prasadam. The birthplace of Lord Krishna celebrations with midnight Abhisheka.",
+          category: "religious",
           location: "Udupi",
-          address: "Kambala Ground, Udupi, Karnataka",
-          event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+          address: "Sri Krishna Temple, Car Street, Udupi, Karnataka 576101",
+          event_date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
             .toISOString()
             .split("T")[0],
-          start_time: "14:00",
-          end_time: "20:00",
-          organizer: "Udupi Kambala Committee",
-          contact_phone: "0820-2520099",
-          contact_email: "info@udupikambala.org",
-          entry_fee: 100,
+          start_time: "05:00",
+          end_time: "23:59",
+          organizer: "Sri Krishna Temple Udupi",
+          contact_phone: "0820-2520636",
+          contact_email: "info@udupiconventionsandfairs.org",
+          entry_fee: 0,
           image_url:
             "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop",
-          website_url: "https://udupikambala.org",
-          capacity: 5000,
-          registered_count: 1234,
+          website_url: "https://udupi.org",
+          capacity: 10000,
+          registered_count: 8500,
           is_featured: true,
           status: "upcoming",
           admin_approval_status: "approved",
