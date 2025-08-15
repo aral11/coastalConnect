@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Layout from '@/components/Layout';
 import PageHeader from '@/components/PageHeader';
 import SearchSection from '@/components/SearchSection';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import {
   Calendar,
   MapPin,
