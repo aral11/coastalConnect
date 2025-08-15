@@ -114,7 +114,7 @@ interface PendingEvent {
 }
 
 export default function AdminDashboard() {
-  const { user, hasRole } = useAuth();
+  const { user, hasRole, session } = useAuth();
   const [stats, setStats] = useState<ApprovalStats | null>(null);
   const [vendorApplications, setVendorApplications] = useState<VendorApplication[]>([]);
   const [pendingEvents, setPendingEvents] = useState<PendingEvent[]>([]);
