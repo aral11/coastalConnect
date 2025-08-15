@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
 import RoleBasedNavigation from "./RoleBasedNavigation";
+import NotificationCenter from "./NotificationCenter";
 import { swiggyTheme } from "@/lib/swiggy-design-system";
 import { layouts } from "@/lib/design-system";
 import {
