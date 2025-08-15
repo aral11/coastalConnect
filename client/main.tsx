@@ -75,8 +75,8 @@ function App() {
             {/* Modern Routes - Using demo version for now */}
             <Route path="/" element={<ModernIndexDemo />} />
             <Route path="/services" element={<SimpleHome />} />
-            <Route path="/login" element={<ModernLogin />} />
-            <Route path="/signup" element={<ModernSignup />} />
+            <Route path="/login" element={<SimpleLogin />} />
+            <Route path="/signup" element={<SimpleSignup />} />
             
             {/* Legacy Routes for compatibility - using placeholders for now */}
             <Route path="/legacy" element={<SimpleHome />} />
