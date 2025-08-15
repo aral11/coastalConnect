@@ -521,7 +521,7 @@ export default function SwiggyStyleIndex() {
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-bold text-gray-900">Discover Coastal Karnataka</h3>
-                            <p className="text-sm text-gray-600">{heroVideoUrl ? 'Watch on Instagram' : 'Coming Soon'}</p>
+                            <p className="text-sm text-gray-600">{heroVideoUrl ? 'Watch on Instagram' : 'Experience Coastal Karnataka'}</p>
                           </div>
                           <div className="flex items-center space-x-2 text-sm text-gray-600">
                             <Eye className="h-4 w-4" />
