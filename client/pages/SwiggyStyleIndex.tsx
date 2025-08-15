@@ -240,8 +240,18 @@ export default function SwiggyStyleIndex() {
         ]);
       }
 
-      await loadStats();
-      await loadServiceCounts();
+      // Load additional data with error handling
+      const additionalResults = await Promise.allSettled([
+        loadStats(),
+        loadServiceCounts()
+      ]);
+
+      // Log any failures for debugging
+      additionalResults.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.warn(`Additional data load ${index} failed:`, result.reason);
+        }
+      });
     } catch (error: any) {
       console.error("Error loading data:", error);
     } finally {
