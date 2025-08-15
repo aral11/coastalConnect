@@ -31,6 +31,7 @@ interface AuthContextType {
     userData: Partial<AuthUser>,
   ) => Promise<void>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updateProfile: (updates: Partial<AuthUser>) => Promise<void>;
   hasPermission: (permission: string) => boolean;
