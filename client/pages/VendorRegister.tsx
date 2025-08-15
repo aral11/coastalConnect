@@ -137,7 +137,7 @@ export default function VendorRegister() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Authorization': `Bearer ${session?.access_token}`
         },
         body: JSON.stringify({
           business_name: formData.businessName,
