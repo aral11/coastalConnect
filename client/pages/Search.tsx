@@ -76,47 +76,40 @@ export default function Search() {
         const data = await response.json();
         setResults(data.results || []);
       } else {
-        // Fallback mock results if API doesn't exist yet
-        const mockResults: SearchResult[] = [
-          {
-            id: '1',
-            title: 'Sea View Homestay',
-            description: 'Beautiful homestay with ocean views and traditional coastal cuisine',
-            category: 'homestays',
-            location: 'Malpe Beach, Udupi',
-            rating: 4.5,
-            reviewCount: 28,
-            price: '₹2,500/night',
-            link: '/homestays'
-          },
-          {
-            id: '2',
-            title: 'Coastal Kitchen Restaurant',
-            description: 'Authentic Udupi cuisine and fresh seafood specialties',
-            category: 'eateries',
-            location: 'Car Street, Udupi',
-            rating: 4.7,
-            reviewCount: 156,
-            price: '₹300 for two',
-            link: '/eateries'
-          },
-          {
-            id: '3',
-            title: 'Ravi - Local Driver',
-            description: 'Experienced driver with AC car, knows all tourist spots',
-            category: 'drivers',
-            location: 'Udupi',
-            rating: 4.8,
-            reviewCount: 42,
-            price: '₹15/km',
-            link: '/drivers'
+        // Search directly in Supabase services
+        try {
+          const { data: services, error } = await supabase
+            .from('services')
+            .select(`
+              *,
+              locations(name),
+              service_categories(name)
+            `)
+            .eq('status', 'approved')
+            .eq('is_active', true)
+            .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+            .limit(20);
+
+          if (!error && services) {
+            const searchResults: SearchResult[] = services.map(service => ({
+              id: service.id,
+              title: service.name,
+              description: service.description || service.short_description || '',
+              category: service.service_categories?.name || service.service_type,
+              location: service.locations?.name || 'Coastal Karnataka',
+              rating: service.average_rating || 0,
+              reviewCount: service.total_reviews || 0,
+              price: `₹${service.base_price}`,
+              link: `/service/${service.id}`
+            }));
+            setResults(searchResults);
+          } else {
+            setResults([]);
           }
-        ].filter(result => 
-          result.title.toLowerCase().includes(query.toLowerCase()) ||
-          result.description.toLowerCase().includes(query.toLowerCase()) ||
-          result.category.toLowerCase().includes(query.toLowerCase())
-        );
-        setResults(mockResults);
+        } catch (error) {
+          console.error('Supabase search error:', error);
+          setResults([]);
+        }
       }
     } catch (error) {
       console.error('Search error:', error);
