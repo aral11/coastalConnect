@@ -7,186 +7,132 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
 import { trackEvent } from "@/lib/supabase";
 import {
+  ArrowLeft,
   Mail,
   Lock,
-  Eye,
-  EyeOff,
-  ArrowLeft,
   User,
   Phone,
-  MapPin,
-  Chrome,
-  Facebook,
   AlertCircle,
   CheckCircle,
+  Eye,
+  EyeOff,
+  MapPin,
+  Calendar,
   Shield,
+  Users,
+  Star,
+  Crown,
 } from "lucide-react";
 
-const USER_TYPES = [
-  {
-    value: "customer",
-    label: "Customer",
-    description: "Book services and experiences",
-  },
-  {
-    value: "vendor",
-    label: "Service Provider",
-    description: "Offer your services",
-  },
-  {
-    value: "event_organizer",
-    label: "Event Organizer",
-    description: "Create and manage events",
-  },
-];
-
-const LOCATIONS = [
-  "Mangalore",
-  "Udupi",
-  "Karwar",
-  "Gokarna",
-  "Murudeshwar",
-  "Malpe",
-  "Manipal",
-  "Kundapur",
-  "Bhatkal",
-  "Kumta",
-];
+interface SignupForm {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  role: "customer" | "vendor" | "event_organizer";
+  businessName?: string;
+  businessType?: "homestay" | "restaurant" | "driver" | "event_services";
+}
 
 export default function ModernSignup() {
-  const { signUp, user, loading } = useAuth();
+  const { signUp, signInWithGoogle, user, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user && !loading) {
-      navigate("/", { replace: true });
-    }
-  }, [user, loading, navigate]);
-
-  // Form state
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignupForm>({
+    name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
-    fullName: "",
-    phone: "",
-    userType: "",
-    location: "",
-    agreeToTerms: false,
-    agreeToMarketing: false,
+    role: "customer",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Form validation
-  const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isValidPhone = (phone: string) => /^[6-9]\d{9}$/.test(phone);
-  const passwordsMatch = formData.password === formData.confirmPassword;
-  const isStrongPassword =
-    formData.password.length >= 8 &&
-    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password);
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
 
-  const canSubmit =
-    isValidEmail(formData.email) &&
-    isStrongPassword &&
-    passwordsMatch &&
-    formData.fullName.trim().length >= 2 &&
-    isValidPhone(formData.phone) &&
-    formData.userType &&
-    formData.location &&
-    formData.agreeToTerms;
-
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: keyof SignupForm, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
 
+  const validateForm = () => {
+    if (!formData.name.trim()) return "Full name is required";
+    if (!formData.email.trim()) return "Email is required";
+    if (!formData.password) return "Password is required";
+    if (formData.password.length < 6) return "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword) return "Passwords do not match";
+    if (formData.role === "vendor" && !formData.businessName?.trim()) return "Business name is required for vendors";
+    if (formData.role === "vendor" && !formData.businessType) return "Business type is required for vendors";
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
-
     setIsLoading(true);
     setError(null);
     setSuccess(null);
 
-    try {
-      // Prepare user metadata for Supabase
-      const userMetadata = {
-        full_name: formData.fullName,
-        phone: formData.phone,
-        user_type: formData.userType,
-        location: formData.location,
-        marketing_consent: formData.agreeToMarketing,
-        signup_date: new Date().toISOString(),
-      };
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      setIsLoading(false);
+      return;
+    }
 
-      await signUp(formData.email, formData.password, userMetadata);
+    try {
+      await signUp(formData.email, formData.password, {
+        id: "", // Will be generated by Supabase
+        email: formData.email,
+        name: formData.name,
+        phone: formData.phone,
+        role: formData.role,
+        business_name: formData.businessName,
+        business_type: formData.businessType,
+        is_verified: false,
+        vendor_status: formData.role === "vendor" ? "pending" : undefined,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
 
       // Track signup event
       await trackEvent("auth_signup", {
-        userType: formData.userType,
-        location: formData.location,
         method: "email",
+        role: formData.role,
         timestamp: new Date().toISOString(),
       });
 
-      setSuccess(
-        "Account created successfully! Please check your email for verification link.",
-      );
+      setSuccess("Account created successfully! Please check your email for verification.");
 
-      // Clear form
-      setFormData({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        fullName: "",
-        phone: "",
-        userType: "",
-        location: "",
-        agreeToTerms: false,
-        agreeToMarketing: false,
-      });
+      // Redirect to login after short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (err: any) {
       console.error("Signup error:", err);
 
       // Handle specific Supabase auth errors
       if (err.message.includes("User already registered")) {
-        setError(
-          "An account with this email already exists. Please sign in instead.",
-        );
-      } else if (
-        err.message.includes("Password should be at least 6 characters")
-      ) {
-        setError(
-          "Password must be at least 8 characters with uppercase, lowercase, and numbers.",
-        );
-      } else if (err.message.includes("Unable to validate email address")) {
+        setError("An account with this email already exists. Please try logging in.");
+      } else if (err.message.includes("Password should be")) {
+        setError("Password must be at least 6 characters long.");
+      } else if (err.message.includes("Invalid email")) {
         setError("Please enter a valid email address.");
       } else {
         setError(err.message || "Signup failed. Please try again.");
@@ -195,7 +141,7 @@ export default function ModernSignup() {
       // Track signup error
       await trackEvent("auth_signup_error", {
         error: err.message,
-        userType: formData.userType,
+        role: formData.role,
         timestamp: new Date().toISOString(),
       });
     } finally {
@@ -203,30 +149,54 @@ export default function ModernSignup() {
     }
   };
 
-  const handleSocialSignup = async (provider: "google" | "facebook") => {
+  const handleGoogleSignup = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Note: This would need to be implemented in the auth context
-      setError(
-        "Social signup will be implemented once Supabase is configured.",
-      );
-
-      await trackEvent("auth_social_signup_attempt", {
-        provider,
-        timestamp: new Date().toISOString(),
-      });
+      await signInWithGoogle();
+      // Google OAuth redirects, so we don't need to do anything else here
     } catch (err: any) {
-      setError(err.message || `${provider} signup failed`);
+      setError(err.message || "Google signup failed");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const roleOptions = [
+    {
+      id: "customer",
+      title: "Customer",
+      description: "Book services and experiences",
+      icon: User,
+      color: "from-blue-400 to-blue-600",
+    },
+    {
+      id: "vendor",
+      title: "Vendor",
+      description: "Offer hotels, restaurants, transport",
+      icon: Crown,
+      color: "from-orange-400 to-red-600",
+    },
+    {
+      id: "event_organizer",
+      title: "Event Organizer",
+      description: "Create and manage events",
+      icon: Star,
+      color: "from-purple-400 to-pink-600",
+    },
+  ];
+
+  const businessTypes = [
+    { id: "homestay", label: "Homestay/Hotel" },
+    { id: "restaurant", label: "Restaurant/Cafe" },
+    { id: "driver", label: "Transport/Driver" },
+    { id: "event_services", label: "Event Services" },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-lg space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center space-x-2 mb-6">
@@ -238,30 +208,21 @@ export default function ModernSignup() {
               Back to Home
             </Link>
           </div>
-
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Join CoastalConnect
-            </h1>
-            <p className="text-gray-600">
-              Create your account and start exploring coastal Karnataka
-            </p>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Join CoastalConnect</h1>
+          <p className="text-gray-600">
+            Your gateway to coastal Karnataka experiences
+          </p>
         </div>
 
         {/* Signup Card */}
         <Card className="border-0 shadow-xl">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl font-semibold text-center">
-              Create Account
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900">
+              Create Your Account
             </CardTitle>
-            <CardDescription className="text-center">
-              Fill in your details to get started
-            </CardDescription>
           </CardHeader>
-
-          <CardContent className="space-y-4">
-            {/* Error Alert */}
+          <CardContent className="space-y-6">
+            {/* Messages */}
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -269,36 +230,67 @@ export default function ModernSignup() {
               </Alert>
             )}
 
-            {/* Success Alert */}
             {success && (
-              <Alert className="border-green-200 bg-green-50">
-                <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-700">
-                  {success}
-                </AlertDescription>
+              <Alert className="border-green-200 bg-green-50 text-green-800">
+                <CheckCircle className="h-4 w-4" />
+                <AlertDescription>{success}</AlertDescription>
               </Alert>
             )}
 
+            {/* Role Selection */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-gray-700">
+                Account Type
+              </label>
+              <div className="grid grid-cols-1 gap-3">
+                {roleOptions.map((role) => {
+                  const Icon = role.icon;
+                  return (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => handleInputChange("role", role.id as any)}
+                      className={`p-4 border-2 rounded-lg text-left transition-all ${
+                        formData.role === role.id
+                          ? "border-orange-500 bg-orange-50"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div
+                          className={`p-2 rounded-lg bg-gradient-to-r ${role.color} text-white`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900">
+                            {role.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {role.description}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Signup Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Full Name */}
+              {/* Name */}
               <div className="space-y-2">
-                <label
-                  htmlFor="fullName"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Full Name
+                <label className="text-sm font-medium text-gray-700">
+                  Full Name *
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
-                    id="fullName"
                     type="text"
                     placeholder="Enter your full name"
-                    value={formData.fullName}
-                    onChange={(e) =>
-                      handleInputChange("fullName", e.target.value)
-                    }
+                    value={formData.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     className="pl-10 h-12"
                     disabled={isLoading}
                     required
@@ -308,16 +300,12 @@ export default function ModernSignup() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Email Address
+                <label className="text-sm font-medium text-gray-700">
+                  Email Address *
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
-                    id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={formData.email}
@@ -331,113 +319,74 @@ export default function ModernSignup() {
 
               {/* Phone */}
               <div className="space-y-2">
-                <label
-                  htmlFor="phone"
-                  className="text-sm font-medium text-gray-700"
-                >
+                <label className="text-sm font-medium text-gray-700">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
-                    id="phone"
                     type="tel"
-                    placeholder="Enter 10-digit mobile number"
+                    placeholder="Enter your phone number"
                     value={formData.phone}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "phone",
-                        e.target.value.replace(/\D/g, "").slice(0, 10),
-                      )
-                    }
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     className="pl-10 h-12"
                     disabled={isLoading}
-                    required
                   />
                 </div>
-                {formData.phone && !isValidPhone(formData.phone) && (
-                  <p className="text-xs text-red-600">
-                    Please enter a valid 10-digit mobile number
-                  </p>
-                )}
               </div>
 
-              {/* User Type */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Account Type
-                </label>
-                <Select
-                  value={formData.userType}
-                  onValueChange={(value) =>
-                    handleInputChange("userType", value)
-                  }
-                  disabled={isLoading}
-                >
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Select account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {USER_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{type.label}</span>
-                          <span className="text-xs text-gray-500">
-                            {type.description}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Business Details for Vendors */}
+              {formData.role === "vendor" && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Business Name *
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your business name"
+                      value={formData.businessName || ""}
+                      onChange={(e) => handleInputChange("businessName", e.target.value)}
+                      className="h-12"
+                      disabled={isLoading}
+                      required
+                    />
+                  </div>
 
-              {/* Location */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Location
-                </label>
-                <Select
-                  value={formData.location}
-                  onValueChange={(value) =>
-                    handleInputChange("location", value)
-                  }
-                  disabled={isLoading}
-                >
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Select your location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {LOCATIONS.map((location) => (
-                      <SelectItem key={location} value={location}>
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-                          {location}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Business Type *
+                    </label>
+                    <select
+                      value={formData.businessType || ""}
+                      onChange={(e) => handleInputChange("businessType", e.target.value as any)}
+                      className="w-full h-12 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      disabled={isLoading}
+                      required
+                    >
+                      <option value="">Select business type</option>
+                      {businessTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
 
               {/* Password */}
               <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Password
+                <label className="text-sm font-medium text-gray-700">
+                  Password *
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
-                    id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a strong password"
+                    placeholder="Create a password"
                     value={formData.password}
-                    onChange={(e) =>
-                      handleInputChange("password", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("password", e.target.value)}
                     className="pl-10 pr-10 h-12"
                     disabled={isLoading}
                     required
@@ -445,8 +394,7 @@ export default function ModernSignup() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    disabled={isLoading}
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -455,32 +403,20 @@ export default function ModernSignup() {
                     )}
                   </button>
                 </div>
-                {formData.password && !isStrongPassword && (
-                  <p className="text-xs text-red-600">
-                    Password must be at least 8 characters with uppercase,
-                    lowercase, and numbers
-                  </p>
-                )}
               </div>
 
               {/* Confirm Password */}
               <div className="space-y-2">
-                <label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium text-gray-700"
-                >
-                  Confirm Password
+                <label className="text-sm font-medium text-gray-700">
+                  Confirm Password *
                 </label>
                 <div className="relative">
-                  <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
-                    id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
-                    onChange={(e) =>
-                      handleInputChange("confirmPassword", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                     className="pl-10 pr-10 h-12"
                     disabled={isLoading}
                     required
@@ -488,8 +424,7 @@ export default function ModernSignup() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    disabled={isLoading}
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -498,62 +433,13 @@ export default function ModernSignup() {
                     )}
                   </button>
                 </div>
-                {formData.confirmPassword && !passwordsMatch && (
-                  <p className="text-xs text-red-600">Passwords do not match</p>
-                )}
-              </div>
-
-              {/* Terms Checkbox */}
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="agreeToTerms"
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("agreeToTerms", checked as boolean)
-                  }
-                  disabled={isLoading}
-                />
-                <label
-                  htmlFor="agreeToTerms"
-                  className="text-sm text-gray-600 leading-4"
-                >
-                  I agree to the{" "}
-                  <Link to="/terms" className="text-orange-600 hover:underline">
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    to="/privacy"
-                    className="text-orange-600 hover:underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                </label>
-              </div>
-
-              {/* Marketing Checkbox */}
-              <div className="flex items-start space-x-2">
-                <Checkbox
-                  id="agreeToMarketing"
-                  checked={formData.agreeToMarketing}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("agreeToMarketing", checked as boolean)
-                  }
-                  disabled={isLoading}
-                />
-                <label
-                  htmlFor="agreeToMarketing"
-                  className="text-sm text-gray-600 leading-4"
-                >
-                  I'd like to receive updates, offers, and promotions via email
-                </label>
               </div>
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold"
-                disabled={!canSubmit || isLoading}
+                className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors"
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
@@ -569,67 +455,66 @@ export default function ModernSignup() {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-gray-300"></div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">
-                  Or continue with
-                </span>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
-            {/* Social Signup Buttons */}
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                className="h-12"
-                onClick={() => handleSocialSignup("google")}
-                disabled={isLoading}
-              >
-                <Chrome className="h-5 w-5 mr-2" />
-                Google
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-12"
-                onClick={() => handleSocialSignup("facebook")}
-                disabled={isLoading}
-              >
-                <Facebook className="h-5 w-5 mr-2" />
-                Facebook
-              </Button>
-            </div>
-          </CardContent>
-
-          <CardFooter className="pt-4">
-            <div className="text-center w-full">
-              <p className="text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="font-medium text-orange-600 hover:text-orange-700"
-                >
-                  Sign in here
-                </Link>
-              </p>
-            </div>
-          </CardFooter>
-        </Card>
-
-        {/* Additional Help */}
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Need help?{" "}
-            <Link
-              to="/support"
-              className="text-orange-600 hover:text-orange-700 font-medium"
+            {/* Google Signup */}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-12"
+              onClick={handleGoogleSignup}
+              disabled={isLoading}
             >
-              Contact Support
-            </Link>
-          </p>
-        </div>
+              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              Sign up with Google
+            </Button>
+
+            {/* Login Link */}
+            <div className="text-center text-sm">
+              <span className="text-gray-600">Already have an account? </span>
+              <Link
+                to="/login"
+                className="font-medium text-orange-600 hover:text-orange-700"
+              >
+                Sign in
+              </Link>
+            </div>
+
+            {/* Terms */}
+            <p className="text-xs text-center text-gray-500">
+              By creating an account, you agree to our{" "}
+              <Link to="/terms" className="text-orange-600 hover:underline">
+                Terms of Service
+              </Link>{" "}
+              and{" "}
+              <Link to="/privacy" className="text-orange-600 hover:underline">
+                Privacy Policy
+              </Link>
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
