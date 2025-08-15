@@ -557,34 +557,34 @@ export default function SwiggyStyleServices() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                         
                         {/* Top Badges */}
-                        <div className="absolute top-4 left-4 right-4 flex justify-between">
-                          <div className={`${getRatingColor(service.average_rating)} text-white px-3 py-1 rounded-full text-sm font-bold flex items-center`}>
+                        <div className="absolute top-3 left-3 right-3 flex justify-between z-10">
+                          <div className={`${getRatingColor(service.average_rating)} text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center shadow-md`}>
                             <Star className="h-3 w-3 mr-1 fill-current" />
                             {service.average_rating.toFixed(1)}
                           </div>
-                          
+
                           <div className="flex space-x-2">
                             {service.featured && (
-                              <Badge className="bg-orange-500 text-white">
+                              <Badge className="bg-orange-500 text-white text-xs px-2 py-1">
                                 <Crown className="h-3 w-3 mr-1" />
                                 Featured
                               </Badge>
                             )}
-                            <button className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors">
-                              <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
+                            <button className="w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-md">
+                              <Heart className="h-3.5 w-3.5 text-gray-600 hover:text-red-500" />
                             </button>
                           </div>
                         </div>
 
                         {/* Bottom Info */}
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-gray-600 flex items-center">
-                                <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
-                                Available
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2.5">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-gray-600 flex items-center truncate">
+                                <CheckCircle className="h-3 w-3 mr-1 text-green-500 flex-shrink-0" />
+                                <span className="truncate">Available</span>
                               </span>
-                              <span className="text-green-600 font-bold">
+                              <span className="text-green-600 font-bold ml-2 flex-shrink-0">
                                 {formatPrice(service.base_price)}
                               </span>
                             </div>
@@ -625,7 +625,7 @@ export default function SwiggyStyleServices() {
                             </span>
                           </div>
                           
-                          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
+                          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md">
                             Book Now
                           </Button>
                         </div>
@@ -715,7 +715,7 @@ export default function SwiggyStyleServices() {
                                 <div className="text-sm text-gray-500 mb-3">
                                   per {service.service_type === "homestay" ? "night" : "booking"}
                                 </div>
-                                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-6">
+                                <Button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 font-medium rounded-lg transition-all duration-200 hover:shadow-md">
                                   Book Now
                                 </Button>
                               </div>
