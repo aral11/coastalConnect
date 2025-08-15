@@ -454,12 +454,14 @@ export default function SwiggyStyleIndex() {
                 </div>
 
                 {/* Quick Action Buttons */}
-                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap gap-3 md:gap-4">
                   {[
-                    { icon: "🏖️", label: "Beach Stays", path: "/services?category=homestays" },
-                    { icon: "🍽️", label: "Local Food", path: "/services?category=restaurants" },
-                    { icon: "🚗", label: "Drivers", path: "/services?category=transport" },
-                    { icon: "🎭", label: "Events", path: "/services?category=events" },
+                    { icon: "🏨", label: "Hotels & Homestays", path: "/services?category=hotels-resorts-homestays" },
+                    { icon: "🍽️", label: "Restaurants & Cafes", path: "/services?category=restaurants-cafes" },
+                    { icon: "🚗", label: "Local Transport", path: "/services?category=transportation" },
+                    { icon: "🎭", label: "Events & Experiences", path: "/services?category=event-services" },
+                    { icon: "💆", label: "Beauty & Wellness", path: "/services?category=wellness-spa" },
+                    { icon: "📸", label: "Content Creators", path: "/services?category=content-creators" },
                   ].map((action, index) => (
                     <Button
                       key={index}
