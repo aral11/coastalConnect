@@ -158,8 +158,8 @@ function Footer() {
               </div>
               
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Discover authentic coastal Karnataka with our comprehensive platform connecting
-                travelers to hotels, resorts, homestays, restaurants, local transport, and talented creators.
+                Discover authentic Udupi and Manipal experiences with our comprehensive platform connecting
+                travelers to hotels, homestays, restaurants, local transport, and talented creators.
                 Experience the real charm of Udupi and Manipal.
               </p>
 
