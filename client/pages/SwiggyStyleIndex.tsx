@@ -557,48 +557,48 @@ export default function SwiggyStyleIndex() {
                   label: "Hotels & Homestays",
                   path: "/services?category=hotels-resorts-homestays",
                   image:
-                    "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=300&h=200&fit=crop&auto=format",
-                  alt: "Coastal resort with palm trees",
+                    "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop&auto=format",
+                  alt: "Coastal homestays and resorts",
                 },
                 {
                   key: "restaurants-cafes",
                   label: "Restaurants",
                   path: "/services?category=restaurants-cafes",
                   image:
-                    "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=300&h=200&fit=crop&auto=format",
-                  alt: "Coastal cuisine",
+                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&h=200&fit=crop&auto=format",
+                  alt: "Traditional South Indian cuisine",
                 },
                 {
                   key: "transportation",
                   label: "Transport",
                   path: "/services?category=transportation",
                   image:
-                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=200&fit=crop&auto=format",
-                  alt: "Local transport",
+                    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=300&h=200&fit=crop&auto=format",
+                  alt: "Local transportation services",
                 },
                 {
                   key: "event-services",
                   label: "Events",
                   path: "/services?category=event-services",
                   image:
-                    "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&h=200&fit=crop&auto=format",
-                  alt: "Cultural events",
+                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop&auto=format",
+                  alt: "Udupi cultural festivals",
                 },
                 {
                   key: "content-creators",
                   label: "Creators",
                   path: "/services?category=content-creators",
                   image:
-                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&auto=format",
-                  alt: "Content creators",
+                    "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=200&fit=crop&auto=format",
+                  alt: "Photography and content creation",
                 },
                 {
                   key: "wellness-spa",
                   label: "Wellness",
                   path: "/services?category=wellness-spa",
                   image:
-                    "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=300&h=200&fit=crop&auto=format",
-                  alt: "Spa and wellness",
+                    "https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=300&h=200&fit=crop&auto=format",
+                  alt: "Ayurvedic spa and wellness",
                 },
                 {
                   key: "visit-guide",
