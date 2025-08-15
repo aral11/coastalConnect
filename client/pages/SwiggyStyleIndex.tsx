@@ -408,7 +408,7 @@ export default function SwiggyStyleIndex() {
                 </div>
 
                 {/* Quick Action Buttons */}
-                <div className="flex flex-wrap gap-4">
+                <div className="grid grid-cols-2 md:flex md:flex-wrap gap-3 md:gap-4">
                   {[
                     { icon: "🏖️", label: "Beach Stays", path: "/services?category=homestays" },
                     { icon: "🍽️", label: "Local Food", path: "/services?category=restaurants" },
@@ -419,10 +419,10 @@ export default function SwiggyStyleIndex() {
                       key={index}
                       variant="outline"
                       onClick={() => navigate(action.path)}
-                      className="flex items-center space-x-2 px-6 py-3 rounded-xl border-2 border-white bg-white/80 backdrop-blur-sm hover:bg-white hover:scale-105 transition-all duration-200 font-semibold"
+                      className="flex items-center justify-center space-x-2 px-4 md:px-6 py-3 rounded-xl border-2 border-white bg-white/80 backdrop-blur-sm hover:bg-white hover:scale-105 transition-all duration-200 font-semibold text-center"
                     >
                       <span className="text-lg">{action.icon}</span>
-                      <span className="text-gray-700">{action.label}</span>
+                      <span className="text-gray-700 text-sm md:text-base">{action.label}</span>
                     </Button>
                   ))}
                 </div>
