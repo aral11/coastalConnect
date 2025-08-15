@@ -714,7 +714,8 @@ export default function SwiggyStyleIndex() {
 
         {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
           <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
               Ready for Your Coastal Adventure?
