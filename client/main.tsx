@@ -40,6 +40,7 @@ import Help from "@/pages/Help";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import ApiTest from "@/pages/ApiTest";
+import MediaGallery from "@/pages/MediaGallery";
 import ScrollToTop from "@/components/ScrollToTop";
 import RoleBasedRoute, {
   AdminRoute,
@@ -84,6 +85,8 @@ function App() {
               <Route path="/safety" element={<Help />} />
               <Route path="/visit-udupi-guide" element={<VisitUdupiGuide />} />
               <Route path="/partner-with-us" element={<PartnerWithUs />} />
+              <Route path="/gallery" element={<MediaGallery />} />
+              <Route path="/media" element={<MediaGallery />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
 
