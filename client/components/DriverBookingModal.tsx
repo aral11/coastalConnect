@@ -60,11 +60,9 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
     setLoading(true);
 
     try {
-      // Get authentication token (check multiple possible keys for compatibility)
-      const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
-      
-      if (!token) {
+      if (!isAuthenticated || !session) {
         alert('Please login to make a booking');
+        window.location.href = '/login';
         return;
       }
 
@@ -78,7 +76,7 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
           driver_id: driver.id,
@@ -135,7 +133,7 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              'Authorization': `Bearer ${session.access_token}`
             },
             body: JSON.stringify({
               order_id: response.razorpay_order_id,
