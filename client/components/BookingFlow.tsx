@@ -80,6 +80,7 @@ interface BookingFlowProps {
 }
 
 export default function BookingFlow({ item, onBookingComplete, onCancel }: BookingFlowProps) {
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
