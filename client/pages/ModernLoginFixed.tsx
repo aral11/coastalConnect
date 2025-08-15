@@ -118,14 +118,22 @@ export default function ModernLoginFixed() {
     setError("");
 
     try {
-      // For now, show a message about Google login setup
-      setError("Google login is being configured. Please use email login for now.");
-      
-      // TODO: Implement Google OAuth
-      // await signInWithGoogle();
+      await signInWithGoogle();
+
+      // Track successful Google login attempt
+      try {
+        await trackEvent("login_success", {
+          method: "google",
+          redirect_from: location.state?.from || window.location.pathname,
+        });
+      } catch (error) {
+        console.warn("Failed to track login success event:", error);
+      }
+
+      // Note: User will be redirected to callback URL, then back to app
     } catch (error: any) {
       console.error("Google login error:", error);
-      setError(error.message || "Google login failed. Please try again.");
+      setError("Google login failed. Please try again or use email login.");
     } finally {
       setLoading(false);
     }
