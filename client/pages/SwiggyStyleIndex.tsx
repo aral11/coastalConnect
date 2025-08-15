@@ -696,27 +696,6 @@ export default function SwiggyStyleIndex() {
         </section>
       </div>
 
-      {/* Video Modal */}
-      {showVideoPlayer && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-4xl w-full">
-            <button
-              onClick={() => setShowVideoPlayer(false)}
-              className="absolute -top-12 right-0 text-white hover:text-gray-300 text-2xl"
-            >
-              ✕
-            </button>
-            <div className="aspect-video bg-black rounded-xl overflow-hidden">
-              <iframe
-                src={heroVideoUrl}
-                className="w-full h-full"
-                allowFullScreen
-                title="CoastalConnect Experience Video"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </Layout>
   );
 }
