@@ -70,7 +70,8 @@ function App() {
               <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
               <Route path="/create-event" element={<CreateEvent />} />
 
-              {/* Dashboard */}
+              {/* Vendor Routes */}
+              <Route path="/vendor-register" element={<VendorRegister />} />
               <Route path="/vendor-dashboard" element={<SwiggyStyleVendorDashboard />} />
 
               {/* Catch-all route */}
