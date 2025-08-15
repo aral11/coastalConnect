@@ -11,6 +11,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import ModernIndex from "./pages/ModernIndex";
 import ModernServices from "./pages/ModernServices";
+import ModernLogin from "./pages/ModernLogin";
+import ModernSignup from "./pages/ModernSignup";
 import Search from "./pages/Search";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
@@ -87,8 +89,10 @@ const App = () => (
           <Route path="/offers/:code" element={<Services />} />
           <Route path="/driver-app" element={<DriverApp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<ModernLogin />} />
+          <Route path="/signup" element={<ModernSignup />} />
+          <Route path="/legacy-login" element={<Login />} />
+          <Route path="/legacy-signup" element={<Signup />} />
           <Route path="/vendor-register" element={<VendorRegister />} />
           <Route path="/vendor-registration" element={<VendorRegister />} />
 
