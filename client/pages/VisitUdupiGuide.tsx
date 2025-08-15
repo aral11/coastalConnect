@@ -39,12 +39,14 @@ interface Festival {
   id: string;
   name: string;
   description: string;
-  date: string;
-  location: string;
-  type: string;
+  festival_date?: string;
+  festival_month?: number;
+  location_id?: string;
+  venue?: string;
+  category: string;
   significance: string;
-  best_viewing_spots: string[];
-  image_url?: string;
+  primary_image_url?: string;
+  locations?: { name: string; type: string };
 }
 
 interface Season {
