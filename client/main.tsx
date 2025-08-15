@@ -56,7 +56,7 @@ function App() {
               <Route path="/" element={<ModernIndex />} />
               <Route path="/services" element={<ModernServices />} />
               <Route path="/services/:id" element={<ModernServiceDetail />} />
-              <Route path="/login" element={<ModernLogin />} />
+              <Route path="/login" element={<ModernLoginFixed />} />
               <Route path="/signup" element={<ModernSignup />} />
 
               {/* Info Pages */}
