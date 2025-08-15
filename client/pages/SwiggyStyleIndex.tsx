@@ -426,15 +426,6 @@ export default function SwiggyStyleIndex() {
             <p className="text-gray-600">
               Preparing your coastal experience...
             </p>
-            <div className="mt-4">
-              <Button
-                onClick={() => navigate("/api-test")}
-                variant="outline"
-                className="text-sm"
-              >
-                Debug Database Connection
-              </Button>
-            </div>
           </div>
         </div>
       </div>
