@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Enhanced scrolling behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for elements with scrollbar-hide class */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Focus states for better accessibility */
+.focus\:ring-orange-500:focus {
+  --tw-ring-color: rgb(249 115 22 / var(--tw-ring-opacity));
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
 @layer base {
   /**
    * coastalConnect Design System
