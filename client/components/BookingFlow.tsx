@@ -223,31 +223,49 @@ export default function BookingFlow({ item, onBookingComplete, onCancel }: Booki
     setError('');
 
     try {
-      // Simulate API call to process booking
-      const bookingPayload = {
-        ...bookingDetails,
-        bookingId: `BK${Date.now()}`,
-        status: 'confirmed',
-        createdAt: new Date(),
-      };
+      // Get current user (should be authenticated)
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-      // Determine correct API endpoint based on item type
-      let endpoint = '/api/bookings/homestay';
-      if (item.type === 'driver' || (item as any).category === 'Driver' || (item as any).category === 'Transportation') {
-        endpoint = '/api/bookings/driver';
-      } else if (item.type === 'service' || (item as any).category === 'Service') {
-        endpoint = '/api/bookings/service';
+      if (userError || !user) {
+        throw new Error('Please log in to make a booking');
       }
 
-      // Send booking request
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(bookingPayload),
-      });
+      // Create booking payload for Supabase
+      const bookingPayload = {
+        service_id: item.id,
+        user_id: user.id,
+        service_type: item.type,
+        guest_name: bookingDetails.guestInfo.name,
+        guest_email: bookingDetails.guestInfo.email,
+        guest_phone: bookingDetails.guestInfo.phone,
+        check_in_date: bookingDetails.dates.checkIn?.toISOString(),
+        check_out_date: bookingDetails.dates.checkOut?.toISOString(),
+        guests: bookingDetails.guests,
+        rooms: bookingDetails.rooms || 1,
+        reservation_date: bookingDetails.dates.checkIn?.toISOString(),
+        reservation_time: bookingDetails.time || '12:00',
+        party_size: bookingDetails.guests,
+        pickup_location: bookingDetails.pickupLocation || '',
+        dropoff_location: bookingDetails.dropoffLocation || '',
+        special_requests: bookingDetails.specialRequests || '',
+        total_amount: calculateTotal(),
+        status: 'pending', // Vendor needs to approve
+        payment_status: 'pending',
+        payment_method: bookingDetails.paymentMethod,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      // Insert booking into Supabase
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([bookingPayload])
+        .select()
+        .single();
+
+      if (bookingError) {
+        throw new Error(bookingError.message);
+      }
 
       if (response.ok) {
         const result = await response.json();
