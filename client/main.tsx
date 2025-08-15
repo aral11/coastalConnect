@@ -39,6 +39,7 @@ import Dashboard from "@/pages/Dashboard";
 import Help from "@/pages/Help";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
+import ApiTest from "@/pages/ApiTest";
 import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
