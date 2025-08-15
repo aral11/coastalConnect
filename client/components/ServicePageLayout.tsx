@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import Layout from '@/components/Layout';
 import PageHeader from '@/components/PageHeader';
 import SearchSection from '@/components/SearchSection';
