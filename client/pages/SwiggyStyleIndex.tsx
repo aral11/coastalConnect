@@ -259,6 +259,7 @@ export default function SwiggyStyleIndex() {
     } catch (error: any) {
       console.error("Error loading data:", error);
     } finally {
+      console.log('Setting loading to false');
       setLoading(false);
     }
   };
