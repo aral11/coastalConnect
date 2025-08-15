@@ -510,7 +510,7 @@ export default function SwiggyStyleServices() {
                     </label>
                     <div className="space-y-2">
                       {[
-                        { key: "wifi", label: "Free WiFi", icon: WiFi },
+                        { key: "wifi", label: "Free WiFi", icon: Wifi },
                         { key: "parking", label: "Parking", icon: Car },
                         { key: "breakfast", label: "Breakfast", icon: Coffee },
                         { key: "restaurant", label: "Restaurant", icon: Utensils },
