@@ -402,6 +402,173 @@ export const trackEvent = async (eventType: string, properties?: any) => {
   }
 };
 
+// Events functions
+export const getEvents = async (filters?: {
+  category?: string;
+  location_id?: string;
+  status?: string;
+  featured?: boolean;
+  upcoming?: boolean;
+  limit?: number;
+  offset?: number;
+}) => {
+  let query = supabase
+    .from("events")
+    .select(`
+      *,
+      locations(name, type),
+      users!organizer_id(name, email)
+    `);
+
+  if (filters?.status) {
+    query = query.eq("status", filters.status);
+  } else {
+    query = query.in("status", ["published", "approved"]);
+  }
+
+  if (filters?.category) {
+    query = query.eq("category", filters.category);
+  }
+
+  if (filters?.location_id) {
+    query = query.eq("location_id", filters.location_id);
+  }
+
+  if (filters?.featured) {
+    query = query.eq("is_featured", true);
+  }
+
+  if (filters?.upcoming) {
+    query = query.gte("event_date", new Date().toISOString().split('T')[0]);
+  }
+
+  if (filters?.limit) {
+    query = query.limit(filters.limit);
+  }
+
+  if (filters?.offset) {
+    query = query.range(
+      filters.offset,
+      filters.offset + (filters.limit || 20) - 1
+    );
+  }
+
+  query = query.order("event_date", { ascending: true });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+};
+
+export const getEventById = async (id: string) => {
+  const { data, error } = await supabase
+    .from("events")
+    .select(`
+      *,
+      locations(name, type, latitude, longitude),
+      users!organizer_id(name, email, phone)
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+// Festivals functions
+export const getFestivals = async (filters?: {
+  category?: string;
+  month?: number;
+  major_only?: boolean;
+  limit?: number;
+}) => {
+  let query = supabase
+    .from("festivals")
+    .select(`
+      *,
+      locations(name, type)
+    `)
+    .eq("is_active", true);
+
+  if (filters?.category) {
+    query = query.eq("category", filters.category);
+  }
+
+  if (filters?.month) {
+    query = query.eq("festival_month", filters.month);
+  }
+
+  if (filters?.major_only) {
+    query = query.eq("is_major_festival", true);
+  }
+
+  if (filters?.limit) {
+    query = query.limit(filters.limit);
+  }
+
+  query = query.order("festival_month", { ascending: true });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+};
+
+// Visit Guide functions
+export const getVisitGuideContent = async (section?: string) => {
+  let query = supabase
+    .from("visit_guide_content")
+    .select("*")
+    .eq("is_active", true);
+
+  if (section) {
+    query = query.eq("section", section);
+  }
+
+  query = query.order("display_order", { ascending: true });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+};
+
+// Cultural Attractions functions
+export const getCulturalAttractions = async (filters?: {
+  category?: string;
+  featured?: boolean;
+  location_id?: string;
+  limit?: number;
+}) => {
+  let query = supabase
+    .from("cultural_attractions")
+    .select(`
+      *,
+      locations(name, type)
+    `)
+    .eq("is_active", true);
+
+  if (filters?.category) {
+    query = query.eq("category", filters.category);
+  }
+
+  if (filters?.featured) {
+    query = query.eq("is_featured", true);
+  }
+
+  if (filters?.location_id) {
+    query = query.eq("location_id", filters.location_id);
+  }
+
+  if (filters?.limit) {
+    query = query.limit(filters.limit);
+  }
+
+  query = query.order("tourist_priority", { ascending: false });
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+};
+
 // Real-time subscriptions
 export const subscribeToServices = (callback: (payload: any) => void) => {
   return supabase
