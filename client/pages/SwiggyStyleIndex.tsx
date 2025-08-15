@@ -479,6 +479,7 @@ export default function SwiggyStyleIndex() {
                     { icon: "🎭", label: "Events & Experiences", path: "/services?category=event-services" },
                     { icon: "💆", label: "Beauty & Wellness", path: "/services?category=wellness-spa" },
                     { icon: "📸", label: "Content Creators", path: "/services?category=content-creators" },
+                    { icon: "📖", label: "Visit Udupi Guide", path: "/visit-udupi-guide" },
                   ].map((action, index) => (
                     <Button
                       key={index}
