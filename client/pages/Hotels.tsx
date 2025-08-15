@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Homestay, HomestayResponse } from '@shared/api';
 import ServicePageLayout from '@/components/ServicePageLayout';
 import ProfessionalBookingModal from '@/components/ProfessionalBookingModal';
