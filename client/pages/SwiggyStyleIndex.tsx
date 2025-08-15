@@ -152,30 +152,54 @@ export default function SwiggyStyleIndex() {
         setSelectedLocation(locationsData[0].id);
       }
 
-      // Load mock offers (replace with real data)
-      setOffers([
-        {
-          id: 1,
-          title: "25% OFF",
-          subtitle: "On first booking",
-          code: "WELCOME25",
-          bgColor: "from-orange-400 to-red-500",
-        },
-        {
-          id: 2,
-          title: "Free Cancellation",
-          subtitle: "Up to 24 hours",
-          code: "FLEXIBLE",
-          bgColor: "from-green-400 to-blue-500",
-        },
-        {
-          id: 3,
-          title: "Instant Booking",
-          subtitle: "No waiting time",
-          code: "INSTANT",
-          bgColor: "from-purple-400 to-pink-500",
-        },
-      ]);
+      // Load dynamic offers from database
+      try {
+        const { data: couponsData } = await supabase
+          .from('coupons')
+          .select('*')
+          .eq('is_active', true)
+          .gte('valid_until', new Date().toISOString())
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (couponsData && couponsData.length > 0) {
+          const formattedOffers = couponsData.map((coupon, index) => ({
+            id: coupon.id,
+            title: coupon.title,
+            subtitle: coupon.description,
+            code: coupon.code,
+            bgColor: [
+              "from-orange-400 to-red-500",
+              "from-green-400 to-blue-500",
+              "from-purple-400 to-pink-500"
+            ][index % 3],
+          }));
+          setOffers(formattedOffers);
+        } else {
+          // Fallback offers if none in database
+          setOffers([
+            {
+              id: 'fallback-1',
+              title: "Welcome Offer",
+              subtitle: "Special discount for new users",
+              code: "WELCOME",
+              bgColor: "from-orange-400 to-red-500",
+            }
+          ]);
+        }
+      } catch (error) {
+        console.warn("Failed to load offers:", error);
+        // Fallback to default offer
+        setOffers([
+          {
+            id: 'fallback-1',
+            title: "Welcome Offer",
+            subtitle: "Special discount for new users",
+            code: "WELCOME",
+            bgColor: "from-orange-400 to-red-500",
+          }
+        ]);
+      }
 
       await loadStats();
     } catch (error: any) {
