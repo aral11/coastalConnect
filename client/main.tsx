@@ -51,6 +51,7 @@ function App() {
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<SwiggyStyleIndex />} />
@@ -61,11 +62,22 @@ function App() {
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
+              {/* Dashboard Routes */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/bookings" element={<Dashboard />} />
+              <Route path="/vendor" element={<SwiggyStyleVendorDashboard />} />
+
               {/* Info Pages */}
               <Route path="/about" element={<SwiggyStyleAbout />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/support" element={<Help />} />
+              <Route path="/safety" element={<Help />} />
               <Route path="/visit-udupi-guide" element={<VisitUdupiGuide />} />
               <Route path="/partner-with-us" element={<PartnerWithUs />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
 
               {/* Service Category Routes - Direct to filtered services */}
               <Route path="/hotels" element={<SwiggyStyleServices />} />
