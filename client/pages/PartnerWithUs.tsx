@@ -78,7 +78,7 @@ export default function PartnerWithUs() {
     {
       id: "wellness",
       title: "Wellness & Spa",
-      icon: <Spa className="h-8 w-8" />,
+      icon: <Heart className="h-8 w-8" />,
       description: "Provide relaxation and wellness services",
       benefits: ["Appointment scheduling", "Service packages", "Client management"],
       color: "from-purple-500 to-pink-500",
