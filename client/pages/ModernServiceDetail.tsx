@@ -326,7 +326,10 @@ export default function ModernServiceDetail() {
       }, 2000);
     } catch (err: any) {
       console.error("Booking error:", err);
-      setError(err.message || "Failed to create booking");
+      const errorMessage = err instanceof Error ? err.message :
+                          typeof err === 'string' ? err :
+                          "Failed to create booking";
+      setError(errorMessage);
     } finally {
       setIsBooking(false);
     }
@@ -376,7 +379,10 @@ export default function ModernServiceDetail() {
       await loadServiceData();
     } catch (err: any) {
       console.error("Review error:", err);
-      setError(err.message || "Failed to submit review");
+      const errorMessage = err instanceof Error ? err.message :
+                          typeof err === 'string' ? err :
+                          "Failed to submit review";
+      setError(errorMessage);
     } finally {
       setIsSubmittingReview(false);
     }
