@@ -19,6 +19,7 @@ import ModernServiceDetail from "@/pages/ModernServiceDetail";
 import ModernLoginFixed from "@/pages/ModernLoginFixed";
 import ModernSignupFixed from "@/pages/ModernSignupFixed";
 import AuthCallback from "@/pages/AuthCallback";
+import ResetPassword from "@/pages/ResetPassword";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 
