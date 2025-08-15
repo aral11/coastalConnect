@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
-import { trackEvent } from "@/lib/supabase";
+import { trackEvent, supabase } from "@/lib/supabase";
 import { 
   Eye, 
   EyeOff, 
