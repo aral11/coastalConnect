@@ -14,7 +14,7 @@ import "./global.css";
 import ModernIndex from "@/pages/ModernIndex";
 import ModernServices from "@/pages/ModernServices";
 import ModernServiceDetail from "@/pages/ModernServiceDetail";
-import ModernLogin from "@/pages/ModernLogin";
+import ModernLoginFixed from "@/pages/ModernLoginFixed";
 import ModernSignup from "@/pages/ModernSignup";
 import SetupRequired from "@/pages/SetupRequired";
 import SimpleHome from "@/pages/SimpleHome";
