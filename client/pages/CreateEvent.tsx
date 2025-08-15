@@ -202,37 +202,50 @@ export default function CreateEvent() {
         return;
       }
 
-      const response = await fetch("/api/organizers/events", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
+      // Create event directly in Supabase
+      const eventPayload = {
+        organizer_id: user.id,
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        event_date: formData.event_date,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        venue: formData.venue,
+        address: formData.address,
+        location_id: formData.location_id || null,
+        price: formData.price || 0,
+        max_attendees: formData.max_attendees || null,
+        contact_phone: formData.contact_phone,
+        contact_email: formData.contact_email,
+        website_url: formData.website_url || null,
+        image_url: formData.image_url || null,
+        tags: formData.tags,
+        status: submitForApproval ? 'pending_approval' : 'draft',
+        is_featured: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      const { data: eventData, error: eventError } = await supabase
+        .from('events')
+        .insert([eventPayload])
+        .select()
+        .single();
+
+      if (eventError) {
+        throw new Error(eventError.message);
+      }
+
+      // Track event creation
+      await trackEvent('event_created', {
+        event_id: eventData.id,
+        organizer_id: user.id,
+        category: formData.category,
+        status: eventPayload.status,
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        if (submitForApproval) {
-          // Submit for approval immediately
-          const submitResponse = await fetch(
-            `/api/organizers/events/${data.data.id}/submit`,
-            {
-              method: "POST",
-              headers: { Authorization: `Bearer ${token}` },
-            },
-          );
-
-          if (submitResponse.ok) {
-            setSuccess(true);
-          }
-        } else {
-          setSuccess(true);
-        }
-      } else {
-        setError(data.message || "Failed to create event");
-      }
+      setSuccess(true);
     } catch (error) {
       setError("Network error. Please try again.");
     } finally {
