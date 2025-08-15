@@ -25,6 +25,7 @@ import EventOrganizerRegister from "@/pages/EventOrganizerRegister";
 import EventOrganizerLogin from "@/pages/EventOrganizerLogin";
 import EventOrganizerDashboard from "@/pages/EventOrganizerDashboard";
 import CreateEvent from "@/pages/CreateEvent";
+import VisitUdupiGuide from "@/pages/VisitUdupiGuide";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 
