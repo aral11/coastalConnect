@@ -113,7 +113,7 @@ function Footer() {
       links: [
         { label: "List Your Business", href: "/vendor-register" },
         { label: "Event Organizer Portal", href: "/organizer-register" },
-        { label: "Business Dashboard", href: "/business-dashboard" },
+        { label: "Business Dashboard", href: "/vendor" },
         { label: "Partner with Us", href: "/partner-with-us" },
       ],
     },
