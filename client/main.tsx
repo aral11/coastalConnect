@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { SupabaseAuthProvider } from "@/contexts/SupabaseAuthContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 // Import global styles
 import "./global.css";
@@ -56,7 +57,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SupabaseAuthProvider>
-        <TooltipProvider>
+        <NotificationProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -128,7 +130,8 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-        </TooltipProvider>
+          </TooltipProvider>
+        </NotificationProvider>
       </SupabaseAuthProvider>
     </QueryClientProvider>
   );
