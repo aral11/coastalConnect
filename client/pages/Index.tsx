@@ -8,7 +8,7 @@ import SwiggyCategories from '@/components/SwiggyCategories';
 import RealDataVendors from '@/components/RealDataVendors';
 import PlatformStats from '@/components/PlatformStats';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import {
   Search,
   Star,
