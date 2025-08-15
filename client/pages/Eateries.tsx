@@ -142,7 +142,6 @@ export default function Eateries() {
           family_friendly: Math.random() > 0.2,
           pure_veg: Math.random() > 0.4,
           distance: Math.floor(Math.random() * 15) + 1,
-          featured: Math.random() > 0.8,
           trending: Math.random() > 0.7,
           popular_dishes: ["Masala Dosa", "Sambar Rice", "Filter Coffee"].slice(
             0,
