@@ -74,6 +74,24 @@ const isSupabaseConfigured = () => {
 };
 
 const App = () => {
+  // Check for demo route first
+  if (window.location.pathname === '/demo') {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/demo" element={<ModernIndexDemo />} />
+              <Route path="*" element={<ModernIndexDemo />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
+
   // Show setup page if Supabase is not configured
   if (!isSupabaseConfigured()) {
     return <SetupRequired />;
