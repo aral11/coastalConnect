@@ -353,10 +353,7 @@ export default function Navigation({ className = "" }: NavigationProps) {
                 )}
 
                 {/* Notifications */}
-                <button className="text-gray-600 hover:text-orange-600 relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
-                </button>
+                <NotificationCenter />
 
                 {/* Profile dropdown */}
                 <div className="relative">
