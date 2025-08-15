@@ -159,18 +159,32 @@ export default function VisitUdupiGuide() {
         guide_type: "udupi_visitor_guide",
       });
 
-      // Generate PDF content (simplified approach)
-      const pdfContent = generatePDFContent();
-      const blob = new Blob([pdfContent], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
+      // Generate professional HTML content for PDF
+      const htmlContent = generateProfessionalPDFContent();
 
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "udupi-visitor-guide.txt";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Open in new window for printing as PDF
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+
+        // Wait for content to load then trigger print
+        setTimeout(() => {
+          printWindow.focus();
+          printWindow.print();
+        }, 500);
+      } else {
+        // Fallback: create downloadable HTML file
+        const blob = new Blob([htmlContent], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Visit-Udupi-CoastalConnect-Guide.html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
     } catch (error) {
       console.error("Error downloading guide:", error);
     }
