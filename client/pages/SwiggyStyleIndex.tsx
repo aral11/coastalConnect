@@ -52,7 +52,7 @@ import {
 } from "lucide-react";
 
 // Dynamic video URL will be loaded from Supabase
-const DEFAULT_HERO_VIDEO_THUMBNAIL = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop";
+const DEFAULT_HERO_VIDEO_THUMBNAIL = "https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop";
 const UDUPI_COASTAL_BACKGROUND = "https://images.pexels.com/photos/2099194/pexels-photo-2099194.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";
 
 export default function SwiggyStyleIndex() {
