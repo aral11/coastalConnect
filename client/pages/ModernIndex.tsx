@@ -140,8 +140,16 @@ export default function ModernIndex() {
         happyCustomers: Math.floor((bookingsCount.count || 0) * 0.8), // 80% satisfaction rate
         citiesCovered: locations.length,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading stats:", error);
+      console.error("Stats error details:", error.message || error.toString());
+      // Set default stats on error
+      setStats({
+        totalServices: 0,
+        totalBookings: 0,
+        happyCustomers: 0,
+        citiesCovered: 0,
+      });
     }
   };
 
