@@ -7,6 +7,7 @@ To deploy CoastalConnect on Netlify with Supabase integration, you need to confi
 ### Required Supabase Variables
 
 1. **VITE_SUPABASE_URL**
+
    - Your Supabase project URL
    - Format: `https://your-project-id.supabase.co`
    - Found in: Supabase Dashboard > Settings > API
@@ -34,12 +35,14 @@ To deploy CoastalConnect on Netlify with Supabase integration, you need to confi
 ## How to Set Environment Variables in Netlify
 
 ### Method 1: Netlify Dashboard
+
 1. Go to your Netlify site dashboard
 2. Navigate to **Site settings** > **Environment variables**
 3. Click **Add variable** for each required variable
 4. Enter the key-value pairs from above
 
 ### Method 2: Netlify CLI
+
 ```bash
 # Install Netlify CLI if not already installed
 npm install -g netlify-cli
@@ -59,6 +62,7 @@ netlify env:set ADMIN_SECRET_KEY "your-admin-secret-key"
 ```
 
 ### Method 3: netlify.toml Configuration
+
 Add to your `netlify.toml` file (Note: Don't include sensitive keys here):
 
 ```toml
@@ -73,15 +77,18 @@ Add to your `netlify.toml` file (Note: Don't include sensitive keys here):
 ## Supabase Setup Steps
 
 1. **Create Supabase Project**
+
    - Go to [supabase.com](https://supabase.com)
    - Create new project
    - Note down your URL and anon key
 
 2. **Run Database Setup**
+
    - In Supabase SQL Editor, run the contents of `database/supabase.sql`
    - This creates all tables, RLS policies, and storage buckets
 
 3. **Configure Authentication**
+
    - Enable Email authentication in Supabase Dashboard
    - Optionally enable Google/Facebook providers
    - Set up redirect URLs for your Netlify domain
@@ -103,7 +110,7 @@ Your `netlify.toml` is already configured for the build:
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
-  
+
 [[redirects]]
   force = true
   from = "/api/*"
@@ -114,6 +121,7 @@ Your `netlify.toml` is already configured for the build:
 ## Deployment Process
 
 1. **Push to Repository**
+
    ```bash
    git add .
    git commit -m "Add Supabase integration"
@@ -121,11 +129,13 @@ Your `netlify.toml` is already configured for the build:
    ```
 
 2. **Connect to Netlify**
+
    - Link your GitHub/GitLab repository
    - Set build command: `npm run build:client`
    - Set publish directory: `dist/spa`
 
 3. **Configure Environment Variables**
+
    - Add all environment variables listed above
    - Use your actual Supabase URL and keys
 
@@ -136,6 +146,7 @@ Your `netlify.toml` is already configured for the build:
 ## Domain Configuration
 
 1. **Custom Domain** (optional)
+
    - Add your custom domain in Netlify dashboard
    - Configure DNS settings
    - Enable HTTPS (automatic with Netlify)
@@ -147,6 +158,7 @@ Your `netlify.toml` is already configured for the build:
 ## Testing the Deployment
 
 1. **Verify Environment Variables**
+
    - Check that all variables are set correctly
    - Test authentication flow
    - Verify database connections
@@ -162,11 +174,13 @@ Your `netlify.toml` is already configured for the build:
 ### Common Issues
 
 1. **Build Failures**
+
    - Check that all environment variables are set
    - Ensure Supabase credentials are correct
    - Review build logs for specific errors
 
 2. **Authentication Issues**
+
    - Verify Supabase redirect URLs
    - Check that auth is enabled in Supabase
    - Ensure anon key is correct
@@ -192,11 +206,13 @@ netlify dev
 ## Security Notes
 
 1. **Environment Variables**
+
    - Never commit sensitive keys to repository
    - Use Netlify's secure environment variable storage
    - Prefix client-side variables with `VITE_`
 
 2. **Supabase Security**
+
    - RLS policies are enforced on all tables
    - Use service role key only for server-side operations
    - Regularly rotate API keys
@@ -208,11 +224,13 @@ netlify dev
 ## Performance Optimization
 
 1. **Build Optimization**
+
    - Enable build caching in Netlify
    - Optimize bundle size with tree shaking
    - Use lazy loading for routes
 
 2. **CDN Configuration**
+
    - Netlify CDN is enabled by default
    - Configure caching headers
    - Optimize image delivery
@@ -225,6 +243,7 @@ netlify dev
 ---
 
 For more help, refer to:
+
 - [Netlify Documentation](https://docs.netlify.com/)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Vite Environment Variables](https://vitejs.dev/guide/env-and-mode.html)

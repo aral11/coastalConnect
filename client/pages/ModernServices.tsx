@@ -3,14 +3,14 @@
  * Real-time filtering and search with Supabase
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
+import React, { useState, useEffect, useMemo } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
 import {
   getServices,
   getServiceCategories,
@@ -20,8 +20,8 @@ import {
   subscribeToServices,
   SupabaseService,
   SupabaseCategory,
-  SupabaseLocation
-} from '@/lib/supabase';
+  SupabaseLocation,
+} from "@/lib/supabase";
 import {
   Search,
   Filter,
@@ -37,8 +37,8 @@ import {
   Users,
   Phone,
   ChevronDown,
-  Loader2
-} from 'lucide-react';
+  Loader2,
+} from "lucide-react";
 
 interface Filters {
   categories: string[];
@@ -47,22 +47,28 @@ interface Filters {
   location: string;
   serviceType: string[];
   featured: boolean;
-  availability: 'all' | 'available' | 'unavailable';
+  availability: "all" | "available" | "unavailable";
 }
 
-type SortOption = 'relevance' | 'price_low' | 'price_high' | 'rating' | 'newest' | 'popular';
-type ViewMode = 'grid' | 'list';
+type SortOption =
+  | "relevance"
+  | "price_low"
+  | "price_high"
+  | "rating"
+  | "newest"
+  | "popular";
+type ViewMode = "grid" | "list";
 
 export default function ModernServices() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // URL-driven state
-  const initialQuery = searchParams.get('q') || '';
-  const initialCategory = searchParams.get('category') || '';
-  const initialLocation = searchParams.get('location') || '';
-  
+  const initialQuery = searchParams.get("q") || "";
+  const initialCategory = searchParams.get("category") || "";
+  const initialLocation = searchParams.get("location") || "";
+
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [filters, setFilters] = useState<Filters>({
@@ -72,10 +78,10 @@ export default function ModernServices() {
     location: initialLocation,
     serviceType: [],
     featured: false,
-    availability: 'all'
+    availability: "all",
   });
-  const [sortBy, setSortBy] = useState<SortOption>('relevance');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [sortBy, setSortBy] = useState<SortOption>("relevance");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [showFilters, setShowFilters] = useState(false);
 
   // Data state
@@ -104,19 +110,19 @@ export default function ModernServices() {
     try {
       const [categoriesData, locationsData] = await Promise.all([
         getServiceCategories(),
-        getLocations()
+        getLocations(),
       ]);
 
       setCategories(categoriesData || []);
       setLocations(locationsData || []);
     } catch (error) {
-      console.error('Error loading initial data:', error);
+      console.error("Error loading initial data:", error);
     }
   };
 
   const setupRealTimeSubscriptions = () => {
     const subscription = subscribeToServices((payload) => {
-      console.log('Services updated:', payload);
+      console.log("Services updated:", payload);
       // Refresh current search when data changes
       performSearch();
     });
@@ -129,14 +135,14 @@ export default function ModernServices() {
   const performSearch = async () => {
     try {
       setSearching(true);
-      
+
       // Track search
-      await trackEvent('services_search', {
+      await trackEvent("services_search", {
         query: searchQuery,
         filters,
         sort: sortBy,
         page: currentPage,
-        user_id: user?.id
+        user_id: user?.id,
       });
 
       let results: SupabaseService[] = [];
@@ -144,21 +150,23 @@ export default function ModernServices() {
       if (searchQuery.trim()) {
         // Use search function for queries
         results = await searchServices(searchQuery, {
-          type: filters.serviceType.length > 0 ? filters.serviceType[0] : undefined,
+          type:
+            filters.serviceType.length > 0 ? filters.serviceType[0] : undefined,
           location_id: filters.location || undefined,
           min_price: filters.priceRange[0],
           max_price: filters.priceRange[1],
-          min_rating: filters.rating
+          min_rating: filters.rating,
         });
       } else {
         // Use regular getServices for browsing
         results = await getServices({
-          type: filters.serviceType.length > 0 ? filters.serviceType[0] : undefined,
+          type:
+            filters.serviceType.length > 0 ? filters.serviceType[0] : undefined,
           location_id: filters.location || undefined,
-          status: 'approved',
+          status: "approved",
           featured: filters.featured || undefined,
           limit: itemsPerPage,
-          offset: (currentPage - 1) * itemsPerPage
+          offset: (currentPage - 1) * itemsPerPage,
         });
       }
 
@@ -167,21 +175,22 @@ export default function ModernServices() {
 
       // Filter by categories
       if (filters.categories.length > 0) {
-        filteredResults = filteredResults.filter(service => 
-          filters.categories.includes(service.category_id || '')
+        filteredResults = filteredResults.filter((service) =>
+          filters.categories.includes(service.category_id || ""),
         );
       }
 
       // Filter by price range
-      filteredResults = filteredResults.filter(service => 
-        service.base_price >= filters.priceRange[0] && 
-        service.base_price <= filters.priceRange[1]
+      filteredResults = filteredResults.filter(
+        (service) =>
+          service.base_price >= filters.priceRange[0] &&
+          service.base_price <= filters.priceRange[1],
       );
 
       // Filter by rating
       if (filters.rating > 0) {
-        filteredResults = filteredResults.filter(service => 
-          service.average_rating >= filters.rating
+        filteredResults = filteredResults.filter(
+          (service) => service.average_rating >= filters.rating,
         );
       }
 
@@ -191,35 +200,40 @@ export default function ModernServices() {
       if (currentPage === 1) {
         setServices(filteredResults);
       } else {
-        setServices(prev => [...prev, ...filteredResults]);
+        setServices((prev) => [...prev, ...filteredResults]);
       }
 
       setTotalResults(filteredResults.length);
       setHasMore(filteredResults.length === itemsPerPage);
-
     } catch (error) {
-      console.error('Error searching services:', error);
+      console.error("Error searching services:", error);
     } finally {
       setSearching(false);
       setLoading(false);
     }
   };
 
-  const sortServices = (services: SupabaseService[], sortOption: SortOption): SupabaseService[] => {
+  const sortServices = (
+    services: SupabaseService[],
+    sortOption: SortOption,
+  ): SupabaseService[] => {
     const sorted = [...services];
-    
+
     switch (sortOption) {
-      case 'price_low':
+      case "price_low":
         return sorted.sort((a, b) => a.base_price - b.base_price);
-      case 'price_high':
+      case "price_high":
         return sorted.sort((a, b) => b.base_price - a.base_price);
-      case 'rating':
+      case "rating":
         return sorted.sort((a, b) => b.average_rating - a.average_rating);
-      case 'newest':
-        return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-      case 'popular':
+      case "newest":
+        return sorted.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
+      case "popular":
         return sorted.sort((a, b) => b.total_reviews - a.total_reviews);
-      case 'relevance':
+      case "relevance":
       default:
         return sorted;
     }
@@ -228,29 +242,29 @@ export default function ModernServices() {
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1);
-    
+
     // Update URL
     const newParams = new URLSearchParams(searchParams);
     if (value) {
-      newParams.set('q', value);
+      newParams.set("q", value);
     } else {
-      newParams.delete('q');
+      newParams.delete("q");
     }
     setSearchParams(newParams);
   };
 
   const handleFilterChange = (newFilters: Partial<Filters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
     setCurrentPage(1);
   };
 
   const handleServiceClick = async (service: SupabaseService) => {
-    await trackEvent('service_detail_click', {
+    await trackEvent("service_detail_click", {
       service_id: service.id,
       service_name: service.name,
       service_type: service.service_type,
-      from_page: 'services_listing',
-      user_id: user?.id
+      from_page: "services_listing",
+      user_id: user?.id,
     });
 
     navigate(`/service/${service.id}`);
@@ -261,10 +275,10 @@ export default function ModernServices() {
       categories: [],
       priceRange: [0, 50000],
       rating: 0,
-      location: '',
+      location: "",
       serviceType: [],
       featured: false,
-      availability: 'all'
+      availability: "all",
     });
     setCurrentPage(1);
   };
@@ -277,7 +291,7 @@ export default function ModernServices() {
     if (filters.location) count++;
     if (filters.serviceType.length > 0) count++;
     if (filters.featured) count++;
-    if (filters.availability !== 'all') count++;
+    if (filters.availability !== "all") count++;
     return count;
   }, [filters]);
 
@@ -350,14 +364,14 @@ export default function ModernServices() {
                 {/* View Mode */}
                 <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                   <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 ${viewMode === 'grid' ? 'bg-orange-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                    onClick={() => setViewMode("grid")}
+                    className={`p-2 ${viewMode === "grid" ? "bg-orange-500 text-white" : "text-gray-600 hover:bg-gray-100"}`}
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                    onClick={() => setViewMode("list")}
+                    className={`p-2 ${viewMode === "list" ? "bg-orange-500 text-white" : "text-gray-600 hover:bg-gray-100"}`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -411,11 +425,15 @@ export default function ModernServices() {
                           onCheckedChange={(checked) => {
                             const newCategories = checked
                               ? [...filters.categories, category.id]
-                              : filters.categories.filter(id => id !== category.id);
+                              : filters.categories.filter(
+                                  (id) => id !== category.id,
+                                );
                             handleFilterChange({ categories: newCategories });
                           }}
                         />
-                        <span className="ml-2 text-sm text-gray-700">{category.name}</span>
+                        <span className="ml-2 text-sm text-gray-700">
+                          {category.name}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -423,11 +441,17 @@ export default function ModernServices() {
 
                 {/* Price Range */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Price Range</h4>
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Price Range
+                  </h4>
                   <div className="px-2">
                     <Slider
                       value={filters.priceRange}
-                      onValueChange={(value) => handleFilterChange({ priceRange: value as [number, number] })}
+                      onValueChange={(value) =>
+                        handleFilterChange({
+                          priceRange: value as [number, number],
+                        })
+                      }
                       max={50000}
                       step={500}
                       className="mb-2"
@@ -441,19 +465,25 @@ export default function ModernServices() {
 
                 {/* Rating */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Minimum Rating</h4>
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Minimum Rating
+                  </h4>
                   <div className="space-y-2">
                     {[4, 3, 2, 1].map((rating) => (
                       <label key={rating} className="flex items-center">
                         <Checkbox
                           checked={filters.rating === rating}
                           onCheckedChange={(checked) => {
-                            handleFilterChange({ rating: checked ? rating : 0 });
+                            handleFilterChange({
+                              rating: checked ? rating : 0,
+                            });
                           }}
                         />
                         <div className="ml-2 flex items-center">
                           <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                          <span className="text-sm text-gray-700">{rating}+ stars</span>
+                          <span className="text-sm text-gray-700">
+                            {rating}+ stars
+                          </span>
                         </div>
                       </label>
                     ))}
@@ -465,7 +495,9 @@ export default function ModernServices() {
                   <h4 className="font-medium text-gray-900 mb-3">Location</h4>
                   <select
                     value={filters.location}
-                    onChange={(e) => handleFilterChange({ location: e.target.value })}
+                    onChange={(e) =>
+                      handleFilterChange({ location: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   >
                     <option value="">All Locations</option>
@@ -479,22 +511,28 @@ export default function ModernServices() {
 
                 {/* Service Type */}
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-3">Service Type</h4>
+                  <h4 className="font-medium text-gray-900 mb-3">
+                    Service Type
+                  </h4>
                   <div className="space-y-2">
-                    {['homestay', 'restaurant', 'driver', 'event_services'].map((type) => (
-                      <label key={type} className="flex items-center">
-                        <Checkbox
-                          checked={filters.serviceType.includes(type)}
-                          onCheckedChange={(checked) => {
-                            const newTypes = checked
-                              ? [...filters.serviceType, type]
-                              : filters.serviceType.filter(t => t !== type);
-                            handleFilterChange({ serviceType: newTypes });
-                          }}
-                        />
-                        <span className="ml-2 text-sm text-gray-700 capitalize">{type.replace('_', ' ')}</span>
-                      </label>
-                    ))}
+                    {["homestay", "restaurant", "driver", "event_services"].map(
+                      (type) => (
+                        <label key={type} className="flex items-center">
+                          <Checkbox
+                            checked={filters.serviceType.includes(type)}
+                            onCheckedChange={(checked) => {
+                              const newTypes = checked
+                                ? [...filters.serviceType, type]
+                                : filters.serviceType.filter((t) => t !== type);
+                              handleFilterChange({ serviceType: newTypes });
+                            }}
+                          />
+                          <span className="ml-2 text-sm text-gray-700 capitalize">
+                            {type.replace("_", " ")}
+                          </span>
+                        </label>
+                      ),
+                    )}
                   </div>
                 </div>
 
@@ -503,9 +541,13 @@ export default function ModernServices() {
                   <label className="flex items-center">
                     <Checkbox
                       checked={filters.featured}
-                      onCheckedChange={(checked) => handleFilterChange({ featured: !!checked })}
+                      onCheckedChange={(checked) =>
+                        handleFilterChange({ featured: !!checked })
+                      }
                     />
-                    <span className="ml-2 text-sm text-gray-700">Featured only</span>
+                    <span className="ml-2 text-sm text-gray-700">
+                      Featured only
+                    </span>
                   </label>
                 </div>
               </div>
@@ -517,7 +559,9 @@ export default function ModernServices() {
             {services.length === 0 ? (
               <div className="text-center py-12">
                 <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No services found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No services found
+                </h3>
                 <p className="text-gray-600 mb-4">
                   Try adjusting your search terms or filters
                 </p>
@@ -532,11 +576,13 @@ export default function ModernServices() {
             ) : (
               <>
                 {/* Services Grid/List */}
-                <div className={
-                  viewMode === 'grid' 
-                    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-                    : 'space-y-4'
-                }>
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      : "space-y-4"
+                  }
+                >
                   {services.map((service) => (
                     <ServiceCard
                       key={service.id}
@@ -551,7 +597,7 @@ export default function ModernServices() {
                 {hasMore && (
                   <div className="text-center mt-8">
                     <Button
-                      onClick={() => setCurrentPage(prev => prev + 1)}
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
                       disabled={searching}
                       className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3"
                     >
@@ -561,7 +607,7 @@ export default function ModernServices() {
                           Loading...
                         </>
                       ) : (
-                        'Load More Services'
+                        "Load More Services"
                       )}
                     </Button>
                   </div>
@@ -576,24 +622,24 @@ export default function ModernServices() {
 }
 
 // Service Card Component
-function ServiceCard({ 
-  service, 
-  viewMode, 
-  onClick 
-}: { 
-  service: SupabaseService; 
-  viewMode: ViewMode; 
-  onClick: () => void; 
+function ServiceCard({
+  service,
+  viewMode,
+  onClick,
+}: {
+  service: SupabaseService;
+  viewMode: ViewMode;
+  onClick: () => void;
 }) {
   const handleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await trackEvent('service_favorited', {
+    await trackEvent("service_favorited", {
       service_id: service.id,
-      service_name: service.name
+      service_name: service.name,
     });
   };
 
-  if (viewMode === 'list') {
+  if (viewMode === "list") {
     return (
       <div
         onClick={onClick}
@@ -602,45 +648,59 @@ function ServiceCard({
         <div className="flex gap-6">
           <div className="w-48 h-32 rounded-xl overflow-hidden flex-shrink-0">
             <img
-              src={service.primary_image_id || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop'}
+              src={
+                service.primary_image_id ||
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop"
+              }
               alt={service.name}
               className="w-full h-full object-cover"
             />
           </div>
-          
+
           <div className="flex-1">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <h3 className="font-semibold text-gray-900 text-lg mb-1">{service.name}</h3>
-                <p className="text-sm text-gray-500 capitalize">{service.service_type}</p>
+                <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                  {service.name}
+                </h3>
+                <p className="text-sm text-gray-500 capitalize">
+                  {service.service_type}
+                </p>
               </div>
-              <button onClick={handleFavorite} className="text-gray-400 hover:text-red-500">
+              <button
+                onClick={handleFavorite}
+                className="text-gray-400 hover:text-red-500"
+              >
                 <Heart className="h-5 w-5" />
               </button>
             </div>
-            
+
             <p className="text-gray-600 mb-3 line-clamp-2">
               {service.short_description || service.description}
             </p>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center">
                   <MapPin className="h-4 w-4 mr-1" />
-                  <span>{service.locations?.name || 'Coastal Karnataka'}</span>
+                  <span>{service.locations?.name || "Coastal Karnataka"}</span>
                 </div>
                 <div className="flex items-center">
                   <Star className="h-4 w-4 mr-1 text-yellow-400 fill-current" />
-                  <span>{service.average_rating.toFixed(1)} ({service.total_reviews})</span>
+                  <span>
+                    {service.average_rating.toFixed(1)} ({service.total_reviews}
+                    )
+                  </span>
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <div className="text-xl font-semibold text-gray-900">
                   ₹{service.base_price.toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-500">
-                  per {service.service_type === 'homestay' ? 'night' : 'booking'}
+                  per{" "}
+                  {service.service_type === "homestay" ? "night" : "booking"}
                 </div>
               </div>
             </div>
@@ -657,7 +717,10 @@ function ServiceCard({
     >
       <div className="aspect-video relative overflow-hidden">
         <img
-          src={service.primary_image_id || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop'}
+          src={
+            service.primary_image_id ||
+            "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop"
+          }
           alt={service.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
@@ -667,7 +730,7 @@ function ServiceCard({
             {service.average_rating.toFixed(1)}
           </Badge>
         </div>
-        <button 
+        <button
           onClick={handleFavorite}
           className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
         >
@@ -680,7 +743,9 @@ function ServiceCard({
           <h3 className="font-semibold text-gray-900 group-hover:text-orange-500 transition-colors mb-1">
             {service.name}
           </h3>
-          <p className="text-sm text-gray-500 capitalize">{service.service_type}</p>
+          <p className="text-sm text-gray-500 capitalize">
+            {service.service_type}
+          </p>
         </div>
 
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
@@ -690,14 +755,14 @@ function ServiceCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm text-gray-500">
             <MapPin className="h-4 w-4 mr-1" />
-            <span>{service.locations?.name || 'Coastal Karnataka'}</span>
+            <span>{service.locations?.name || "Coastal Karnataka"}</span>
           </div>
           <div className="text-right">
             <div className="font-semibold text-gray-900">
               ₹{service.base_price.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500">
-              per {service.service_type === 'homestay' ? 'night' : 'booking'}
+              per {service.service_type === "homestay" ? "night" : "booking"}
             </div>
           </div>
         </div>

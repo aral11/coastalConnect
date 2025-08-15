@@ -3,21 +3,45 @@
  * 100% Supabase-driven with real-time booking
  */
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { supabase, trackEvent, SupabaseService, SupabaseReview } from '@/lib/supabase';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
+import {
+  supabase,
+  trackEvent,
+  SupabaseService,
+  SupabaseReview,
+} from "@/lib/supabase";
 import {
   ArrowLeft,
   Star,
@@ -44,8 +68,8 @@ import {
   Flag,
   Send,
   CreditCard,
-  Smartphone
-} from 'lucide-react';
+  Smartphone,
+} from "lucide-react";
 
 interface BookingFormData {
   date: Date | undefined;
@@ -76,18 +100,18 @@ export default function ModernServiceDetail() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
-  
+
   // Booking state
   const [bookingData, setBookingData] = useState<BookingFormData>({
     date: undefined,
-    time: '',
+    time: "",
     guests: 1,
-    specialRequests: '',
+    specialRequests: "",
     customerInfo: {
-      name: user?.user_metadata?.full_name || '',
-      phone: user?.user_metadata?.phone || '',
-      email: user?.email || ''
-    }
+      name: user?.user_metadata?.full_name || "",
+      phone: user?.user_metadata?.phone || "",
+      email: user?.email || "",
+    },
   });
   const [isBooking, setIsBooking] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
@@ -95,8 +119,8 @@ export default function ModernServiceDetail() {
   // Review state
   const [newReview, setNewReview] = useState({
     rating: 5,
-    comment: '',
-    title: ''
+    comment: "",
+    title: "",
   });
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
@@ -115,8 +139,9 @@ export default function ModernServiceDetail() {
 
       // Load service details
       const { data: serviceData, error: serviceError } = await supabase
-        .from('services')
-        .select(`
+        .from("services")
+        .select(
+          `
           *,
           vendor:vendors(
             id,
@@ -128,30 +153,33 @@ export default function ModernServiceDetail() {
             profile_image_url,
             verified
           )
-        `)
-        .eq('id', id)
-        .eq('status', 'active')
+        `,
+        )
+        .eq("id", id)
+        .eq("status", "active")
         .single();
 
       if (serviceError) throw serviceError;
-      if (!serviceData) throw new Error('Service not found');
+      if (!serviceData) throw new Error("Service not found");
 
       setService(serviceData);
 
       // Load reviews
       const { data: reviewsData, error: reviewsError } = await supabase
-        .from('reviews')
-        .select(`
+        .from("reviews")
+        .select(
+          `
           *,
           user:users(
             id,
             full_name,
             avatar_url
           )
-        `)
-        .eq('service_id', id)
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false })
+        `,
+        )
+        .eq("service_id", id)
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
         .limit(20);
 
       if (reviewsError) throw reviewsError;
@@ -159,27 +187,26 @@ export default function ModernServiceDetail() {
 
       // Load related services (same category)
       const { data: relatedData, error: relatedError } = await supabase
-        .from('services')
-        .select('*')
-        .eq('category', serviceData.category)
-        .neq('id', id)
-        .eq('status', 'active')
+        .from("services")
+        .select("*")
+        .eq("category", serviceData.category)
+        .neq("id", id)
+        .eq("status", "active")
         .limit(4);
 
       if (relatedError) throw relatedError;
       setRelatedServices(relatedData || []);
 
       // Track page view
-      await trackEvent('service_viewed', {
+      await trackEvent("service_viewed", {
         service_id: id,
         service_name: serviceData.name,
         category: serviceData.category,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-
     } catch (err: any) {
-      console.error('Error loading service:', err);
-      setError(err.message || 'Failed to load service details');
+      console.error("Error loading service:", err);
+      setError(err.message || "Failed to load service details");
     } finally {
       setLoading(false);
     }
@@ -190,63 +217,60 @@ export default function ModernServiceDetail() {
 
     try {
       const { data, error } = await supabase
-        .from('user_favorites')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('service_id', id)
+        .from("user_favorites")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("service_id", id)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== "PGRST116") throw error;
       setIsFavorited(!!data);
     } catch (err) {
-      console.error('Error checking favorite status:', err);
+      console.error("Error checking favorite status:", err);
     }
   };
 
   const handleFavoriteToggle = async () => {
     if (!user) {
-      navigate('/login', { state: { from: location } });
+      navigate("/login", { state: { from: location } });
       return;
     }
 
     try {
       if (isFavorited) {
         await supabase
-          .from('user_favorites')
+          .from("user_favorites")
           .delete()
-          .eq('user_id', user.id)
-          .eq('service_id', id);
+          .eq("user_id", user.id)
+          .eq("service_id", id);
       } else {
-        await supabase
-          .from('user_favorites')
-          .insert({
-            user_id: user.id,
-            service_id: id,
-            created_at: new Date().toISOString()
-          });
+        await supabase.from("user_favorites").insert({
+          user_id: user.id,
+          service_id: id,
+          created_at: new Date().toISOString(),
+        });
       }
 
       setIsFavorited(!isFavorited);
-      
-      await trackEvent('service_favorite_toggled', {
-        service_id: id,
-        action: isFavorited ? 'removed' : 'added',
-        timestamp: new Date().toISOString()
-      });
 
+      await trackEvent("service_favorite_toggled", {
+        service_id: id,
+        action: isFavorited ? "removed" : "added",
+        timestamp: new Date().toISOString(),
+      });
     } catch (err) {
-      console.error('Error toggling favorite:', err);
+      console.error("Error toggling favorite:", err);
     }
   };
 
   const handleBookingSubmit = async () => {
     if (!user) {
-      navigate('/login', { state: { from: location } });
+      navigate("/login", { state: { from: location } });
       return;
     }
 
     if (!bookingData.date || !bookingData.time) {
-      setError('Please select date and time for your booking');
+      setError("Please select date and time for your booking");
       return;
     }
 
@@ -255,7 +279,7 @@ export default function ModernServiceDetail() {
       setError(null);
 
       const bookingDateTime = new Date(bookingData.date);
-      const [hours, minutes] = bookingData.time.split(':');
+      const [hours, minutes] = bookingData.time.split(":");
       bookingDateTime.setHours(parseInt(hours), parseInt(minutes));
 
       const booking = {
@@ -269,12 +293,12 @@ export default function ModernServiceDetail() {
         customer_name: bookingData.customerInfo.name,
         customer_phone: bookingData.customerInfo.phone,
         customer_email: bookingData.customerInfo.email,
-        status: 'pending',
-        created_at: new Date().toISOString()
+        status: "pending",
+        created_at: new Date().toISOString(),
       };
 
       const { data, error } = await supabase
-        .from('bookings')
+        .from("bookings")
         .insert(booking)
         .select()
         .single();
@@ -282,12 +306,12 @@ export default function ModernServiceDetail() {
       if (error) throw error;
 
       // Track booking event
-      await trackEvent('booking_created', {
+      await trackEvent("booking_created", {
         booking_id: data.id,
         service_id: id,
         vendor_id: service?.vendor_id,
         amount: service?.price || 0,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       setBookingSuccess(true);
@@ -295,12 +319,11 @@ export default function ModernServiceDetail() {
 
       // Show success message and redirect to bookings page
       setTimeout(() => {
-        navigate('/dashboard?tab=bookings');
+        navigate("/dashboard?tab=bookings");
       }, 2000);
-
     } catch (err: any) {
-      console.error('Booking error:', err);
-      setError(err.message || 'Failed to create booking');
+      console.error("Booking error:", err);
+      setError(err.message || "Failed to create booking");
     } finally {
       setIsBooking(false);
     }
@@ -308,12 +331,12 @@ export default function ModernServiceDetail() {
 
   const handleReviewSubmit = async () => {
     if (!user) {
-      navigate('/login', { state: { from: location } });
+      navigate("/login", { state: { from: location } });
       return;
     }
 
     if (!newReview.comment.trim()) {
-      setError('Please write a review comment');
+      setError("Please write a review comment");
       return;
     }
 
@@ -328,32 +351,29 @@ export default function ModernServiceDetail() {
         rating: newReview.rating,
         title: newReview.title,
         comment: newReview.comment,
-        status: 'pending',
-        created_at: new Date().toISOString()
+        status: "pending",
+        created_at: new Date().toISOString(),
       };
 
-      const { error } = await supabase
-        .from('reviews')
-        .insert(review);
+      const { error } = await supabase.from("reviews").insert(review);
 
       if (error) throw error;
 
       // Track review event
-      await trackEvent('review_submitted', {
+      await trackEvent("review_submitted", {
         service_id: id,
         rating: newReview.rating,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
-      setNewReview({ rating: 5, comment: '', title: '' });
+      setNewReview({ rating: 5, comment: "", title: "" });
       setIsReviewOpen(false);
-      
+
       // Reload reviews
       await loadServiceData();
-
     } catch (err: any) {
-      console.error('Review error:', err);
-      setError(err.message || 'Failed to submit review');
+      console.error("Review error:", err);
+      setError(err.message || "Failed to submit review");
     } finally {
       setIsSubmittingReview(false);
     }
@@ -365,25 +385,25 @@ export default function ModernServiceDetail() {
         await navigator.share({
           title: service?.name,
           text: service?.description,
-          url: window.location.href
+          url: window.location.href,
         });
-        
-        await trackEvent('service_shared', {
+
+        await trackEvent("service_shared", {
           service_id: id,
-          method: 'native',
-          timestamp: new Date().toISOString()
+          method: "native",
+          timestamp: new Date().toISOString(),
         });
       } catch (err) {
-        console.error('Error sharing:', err);
+        console.error("Error sharing:", err);
       }
     } else {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(window.location.href);
-      
-      await trackEvent('service_shared', {
+
+      await trackEvent("service_shared", {
         service_id: id,
-        method: 'clipboard',
-        timestamp: new Date().toISOString()
+        method: "clipboard",
+        timestamp: new Date().toISOString(),
       });
     }
   };
@@ -405,7 +425,7 @@ export default function ModernServiceDetail() {
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
               <h2 className="text-xl font-semibold">Service Not Found</h2>
               <p className="text-gray-600">{error}</p>
-              <Button onClick={() => navigate('/services')} className="w-full">
+              <Button onClick={() => navigate("/services")} className="w-full">
                 Browse All Services
               </Button>
             </div>
@@ -417,11 +437,13 @@ export default function ModernServiceDetail() {
 
   if (!service) return null;
 
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-    : 0;
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
 
-  const images = service.images?.length > 0 ? service.images : ['/placeholder.svg'];
+  const images =
+    service.images?.length > 0 ? service.images : ["/placeholder.svg"];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -437,15 +459,17 @@ export default function ModernServiceDetail() {
               <ArrowLeft className="h-5 w-5 mr-2" />
               Back
             </Button>
-            
+
             <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleFavoriteToggle}
-                className={isFavorited ? 'text-red-500' : 'text-gray-600'}
+                className={isFavorited ? "text-red-500" : "text-gray-600"}
               >
-                <Heart className={`h-5 w-5 ${isFavorited ? 'fill-current' : ''}`} />
+                <Heart
+                  className={`h-5 w-5 ${isFavorited ? "fill-current" : ""}`}
+                />
               </Button>
               <Button variant="ghost" size="sm" onClick={handleShare}>
                 <Share2 className="h-5 w-5" />
@@ -494,7 +518,7 @@ export default function ModernServiceDetail() {
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={`w-3 h-3 rounded-full ${
-                        index === selectedImage ? 'bg-white' : 'bg-white/50'
+                        index === selectedImage ? "bg-white" : "bg-white/50"
                       }`}
                     />
                   ))}
@@ -521,7 +545,9 @@ export default function ModernServiceDetail() {
                     <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <div className="flex items-center">
                         <Star className="h-4 w-4 text-yellow-500 mr-1 fill-current" />
-                        <span className="font-medium">{averageRating.toFixed(1)}</span>
+                        <span className="font-medium">
+                          {averageRating.toFixed(1)}
+                        </span>
                         <span className="ml-1">({reviews.length} reviews)</span>
                       </div>
                       <div className="flex items-center">
@@ -535,13 +561,17 @@ export default function ModernServiceDetail() {
                     <div className="text-2xl font-bold text-orange-600">
                       ₹{service.price}
                     </div>
-                    <div className="text-sm text-gray-600">per {service.price_unit || 'service'}</div>
+                    <div className="text-sm text-gray-600">
+                      per {service.price_unit || "service"}
+                    </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 leading-relaxed">{service.description}</p>
-                
+                <p className="text-gray-700 leading-relaxed">
+                  {service.description}
+                </p>
+
                 {service.amenities && service.amenities.length > 0 && (
                   <div className="mt-4">
                     <h4 className="font-medium mb-2">Amenities</h4>
@@ -562,24 +592,32 @@ export default function ModernServiceDetail() {
               <Tabs defaultValue="details" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="details">Details</TabsTrigger>
-                  <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
+                  <TabsTrigger value="reviews">
+                    Reviews ({reviews.length})
+                  </TabsTrigger>
                   <TabsTrigger value="vendor">Vendor Info</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="details" className="p-6">
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <h4 className="font-medium mb-2">Duration</h4>
-                        <p className="text-gray-600">{service.duration || 'Contact vendor'}</p>
+                        <p className="text-gray-600">
+                          {service.duration || "Contact vendor"}
+                        </p>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Capacity</h4>
-                        <p className="text-gray-600">{service.max_guests || 'No limit'} people</p>
+                        <p className="text-gray-600">
+                          {service.max_guests || "No limit"} people
+                        </p>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Cancellation</h4>
-                        <p className="text-gray-600">Free cancellation 24 hours before</p>
+                        <p className="text-gray-600">
+                          Free cancellation 24 hours before
+                        </p>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Payment</h4>
@@ -588,15 +626,22 @@ export default function ModernServiceDetail() {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="reviews" className="p-6">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-semibold">Customer Reviews</h3>
+                      <h3 className="text-lg font-semibold">
+                        Customer Reviews
+                      </h3>
                       {user && (
-                        <Dialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
+                        <Dialog
+                          open={isReviewOpen}
+                          onOpenChange={setIsReviewOpen}
+                        >
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">Write Review</Button>
+                            <Button variant="outline" size="sm">
+                              Write Review
+                            </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
@@ -607,14 +652,23 @@ export default function ModernServiceDetail() {
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <label className="text-sm font-medium">Rating</label>
+                                <label className="text-sm font-medium">
+                                  Rating
+                                </label>
                                 <div className="flex items-center space-x-2 mt-1">
                                   {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                       key={star}
-                                      onClick={() => setNewReview(prev => ({ ...prev, rating: star }))}
+                                      onClick={() =>
+                                        setNewReview((prev) => ({
+                                          ...prev,
+                                          rating: star,
+                                        }))
+                                      }
                                       className={`${
-                                        star <= newReview.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
+                                        star <= newReview.rating
+                                          ? "text-yellow-500 fill-current"
+                                          : "text-gray-300"
                                       }`}
                                     >
                                       <Star className="h-6 w-6" />
@@ -623,19 +677,33 @@ export default function ModernServiceDetail() {
                                 </div>
                               </div>
                               <div>
-                                <label className="text-sm font-medium">Title (optional)</label>
+                                <label className="text-sm font-medium">
+                                  Title (optional)
+                                </label>
                                 <Input
                                   value={newReview.title}
-                                  onChange={(e) => setNewReview(prev => ({ ...prev, title: e.target.value }))}
+                                  onChange={(e) =>
+                                    setNewReview((prev) => ({
+                                      ...prev,
+                                      title: e.target.value,
+                                    }))
+                                  }
                                   placeholder="Great experience!"
                                   className="mt-1"
                                 />
                               </div>
                               <div>
-                                <label className="text-sm font-medium">Review</label>
+                                <label className="text-sm font-medium">
+                                  Review
+                                </label>
                                 <Textarea
                                   value={newReview.comment}
-                                  onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
+                                  onChange={(e) =>
+                                    setNewReview((prev) => ({
+                                      ...prev,
+                                      comment: e.target.value,
+                                    }))
+                                  }
                                   placeholder="Tell others about your experience..."
                                   className="mt-1"
                                   rows={4}
@@ -643,60 +711,80 @@ export default function ModernServiceDetail() {
                               </div>
                               <Button
                                 onClick={handleReviewSubmit}
-                                disabled={isSubmittingReview || !newReview.comment.trim()}
+                                disabled={
+                                  isSubmittingReview ||
+                                  !newReview.comment.trim()
+                                }
                                 className="w-full"
                               >
-                                {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
+                                {isSubmittingReview
+                                  ? "Submitting..."
+                                  : "Submit Review"}
                               </Button>
                             </div>
                           </DialogContent>
                         </Dialog>
                       )}
                     </div>
-                    
+
                     <div className="space-y-4">
                       {reviews.length > 0 ? (
                         reviews.map((review) => (
-                          <div key={review.id} className="border-b pb-4 last:border-b-0">
+                          <div
+                            key={review.id}
+                            className="border-b pb-4 last:border-b-0"
+                          >
                             <div className="flex items-start space-x-3">
                               <Avatar>
                                 <AvatarImage src={review.user?.avatar_url} />
                                 <AvatarFallback>
-                                  {review.user?.full_name?.charAt(0) || 'U'}
+                                  {review.user?.full_name?.charAt(0) || "U"}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex-1">
                                 <div className="flex items-center space-x-2 mb-1">
-                                  <span className="font-medium">{review.user?.full_name || 'Anonymous'}</span>
+                                  <span className="font-medium">
+                                    {review.user?.full_name || "Anonymous"}
+                                  </span>
                                   <div className="flex">
                                     {Array.from({ length: 5 }).map((_, i) => (
                                       <Star
                                         key={i}
                                         className={`h-4 w-4 ${
-                                          i < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
+                                          i < review.rating
+                                            ? "text-yellow-500 fill-current"
+                                            : "text-gray-300"
                                         }`}
                                       />
                                     ))}
                                   </div>
                                   <span className="text-sm text-gray-500">
-                                    {new Date(review.created_at).toLocaleDateString()}
+                                    {new Date(
+                                      review.created_at,
+                                    ).toLocaleDateString()}
                                   </span>
                                 </div>
                                 {review.title && (
-                                  <h4 className="font-medium mb-1">{review.title}</h4>
+                                  <h4 className="font-medium mb-1">
+                                    {review.title}
+                                  </h4>
                                 )}
-                                <p className="text-gray-700">{review.comment}</p>
+                                <p className="text-gray-700">
+                                  {review.comment}
+                                </p>
                               </div>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <p className="text-gray-500 text-center py-8">No reviews yet. Be the first to review!</p>
+                        <p className="text-gray-500 text-center py-8">
+                          No reviews yet. Be the first to review!
+                        </p>
                       )}
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="vendor" className="p-6">
                   {service.vendor && (
                     <div className="space-y-4">
@@ -704,12 +792,14 @@ export default function ModernServiceDetail() {
                         <Avatar className="h-16 w-16">
                           <AvatarImage src={service.vendor.profile_image_url} />
                           <AvatarFallback>
-                            {service.vendor.business_name?.charAt(0) || 'V'}
+                            {service.vendor.business_name?.charAt(0) || "V"}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
-                            <h3 className="text-lg font-semibold">{service.vendor.business_name}</h3>
+                            <h3 className="text-lg font-semibold">
+                              {service.vendor.business_name}
+                            </h3>
                             {service.vendor.verified && (
                               <Badge className="bg-green-100 text-green-800">
                                 <Shield className="h-3 w-3 mr-1" />
@@ -717,10 +807,12 @@ export default function ModernServiceDetail() {
                               </Badge>
                             )}
                           </div>
-                          <p className="text-gray-600">{service.vendor.contact_person}</p>
+                          <p className="text-gray-600">
+                            {service.vendor.contact_person}
+                          </p>
                         </div>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-center space-x-2">
                           <Phone className="h-4 w-4 text-gray-400" />
@@ -750,14 +842,16 @@ export default function ModernServiceDetail() {
                   <span>Book This Service</span>
                   <Badge variant="secondary">Available</Badge>
                 </CardTitle>
-                <CardDescription>
-                  Reserve your spot today
-                </CardDescription>
+                <CardDescription>Reserve your spot today</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-600">₹{service.price}</div>
-                  <div className="text-sm text-gray-600">per {service.price_unit || 'service'}</div>
+                  <div className="text-3xl font-bold text-orange-600">
+                    ₹{service.price}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    per {service.price_unit || "service"}
+                  </div>
                 </div>
 
                 <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
@@ -775,55 +869,93 @@ export default function ModernServiceDetail() {
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium">Select Date</label>
+                        <label className="text-sm font-medium">
+                          Select Date
+                        </label>
                         <Calendar
                           mode="single"
                           selected={bookingData.date}
-                          onSelect={(date) => setBookingData(prev => ({ ...prev, date }))}
+                          onSelect={(date) =>
+                            setBookingData((prev) => ({ ...prev, date }))
+                          }
                           disabled={(date) => date < new Date()}
                           className="rounded-md border mt-1"
                         />
                       </div>
-                      
+
                       <div>
-                        <label className="text-sm font-medium">Select Time</label>
+                        <label className="text-sm font-medium">
+                          Select Time
+                        </label>
                         <Select
                           value={bookingData.time}
-                          onValueChange={(value) => setBookingData(prev => ({ ...prev, time: value }))}
+                          onValueChange={(value) =>
+                            setBookingData((prev) => ({ ...prev, time: value }))
+                          }
                         >
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Choose time slot" />
                           </SelectTrigger>
                           <SelectContent>
-                            {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'].map((time) => (
-                              <SelectItem key={time} value={time}>{time}</SelectItem>
+                            {[
+                              "09:00",
+                              "10:00",
+                              "11:00",
+                              "12:00",
+                              "13:00",
+                              "14:00",
+                              "15:00",
+                              "16:00",
+                              "17:00",
+                            ].map((time) => (
+                              <SelectItem key={time} value={time}>
+                                {time}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
 
                       <div>
-                        <label className="text-sm font-medium">Number of Guests</label>
+                        <label className="text-sm font-medium">
+                          Number of Guests
+                        </label>
                         <Select
                           value={bookingData.guests.toString()}
-                          onValueChange={(value) => setBookingData(prev => ({ ...prev, guests: parseInt(value) }))}
+                          onValueChange={(value) =>
+                            setBookingData((prev) => ({
+                              ...prev,
+                              guests: parseInt(value),
+                            }))
+                          }
                         >
                           <SelectTrigger className="mt-1">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                              <SelectItem key={num} value={num.toString()}>{num} {num === 1 ? 'Guest' : 'Guests'}</SelectItem>
-                            ))}
+                            {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                              (num) => (
+                                <SelectItem key={num} value={num.toString()}>
+                                  {num} {num === 1 ? "Guest" : "Guests"}
+                                </SelectItem>
+                              ),
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
 
                       <div>
-                        <label className="text-sm font-medium">Special Requests (Optional)</label>
+                        <label className="text-sm font-medium">
+                          Special Requests (Optional)
+                        </label>
                         <Textarea
                           value={bookingData.specialRequests}
-                          onChange={(e) => setBookingData(prev => ({ ...prev, specialRequests: e.target.value }))}
+                          onChange={(e) =>
+                            setBookingData((prev) => ({
+                              ...prev,
+                              specialRequests: e.target.value,
+                            }))
+                          }
                           placeholder="Any special requirements..."
                           className="mt-1"
                           rows={3}
@@ -834,16 +966,21 @@ export default function ModernServiceDetail() {
                         <div className="flex justify-between items-center mb-4">
                           <span className="font-medium">Total Amount</span>
                           <span className="text-xl font-bold text-orange-600">
-                            ₹{(service.price * bookingData.guests).toLocaleString()}
+                            ₹
+                            {(
+                              service.price * bookingData.guests
+                            ).toLocaleString()}
                           </span>
                         </div>
-                        
+
                         <Button
                           onClick={handleBookingSubmit}
-                          disabled={isBooking || !bookingData.date || !bookingData.time}
+                          disabled={
+                            isBooking || !bookingData.date || !bookingData.time
+                          }
                           className="w-full"
                         >
-                          {isBooking ? 'Processing...' : 'Confirm Booking'}
+                          {isBooking ? "Processing..." : "Confirm Booking"}
                         </Button>
                       </div>
                     </div>
@@ -862,11 +999,19 @@ export default function ModernServiceDetail() {
                 </div>
 
                 <div className="flex space-x-2">
-                  <Button variant="outline" className="flex-1" onClick={() => navigate(`/vendor/${service.vendor_id}`)}>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => navigate(`/vendor/${service.vendor_id}`)}
+                  >
                     <MessageCircle className="h-4 w-4 mr-2" />
                     Contact
                   </Button>
-                  <Button variant="outline" className="flex-1" onClick={handleShare}>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={handleShare}
+                  >
                     <Share2 className="h-4 w-4 mr-2" />
                     Share
                   </Button>
@@ -889,7 +1034,7 @@ export default function ModernServiceDetail() {
                     >
                       <div className="flex space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                         <img
-                          src={relatedService.images?.[0] || '/placeholder.svg'}
+                          src={relatedService.images?.[0] || "/placeholder.svg"}
                           alt={relatedService.name}
                           className="w-16 h-16 object-cover rounded-lg"
                         />
@@ -897,7 +1042,9 @@ export default function ModernServiceDetail() {
                           <h4 className="font-medium group-hover:text-orange-600 transition-colors truncate">
                             {relatedService.name}
                           </h4>
-                          <p className="text-sm text-gray-600 truncate">{relatedService.location}</p>
+                          <p className="text-sm text-gray-600 truncate">
+                            {relatedService.location}
+                          </p>
                           <div className="flex items-center justify-between mt-1">
                             <div className="flex items-center">
                               <Star className="h-3 w-3 text-yellow-500 fill-current" />

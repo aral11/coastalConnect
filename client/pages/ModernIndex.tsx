@@ -3,12 +3,12 @@
  * 100% Supabase-driven with real-time data
  */
 
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
 import {
   supabase,
   getServices,
@@ -18,8 +18,8 @@ import {
   trackEvent,
   SupabaseService,
   SupabaseCategory,
-  SupabaseLocation
-} from '@/lib/supabase';
+  SupabaseLocation,
+} from "@/lib/supabase";
 import {
   Search,
   MapPin,
@@ -36,23 +36,27 @@ import {
   Award,
   Percent,
   Phone,
-  Mail
-} from 'lucide-react';
+  Mail,
+} from "lucide-react";
 
 export default function ModernIndex() {
   const { user, trackEvent: authTrackEvent } = useAuth();
   const navigate = useNavigate();
-  
+
   // Search state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [isSearching, setIsSearching] = useState(false);
-  
+
   // Data state
   const [categories, setCategories] = useState<SupabaseCategory[]>([]);
   const [locations, setLocations] = useState<SupabaseLocation[]>([]);
-  const [featuredServices, setFeaturedServices] = useState<SupabaseService[]>([]);
-  const [trendingServices, setTrendingServices] = useState<SupabaseService[]>([]);
+  const [featuredServices, setFeaturedServices] = useState<SupabaseService[]>(
+    [],
+  );
+  const [trendingServices, setTrendingServices] = useState<SupabaseService[]>(
+    [],
+  );
   const [nearbyServices, setNearbyServices] = useState<SupabaseService[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -61,7 +65,7 @@ export default function ModernIndex() {
     totalServices: 0,
     totalBookings: 0,
     happyCustomers: 0,
-    citiesCovered: 0
+    citiesCovered: 0,
   });
 
   useEffect(() => {
@@ -72,11 +76,11 @@ export default function ModernIndex() {
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      
+
       // Track page view
-      await trackEvent('page_view', {
-        page: 'homepage',
-        user_id: user?.id
+      await trackEvent("page_view", {
+        page: "homepage",
+        user_id: user?.id,
       });
 
       // Load data in parallel
@@ -85,13 +89,13 @@ export default function ModernIndex() {
         locationsData,
         featuredData,
         trendingData,
-        nearbyData
+        nearbyData,
       ] = await Promise.all([
         getServiceCategories(),
         getLocations(true), // Popular locations only
-        getServices({ featured: true, status: 'approved', limit: 8 }),
-        getServices({ status: 'approved', limit: 6 }), // Most recent as trending
-        getServices({ status: 'approved', limit: 12 }) // All nearby
+        getServices({ featured: true, status: "approved", limit: 8 }),
+        getServices({ status: "approved", limit: 6 }), // Most recent as trending
+        getServices({ status: "approved", limit: 12 }), // All nearby
       ]);
 
       setCategories(categoriesData || []);
@@ -107,9 +111,8 @@ export default function ModernIndex() {
 
       // Load stats
       await loadStats();
-      
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error("Error loading data:", error);
     } finally {
       setLoading(false);
     }
@@ -119,32 +122,33 @@ export default function ModernIndex() {
     try {
       // Get real counts from Supabase
       const [servicesCount, bookingsCount] = await Promise.all([
-        supabase.from('services').select('id', { count: 'exact', head: true }),
-        supabase.from('bookings').select('id', { count: 'exact', head: true })
+        supabase.from("services").select("id", { count: "exact", head: true }),
+        supabase.from("bookings").select("id", { count: "exact", head: true }),
       ]);
 
       setStats({
         totalServices: servicesCount.count || 0,
         totalBookings: bookingsCount.count || 0,
         happyCustomers: Math.floor((bookingsCount.count || 0) * 0.8), // 80% satisfaction rate
-        citiesCovered: locations.length
+        citiesCovered: locations.length,
       });
     } catch (error) {
-      console.error('Error loading stats:', error);
+      console.error("Error loading stats:", error);
     }
   };
 
   const setupRealTimeSubscriptions = () => {
     // Subscribe to services changes
     const servicesSubscription = supabase
-      .channel('homepage_services')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'services' }, 
+      .channel("homepage_services")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "services" },
         (payload) => {
-          console.log('Services updated:', payload);
+          console.log("Services updated:", payload);
           // Refresh featured services
           loadFeaturedServices();
-        }
+        },
       )
       .subscribe();
 
@@ -155,49 +159,57 @@ export default function ModernIndex() {
 
   const loadFeaturedServices = async () => {
     try {
-      const data = await getServices({ featured: true, status: 'approved', limit: 8 });
+      const data = await getServices({
+        featured: true,
+        status: "approved",
+        limit: 8,
+      });
       setFeaturedServices(data || []);
     } catch (error) {
-      console.error('Error refreshing featured services:', error);
+      console.error("Error refreshing featured services:", error);
     }
   };
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
-    
+
     setIsSearching(true);
-    
+
     try {
-      await trackEvent('search_performed', {
+      await trackEvent("search_performed", {
         query: searchQuery,
         location_id: selectedLocation,
-        user_id: user?.id
+        user_id: user?.id,
       });
 
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`);
+      navigate(
+        `/search?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`,
+      );
     } catch (error) {
-      console.error('Search error:', error);
+      console.error("Search error:", error);
     } finally {
       setIsSearching(false);
     }
   };
 
   const handleCategoryClick = async (category: SupabaseCategory) => {
-    await trackEvent('category_clicked', {
+    await trackEvent("category_clicked", {
       category_id: category.id,
       category_name: category.name,
-      user_id: user?.id
+      user_id: user?.id,
     });
 
-    navigate(`/services?category=${category.slug}&location=${selectedLocation}`);
+    navigate(
+      `/services?category=${category.slug}&location=${selectedLocation}`,
+    );
   };
 
   const handleServiceClick = async (service: SupabaseService) => {
-    await trackEvent('service_clicked', {
+    await trackEvent("service_clicked", {
       service_id: service.id,
       service_name: service.name,
       service_type: service.service_type,
-      user_id: user?.id
+      user_id: user?.id,
     });
 
     navigate(`/service/${service.id}`);
@@ -230,12 +242,14 @@ export default function ModernIndex() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
                   Your Gateway to
                   <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                    {" "}Coastal Bliss
+                    {" "}
+                    Coastal Bliss
                   </span>
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
-                  Book authentic homestays, discover local flavors, hire trusted drivers, 
-                  and connect with talented creators in the heart of Coastal Karnataka.
+                  Book authentic homestays, discover local flavors, hire trusted
+                  drivers, and connect with talented creators in the heart of
+                  Coastal Karnataka.
                 </p>
               </div>
 
@@ -268,7 +282,7 @@ export default function ModernIndex() {
                       placeholder="Search for hotels, restaurants, drivers..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                      onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                       className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400"
                     />
                   </div>
@@ -294,19 +308,27 @@ export default function ModernIndex() {
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalServices}+</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {stats.totalServices}+
+                  </div>
                   <div className="text-sm text-gray-600">Services</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalBookings}+</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {stats.totalBookings}+
+                  </div>
                   <div className="text-sm text-gray-600">Bookings</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{stats.happyCustomers}+</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {stats.happyCustomers}+
+                  </div>
                   <div className="text-sm text-gray-600">Happy Customers</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{stats.citiesCovered}+</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {stats.citiesCovered}+
+                  </div>
                   <div className="text-sm text-gray-600">Cities</div>
                 </div>
               </div>
@@ -321,12 +343,12 @@ export default function ModernIndex() {
                   className="w-full h-96 lg:h-[500px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                
+
                 {/* Play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <button 
+                  <button
                     className="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors group"
-                    onClick={() => trackEvent('hero_video_play')}
+                    onClick={() => trackEvent("hero_video_play")}
                   >
                     <PlayCircle className="h-10 w-10 text-orange-500 group-hover:scale-110 transition-transform" />
                   </button>
@@ -340,8 +362,12 @@ export default function ModernIndex() {
                     <Award className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Verified Services</div>
-                    <div className="text-sm text-gray-600">100% authentic experiences</div>
+                    <div className="font-semibold text-gray-900">
+                      Verified Services
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      100% authentic experiences
+                    </div>
                   </div>
                 </div>
               </div>
@@ -354,8 +380,12 @@ export default function ModernIndex() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Explore by Category</h2>
-            <p className="text-lg text-gray-600">Discover the best of Coastal Karnataka</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Explore by Category
+            </h2>
+            <p className="text-lg text-gray-600">
+              Discover the best of Coastal Karnataka
+            </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
@@ -368,15 +398,17 @@ export default function ModernIndex() {
                 <div className="text-center space-y-3">
                   <div
                     className="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform"
-                    style={{ backgroundColor: category.color || '#f97316' }}
+                    style={{ backgroundColor: category.color || "#f97316" }}
                   >
-                    {category.icon || '🏨'}
+                    {category.icon || "🏨"}
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 group-hover:text-orange-500 transition-colors">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-gray-500">{category.service_count || 0} services</p>
+                    <p className="text-sm text-gray-500">
+                      {category.service_count || 0} services
+                    </p>
                   </div>
                 </div>
               </button>
@@ -390,10 +422,12 @@ export default function ModernIndex() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Featured Services</h2>
+              <h2 className="text-3xl font-bold text-gray-900">
+                Featured Services
+              </h2>
               <p className="text-gray-600 mt-2">Hand-picked by our team</p>
             </div>
-            <Link 
+            <Link
               to="/services?featured=true"
               className="text-orange-500 hover:text-orange-600 font-medium flex items-center"
             >
@@ -410,7 +444,10 @@ export default function ModernIndex() {
               >
                 <div className="aspect-video relative overflow-hidden">
                   <img
-                    src={service.primary_image_id || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop'}
+                    src={
+                      service.primary_image_id ||
+                      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop"
+                    }
                     alt={service.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
@@ -420,11 +457,13 @@ export default function ModernIndex() {
                       {service.average_rating.toFixed(1)}
                     </Badge>
                   </div>
-                  <button 
+                  <button
                     className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      trackEvent('service_favorited', { service_id: service.id });
+                      trackEvent("service_favorited", {
+                        service_id: service.id,
+                      });
                     }}
                   >
                     <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
@@ -436,7 +475,9 @@ export default function ModernIndex() {
                     <h3 className="font-semibold text-gray-900 group-hover:text-orange-500 transition-colors">
                       {service.name}
                     </h3>
-                    <p className="text-sm text-gray-500 capitalize">{service.service_type}</p>
+                    <p className="text-sm text-gray-500 capitalize">
+                      {service.service_type}
+                    </p>
                   </div>
 
                   <p className="text-sm text-gray-600 mb-3 line-clamp-2">
@@ -446,13 +487,20 @@ export default function ModernIndex() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-500">
                       <MapPin className="h-4 w-4 mr-1" />
-                      <span>{service.locations?.name || 'Coastal Karnataka'}</span>
+                      <span>
+                        {service.locations?.name || "Coastal Karnataka"}
+                      </span>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-gray-900">
                         ₹{service.base_price.toLocaleString()}
                       </div>
-                      <div className="text-xs text-gray-500">per {service.service_type === 'homestay' ? 'night' : 'booking'}</div>
+                      <div className="text-xs text-gray-500">
+                        per{" "}
+                        {service.service_type === "homestay"
+                          ? "night"
+                          : "booking"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -471,7 +519,9 @@ export default function ModernIndex() {
                 <TrendingUp className="h-8 w-8 text-orange-500 mr-3" />
                 Trending Now
               </h2>
-              <p className="text-gray-600 mt-2">Most popular services this week</p>
+              <p className="text-gray-600 mt-2">
+                Most popular services this week
+              </p>
             </div>
           </div>
 
@@ -492,12 +542,16 @@ export default function ModernIndex() {
                     <h3 className="font-semibold text-gray-900 group-hover:text-orange-500 transition-colors mb-1">
                       {service.name}
                     </h3>
-                    <p className="text-sm text-gray-500 capitalize mb-2">{service.service_type}</p>
+                    <p className="text-sm text-gray-500 capitalize mb-2">
+                      {service.service_type}
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center text-sm text-yellow-500">
                         <Star className="h-4 w-4 mr-1 fill-current" />
                         <span>{service.average_rating.toFixed(1)}</span>
-                        <span className="text-gray-500 ml-1">({service.total_reviews})</span>
+                        <span className="text-gray-500 ml-1">
+                          ({service.total_reviews})
+                        </span>
                       </div>
                       <div className="text-sm font-medium text-gray-900">
                         ₹{service.base_price.toLocaleString()}
@@ -522,14 +576,14 @@ export default function ModernIndex() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              onClick={() => navigate('/services')}
+              onClick={() => navigate("/services")}
               size="lg"
               className="bg-white text-orange-500 hover:bg-orange-50 px-8 py-3 text-lg font-medium"
             >
               Start Exploring
             </Button>
             <Button
-              onClick={() => navigate('/vendor-register')}
+              onClick={() => navigate("/vendor-register")}
               size="lg"
               variant="outline"
               className="border-white text-white hover:bg-white hover:text-orange-500 px-8 py-3 text-lg font-medium"
