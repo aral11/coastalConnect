@@ -78,6 +78,12 @@ export default function ModernIndex() {
     try {
       setLoading(true);
 
+      // Debug: Log environment variables (remove in production)
+      console.log("Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+      console.log("Supabase Key exists:", !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+      console.log("Auth loading:", authLoading);
+      console.log("User:", user);
+
       // Track page view (only if auth is not loading)
       if (!authLoading) {
         try {
