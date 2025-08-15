@@ -296,6 +296,7 @@ export default function Events() {
           entry_fee: 500,
           image_url:
             "https://images.unsplash.com/photo-1606721977440-2c2b62e4f647?w=600&h=400&fit=crop",
+          website_url: "https://coastalphotoworkshop.in",
           capacity: 50,
           registered_count: 23,
           is_featured: false,
