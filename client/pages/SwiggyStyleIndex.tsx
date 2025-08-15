@@ -51,11 +51,11 @@ import {
   Volume2,
 } from "lucide-react";
 
-// Dynamic video URL will be loaded from Supabase
+// Authentic Udupi images - Dynamic video URL will be loaded from Supabase
 const DEFAULT_HERO_VIDEO_THUMBNAIL =
-  "https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop";
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&auto=format";
 const UDUPI_COASTAL_BACKGROUND =
-  "https://images.pexels.com/photos/2099194/pexels-photo-2099194.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";
+  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop&auto=format";
 
 export default function SwiggyStyleIndex() {
   const { user, loading: authLoading } = useAuth();
