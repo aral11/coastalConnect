@@ -85,6 +85,139 @@ app.get('/api/restaurants', (req, res) => {
   });
 });
 
+// Eateries endpoint with fallback data
+app.get('/api/eateries', async (req, res) => {
+  try {
+    // Fallback eateries data when database is not available
+    const mockEateries = [
+      {
+        id: 1,
+        name: "Shree Krishna Boarding Lodge",
+        description: "Authentic Udupi vegetarian cuisine with traditional flavors",
+        location: "Car Street, Udupi",
+        address: "Car Street, Near Krishna Temple, Udupi, Karnataka 576101",
+        cuisine_type: "South Indian Vegetarian",
+        rating: 4.6,
+        total_reviews: 324,
+        phone: "+91 8202 520 524",
+        opening_hours: "6:00 AM - 10:00 PM",
+        price_range: 150,
+        image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+        is_active: true,
+        featured: true,
+        delivery_available: false,
+        takeaway_available: true,
+        seating_capacity: 80,
+        has_parking: false,
+        wifi_available: false,
+        accepts_cards: true
+      },
+      {
+        id: 2,
+        name: "Mitra Samaj",
+        description: "Historic restaurant serving authentic Udupi meals since 1950",
+        location: "Temple Road, Udupi",
+        address: "Temple Road, Near Bus Stand, Udupi, Karnataka 576101",
+        cuisine_type: "Traditional Udupi",
+        rating: 4.5,
+        total_reviews: 267,
+        phone: "+91 8202 520 100",
+        opening_hours: "7:00 AM - 9:30 PM",
+        price_range: 120,
+        image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+        is_active: true,
+        featured: true,
+        delivery_available: false,
+        takeaway_available: true,
+        seating_capacity: 60,
+        has_parking: true,
+        wifi_available: false,
+        accepts_cards: false
+      },
+      {
+        id: 3,
+        name: "Woodlands Restaurant",
+        description: "Modern South Indian restaurant with coastal specialties",
+        location: "Manipal Road, Udupi",
+        address: "Manipal Road, Tiger Circle, Udupi, Karnataka 576101",
+        cuisine_type: "South Indian & Chinese",
+        rating: 4.3,
+        total_reviews: 189,
+        phone: "+91 8202 521 234",
+        opening_hours: "11:00 AM - 11:00 PM",
+        price_range: 250,
+        image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
+        is_active: true,
+        featured: false,
+        delivery_available: true,
+        takeaway_available: true,
+        seating_capacity: 120,
+        has_parking: true,
+        wifi_available: true,
+        accepts_cards: true
+      },
+      {
+        id: 4,
+        name: "Diana Restaurant",
+        description: "Popular for biryanis and Mangalorean coastal cuisine",
+        location: "Kalsanka, Udupi",
+        address: "Kalsanka Junction, NH 66, Udupi, Karnataka 576101",
+        cuisine_type: "Coastal & North Indian",
+        rating: 4.4,
+        total_reviews: 156,
+        phone: "+91 8202 522 345",
+        opening_hours: "12:00 PM - 3:00 PM, 7:00 PM - 11:00 PM",
+        price_range: 300,
+        image_url: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&h=300&fit=crop",
+        is_active: true,
+        featured: false,
+        delivery_available: true,
+        takeaway_available: true,
+        seating_capacity: 100,
+        has_parking: true,
+        wifi_available: true,
+        accepts_cards: true
+      },
+      {
+        id: 5,
+        name: "Hotel Kidiyoor",
+        description: "Family restaurant known for fish curry and neer dosa",
+        location: "Malpe Road, Udupi",
+        address: "Malpe Road, Near Syndicate Circle, Udupi, Karnataka 576101",
+        cuisine_type: "Coastal Karnataka",
+        rating: 4.2,
+        total_reviews: 203,
+        phone: "+91 8202 523 456",
+        opening_hours: "11:30 AM - 3:00 PM, 6:30 PM - 10:30 PM",
+        price_range: 200,
+        image_url: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
+        is_active: true,
+        featured: false,
+        delivery_available: false,
+        takeaway_available: true,
+        seating_capacity: 75,
+        has_parking: true,
+        wifi_available: false,
+        accepts_cards: true
+      }
+    ];
+
+    res.json({
+      success: true,
+      data: mockEateries,
+      count: mockEateries.length,
+      source: 'fallback'
+    });
+  } catch (error) {
+    console.error('Error in eateries endpoint:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch eateries',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 // Drivers endpoint with fallback data
 app.get('/api/drivers', async (req, res) => {
   try {
