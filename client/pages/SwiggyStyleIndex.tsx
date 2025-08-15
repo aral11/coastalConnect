@@ -633,8 +633,9 @@ export default function SwiggyStyleIndex() {
                 },
               ].map((action, index) => {
                 const count = serviceCounts[action.key] || 0;
-                const isComingSoon =
-                  action.key !== "visit-guide" && count === 0;
+                // Only show "Coming Soon" for specific services we know aren't ready
+                // Allow navigation to show "No services available" message instead
+                const isComingSoon = false; // Temporarily disable coming soon to allow navigation
 
                 return (
                   <div
