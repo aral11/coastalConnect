@@ -227,7 +227,64 @@ export default function SwiggyStyleVendorDashboard() {
         ],
       };
 
-      setMetrics(mockData);
+      // Load real vendor data from Supabase
+      if (user?.role === 'vendor') {
+        const [bookingsResponse, servicesResponse] = await Promise.allSettled([
+          supabase.from("bookings").select("*, services(name)").eq("vendor_id", user.id),
+          supabase.from("services").select("*").eq("vendor_id", user.id)
+        ]);
+
+        const bookings = bookingsResponse.status === 'fulfilled' ? bookingsResponse.value.data || [] : [];
+        const services = servicesResponse.status === 'fulfilled' ? servicesResponse.value.data || [] : [];
+
+        const totalRevenue = bookings
+          .filter(b => b.payment_status === 'paid')
+          .reduce((sum, b) => sum + (b.total_amount || 0), 0);
+
+        const avgRating = services.length > 0
+          ? services.reduce((sum, s) => sum + (s.average_rating || 0), 0) / services.length
+          : 0;
+
+        const recentBookings = bookings
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 3)
+          .map(booking => ({
+            id: booking.id,
+            customer: booking.guest_name,
+            service: booking.services?.name || 'Service',
+            amount: booking.total_amount,
+            status: booking.status,
+            date: new Date(booking.created_at).toISOString().split('T')[0]
+          }));
+
+        const servicesData = services.map(service => ({
+          id: service.id,
+          name: service.name,
+          type: service.service_type,
+          status: service.status === 'approved' && service.is_active ? 'active' : 'inactive',
+          bookings: bookings.filter(b => b.service_id === service.id).length,
+          rating: service.average_rating || 0,
+          price: service.base_price
+        }));
+
+        const realData: VendorMetrics = {
+          totalBookings: bookings.length,
+          totalRevenue,
+          averageRating: Number(avgRating.toFixed(1)),
+          totalReviews: services.reduce((sum, s) => sum + (s.total_reviews || 0), 0),
+          viewsThisMonth: 0, // Will implement analytics later
+          responseRate: 100, // Will calculate based on actual response data
+          completionRate: bookings.length > 0 ? Math.round((bookings.filter(b => b.status === 'completed').length / bookings.length) * 100) : 0,
+          repeatCustomers: 0, // Will calculate based on customer data
+          bookingTrends: [], // Will implement monthly trends
+          recentBookings,
+          services: servicesData,
+        };
+
+        setMetrics(realData);
+      } else {
+        setMetrics(mockData); // Fallback for demo
+      }
 
       await trackEvent("vendor_dashboard_viewed", {
         vendor_id: user?.id,
