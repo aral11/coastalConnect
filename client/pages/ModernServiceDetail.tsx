@@ -245,38 +245,50 @@ export default function ModernServiceDetail() {
 
       setService(serviceData);
 
-      // Load reviews
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from("reviews")
-        .select(
-          `
-          *,
-          user:users(
-            id,
-            full_name,
-            avatar_url
-          )
-        `,
-        )
-        .eq("service_id", id)
-        .eq("status", "approved")
-        .order("created_at", { ascending: false })
-        .limit(20);
+      // Load reviews (optional, don't fail if reviews table doesn't exist)
+      try {
+        const { data: reviewsData, error: reviewsError } = await supabase
+          .from("reviews")
+          .select(`
+            *,
+            users(id, name, avatar_url)
+          `)
+          .eq("service_id", id)
+          .in("status", ["approved", "active"])
+          .order("created_at", { ascending: false })
+          .limit(20);
 
-      if (reviewsError) throw reviewsError;
-      setReviews(reviewsData || []);
+        if (!reviewsError && reviewsData) {
+          setReviews(reviewsData);
+        } else {
+          console.warn("Could not load reviews:", reviewsError);
+          setReviews([]);
+        }
+      } catch (err) {
+        console.warn("Reviews table may not exist:", err);
+        setReviews([]);
+      }
 
-      // Load related services (same category)
-      const { data: relatedData, error: relatedError } = await supabase
-        .from("services")
-        .select("*")
-        .eq("category", serviceData.category)
-        .neq("id", id)
-        .eq("status", "active")
-        .limit(4);
+      // Load related services (optional, don't fail if query fails)
+      try {
+        const { data: relatedData, error: relatedError } = await supabase
+          .from("services")
+          .select("*")
+          .eq("service_type", serviceData.service_type || serviceData.category)
+          .neq("id", id)
+          .in("status", ["active", "approved"])
+          .limit(4);
 
-      if (relatedError) throw relatedError;
-      setRelatedServices(relatedData || []);
+        if (!relatedError && relatedData) {
+          setRelatedServices(relatedData);
+        } else {
+          console.warn("Could not load related services:", relatedError);
+          setRelatedServices([]);
+        }
+      } catch (err) {
+        console.warn("Could not load related services:", err);
+        setRelatedServices([]);
+      }
 
       // Track page view
       await trackEvent("service_viewed", {
