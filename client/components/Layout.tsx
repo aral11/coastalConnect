@@ -320,21 +320,6 @@ function Footer() {
             </div>
           </div>
 
-          {/* Mobile App Development Update */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 mb-8">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="text-center md:text-left mb-4 md:mb-0">
-                <h3 className="text-white font-bold text-xl mb-2">📱 CoastalConnect Mobile Apps</h3>
-                <p className="text-blue-100">Native iOS and Android apps in development - launching soon for enhanced booking experience!</p>
-              </div>
-              <div className="flex space-x-4">
-                <Badge className="bg-white/20 backdrop-blur-sm text-white border border-white/30 px-4 py-2">
-                  <Zap className="h-4 w-4 mr-2" />
-                  In Development
-                </Badge>
-              </div>
-            </div>
-          </div>
 
           {/* Platform Statistics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
