@@ -51,11 +51,11 @@ import {
   Volume2,
 } from "lucide-react";
 
-// Authentic Udupi images - Dynamic video URL will be loaded from Supabase
+// Authentic Udupi and Manipal images - Dynamic video URL will be loaded from Supabase
 const DEFAULT_HERO_VIDEO_THUMBNAIL =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop&auto=format";
+  "https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&h=600&fit=crop&auto=format"; // Krishna Temple Udupi
 const UDUPI_COASTAL_BACKGROUND =
-  "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop&auto=format";
+  "https://images.unsplash.com/photo-1598948485421-33cf1262965f?w=1920&h=1080&fit=crop&auto=format"; // Coastal Karnataka beach
 
 export default function SwiggyStyleIndex() {
   const { user, loading: authLoading } = useAuth();
