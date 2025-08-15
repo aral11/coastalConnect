@@ -33,6 +33,14 @@ import Drivers from "@/pages/Drivers";
 import Eateries from "@/pages/Eateries";
 import NotFound from "@/pages/NotFound";
 
+// Import new pages
+import AdminDashboard from "@/pages/AdminDashboard";
+import Dashboard from "@/pages/Dashboard";
+import Help from "@/pages/Help";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import ScrollToTop from "@/components/ScrollToTop";
+
 const queryClient = new QueryClient();
 
 function App() {
