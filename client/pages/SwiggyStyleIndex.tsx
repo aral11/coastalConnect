@@ -100,8 +100,11 @@ export default function SwiggyStyleIndex() {
   });
 
   useEffect(() => {
-    loadInitialData();
-    setupRealTimeSubscriptions();
+    console.log('SwiggyStyleIndex mounted, authLoading:', authLoading);
+    if (!authLoading) {
+      loadInitialData();
+      setupRealTimeSubscriptions();
+    }
   }, [authLoading]);
 
   const loadInitialData = async () => {
