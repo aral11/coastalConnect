@@ -192,7 +192,7 @@ VITE_DEBUG_MODE=true`;
             {/* Quick Actions */}
             <div className="border-t pt-6">
               <h3 className="font-semibold mb-3">Quick Actions:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <Button
                   variant="outline"
                   className="justify-start"
@@ -208,6 +208,14 @@ VITE_DEBUG_MODE=true`;
                 >
                   <Globe className="h-4 w-4 mr-2" />
                   Deployment Guide
+                </Button>
+                <Button
+                  variant="outline"
+                  className="justify-start"
+                  onClick={() => window.location.href = '/demo'}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview UI
                 </Button>
               </div>
             </div>
