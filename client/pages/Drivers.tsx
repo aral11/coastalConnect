@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import ServicePageLayout from '@/components/ServicePageLayout';
 import DriverBookingModal from '@/components/DriverBookingModal';
 import { Car } from 'lucide-react';
