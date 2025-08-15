@@ -66,6 +66,7 @@ export default function SwiggyStyleIndex() {
   const [isSearching, setIsSearching] = useState(false);
   const [heroVideoUrl, setHeroVideoUrl] = useState<string>("");
   const [videoThumbnail, setVideoThumbnail] = useState<string>(DEFAULT_HERO_VIDEO_THUMBNAIL);
+  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string>(UDUPI_COASTAL_BACKGROUND);
 
   // Data state
   const [categories, setCategories] = useState<SupabaseCategory[]>([]);
