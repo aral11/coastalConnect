@@ -304,18 +304,27 @@ export const getServiceCategories = async () => {
 };
 
 export const getLocations = async (popularOnly = false) => {
-  let query = supabase.from("locations").select("*").eq("is_active", true);
+  try {
+    let query = supabase.from("locations").select("*").eq("is_active", true);
 
-  if (popularOnly) {
-    query = query.eq("is_popular", true);
+    if (popularOnly) {
+      query = query.eq("is_popular", true);
+    }
+
+    const { data, error } = await query.order("display_order", {
+      ascending: true,
+    });
+
+    if (error) {
+      console.warn("Error fetching locations:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Locations fetch error:", error);
+    return [];
   }
-
-  const { data, error } = await query.order("display_order", {
-    ascending: true,
-  });
-
-  if (error) throw error;
-  return data;
 };
 
 export const searchServices = async (
