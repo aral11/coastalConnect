@@ -117,6 +117,10 @@ export default function SwiggyStyleIndex() {
 
         if (videoConfig?.value) {
           setHeroVideoUrl(videoConfig.value);
+          // If it's an Instagram reel, use a coastal Karnataka thumbnail
+          if (videoConfig.value.includes('instagram.com')) {
+            setVideoThumbnail(DEFAULT_HERO_VIDEO_THUMBNAIL);
+          }
         }
       } catch (error) {
         console.warn("Failed to load video URL:", error);
