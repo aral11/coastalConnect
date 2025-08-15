@@ -100,7 +100,6 @@ export default function SwiggyStyleIndex() {
   });
 
   useEffect(() => {
-    console.log('SwiggyStyleIndex mounted, authLoading:', authLoading);
     if (!authLoading) {
       loadInitialData();
       setupRealTimeSubscriptions();
@@ -108,7 +107,6 @@ export default function SwiggyStyleIndex() {
 
     // Safety timeout to prevent infinite loading
     const timeout = setTimeout(() => {
-      console.log('Loading timeout reached, forcing app to load');
       setLoading(false);
     }, 10000); // 10 seconds max
 
