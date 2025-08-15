@@ -464,6 +464,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signUp,
     signOut,
+    signInWithGoogle,
     resetPassword,
     updateProfile,
     hasPermission,
