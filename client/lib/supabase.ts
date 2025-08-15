@@ -243,17 +243,22 @@ export const getServices = async (filters?: {
 export const getServiceCategories = async () => {
   const { data, error } = await supabase
     .from("service_categories")
-    .select(
-      `
+    .select(`
       *,
-      services!inner(count)
-    `,
-    )
+      services(count)
+    `)
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
-  return data;
+
+  // Add service_count field for each category
+  const categoriesWithCount = data?.map(category => ({
+    ...category,
+    service_count: category.services?.[0]?.count || 0
+  }));
+
+  return categoriesWithCount;
 };
 
 export const getLocations = async (popularOnly = false) => {
