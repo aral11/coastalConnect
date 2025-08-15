@@ -103,6 +103,13 @@ export default function Navigation({ className = "" }: NavigationProps) {
       description: "Events & cultural activities",
       color: "text-purple-600",
     },
+    {
+      label: "Gallery",
+      href: "/gallery",
+      icon: <Camera className="h-4 w-4" />,
+      description: "Wedding & ceremony photos",
+      color: "text-pink-600",
+    },
   ];
 
   // Role-specific navigation items for authenticated users
