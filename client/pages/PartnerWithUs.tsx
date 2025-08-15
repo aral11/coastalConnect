@@ -31,7 +31,6 @@ import {
   Building,
   Car,
   UtensilsCrossed,
-  Spa,
   PartyPopper,
   Home,
 } from "lucide-react";
