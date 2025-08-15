@@ -134,12 +134,26 @@ export interface SupabaseReview {
 
 // Auth helper functions
 export const getCurrentUser = async () => {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-  if (error) throw error;
-  return user;
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    // If there's an auth session missing error, just return null (user not authenticated)
+    if (error && error.message.includes('Auth session missing')) {
+      return null;
+    }
+
+    if (error) throw error;
+    return user;
+  } catch (error: any) {
+    // Handle auth session missing gracefully
+    if (error.message && error.message.includes('Auth session missing')) {
+      return null;
+    }
+    throw error;
+  }
 };
 
 export const signIn = async (email: string, password: string) => {
@@ -345,20 +359,25 @@ export const getServiceById = async (id: string) => {
 
 // Analytics tracking
 export const trackEvent = async (eventType: string, properties?: any) => {
-  const user = await getCurrentUser();
+  try {
+    const user = await getCurrentUser();
 
-  const { error } = await supabase.from("analytics_events").insert({
-    event_type: eventType,
-    user_id: user?.id,
-    session_id: crypto.randomUUID(),
-    properties,
-    page_url: window.location.href,
-    page_title: document.title,
-    user_agent: navigator.userAgent,
-    created_at: new Date().toISOString(),
-  });
+    const { error } = await supabase.from("analytics_events").insert({
+      event_type: eventType,
+      user_id: user?.id,
+      session_id: crypto.randomUUID(),
+      properties,
+      page_url: window.location.href,
+      page_title: document.title,
+      user_agent: navigator.userAgent,
+      created_at: new Date().toISOString(),
+    });
 
-  if (error) console.warn("Analytics tracking failed:", error);
+    if (error) console.warn("Analytics tracking failed:", error);
+  } catch (error: any) {
+    // Silently fail analytics tracking if there are auth issues
+    console.warn("Analytics tracking failed:", error.message);
+  }
 };
 
 // Real-time subscriptions
