@@ -545,7 +545,9 @@ export default function ModernServiceDetail() {
       : 0;
 
   const images =
-    service.images?.length > 0 ? service.images : ["/placeholder.svg"];
+    service.images?.length > 0 ? service.images : [
+      "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop&auto=format" // Generic coastal service image
+    ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1136,7 +1138,7 @@ export default function ModernServiceDetail() {
                     >
                       <div className="flex space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                         <img
-                          src={relatedService.images?.[0] || "/placeholder.svg"}
+                          src={relatedService.images?.[0] || "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop&auto=format"}
                           alt={relatedService.name}
                           className="w-16 h-16 object-cover rounded-lg"
                         />
