@@ -52,6 +52,7 @@ function App() {
               {/* Info Pages */}
               <Route path="/about" element={<SwiggyStyleAbout />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/visit-udupi-guide" element={<VisitUdupiGuide />} />
 
               {/* Service Category Routes - Direct to filtered services */}
               <Route path="/hotels" element={<SwiggyStyleServices />} />
