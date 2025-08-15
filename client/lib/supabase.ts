@@ -203,44 +203,53 @@ export const getServices = async (filters?: {
   limit?: number;
   offset?: number;
 }) => {
-  let query = supabase.from("services").select(`
-      *,
-      locations(name, type),
-      service_categories(name, slug, color),
-      reviews(rating)
-    `);
+  try {
+    let query = supabase.from("services").select(`
+        *,
+        locations(name, type),
+        service_categories(name, slug, color),
+        reviews(rating)
+      `);
 
-  if (filters?.type) {
-    query = query.eq("service_type", filters.type);
+    if (filters?.type) {
+      query = query.eq("service_type", filters.type);
+    }
+
+    if (filters?.location_id) {
+      query = query.eq("location_id", filters.location_id);
+    }
+
+    if (filters?.status) {
+      query = query.eq("status", filters.status);
+    }
+
+    if (filters?.featured) {
+      query = query.eq("is_featured", true);
+    }
+
+    if (filters?.limit) {
+      query = query.limit(filters.limit);
+    }
+
+    if (filters?.offset) {
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 20) - 1,
+      );
+    }
+
+    const { data, error } = await query.order("created_at", { ascending: false });
+
+    if (error) {
+      console.warn("Error fetching services:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Services fetch error:", error);
+    return [];
   }
-
-  if (filters?.location_id) {
-    query = query.eq("location_id", filters.location_id);
-  }
-
-  if (filters?.status) {
-    query = query.eq("status", filters.status);
-  }
-
-  if (filters?.featured) {
-    query = query.eq("is_featured", true);
-  }
-
-  if (filters?.limit) {
-    query = query.limit(filters.limit);
-  }
-
-  if (filters?.offset) {
-    query = query.range(
-      filters.offset,
-      filters.offset + (filters.limit || 20) - 1,
-    );
-  }
-
-  const { data, error } = await query.order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data;
 };
 
 export const getServiceCategories = async () => {
