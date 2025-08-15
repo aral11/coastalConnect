@@ -107,25 +107,45 @@ export default function Events() {
     try {
       setLoading(true);
 
-      // Try to fetch from API
-      const response = await fetch("/api/community/events");
+      // Use Supabase to fetch events
+      const { getEvents } = await import('@/lib/supabase');
+      const eventsData = await getEvents({
+        status: "published",
+        upcoming: true,
+        limit: 50
+      });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success && data.data) {
-          // Filter only approved events
-          const approvedEvents = data.data.filter(
-            (event: Event) =>
-              event.admin_approval_status === "approved" &&
-              event.status !== "cancelled",
-          );
-          setEvents(approvedEvents);
-        }
+      if (eventsData && eventsData.length > 0) {
+        // Transform Supabase data to match our interface
+        const transformedEvents = eventsData.map((event: any) => ({
+          id: event.id,
+          title: event.title,
+          description: event.description,
+          category: event.category,
+          location: event.locations?.name || event.venue_name || "Udupi",
+          address: event.venue_address || "",
+          event_date: event.event_date,
+          start_time: event.start_time,
+          end_time: event.end_time,
+          organizer: event.users?.name || event.organizer_name || "Local Organization",
+          contact_phone: event.contact_phone || "",
+          contact_email: event.contact_email || "",
+          entry_fee: event.ticket_price || 0,
+          image_url: event.featured_image_url || `https://images.unsplash.com/photo-${1578662996442 + Math.floor(Math.random() * 100000)}?w=600&h=400&fit=crop`,
+          website_url: event.website_url || "",
+          capacity: event.max_capacity || 100,
+          registered_count: event.current_registrations || 0,
+          is_featured: event.is_featured || false,
+          status: "upcoming",
+          admin_approval_status: "approved",
+        }));
+        setEvents(transformedEvents);
       } else {
-        throw new Error("API not available");
+        // Use fallback data if no events in Supabase
+        throw new Error("No events found in database");
       }
     } catch (error) {
-      console.log("Events API not available, using fallback data");
+      console.log("Loading fallback events data...");
 
       // Fallback events data
       const fallbackEvents: Event[] = [
