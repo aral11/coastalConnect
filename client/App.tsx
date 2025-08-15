@@ -15,6 +15,7 @@ import ModernServiceDetail from "./pages/ModernServiceDetail";
 import ModernLogin from "./pages/ModernLogin";
 import ModernSignup from "./pages/ModernSignup";
 import SetupRequired from "./pages/SetupRequired";
+import ModernIndexDemo from "./pages/ModernIndexDemo";
 import Search from "./pages/Search";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
