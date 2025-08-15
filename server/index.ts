@@ -85,12 +85,110 @@ app.get('/api/restaurants', (req, res) => {
   });
 });
 
-app.get('/api/drivers', (req, res) => {
-  res.json({
-    success: true,
-    data: [],
-    message: 'Driver data will be served by dynamic services'
-  });
+// Drivers endpoint with fallback data
+app.get('/api/drivers', async (req, res) => {
+  try {
+    // Fallback drivers data when database is not available
+    const mockDrivers = [
+      {
+        id: 1,
+        name: "Suresh Kumar",
+        phone: "+91 94488 12345",
+        email: "suresh.driver@gmail.com",
+        location: "Udupi City",
+        vehicle_type: "Sedan (Maruti Dzire)",
+        vehicle_number: "KA 20 A 1234",
+        license_number: "DL-2020123456789",
+        rating: 4.8,
+        total_reviews: 156,
+        hourly_rate: 300,
+        experience_years: 8,
+        languages: "Kannada, Hindi, English, Tulu",
+        is_available: true,
+        is_active: true
+      },
+      {
+        id: 2,
+        name: "Ramesh Bhat",
+        phone: "+91 98456 78901",
+        email: "ramesh.bhat.driver@yahoo.com",
+        location: "Manipal-Udupi",
+        vehicle_type: "SUV (Mahindra Scorpio)",
+        vehicle_number: "KA 20 B 5678",
+        license_number: "DL-2019987654321",
+        rating: 4.9,
+        total_reviews: 203,
+        hourly_rate: 450,
+        experience_years: 12,
+        languages: "Kannada, English, Tulu, Konkani",
+        is_available: true,
+        is_active: true
+      },
+      {
+        id: 3,
+        name: "Prakash Shetty",
+        phone: "+91 95916 54321",
+        location: "Malpe-Kaup Route",
+        vehicle_type: "Hatchback (Maruti Swift)",
+        vehicle_number: "KA 20 C 9012",
+        license_number: "DL-2021456789123",
+        rating: 4.6,
+        total_reviews: 89,
+        hourly_rate: 250,
+        experience_years: 5,
+        languages: "Kannada, Hindi, Tulu",
+        is_available: true,
+        is_active: true
+      },
+      {
+        id: 4,
+        name: "Ganesh Acharya",
+        phone: "+91 97411 98765",
+        email: "ganesh.taxi@gmail.com",
+        location: "Udupi-Mangalore Route",
+        vehicle_type: "Sedan (Honda City)",
+        vehicle_number: "KA 20 D 3456",
+        license_number: "DL-2018654321987",
+        rating: 4.7,
+        total_reviews: 334,
+        hourly_rate: 350,
+        experience_years: 15,
+        languages: "Kannada, English, Hindi, Tulu, Konkani",
+        is_available: true,
+        is_active: true
+      },
+      {
+        id: 5,
+        name: "Vijay Pai",
+        phone: "+91 98862 13579",
+        location: "Tourist Circuit Guide",
+        vehicle_type: "Tempo Traveller (12 Seater)",
+        vehicle_number: "KA 20 E 7890",
+        license_number: "DL-2017321654987",
+        rating: 4.8,
+        total_reviews: 124,
+        hourly_rate: 800,
+        experience_years: 10,
+        languages: "Kannada, English, Hindi, Tulu",
+        is_available: true,
+        is_active: true
+      }
+    ];
+
+    res.json({
+      success: true,
+      data: mockDrivers,
+      count: mockDrivers.length,
+      source: 'fallback'
+    });
+  } catch (error) {
+    console.error('Error in drivers endpoint:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch drivers',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 app.get('/api/events', (req, res) => {
