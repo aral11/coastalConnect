@@ -75,6 +75,7 @@ export default function SwiggyStyleIndex() {
   const [trendingServices, setTrendingServices] = useState<SupabaseService[]>([]);
   const [nearbyServices, setNearbyServices] = useState<SupabaseService[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
+  const [serviceCounts, setServiceCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
   // Stats
@@ -219,6 +220,7 @@ export default function SwiggyStyleIndex() {
       }
 
       await loadStats();
+      await loadServiceCounts();
     } catch (error: any) {
       console.error("Error loading data:", error);
     } finally {
@@ -258,6 +260,35 @@ export default function SwiggyStyleIndex() {
         citiesCovered: 0,
         avgRating: 4.8,
       });
+    }
+  };
+
+  const loadServiceCounts = async () => {
+    try {
+      const categoryMappings = {
+        'hotels-resorts-homestays': ['hotels-resorts-homestays', 'accommodation'],
+        'restaurants-cafes': ['restaurants-cafes', 'food'],
+        'transportation': ['transportation', 'drivers'],
+        'event-services': ['event-services', 'events'],
+        'wellness-spa': ['wellness-spa', 'beauty'],
+        'content-creators': ['content-creators', 'photography']
+      };
+
+      const counts: Record<string, number> = {};
+
+      for (const [key, categories] of Object.entries(categoryMappings)) {
+        const { count } = await supabase
+          .from('services')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'approved')
+          .in('service_type', categories);
+        counts[key] = count || 0;
+      }
+
+      setServiceCounts(counts);
+    } catch (error) {
+      console.error('Error loading service counts:', error);
+      setServiceCounts({});
     }
   };
 
@@ -470,27 +501,118 @@ export default function SwiggyStyleIndex() {
                   </div>
                 </div>
 
-                {/* Quick Action Buttons */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap gap-3 md:gap-4">
+                {/* Dynamic Service Cards with Images */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {[
-                    { icon: "🏨", label: "Hotels & Homestays", path: "/services?category=hotels-resorts-homestays" },
-                    { icon: "🍽️", label: "Restaurants & Cafes", path: "/services?category=restaurants-cafes" },
-                    { icon: "🚗", label: "Local Transport", path: "/services?category=transportation" },
-                    { icon: "🎭", label: "Events & Experiences", path: "/services?category=event-services" },
-                    { icon: "💆", label: "Beauty & Wellness", path: "/services?category=wellness-spa" },
-                    { icon: "📸", label: "Content Creators", path: "/services?category=content-creators" },
-                    { icon: "📖", label: "Visit Udupi Guide", path: "/visit-udupi-guide" },
-                  ].map((action, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      onClick={() => navigate(action.path)}
-                      className="flex items-center justify-center space-x-2 px-4 md:px-6 py-3 rounded-xl border-2 border-white bg-white/80 backdrop-blur-sm hover:bg-white hover:scale-105 transition-all duration-200 font-semibold text-center"
-                    >
-                      <span className="text-lg">{action.icon}</span>
-                      <span className="text-gray-700 text-sm md:text-base">{action.label}</span>
-                    </Button>
-                  ))}
+                    {
+                      key: 'hotels-resorts-homestays',
+                      label: "Hotels & Homestays",
+                      path: "/services?category=hotels-resorts-homestays",
+                      image: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=400&h=300&fit=crop&auto=format",
+                      alt: "Coastal resort with palm trees and ocean view"
+                    },
+                    {
+                      key: 'restaurants-cafes',
+                      label: "Restaurants & Cafes",
+                      path: "/services?category=restaurants-cafes",
+                      image: "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=400&h=300&fit=crop&auto=format",
+                      alt: "Coastal cuisine and local cafe setting"
+                    },
+                    {
+                      key: 'transportation',
+                      label: "Local Transport",
+                      path: "/services?category=transportation",
+                      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=300&fit=crop&auto=format",
+                      alt: "Cars and taxis on coastal road"
+                    },
+                    {
+                      key: 'event-services',
+                      label: "Events & Experiences",
+                      path: "/services?category=event-services",
+                      image: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&h=300&fit=crop&auto=format",
+                      alt: "Local cultural events and festivals"
+                    },
+                    {
+                      key: 'content-creators',
+                      label: "📸 Content Creators",
+                      path: "/services?category=content-creators",
+                      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&auto=format",
+                      alt: "Photography and videography setup"
+                    },
+                    {
+                      key: 'wellness-spa',
+                      label: "Beauty & Wellness",
+                      path: "/services?category=wellness-spa",
+                      image: "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=400&h=300&fit=crop&auto=format",
+                      alt: "Spa interior and wellness therapy"
+                    },
+                    {
+                      key: 'visit-guide',
+                      label: "Visit Udupi Guide",
+                      path: "/visit-udupi-guide",
+                      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format",
+                      alt: "Udupi temple and cultural attractions"
+                    },
+                  ].filter(action => {
+                    // Show all cards, but mark zero-count ones as "Coming Soon"
+                    return true;
+                  }).map((action, index) => {
+                    const count = serviceCounts[action.key] || 0;
+                    const isComingSoon = action.key !== 'visit-guide' && count === 0;
+
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => !isComingSoon && navigate(action.path)}
+                        className={`group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 ${
+                          isComingSoon ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:scale-105'
+                        }`}
+                      >
+                        <div className="aspect-[4/3] relative">
+                          <img
+                            src={action.image}
+                            alt={action.alt}
+                            className={`w-full h-full object-cover transition-transform duration-500 ${
+                              isComingSoon ? 'grayscale' : 'group-hover:scale-110'
+                            }`}
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+                          {/* Count Badge */}
+                          <div className="absolute top-3 right-3">
+                            <div className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                              isComingSoon
+                                ? 'bg-gray-500 text-white'
+                                : 'bg-orange-500 text-white'
+                            }`}>
+                              {isComingSoon ? 'Soon' : action.key === 'visit-guide' ? '🎯' : `${count}`}
+                            </div>
+                          </div>
+
+                          {/* Content Overlay */}
+                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 className="font-bold text-base mb-1 leading-tight">
+                              {action.label}
+                            </h3>
+                            <p className="text-xs opacity-90">
+                              {isComingSoon
+                                ? 'Coming Soon'
+                                : action.key === 'visit-guide'
+                                  ? 'Discover Udupi'
+                                  : `${count} option${count !== 1 ? 's' : ''} available`
+                              }
+                            </p>
+                            {!isComingSoon && (
+                              <div className="flex items-center mt-2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                Explore <ArrowRight className="h-3 w-3 ml-1" />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
