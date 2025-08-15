@@ -16,6 +16,7 @@ import ModernLogin from "./pages/ModernLogin";
 import ModernSignup from "./pages/ModernSignup";
 import SetupRequired from "./pages/SetupRequired";
 import ModernIndexDemo from "./pages/ModernIndexDemo";
+import SimpleHome from "./pages/SimpleHome";
 import Search from "./pages/Search";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
