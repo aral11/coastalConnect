@@ -53,6 +53,7 @@ interface Event {
 
 export default function Events() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
