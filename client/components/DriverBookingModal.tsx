@@ -103,32 +103,50 @@ export default function DriverBookingModal({
       const pickupDateTime = new Date(pickupDate);
       pickupDateTime.setHours(parseInt(hours), parseInt(minutes));
 
-      // Create booking
-      const bookingResponse = await fetch("/api/bookings/driver", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          driver_id: driver.id,
-          pickup_location: pickupLocation,
-          dropoff_location: dropoffLocation,
-          pickup_datetime: pickupDateTime.toISOString(),
-          passenger_name: passengerName,
-          passenger_phone: passengerPhone,
-          passengers_count: passengers,
-        }),
-      });
+      // Create booking directly in Supabase
+      const estimatedCost = (duration * (driver.hourly_rate || 200));
 
-      const bookingData = await bookingResponse.json();
+      const bookingPayload = {
+        service_id: driver.id.toString(),
+        user_id: session.user.id,
+        service_type: 'driver',
+        guest_name: passengerName,
+        guest_phone: passengerPhone,
+        pickup_location: pickupLocation,
+        dropoff_location: dropoffLocation,
+        pickup_datetime: pickupDateTime.toISOString(),
+        guests: passengers,
+        special_requests: '',
+        total_amount: estimatedCost,
+        status: 'pending',
+        payment_status: 'pending',
+        payment_method: 'razorpay',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
 
-      if (!bookingData.success) {
-        throw new Error(bookingData.message);
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([bookingPayload])
+        .select()
+        .single();
+
+      if (bookingError) {
+        throw new Error(bookingError.message);
       }
 
-      // Proceed to payment
-      handlePayment(bookingData.data);
+      // Track booking event
+      await trackEvent('driver_booking_created', {
+        booking_id: booking.id,
+        driver_id: driver.id,
+        user_id: session.user.id,
+        amount: estimatedCost,
+      });
+
+      // Show success message
+      alert('Driver booking submitted successfully! The driver will confirm your ride shortly.');
+      onBookingSuccess?.();
+      resetAndClose();
     } catch (error) {
       console.error("Booking error:", error);
       alert("Booking failed. Please try again.");
