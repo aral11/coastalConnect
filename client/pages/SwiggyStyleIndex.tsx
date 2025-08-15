@@ -105,6 +105,22 @@ export default function SwiggyStyleIndex() {
         }
       }
 
+      // Load hero video URL from database
+      try {
+        const { data: videoConfig } = await supabase
+          .from('site_config')
+          .select('value')
+          .eq('key', 'homepage_video_url')
+          .eq('is_public', true)
+          .single();
+
+        if (videoConfig?.value) {
+          setHeroVideoUrl(videoConfig.value);
+        }
+      } catch (error) {
+        console.warn("Failed to load video URL:", error);
+      }
+
       // Load data in parallel
       const [
         categoriesData,
