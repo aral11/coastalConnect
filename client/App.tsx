@@ -6,9 +6,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+import { SupabaseAuthProvider } from "./contexts/SupabaseAuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Index from "./pages/Index";
+import ModernIndex from "./pages/ModernIndex";
+import ModernServices from "./pages/ModernServices";
 import Search from "./pages/Search";
 import Hotels from "./pages/Hotels";
 import Drivers from "./pages/Drivers";
@@ -57,13 +59,14 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+    <SupabaseAuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<ModernIndex />} />
+          <Route path="/legacy" element={<Index />} />
           <Route path="/search" element={<Search />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/homestays" element={<Hotels />} />
@@ -218,7 +221,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
       </TooltipProvider>
-    </AuthProvider>
+    </SupabaseAuthProvider>
   </QueryClientProvider>
 );
 
