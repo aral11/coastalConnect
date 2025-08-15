@@ -242,20 +242,23 @@ export default function Index() {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=500&fit=crop"
-                  alt="Coastal Karnataka Experience"
+                  src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=500&fit=crop"
+                  alt="Udupi Krishna Temple - Coastal Karnataka"
                   className="w-full h-96 lg:h-[500px] object-cover"
                 />
-                {/* Play Button Overlay */}
+                {/* Play Button Overlay for Instagram Video */}
                 <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                  <button className="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                  <button
+                    onClick={() => window.open('https://www.instagram.com/p/your-instagram-post/', '_blank')}
+                    className="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
+                  >
                     <PlayCircle className="h-10 w-10 text-orange-500" />
                   </button>
                 </div>
                 {/* Badge */}
                 <div className="absolute top-4 left-4">
                   <div className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    ⚡ Live in Coastal Karnataka
+                    🏛️ Discover Udupi Heritage
                   </div>
                 </div>
               </div>
