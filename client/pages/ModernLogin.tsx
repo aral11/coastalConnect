@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 
 export default function ModernLogin() {
-  const { signIn, user, loading } = useAuth();
+  const { signIn, signInWithGoogle, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
