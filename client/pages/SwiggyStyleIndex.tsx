@@ -117,6 +117,25 @@ export default function SwiggyStyleIndex() {
   const loadInitialData = async () => {
     try {
       setLoading(true);
+      console.log("Starting to load initial data...");
+
+      // Test Supabase connection first
+      try {
+        const { data: testData, error: testError } = await supabase
+          .from('service_categories')
+          .select('id')
+          .limit(1);
+
+        if (testError) {
+          console.error("Supabase connection test failed:", testError);
+          // Continue with fallback data
+        } else {
+          console.log("Supabase connection successful");
+        }
+      } catch (error) {
+        console.error("Supabase connection error:", error);
+        // Continue with fallback data
+      }
 
       // Track page view
       if (!authLoading) {
