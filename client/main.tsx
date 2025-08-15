@@ -63,6 +63,7 @@ function App() {
               <Route path="/hotels" element={<SwiggyStyleServices />} />
               <Route path="/homestays" element={<SwiggyStyleServices />} />
               <Route path="/restaurants" element={<SwiggyStyleServices />} />
+              <Route path="/eateries" element={<Eateries />} />
               <Route path="/transport" element={<SwiggyStyleServices />} />
               <Route path="/drivers" element={<Drivers />} />
               <Route path="/events" element={<Events />} />
