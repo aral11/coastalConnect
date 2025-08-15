@@ -323,7 +323,7 @@ function Footer() {
 
 
           {/* Platform Statistics - Dynamic from Supabase */}
-          <PlatformStats />
+          <FooterStats />
         </div>
       </div>
 
