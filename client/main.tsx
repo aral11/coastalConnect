@@ -30,6 +30,7 @@ import VisitUdupiGuide from "@/pages/VisitUdupiGuide";
 import Contact from "@/pages/Contact";
 import PartnerWithUs from "@/pages/PartnerWithUs";
 import Drivers from "@/pages/Drivers";
+import Eateries from "@/pages/Eateries";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
