@@ -20,6 +20,11 @@ import ModernLoginFixed from "@/pages/ModernLoginFixed";
 import ModernSignupFixed from "@/pages/ModernSignupFixed";
 import AuthCallback from "@/pages/AuthCallback";
 import ResetPassword from "@/pages/ResetPassword";
+import Events from "@/pages/Events";
+import EventOrganizerRegister from "@/pages/EventOrganizerRegister";
+import EventOrganizerLogin from "@/pages/EventOrganizerLogin";
+import EventOrganizerDashboard from "@/pages/EventOrganizerDashboard";
+import CreateEvent from "@/pages/CreateEvent";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 
