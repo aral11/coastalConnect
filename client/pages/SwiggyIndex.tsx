@@ -341,7 +341,7 @@ export default function SwiggyIndex() {
             </div>
 
             <p className="text-sm text-orange-100 mt-6">
-              📱 Coming Soon - Native mobile apps for iOS and Android
+              📱 Book instantly through our web platform
             </p>
           </div>
         </div>
