@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import RoleBasedNavigation from './RoleBasedNavigation';
 import { swiggyTheme } from '@/lib/swiggy-design-system';
 import { layouts } from '@/lib/design-system';
