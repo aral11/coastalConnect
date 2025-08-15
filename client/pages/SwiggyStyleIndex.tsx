@@ -606,27 +606,27 @@ export default function SwiggyStyleIndex() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     
                     {/* Rating Badge */}
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center">
+                    <div className="absolute top-3 left-3 z-10">
+                      <div className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center shadow-md">
                         <Star className="h-3 w-3 mr-1 fill-current" />
                         {service.average_rating.toFixed(1)}
                       </div>
                     </div>
                     
                     {/* Favorite Button */}
-                    <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
-                      <Heart className="h-5 w-5 text-gray-600 hover:text-red-500" />
+                    <button className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-md z-10">
+                      <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
                     </button>
 
                     {/* Quick Info */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600 flex items-center">
-                            <Timer className="h-3 w-3 mr-1" />
-                            Available today
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2.5">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-gray-600 flex items-center truncate">
+                            <Timer className="h-3 w-3 mr-1 flex-shrink-0" />
+                            <span className="truncate">Available</span>
                           </span>
-                          <span className="text-green-600 font-bold">
+                          <span className="text-green-600 font-bold ml-2 flex-shrink-0">
                             ₹{service.base_price.toLocaleString()}
                           </span>
                         </div>
@@ -653,7 +653,7 @@ export default function SwiggyStyleIndex() {
                         <span className="text-xs text-gray-500">{service.total_reviews} reviews</span>
                         <span className="text-xs text-green-600 font-bold">Free cancellation</span>
                       </div>
-                      <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
+                      <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md">
                         Book Now
                       </Button>
                     </div>
