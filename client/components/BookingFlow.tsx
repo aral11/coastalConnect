@@ -233,9 +233,9 @@ export default function BookingFlow({ item, onBookingComplete, onCancel }: Booki
 
       // Determine correct API endpoint based on item type
       let endpoint = '/api/bookings/homestay';
-      if (item.type === 'driver' || item.category === 'Driver' || item.category === 'Transportation') {
+      if (item.type === 'driver' || (item as any).category === 'Driver' || (item as any).category === 'Transportation') {
         endpoint = '/api/bookings/driver';
-      } else if (item.type === 'service' || item.category === 'Service') {
+      } else if (item.type === 'service' || (item as any).category === 'Service') {
         endpoint = '/api/bookings/service';
       }
 
