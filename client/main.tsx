@@ -39,6 +39,7 @@ function App() {
               <Route path="/service/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLoginFixed />} />
               <Route path="/signup" element={<ModernSignupFixed />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
 
               {/* Info Pages */}
               <Route path="/about" element={<SwiggyStyleAbout />} />
