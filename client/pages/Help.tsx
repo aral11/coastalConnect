@@ -1,303 +1,232 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Layout from '@/components/Layout';
-import PageHeader from '@/components/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import React, { useState } from "react";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { 
-  ArrowLeft,
-  Search,
-  MessageCircle,
-  Phone,
+  Search, 
+  HelpCircle, 
+  MessageCircle, 
+  Phone, 
   Mail,
+  ChevronRight,
   Book,
-  HelpCircle,
-  User,
   CreditCard,
   MapPin,
+  Calendar,
   Shield,
-  FileText
-} from 'lucide-react';
+  Clock
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const faqCategories = [
   {
-    id: 'booking',
-    title: 'Booking & Reservations',
-    icon: Book,
+    title: "Bookings & Reservations",
+    icon: <Calendar className="h-6 w-6" />,
+    color: "bg-blue-100 text-blue-600",
     faqs: [
       {
-        question: 'How do I make a booking?',
-        answer: 'You can make a booking by browsing our services, selecting your preferred option, choosing dates, and completing the payment process. You\'ll receive a confirmation email with all the details.'
+        question: "How do I make a booking?",
+        answer: "You can make a booking by browsing our services, selecting your preferred option, and clicking 'Book Now'. Follow the booking flow to complete your reservation."
       },
       {
-        question: 'Can I modify or cancel my booking?',
-        answer: 'Yes, you can modify or cancel your booking up to 24 hours before the service date. Log into your account and go to "My Bookings" to make changes.'
+        question: "Can I cancel or modify my booking?",
+        answer: "Cancellation and modification policies vary by service provider. Please check the specific terms when booking or contact customer support."
       },
       {
-        question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards, debit cards, UPI, net banking, and digital wallets. All payments are processed securely.'
-      },
-      {
-        question: 'Do I get a booking confirmation?',
-        answer: 'Yes, you\'ll receive an instant booking confirmation via email and SMS with all the details including service provider contact information.'
+        question: "How do I get booking confirmation?",
+        answer: "You'll receive a confirmation email immediately after booking. You can also view your bookings in your dashboard."
       }
     ]
   },
   {
-    id: 'account',
-    title: 'Account & Profile',
-    icon: User,
+    title: "Payments & Billing",
+    icon: <CreditCard className="h-6 w-6" />,
+    color: "bg-green-100 text-green-600",
     faqs: [
       {
-        question: 'How do I create an account?',
-        answer: 'Click on "Sign Up" and provide your name, email, and phone number. You\'ll receive a verification code to activate your account.'
+        question: "What payment methods do you accept?",
+        answer: "We accept all major credit cards, debit cards, net banking, UPI, and digital wallets through our secure payment gateway."
       },
       {
-        question: 'I forgot my password',
-        answer: 'Click on "Forgot Password" on the login page and enter your email. We\'ll send you a reset link to create a new password.'
+        question: "Is my payment information secure?",
+        answer: "Yes, all payments are processed through secure, encrypted channels. We don't store your payment information."
       },
       {
-        question: 'How do I update my profile information?',
-        answer: 'Log into your account and go to "Profile Settings" where you can update your personal information, contact details, and preferences.'
-      },
-      {
-        question: 'Can I delete my account?',
-        answer: 'Yes, you can delete your account by contacting our support team. Please note that this action cannot be undone.'
+        question: "Can I get a refund?",
+        answer: "Refund policies depend on the service provider and booking terms. Please contact support for assistance with refund requests."
       }
     ]
   },
   {
-    id: 'payment',
-    title: 'Payments & Refunds',
-    icon: CreditCard,
+    title: "Account & Profile",
+    icon: <Shield className="h-6 w-6" />,
+    color: "bg-purple-100 text-purple-600",
     faqs: [
       {
-        question: 'Is my payment information secure?',
-        answer: 'Yes, we use industry-standard encryption and secure payment gateways. We don\'t store your payment information on our servers.'
+        question: "How do I create an account?",
+        answer: "Click 'Sign Up' in the top navigation, fill in your details, and verify your email address to activate your account."
       },
       {
-        question: 'How do refunds work?',
-        answer: 'Refunds are processed according to our cancellation policy. Approved refunds typically take 5-7 business days to reflect in your account.'
+        question: "I forgot my password",
+        answer: "Use the 'Forgot Password' link on the login page to reset your password via email."
       },
       {
-        question: 'What if I\'m charged incorrectly?',
-        answer: 'Contact our support team immediately with your booking details. We\'ll investigate and resolve any billing discrepancies promptly.'
-      },
-      {
-        question: 'Can I get a receipt for my booking?',
-        answer: 'Yes, you can download invoices and receipts from your account dashboard under "My Bookings".'
-      }
-    ]
-  },
-  {
-    id: 'services',
-    title: 'Services & Locations',
-    icon: MapPin,
-    faqs: [
-      {
-        question: 'What areas do you cover?',
-        answer: 'We cover major coastal destinations in Karnataka including Mangalore, Udupi, Karwar, Gokarna, and surrounding areas.'
-      },
-      {
-        question: 'How do I find services in my area?',
-        answer: 'Use our location filter on the homepage or browse by category. You can also search for specific services or locations.'
-      },
-      {
-        question: 'Are all service providers verified?',
-        answer: 'Yes, all our service providers go through a verification process including background checks and quality assessments.'
-      },
-      {
-        question: 'What if I\'m not satisfied with a service?',
-        answer: 'Contact us within 24 hours of your experience. We\'ll work with you and the service provider to resolve any issues.'
+        question: "How do I update my profile?",
+        answer: "Go to your dashboard and click on profile settings to update your personal information."
       }
     ]
   }
 ];
 
-const quickActions = [
+const quickHelp = [
   {
-    title: 'Contact Support',
-    description: 'Speak with our support team',
-    icon: MessageCircle,
-    action: '/contact',
-    color: 'bg-blue-500'
+    title: "Contact Support",
+    description: "Get help from our customer service team",
+    icon: <MessageCircle className="h-8 w-8" />,
+    action: "Chat Now",
+    href: "/contact",
+    color: "bg-blue-500 hover:bg-blue-600"
   },
   {
-    title: 'Call Us',
-    description: '+91 9876543210',
-    icon: Phone,
-    action: 'tel:+919876543210',
-    color: 'bg-green-500'
+    title: "Call Us",
+    description: "Speak directly with our support team",
+    icon: <Phone className="h-8 w-8" />,
+    action: "Call +91-8105003858",
+    href: "tel:+918105003858",
+    color: "bg-green-500 hover:bg-green-600"
   },
   {
-    title: 'Email Support',
-    description: 'hello@coastalconnect.in',
-    icon: Mail,
-    action: 'mailto:hello@coastalconnect.in',
-    color: 'bg-orange-500'
-  },
-  {
-    title: 'Safety Guidelines',
-    description: 'Travel safety tips',
-    icon: Shield,
-    action: '/safety',
-    color: 'bg-purple-500'
+    title: "Email Support",
+    description: "Send us your questions via email",
+    icon: <Mail className="h-8 w-8" />,
+    action: "Email Us",
+    href: "mailto:support@coastalconnect.in",
+    color: "bg-orange-500 hover:bg-orange-600"
   }
 ];
 
 export default function Help() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   const filteredFAQs = faqCategories.map(category => ({
     ...category,
-    faqs: category.faqs.filter(faq =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+    faqs: category.faqs.filter(
+      faq => 
+        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
     )
-  })).filter(category => category.faqs.length > 0);
+  }));
 
   return (
     <Layout>
-      <div className="min-h-screen">
-        {/* Page Header */}
-        <PageHeader
-          title="Help Center"
-          subtitle="Find answers to common questions and get the support you need"
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Help Center', href: '/help' }
-          ]}
-        />
-
-        {/* Back Button */}
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
-
-        <div className="container mx-auto px-4 py-8">
-          {/* Search Section */}
-          <div className="max-w-2xl mx-auto mb-12">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Help Center</h1>
+            <p className="text-xl text-gray-600 mb-8">
+              Find answers to common questions or get in touch with our support team
+            </p>
+            
+            {/* Search */}
+            <div className="max-w-md mx-auto relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <Input
-                placeholder="Search for help topics..."
+                placeholder="Search for help..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 text-lg"
+                className="pl-10 pr-4 py-3 text-lg"
               />
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            {quickActions.map((action, index) => (
-              <Link key={index} to={action.action}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mx-auto mb-3`}>
-                      <action.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-1">{action.title}</h3>
-                    <p className="text-sm text-gray-600">{action.description}</p>
-                  </CardContent>
-                </Card>
-              </Link>
+          {/* Quick Help */}
+          <div className="grid gap-6 md:grid-cols-3 mb-12">
+            {quickHelp.map((item, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center mx-auto mb-4`}>
+                    {item.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  {item.href.startsWith('http') || item.href.startsWith('tel:') || item.href.startsWith('mailto:') ? (
+                    <a href={item.href} target="_blank" rel="noopener noreferrer">
+                      <Button className={item.color}>{item.action}</Button>
+                    </a>
+                  ) : (
+                    <Link to={item.href}>
+                      <Button className={item.color}>{item.action}</Button>
+                    </Link>
+                  )}
+                </CardContent>
+              </Card>
             ))}
           </div>
 
           {/* FAQ Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {faqCategories.map((category) => (
-              <Card 
-                key={category.id}
-                className={`cursor-pointer transition-all ${
-                  selectedCategory === category.id 
-                    ? 'ring-2 ring-orange-500 bg-orange-50' 
-                    : 'hover:shadow-md'
-                }`}
-                onClick={() => setSelectedCategory(
-                  selectedCategory === category.id ? null : category.id
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            
+            {filteredFAQs.map((category, categoryIndex) => (
+              <Card key={categoryIndex}>
+                <CardHeader 
+                  className="cursor-pointer hover:bg-gray-50"
+                  onClick={() => setSelectedCategory(selectedCategory === categoryIndex ? null : categoryIndex)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className={`w-12 h-12 rounded-lg ${category.color} flex items-center justify-center`}>
+                        {category.icon}
+                      </div>
+                      <div>
+                        <CardTitle>{category.title}</CardTitle>
+                        <CardDescription>{category.faqs.length} questions</CardDescription>
+                      </div>
+                    </div>
+                    <ChevronRight 
+                      className={`h-5 w-5 transform transition-transform ${
+                        selectedCategory === categoryIndex ? 'rotate-90' : ''
+                      }`} 
+                    />
+                  </div>
+                </CardHeader>
+                
+                {selectedCategory === categoryIndex && (
+                  <CardContent className="pt-0">
+                    <div className="space-y-4">
+                      {category.faqs.map((faq, faqIndex) => (
+                        <div key={faqIndex} className="border-l-4 border-blue-200 pl-4">
+                          <h4 className="font-medium text-gray-900 mb-2">{faq.question}</h4>
+                          <p className="text-gray-600">{faq.answer}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
                 )}
-              >
-                <CardContent className="p-6 text-center">
-                  <category.icon className="h-8 w-8 text-orange-500 mx-auto mb-3" />
-                  <h3 className="font-semibold text-gray-900">{category.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {category.faqs.length} questions
-                  </p>
-                </CardContent>
               </Card>
             ))}
           </div>
 
-          {/* FAQ Content */}
-          <div className="max-w-4xl mx-auto">
-            {filteredFAQs.length === 0 ? (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <HelpCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No results found</h3>
-                  <p className="text-gray-600">
-                    Try adjusting your search terms or browse our categories above.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-6">
-                {filteredFAQs.map((category) => (
-                  <Card key={category.id}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <category.icon className="h-5 w-5 text-orange-500" />
-                        <span>{category.title}</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Accordion type="single" collapsible className="space-y-2">
-                        {category.faqs.map((faq, index) => (
-                          <AccordionItem key={index} value={`${category.id}-${index}`}>
-                            <AccordionTrigger className="text-left">
-                              {faq.question}
-                            </AccordionTrigger>
-                            <AccordionContent className="text-gray-600">
-                              {faq.answer}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* Still Need Help */}
-          <Card className="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-orange-50 to-red-50">
+          <Card className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50">
             <CardContent className="p-8 text-center">
-              <MessageCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Still need help?</h3>
+              <HelpCircle className="h-12 w-12 mx-auto text-blue-500 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Still need help?</h3>
               <p className="text-gray-600 mb-6">
-                Can't find what you're looking for? Our support team is here to help.
+                Can't find what you're looking for? Our support team is here to help you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/contact">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-                    Contact Support
-                  </Button>
+                  <Button size="lg">Contact Support</Button>
                 </Link>
-                <Link to="/feedback">
-                  <Button variant="outline" className="border-orange-300 text-orange-600 hover:bg-orange-50">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Submit Feedback
+                <Link to="/visit-udupi-guide">
+                  <Button variant="outline" size="lg">
+                    <Book className="h-4 w-4 mr-2" />
+                    Visit Udupi Guide
                   </Button>
                 </Link>
               </div>
