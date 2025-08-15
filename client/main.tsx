@@ -17,8 +17,8 @@ import SwiggyStyleVendorDashboard from "@/pages/SwiggyStyleVendorDashboard";
 import SwiggyStyleAbout from "@/pages/SwiggyStyleAbout";
 import VendorRegister from "@/pages/VendorRegister";
 import ModernServiceDetail from "@/pages/ModernServiceDetail";
-import ModernLoginFixed from "@/pages/ModernLoginFixed";
-import ModernSignupFixed from "@/pages/ModernSignupFixed";
+import ModernLogin from "@/pages/ModernLogin";
+import ModernSignup from "@/pages/ModernSignup";
 import AuthCallback from "@/pages/AuthCallback";
 import ResetPassword from "@/pages/ResetPassword";
 import Events from "@/pages/Events";
@@ -58,8 +58,8 @@ function App() {
               <Route path="/" element={<SwiggyStyleIndex />} />
               <Route path="/services" element={<SwiggyStyleServices />} />
               <Route path="/service/:id" element={<ModernServiceDetail />} />
-              <Route path="/login" element={<ModernLoginFixed />} />
-              <Route path="/signup" element={<ModernSignupFixed />} />
+              <Route path="/login" element={<ModernLogin />} />
+              <Route path="/signup" element={<ModernSignup />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
