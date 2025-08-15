@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { CalendarIcon, CreditCard, IndianRupee, Users, MapPin, Phone, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 interface Homestay {
   id: number;
@@ -33,13 +34,14 @@ declare global {
 }
 
 export default function BookingModal({ homestay, isOpen, onClose, onBookingSuccess }: BookingModalProps) {
+  const { user, session, isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
   const [guests, setGuests] = useState(1);
-  const [guestName, setGuestName] = useState('');
-  const [guestPhone, setGuestPhone] = useState('');
-  const [guestEmail, setGuestEmail] = useState('');
+  const [guestName, setGuestName] = useState(user?.name || '');
+  const [guestPhone, setGuestPhone] = useState(user?.phone || '');
+  const [guestEmail, setGuestEmail] = useState(user?.email || '');
   const [specialRequests, setSpecialRequests] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -58,11 +60,9 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
     setLoading(true);
 
     try {
-      // Get authentication token (check multiple possible keys for compatibility)
-      const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
-
-      if (!token) {
+      if (!isAuthenticated || !session) {
         alert('Please login to make a booking');
+        window.location.href = '/login';
         return;
       }
 
