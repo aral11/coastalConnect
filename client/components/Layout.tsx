@@ -6,6 +6,7 @@ import FloatingSearch from './FloatingSearch';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import FooterStats from '@/components/FooterStats';
 import { designSystem, layouts } from '@/lib/design-system';
 import {
   MapPin,
