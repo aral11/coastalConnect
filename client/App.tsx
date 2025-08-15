@@ -11,6 +11,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import ModernIndex from "./pages/ModernIndex";
 import ModernServices from "./pages/ModernServices";
+import ModernServiceDetail from "./pages/ModernServiceDetail";
 import ModernLogin from "./pages/ModernLogin";
 import ModernSignup from "./pages/ModernSignup";
 import Search from "./pages/Search";
