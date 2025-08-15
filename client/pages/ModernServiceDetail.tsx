@@ -206,7 +206,10 @@ export default function ModernServiceDetail() {
       });
     } catch (err: any) {
       console.error("Error loading service:", err);
-      setError(err.message || "Failed to load service details");
+      const errorMessage = err instanceof Error ? err.message :
+                          typeof err === 'string' ? err :
+                          "Failed to load service details";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
