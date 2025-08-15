@@ -1087,6 +1087,33 @@ CREATE UNIQUE INDEX ON daily_analytics (date, event_type);
 CREATE UNIQUE INDEX ON weekly_analytics (week, event_type);
 
 -- ==============================================
+-- 15. INITIAL ADMIN USER
+-- ==============================================
+
+-- Note: This creates a profile for admin user -
+-- The actual Supabase Auth user must be created through Supabase Auth Dashboard or signup process
+-- with email: admin@coastalconnect.in
+INSERT INTO users (
+    id,
+    email,
+    name,
+    role,
+    is_verified,
+    is_active,
+    created_at,
+    updated_at
+) VALUES (
+    uuid_generate_v4(),
+    'admin@coastalconnect.in',
+    'CoastalConnect Admin',
+    'admin',
+    true,
+    true,
+    NOW(),
+    NOW()
+) ON CONFLICT (email) DO NOTHING;
+
+-- ==============================================
 -- 16. SAMPLE QUERIES FOR DASHBOARDS
 -- ==============================================
 
