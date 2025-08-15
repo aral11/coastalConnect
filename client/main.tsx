@@ -185,6 +185,7 @@ function App() {
                   />
                 }
               />
+              <Route path="/vendor-dashboard" element={<SwiggyStyleVendorDashboard />} />
               <Route
                 path="/admin"
                 element={
