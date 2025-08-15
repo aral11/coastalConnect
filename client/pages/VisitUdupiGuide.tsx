@@ -101,32 +101,36 @@ export default function VisitUdupiGuide() {
       setLoading(true);
 
       // Load guide data from Supabase
-      const [festivalsResponse, seasonsResponse, attractionsResponse] =
+      const [festivalsResponse, guideContentResponse, attractionsResponse] =
         await Promise.all([
           supabase
             .from("festivals")
-            .select("*")
-            .eq("location", "Udupi")
+            .select(`
+              *,
+              locations(name, type)
+            `)
             .eq("is_active", true)
-            .order("date"),
+            .order("festival_month"),
 
           supabase
-            .from("seasons")
+            .from("visitguidecontent")
             .select("*")
-            .eq("location", "Udupi")
-            .order("season_order"),
+            .eq("is_active", true)
+            .order("display_order"),
 
           supabase
-            .from("attractions")
-            .select("*")
-            .eq("location", "Udupi")
+            .from("cultural_attractions")
+            .select(`
+              *,
+              locations(name, type)
+            `)
             .eq("is_active", true)
-            .order("rating", { ascending: false }),
+            .order("tourist_priority", { ascending: false }),
         ]);
 
       // Use dynamic data if available, otherwise use fallback
       const festivals = festivalsResponse.data || getDefaultFestivals();
-      const seasons = seasonsResponse.data || getDefaultSeasons();
+      const guideContent = guideContentResponse.data || [];
       const attractions = attractionsResponse.data || getDefaultAttractions();
 
       setGuideData({ festivals, seasons, attractions });
@@ -485,7 +489,7 @@ export default function VisitUdupiGuide() {
     <!-- Attractions Section -->
     <div class="page">
         <div class="section">
-            <h2 class="section-title">🏛️ Must-Visit Attractions</h2>
+            <h2 class="section-title">��️ Must-Visit Attractions</h2>
             <p class="section-intro">
                 Discover the spiritual, cultural, and natural wonders of Udupi. From ancient temples to pristine beaches,
                 these attractions showcase the best of coastal Karnataka.
