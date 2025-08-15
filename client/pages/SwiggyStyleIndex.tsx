@@ -156,20 +156,29 @@ export default function SwiggyStyleIndex() {
         console.warn("Failed to load background URL:", error);
       }
 
-      // Load data in parallel
-      const [
-        categoriesData,
-        locationsData,
-        featuredData,
-        trendingData,
-        nearbyData,
-      ] = await Promise.all([
+      // Load data in parallel with better error handling
+      const dataResults = await Promise.allSettled([
         getServiceCategories(),
         getLocations(true),
         getServices({ featured: true, status: "approved", limit: 12 }),
         getServices({ status: "approved", limit: 8 }),
         getServices({ status: "approved", limit: 16 }),
       ]);
+
+      // Extract results with fallbacks
+      const categoriesData = dataResults[0].status === 'fulfilled' ? dataResults[0].value : [];
+      const locationsData = dataResults[1].status === 'fulfilled' ? dataResults[1].value : [];
+      const featuredData = dataResults[2].status === 'fulfilled' ? dataResults[2].value : [];
+      const trendingData = dataResults[3].status === 'fulfilled' ? dataResults[3].value : [];
+      const nearbyData = dataResults[4].status === 'fulfilled' ? dataResults[4].value : [];
+
+      console.log('Data loaded:', {
+        categories: categoriesData?.length || 0,
+        locations: locationsData?.length || 0,
+        featured: featuredData?.length || 0,
+        trending: trendingData?.length || 0,
+        nearby: nearbyData?.length || 0
+      });
 
       setCategories(categoriesData || []);
       setLocations(locationsData || []);
