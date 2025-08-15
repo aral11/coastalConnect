@@ -425,6 +425,10 @@ export default function SwiggyStyleIndex() {
             <p className="text-gray-600">
               Preparing your coastal experience...
             </p>
+            <div className="text-xs text-gray-500 mt-4">
+              Auth Loading: {authLoading ? 'Yes' : 'No'} |
+              Data Loading: {loading ? 'Yes' : 'No'}
+            </div>
           </div>
         </div>
       </div>
