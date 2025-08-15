@@ -190,6 +190,7 @@ export default function SwiggyStyleServices() {
         return;
       }
       
+      // Handle regular getServices results
       if (currentPage === 1) {
         setServices(results || []);
       } else {
