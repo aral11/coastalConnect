@@ -139,7 +139,7 @@ export default function AdminDashboard() {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('authToken');
+      const token = session?.access_token;
       const headers = {
         'Authorization': `Bearer ${token}`
       };
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
     try {
       setActionLoading(true);
       
-      const token = localStorage.getItem('authToken');
+      const token = session?.access_token;
       const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
