@@ -456,11 +456,11 @@ export default function SwiggyStyleIndex() {
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-bold text-gray-900">Watch Our Story</h3>
-                            <p className="text-sm text-gray-600">Discover coastal magic</p>
+                            <p className="text-sm text-gray-600">View on Instagram</p>
                           </div>
                           <div className="flex items-center space-x-2 text-sm text-gray-600">
                             <Eye className="h-4 w-4" />
-                            <span>2.4k views</span>
+                            <span>Watch Reel</span>
                           </div>
                         </div>
                       </div>
