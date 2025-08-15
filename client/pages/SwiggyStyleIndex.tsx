@@ -181,13 +181,6 @@ export default function SwiggyStyleIndex() {
       const trendingData = dataResults[3].status === 'fulfilled' ? dataResults[3].value : [];
       const nearbyData = dataResults[4].status === 'fulfilled' ? dataResults[4].value : [];
 
-      console.log('Data loaded:', {
-        categories: categoriesData?.length || 0,
-        locations: locationsData?.length || 0,
-        featured: featuredData?.length || 0,
-        trending: trendingData?.length || 0,
-        nearby: nearbyData?.length || 0
-      });
 
       setCategories(categoriesData || []);
       setLocations(locationsData || []);
