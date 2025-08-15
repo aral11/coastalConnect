@@ -124,8 +124,9 @@ export default function VendorRegister() {
   };
 
   const handleSubmit = async () => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !session) {
       setError('Please login to submit vendor application');
+      navigate('/login');
       return;
     }
 
