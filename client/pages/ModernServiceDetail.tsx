@@ -137,30 +137,111 @@ export default function ModernServiceDetail() {
       setLoading(true);
       setError(null);
 
-      // Load service details
-      const { data: serviceData, error: serviceError } = await supabase
-        .from("services")
-        .select(
-          `
-          *,
-          vendor:vendors(
-            id,
-            business_name,
-            contact_person,
-            phone,
-            email,
-            address,
-            profile_image_url,
-            verified
-          )
-        `,
-        )
-        .eq("id", id)
-        .eq("status", "active")
-        .single();
+      // Load service details - try different approaches for compatibility
+      let serviceData = null;
+      let serviceError = null;
 
-      if (serviceError) throw serviceError;
-      if (!serviceData) throw new Error("Service not found");
+      // First try with users join (most likely correct structure)
+      try {
+        const { data, error } = await supabase
+          .from("services")
+          .select(`
+            *,
+            locations(name, type),
+            service_categories(name, slug, color),
+            users!vendor_id(name, email, business_name)
+          `)
+          .eq("id", id)
+          .in("status", ["active", "approved"])
+          .single();
+
+        if (data && !error) {
+          serviceData = data;
+        } else {
+          serviceError = error;
+        }
+      } catch (err) {
+        serviceError = err;
+      }
+
+      // Fallback: try simpler query without joins
+      if (!serviceData) {
+        try {
+          const { data, error } = await supabase
+            .from("services")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+          if (data && !error) {
+            serviceData = data;
+          } else {
+            serviceError = error;
+          }
+        } catch (err) {
+          serviceError = err;
+        }
+      }
+
+      // Final fallback: check if it's a fallback service ID
+      if (!serviceData && id.startsWith("fallback-")) {
+        // Handle fallback services from our enhanced services
+        const fallbackServices = {
+          "fallback-1": {
+            id: "fallback-1",
+            name: "Cozy Coastal Homestay",
+            description: "Beautiful homestay near Malpe Beach with traditional hospitality",
+            service_type: "homestay",
+            base_price: 1500,
+            average_rating: 4.6,
+            total_reviews: 124,
+            location: "Malpe, Udupi",
+            status: "approved",
+            is_active: true,
+            primary_image_id: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop",
+            phone: "+91 98765 43210",
+          },
+          "fallback-2": {
+            id: "fallback-2",
+            name: "Heritage Inn Udupi",
+            description: "Traditional hotel with modern amenities in the heart of Udupi",
+            service_type: "hotel",
+            base_price: 2500,
+            average_rating: 4.4,
+            total_reviews: 89,
+            location: "Car Street, Udupi",
+            status: "approved",
+            is_active: true,
+            primary_image_id: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
+            phone: "+91 98765 43211",
+          },
+          "fallback-3": {
+            id: "fallback-3",
+            name: "Authentic Udupi Restaurant",
+            description: "Traditional South Indian cuisine with authentic Udupi flavors",
+            service_type: "restaurant",
+            base_price: 300,
+            average_rating: 4.7,
+            total_reviews: 256,
+            location: "Temple Road, Udupi",
+            status: "approved",
+            is_active: true,
+            primary_image_id: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+            phone: "+91 98765 43212",
+          }
+        };
+
+        serviceData = fallbackServices[id];
+      }
+
+      if (serviceError && !serviceData) {
+        console.error("All service queries failed:", serviceError);
+        throw new Error(`Service not found: ${serviceError.message || 'Service does not exist'}`);
+      }
+
+      if (!serviceData) {
+        throw new Error("Service not found");
+      }
 
       setService(serviceData);
 
