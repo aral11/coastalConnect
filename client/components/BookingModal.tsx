@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
+import { supabase, trackEvent } from "@/lib/supabase";
 
 interface Homestay {
   id: number;
