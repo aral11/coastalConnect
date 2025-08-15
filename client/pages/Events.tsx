@@ -420,12 +420,27 @@ export default function Events() {
               <div className="text-sm text-gray-600">
                 Showing {filteredEvents.length} of {events.length} events
               </div>
-              <Link to="/organizer-register">
-                <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+              {/* Only show create event button to approved organizers */}
+              {user?.role === 'event_organizer' && user?.vendor_status === 'approved' ? (
+                <Link to="/create-event">
+                  <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Create Event
+                  </Button>
+                </Link>
+              ) : user?.role === 'event_organizer' ? (
+                <Button disabled variant="outline" className="text-gray-400 border-gray-300">
                   <Calendar className="h-4 w-4 mr-2" />
-                  Organize Event
+                  Approval Pending
                 </Button>
-              </Link>
+              ) : (
+                <Link to="/organizer-register">
+                  <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Become Organizer
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
