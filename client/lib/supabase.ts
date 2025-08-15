@@ -600,4 +600,15 @@ export const subscribeToBookings = (
     .subscribe();
 };
 
+export const subscribeToEvents = (callback: (payload: any) => void) => {
+  return supabase
+    .channel("events")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "events" },
+      callback,
+    )
+    .subscribe();
+};
+
 export default supabase;
