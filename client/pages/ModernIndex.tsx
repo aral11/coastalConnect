@@ -92,32 +92,20 @@ export default function ModernIndex() {
         }
       }
 
-      // Load data in parallel with individual error handling
-      console.log("Starting data load...");
-
-      const loadPromises = [
-        getServiceCategories().catch(err => { console.error("Categories error:", err); return []; }),
-        getLocations(true).catch(err => { console.error("Locations error:", err); return []; }),
-        getServices({ featured: true, status: "approved", limit: 8 }).catch(err => { console.error("Featured services error:", err); return []; }),
-        getServices({ status: "approved", limit: 6 }).catch(err => { console.error("Trending services error:", err); return []; }),
-        getServices({ status: "approved", limit: 12 }).catch(err => { console.error("Nearby services error:", err); return []; }),
-      ];
-
+      // Load data in parallel
       const [
         categoriesData,
         locationsData,
         featuredData,
         trendingData,
         nearbyData,
-      ] = await Promise.all(loadPromises);
-
-      console.log("Data loaded:", {
-        categories: categoriesData?.length,
-        locations: locationsData?.length,
-        featured: featuredData?.length,
-        trending: trendingData?.length,
-        nearby: nearbyData?.length,
-      });
+      ] = await Promise.all([
+        getServiceCategories(),
+        getLocations(true), // Popular locations only
+        getServices({ featured: true, status: "approved", limit: 8 }),
+        getServices({ status: "approved", limit: 6 }), // Most recent as trending
+        getServices({ status: "approved", limit: 12 }), // All nearby
+      ]);
 
       setCategories(categoriesData || []);
       setLocations(locationsData || []);
