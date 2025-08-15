@@ -166,10 +166,14 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
           setUser(userProfile);
 
           // Track user login
-          await trackEvent("user_login", {
-            user_id: session.user.id,
-            provider: session.user.app_metadata?.provider,
-          });
+          try {
+            await trackEvent("user_login", {
+              user_id: session.user.id,
+              provider: session.user.app_metadata?.provider,
+            });
+          } catch (error) {
+            console.warn("Failed to track login event:", error);
+          }
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
@@ -193,16 +197,24 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         setUser(userProfile);
 
         if (event === "SIGNED_IN") {
-          await trackEvent("user_login", {
-            user_id: session.user.id,
-            provider: session.user.app_metadata?.provider,
-          });
+          try {
+            await trackEvent("user_login", {
+              user_id: session.user.id,
+              provider: session.user.app_metadata?.provider,
+            });
+          } catch (error) {
+            console.warn("Failed to track login event:", error);
+          }
         }
       } else {
         setUser(null);
 
         if (event === "SIGNED_OUT") {
-          await trackEvent("user_logout");
+          try {
+            await trackEvent("user_logout");
+          } catch (error) {
+            console.warn("Failed to track logout event:", error);
+          }
         }
       }
 
@@ -223,13 +235,21 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       // User will be set through the auth state change listener
-      await trackEvent("sign_in_attempt", { email, success: true });
+      try {
+        await trackEvent("sign_in_attempt", { email, success: true });
+      } catch (error) {
+        console.warn("Failed to track sign in event:", error);
+      }
     } catch (error: any) {
-      await trackEvent("sign_in_attempt", {
-        email,
-        success: false,
-        error: error.message,
-      });
+      try {
+        await trackEvent("sign_in_attempt", {
+          email,
+          success: false,
+          error: error.message,
+        });
+      } catch (trackError) {
+        console.warn("Failed to track sign in attempt:", trackError);
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -257,17 +277,25 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
 
-      await trackEvent("sign_up_attempt", {
-        email,
-        role: userData.role,
-        success: true,
-      });
+      try {
+        await trackEvent("sign_up_attempt", {
+          email,
+          role: userData.role,
+          success: true,
+        });
+      } catch (error) {
+        console.warn("Failed to track sign up event:", error);
+      }
     } catch (error: any) {
-      await trackEvent("sign_up_attempt", {
-        email,
-        success: false,
-        error: error.message,
-      });
+      try {
+        await trackEvent("sign_up_attempt", {
+          email,
+          success: false,
+          error: error.message,
+        });
+      } catch (trackError) {
+        console.warn("Failed to track sign up attempt:", trackError);
+      }
       throw error;
     } finally {
       setLoading(false);
@@ -277,7 +305,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     setLoading(true);
     try {
-      await trackEvent("user_logout", { user_id: user?.id });
+      try {
+        await trackEvent("user_logout", { user_id: user?.id });
+      } catch (error) {
+        console.warn("Failed to track logout event:", error);
+      }
 
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
@@ -299,7 +331,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
 
-      await trackEvent("password_reset_request", { email });
+      try {
+        await trackEvent("password_reset_request", { email });
+      } catch (error) {
+        console.warn("Failed to track password reset event:", error);
+      }
     } catch (error) {
       console.error("Error resetting password:", error);
       throw error;
@@ -336,10 +372,14 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       setUser({ ...data, supabase_user: session.user });
 
-      await trackEvent("profile_updated", {
-        user_id: user.id,
-        fields: Object.keys(updates),
-      });
+      try {
+        await trackEvent("profile_updated", {
+          user_id: user.id,
+          fields: Object.keys(updates),
+        });
+      } catch (error) {
+        console.warn("Failed to track profile update event:", error);
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       throw error;
