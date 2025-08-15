@@ -117,7 +117,7 @@ function App() {
               <Route path="/vendor-register" element={<VendorRegister />} />
               <Route
                 path="/vendor-dashboard"
-                element={<SwiggyStyleVendorDashboard />}
+                element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>}
               />
 
               {/* Catch-all route */}
