@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
 import {
   supabase,
@@ -227,7 +228,8 @@ export default function ModernIndex() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <Layout fullWidth>
+      <div className="min-h-screen bg-white">
       {/* Hero Section - Swiggy Style */}
       <section className="relative bg-gradient-to-br from-orange-50 via-white to-red-50 pt-8 pb-16 lg:pt-16 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -593,6 +595,7 @@ export default function ModernIndex() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </Layout>
   );
 }
