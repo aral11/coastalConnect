@@ -375,83 +375,74 @@ export default function SwiggyStyleIndex() {
   return (
     <Layout fullWidth>
       <div className="min-h-screen bg-white">
-        {/* Enhanced Hero Section - Swiggy Style with Video */}
-        <section className="relative min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden border-b border-gray-100">
-          {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            <div className="relative w-full h-full">
-              <img
-                src={heroBackgroundUrl}
-                alt="Beautiful Udupi coastal landscape with palms and beach"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-900/30 via-transparent to-red-900/30"></div>
-              <div className="absolute inset-0 bg-white/30"></div>
-            </div>
-          </div>
+        {/* Redesigned Hero Section - Clean & Modern */}
+        <section className="relative bg-white overflow-hidden">
+          {/* Background with subtle pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 via-white to-red-50/50"></div>
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-          {/* Content */}
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-            <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
-              {/* Left Content */}
-              <div className="space-y-8">
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3">
-                    <Badge className="bg-orange-500 text-white border-0 px-4 py-2 text-sm font-medium">
-                      <Sparkles className="h-4 w-4 mr-2" />
-                      #1 Coastal Platform
-                    </Badge>
-                    <Badge className="bg-green-500 text-white border-0 px-4 py-2 text-sm font-medium">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Verified Partners
-                    </Badge>
-                  </div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+            {/* Hero Content */}
+            <div className="text-center space-y-12">
+              {/* Badges */}
+              <div className="flex justify-center items-center space-x-4">
+                <Badge className="bg-orange-500 text-white border-0 px-6 py-2 text-sm font-semibold">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  #1 Coastal Platform
+                </Badge>
+                <Badge className="bg-green-500 text-white border-0 px-6 py-2 text-sm font-semibold">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Verified Partners
+                </Badge>
+              </div>
 
-                  <h1 className="text-5xl lg:text-7xl font-black text-gray-900 leading-[0.9]">
-                    Your Gateway to
-                    <span className="block bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
-                      Coastal Bliss
-                    </span>
-                  </h1>
+              {/* Main Heading */}
+              <div className="space-y-6">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight">
+                  Your Gateway to
+                  <span className="block bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
+                    Coastal Bliss
+                  </span>
+                </h1>
+                <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                  Book authentic homestays, discover local flavors, hire trusted drivers,
+                  and connect with talented creators in beautiful Coastal Karnataka.
+                </p>
+              </div>
 
-                  <p className="text-xl lg:text-2xl text-gray-700 leading-relaxed font-medium">
-                    Book authentic homestays, discover local flavors, hire trusted drivers,
-                    and connect with talented creators in beautiful Coastal Karnataka.
-                  </p>
-
-                  {/* Stats Row */}
-                  <div className="flex items-center space-x-8 pt-4">
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-gray-900">{stats.totalServices}+</div>
-                      <div className="text-sm text-gray-600 font-medium">Verified Services</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-gray-900">{stats.avgRating}</div>
-                      <div className="text-sm text-gray-600 font-medium flex items-center">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                        Average Rating
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-gray-900">{stats.happyCustomers}+</div>
-                      <div className="text-sm text-gray-600 font-medium">Happy Travelers</div>
-                    </div>
+              {/* Stats */}
+              <div className="flex justify-center items-center space-x-12">
+                <div className="text-center">
+                  <div className="text-4xl font-black text-gray-900">{stats.totalServices}+</div>
+                  <div className="text-sm text-gray-600 font-medium">Verified Services</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-black text-gray-900">{stats.avgRating}</div>
+                  <div className="text-sm text-gray-600 font-medium flex items-center justify-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                    Average Rating
                   </div>
                 </div>
+                <div className="text-center">
+                  <div className="text-4xl font-black text-gray-900">{stats.happyCustomers}+</div>
+                  <div className="text-sm text-gray-600 font-medium">Happy Travelers</div>
+                </div>
+              </div>
 
-                {/* Enhanced Search Bar - Swiggy Style */}
-                <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-                  <div className="p-2">
-                    <div className="flex flex-col lg:flex-row">
-                      {/* Location Selector */}
-                      <div className="flex items-center px-6 py-4 border-b lg:border-b-0 lg:border-r border-gray-100 lg:w-1/3">
-                        <LocationIcon className="h-6 w-6 text-orange-500 mr-3 flex-shrink-0" />
+              {/* Search Bar */}
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+                  <div className="p-3">
+                    <div className="flex flex-col md:flex-row gap-2">
+                      {/* Location */}
+                      <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-1">
+                        <LocationIcon className="h-5 w-5 text-orange-500 mr-3" />
                         <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Location</div>
+                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Location</div>
                           <select
                             value={selectedLocation}
                             onChange={(e) => setSelectedLocation(e.target.value)}
-                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold text-lg"
+                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold"
                           >
                             <option value="">Choose destination</option>
                             {locations.map((location) => (
@@ -461,307 +452,238 @@ export default function SwiggyStyleIndex() {
                             ))}
                           </select>
                         </div>
-                        <ChevronDown className="h-5 w-5 text-gray-400 ml-2" />
                       </div>
 
-                      {/* Search Input */}
-                      <div className="flex items-center px-6 py-4 flex-1">
-                        <Search className="h-6 w-6 text-gray-400 mr-3" />
+                      {/* Search */}
+                      <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-[2]">
+                        <Search className="h-5 w-5 text-gray-400 mr-3" />
                         <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide">Search</div>
+                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Search</div>
                           <input
                             type="text"
                             placeholder="Hotels, restaurants, drivers, events..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold text-lg placeholder-gray-400"
+                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold placeholder-gray-400"
                           />
                         </div>
                       </div>
 
                       {/* Search Button */}
-                      <div className="p-2">
-                        <Button
-                          onClick={handleSearch}
-                          disabled={isSearching || !searchQuery.trim()}
-                          className="w-full lg:w-auto bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-6 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                        >
-                          {isSearching ? (
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                          ) : (
-                            <>
-                              <Search className="h-6 w-6 mr-3" />
-                              Explore Now
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dynamic Service Cards with Images */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {[
-                    {
-                      key: 'hotels-resorts-homestays',
-                      label: "Hotels & Homestays",
-                      path: "/services?category=hotels-resorts-homestays",
-                      image: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=400&h=300&fit=crop&auto=format",
-                      alt: "Coastal resort with palm trees and ocean view"
-                    },
-                    {
-                      key: 'restaurants-cafes',
-                      label: "Restaurants & Cafes",
-                      path: "/services?category=restaurants-cafes",
-                      image: "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=400&h=300&fit=crop&auto=format",
-                      alt: "Coastal cuisine and local cafe setting"
-                    },
-                    {
-                      key: 'transportation',
-                      label: "Local Transport",
-                      path: "/services?category=transportation",
-                      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=300&fit=crop&auto=format",
-                      alt: "Cars and taxis on coastal road"
-                    },
-                    {
-                      key: 'event-services',
-                      label: "Events & Experiences",
-                      path: "/services?category=event-services",
-                      image: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&h=300&fit=crop&auto=format",
-                      alt: "Local cultural events and festivals"
-                    },
-                    {
-                      key: 'content-creators',
-                      label: "📸 Content Creators",
-                      path: "/services?category=content-creators",
-                      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&auto=format",
-                      alt: "Photography and videography setup"
-                    },
-                    {
-                      key: 'wellness-spa',
-                      label: "Beauty & Wellness",
-                      path: "/services?category=wellness-spa",
-                      image: "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=400&h=300&fit=crop&auto=format",
-                      alt: "Spa interior and wellness therapy"
-                    },
-                    {
-                      key: 'visit-guide',
-                      label: "Visit Udupi Guide",
-                      path: "/visit-udupi-guide",
-                      image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format",
-                      alt: "Udupi temple and cultural attractions"
-                    },
-                  ].filter(action => {
-                    // Show all cards, but mark zero-count ones as "Coming Soon"
-                    return true;
-                  }).map((action, index) => {
-                    const count = serviceCounts[action.key] || 0;
-                    const isComingSoon = action.key !== 'visit-guide' && count === 0;
-
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => !isComingSoon && navigate(action.path)}
-                        className={`group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 ${
-                          isComingSoon ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:scale-105'
-                        }`}
+                      <Button
+                        onClick={handleSearch}
+                        disabled={isSearching || !searchQuery.trim()}
+                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-6 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-200"
                       >
-                        <div className="aspect-[4/3] relative">
-                          <img
-                            src={action.image}
-                            alt={action.alt}
-                            className={`w-full h-full object-cover transition-transform duration-500 ${
-                              isComingSoon ? 'grayscale' : 'group-hover:scale-110'
-                            }`}
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-                          {/* Count Badge */}
-                          <div className="absolute top-3 right-3">
-                            <div className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                              isComingSoon
-                                ? 'bg-gray-500 text-white'
-                                : 'bg-orange-500 text-white'
-                            }`}>
-                              {isComingSoon ? 'Soon' : action.key === 'visit-guide' ? '🎯' : `${count}`}
-                            </div>
-                          </div>
-
-                          {/* Content Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                            <div className="bg-black/20 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-                              <h3 className="font-bold text-lg mb-2 leading-tight tracking-wide">
-                                {action.label}
-                              </h3>
-                              <p className="text-sm opacity-95 font-medium">
-                                {isComingSoon
-                                  ? 'Coming Soon'
-                                  : action.key === 'visit-guide'
-                                    ? 'Discover Udupi'
-                                    : `${count} option${count !== 1 ? 's' : ''} available`
-                                }
-                              </p>
-                              {!isComingSoon && (
-                                <div className="flex items-center mt-3 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
-                                  <span className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30">
-                                    Explore <ArrowRight className="h-4 w-4 ml-1 inline" />
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Right Content - Video & Features */}
-              <div className="relative space-y-6">
-                {/* Video Section */}
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                  <div className="aspect-[4/3] relative">
-                    <img
-                      src={videoThumbnail}
-                      alt="Experience Beautiful Coastal Karnataka - Watch Our Story"
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-                    
-                    {/* Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <button
-                        onClick={handlePlayVideo}
-                        className="group w-24 h-24 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 hover:scale-110 shadow-xl"
-                      >
-                        <PlayCircle className="h-12 w-12 text-orange-500 group-hover:text-red-500 transition-colors" />
-                      </button>
-                    </div>
-
-                    {/* Video Overlay */}
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="font-bold text-gray-900">Discover Coastal Karnataka</h3>
-                            <p className="text-sm text-gray-600">{heroVideoUrl ? 'Watch on Instagram' : 'Experience Coastal Karnataka'}</p>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <Eye className="h-4 w-4" />
-                            <span>{heroVideoUrl ? 'Watch Reel' : 'Preview'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Trust Indicators */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                        <Shield className="h-6 w-6 text-green-600" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-gray-900">100% Verified</div>
-                        <div className="text-sm text-gray-600">All partners verified</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <FastForward className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-gray-900">Instant Booking</div>
-                        <div className="text-sm text-gray-600">Book in seconds</div>
-                      </div>
+                        {isSearching ? (
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        ) : (
+                          <>
+                            <Search className="h-5 w-5 mr-2" />
+                            Explore
+                          </>
+                        )}
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Floating Offers Banner */}
-          <div className="absolute bottom-8 left-4 right-4 z-20">
-            <div className="max-w-7xl mx-auto">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        {/* Quick Access Cards */}
+        <section className="py-16 bg-white border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {[
+                {
+                  key: 'hotels-resorts-homestays',
+                  label: "Hotels & Homestays",
+                  path: "/services?category=hotels-resorts-homestays",
+                  image: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=300&h=200&fit=crop&auto=format",
+                  alt: "Coastal resort with palm trees"
+                },
+                {
+                  key: 'restaurants-cafes',
+                  label: "Restaurants",
+                  path: "/services?category=restaurants-cafes",
+                  image: "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=300&h=200&fit=crop&auto=format",
+                  alt: "Coastal cuisine"
+                },
+                {
+                  key: 'transportation',
+                  label: "Transport",
+                  path: "/services?category=transportation",
+                  image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=200&fit=crop&auto=format",
+                  alt: "Local transport"
+                },
+                {
+                  key: 'event-services',
+                  label: "Events",
+                  path: "/services?category=event-services",
+                  image: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&h=200&fit=crop&auto=format",
+                  alt: "Cultural events"
+                },
+                {
+                  key: 'content-creators',
+                  label: "Creators",
+                  path: "/services?category=content-creators",
+                  image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&auto=format",
+                  alt: "Content creators"
+                },
+                {
+                  key: 'wellness-spa',
+                  label: "Wellness",
+                  path: "/services?category=wellness-spa",
+                  image: "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=300&h=200&fit=crop&auto=format",
+                  alt: "Spa and wellness"
+                },
+                {
+                  key: 'visit-guide',
+                  label: "Udupi Guide",
+                  path: "/visit-udupi-guide",
+                  image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop&auto=format",
+                  alt: "Udupi attractions"
+                },
+              ].map((action, index) => {
+                const count = serviceCounts[action.key] || 0;
+                const isComingSoon = action.key !== 'visit-guide' && count === 0;
+
+                return (
+                  <div
+                    key={index}
+                    onClick={() => !isComingSoon && navigate(action.path)}
+                    className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 ${
+                      isComingSoon ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:-translate-y-1'
+                    }`}
+                  >
+                    <div className="aspect-[3/2] relative">
+                      <img
+                        src={action.image}
+                        alt={action.alt}
+                        className={`w-full h-full object-cover ${
+                          isComingSoon ? 'grayscale' : 'group-hover:scale-105'
+                        } transition-transform duration-500`}
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+
+                      {/* Badge */}
+                      <div className="absolute top-2 right-2">
+                        <div className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                          isComingSoon
+                            ? 'bg-gray-500 text-white'
+                            : 'bg-orange-500 text-white'
+                        }`}>
+                          {isComingSoon ? 'Soon' : action.key === 'visit-guide' ? '📖' : count}
+                        </div>
+                      </div>
+
+                      {/* Label */}
+                      <div className="absolute bottom-2 left-2 right-2">
+                        <h3 className="text-white font-bold text-sm leading-tight">
+                          {action.label}
+                        </h3>
+                        <p className="text-white/80 text-xs">
+                          {isComingSoon
+                            ? 'Coming Soon'
+                            : action.key === 'visit-guide'
+                              ? 'Explore Guide'
+                              : `${count} available`
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Offers Banner */}
+        {offers.length > 0 && (
+          <section className="py-8 bg-gradient-to-r from-orange-500 to-red-500">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
                 {offers.map((offer) => (
                   <div
                     key={offer.id}
-                    className={`flex-shrink-0 bg-gradient-to-r ${offer.bgColor} rounded-xl p-4 text-white min-w-[200px] shadow-xl backdrop-blur-sm border border-white/20`}
+                    className="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white min-w-[250px] border border-white/20"
                   >
                     <div className="font-bold text-lg mb-1">{offer.title}</div>
-                    <div className="text-sm opacity-95 mb-2">{offer.subtitle}</div>
-                    <div className="text-xs opacity-85 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full inline-block">
+                    <div className="text-sm opacity-90 mb-2">{offer.subtitle}</div>
+                    <div className="text-xs bg-white/20 px-3 py-1 rounded-full inline-block">
                       Code: {offer.code}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* Categories Section - Enhanced */}
-        <section className="pt-32 pb-20 bg-gray-50">
+        {/* What are you looking for - Redesigned */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <Badge className="bg-orange-100 text-orange-700 border-orange-200 mb-4">
+              <Badge className="bg-orange-100 text-orange-700 border-orange-200 mb-6">
                 <Crown className="h-4 w-4 mr-2" />
                 Explore Categories
               </Badge>
               <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6">
                 What are you looking for?
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 From beachside stays to local delicacies, we've got everything for your perfect coastal getaway
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {categories.map((category, index) => (
-                <button
+                <div
                   key={category.id}
                   onClick={() => navigate(`/services?category=${category.slug}&location=${selectedLocation}`)}
-                  className="group relative p-8 bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden"
+                  className="group cursor-pointer bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 overflow-hidden"
                 >
-                  {/* Background Gradient */}
-                  <div 
-                    className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity"
-                    style={{ background: `linear-gradient(135deg, ${category.color || '#f97316'}, ${category.color || '#f97316'}66)` }}
-                  ></div>
-                  
-                  <div className="relative text-center space-y-4">
+                  {/* Card Header */}
+                  <div className="relative p-8 text-center">
+                    {/* Background Pattern */}
                     <div
-                      className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                      style={{ backgroundColor: category.color || "#f97316" }}
-                    >
-                      {category.icon || "🏨"}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-xl text-gray-900 group-hover:text-orange-500 transition-colors mb-3 leading-tight tracking-wide">
-                        {category.name}
-                      </h3>
-                      <p className="text-base text-gray-600 font-semibold mb-2">
-                        {category.service_count || 0} options available
-                      </p>
-                      <div className="inline-flex items-center text-sm text-orange-500 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
-                        <span className="bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                          Explore <ChevronRight className="h-4 w-4 ml-1 inline" />
-                        </span>
+                      className="absolute inset-0 opacity-5 group-hover:opacity-15 transition-all duration-500"
+                      style={{ background: `linear-gradient(135deg, ${category.color || '#f97316'}, ${category.color || '#f97316'}99)` }}
+                    ></div>
+
+                    {/* Icon */}
+                    <div className="relative mb-6">
+                      <div
+                        className="w-24 h-24 mx-auto rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl"
+                        style={{ backgroundColor: category.color || "#f97316" }}
+                      >
+                        {category.icon || "🏨"}
                       </div>
                     </div>
+
+                    {/* Content */}
+                    <div className="relative space-y-3">
+                      <h3 className="font-bold text-2xl text-gray-900 group-hover:text-orange-500 transition-colors leading-tight">
+                        {category.name}
+                      </h3>
+                      <p className="text-lg text-gray-600 font-semibold">
+                        {category.service_count || 0} options available
+                      </p>
+                    </div>
                   </div>
-                </button>
+
+                  {/* Card Footer */}
+                  <div className="px-8 pb-8">
+                    <div className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-2xl font-bold text-lg opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 shadow-lg text-center">
+                      Explore Now
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
