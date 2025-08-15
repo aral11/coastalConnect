@@ -41,6 +41,12 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import ApiTest from "@/pages/ApiTest";
 import ScrollToTop from "@/components/ScrollToTop";
+import RoleBasedRoute, {
+  AdminRoute,
+  VendorRoute,
+  EventOrganizerRoute,
+  PublicRoute
+} from "@/components/RoleBasedRoute";
 
 const queryClient = new QueryClient();
 
