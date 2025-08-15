@@ -243,26 +243,38 @@ export const getServices = async (filters?: {
 };
 
 export const getServiceCategories = async () => {
-  const { data, error } = await supabase
-    .from("service_categories")
-    .select(
-      `
-      *,
-      services(count)
-    `,
-    )
-    .eq("is_active", true)
-    .order("display_order", { ascending: true });
+  try {
+    // Try to get categories with service counts
+    const { data, error } = await supabase
+      .from("service_categories")
+      .select("*")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
 
-  if (error) throw error;
+    if (error) throw error;
 
-  // Add service_count field for each category
-  const categoriesWithCount = data?.map((category) => ({
-    ...category,
-    service_count: category.services?.[0]?.count || 0,
-  }));
+    // Manually count services for each category
+    const categoriesWithCount = await Promise.all(
+      data.map(async (category) => {
+        const { count } = await supabase
+          .from("services")
+          .select("*", { count: "exact", head: true })
+          .eq("category_id", category.id)
+          .eq("status", "approved")
+          .eq("is_active", true);
 
-  return categoriesWithCount;
+        return {
+          ...category,
+          service_count: count || 0
+        };
+      })
+    );
+
+    return categoriesWithCount;
+  } catch (error) {
+    console.error("Error fetching service categories:", error);
+    throw error;
+  }
 };
 
 export const getLocations = async (popularOnly = false) => {
