@@ -108,6 +108,10 @@ export default function SwiggyStyleIndex() {
     try {
       setLoading(true);
 
+      // Debug: Check Supabase connection
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Loading initial data...');
+
       // Track page view
       if (!authLoading) {
         try {
