@@ -262,7 +262,7 @@ function Footer() {
               </div>
               <div className="text-sm text-gray-400">
                 <div>🟢 Live: Udupi & Manipal</div>
-                <div>🔄 Coming Soon: Mangalore</div>
+                <div>🏖️ Focus: Coastal Karnataka</div>
               </div>
             </div>
 
