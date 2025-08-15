@@ -122,9 +122,12 @@ export default function ModernLogin() {
     setError(null);
 
     try {
-      // Note: This would need to be implemented in the auth context
-      // await signInWithProvider(provider);
-      setError("Social login will be implemented once Supabase is configured.");
+      if (provider === "google") {
+        await signInWithGoogle();
+        // Google OAuth redirects, so we don't need to do anything else here
+      } else {
+        setError("Facebook login will be available soon. Please use Google or email login.");
+      }
 
       await trackEvent("auth_social_login_attempt", {
         provider,
