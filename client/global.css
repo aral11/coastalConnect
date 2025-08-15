@@ -322,4 +322,54 @@ html {
       transform: translateY(0);
     }
   }
+
+  /* Swiggy-style hover effects for production UI */
+  .swiggy-card {
+    transition: all 0.3s ease;
+    transform: translateY(0);
+  }
+
+  .swiggy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .swiggy-button {
+    transition: all 0.2s ease;
+    transform: scale(1);
+  }
+
+  .swiggy-button:hover {
+    transform: scale(1.02);
+  }
+
+  .swiggy-button:active {
+    transform: scale(0.98);
+  }
+
+  /* Image hover effects */
+  .image-hover {
+    transition: transform 0.3s ease;
+    overflow: hidden;
+  }
+
+  .image-hover img {
+    transition: transform 0.3s ease;
+  }
+
+  .image-hover:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Loading skeleton animation */
+  @keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+  }
 }
