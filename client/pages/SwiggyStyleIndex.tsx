@@ -582,18 +582,20 @@ export default function SwiggyStyleIndex() {
                       </div>
 
                       {/* Label */}
-                      <div className="absolute bottom-2 left-2 right-2">
-                        <h3 className="text-white font-bold text-sm leading-tight">
-                          {action.label}
-                        </h3>
-                        <p className="text-white/80 text-xs">
-                          {isComingSoon
-                            ? 'Coming Soon'
-                            : action.key === 'visit-guide'
-                              ? 'Explore Guide'
-                              : `${count} available`
-                          }
-                        </p>
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-2">
+                          <h3 className="text-white font-bold text-base leading-tight mb-1">
+                            {action.label}
+                          </h3>
+                          <p className="text-white/90 text-sm font-medium">
+                            {isComingSoon
+                              ? 'Coming Soon'
+                              : action.key === 'visit-guide'
+                                ? 'Explore Guide'
+                                : `${count} available`
+                            }
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
