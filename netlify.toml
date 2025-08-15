@@ -1,15 +1,10 @@
 [build]
-  command = "npm install && npx vite build --config vite.config.production.ts"
-  functions = "netlify/functions"
+  command = "npm ci && npm run build:client"
   publish = "dist/spa"
 
 [build.environment]
-  VITE_APP_NAME = "CoastalConnect"
-  VITE_APP_DESCRIPTION = "Your gateway to coastal Karnataka experiences"
-  VITE_CONTACT_EMAIL = "admin@coastalconnect.in"
-  VITE_CONTACT_PHONE = "+91-8105003858"
-  DB_TYPE = "supabase"
   NODE_ENV = "production"
+  NPM_FLAGS = "--production=false"
 
 [functions]
   external_node_modules = ["express"]
