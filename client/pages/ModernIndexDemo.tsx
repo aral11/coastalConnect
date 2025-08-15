@@ -91,7 +91,7 @@ const demoServices = [
     rating: 4.8,
     reviews: 245,
     location: "Malpe Beach",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
     featured: true,
   },
   {
@@ -102,7 +102,7 @@ const demoServices = [
     rating: 4.9,
     reviews: 156,
     location: "Mangalore",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
     featured: true,
   },
   {
@@ -113,7 +113,7 @@ const demoServices = [
     rating: 4.7,
     reviews: 89,
     location: "Karwar",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
     featured: false,
   },
 ];
