@@ -57,7 +57,8 @@ function App() {
               {/* Modern Routes - Full Supabase Integration */}
               <Route path="/" element={<SwiggyStyleIndex />} />
               <Route path="/modern" element={<ModernIndex />} />
-              <Route path="/services" element={<ModernServices />} />
+              <Route path="/services" element={<SwiggyStyleServices />} />
+              <Route path="/services/legacy" element={<ModernServices />} />
               <Route path="/services/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLoginFixed />} />
               <Route path="/signup" element={<ModernSignupFixed />} />
