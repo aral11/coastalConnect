@@ -103,15 +103,22 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        'gradient-coastal': 'linear-gradient(135deg, hsl(var(--coastal-600)), hsl(var(--coastal-700)))',
-        'gradient-ocean': 'linear-gradient(135deg, hsl(var(--ocean-500)), hsl(var(--coastal-600)))',
-        'gradient-coral': 'linear-gradient(135deg, hsl(var(--coral-500)), hsl(var(--coral-600)))',
-        'hero-pattern': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E\")",
+        "gradient-coastal":
+          "linear-gradient(135deg, hsl(var(--coastal-600)), hsl(var(--coastal-700)))",
+        "gradient-ocean":
+          "linear-gradient(135deg, hsl(var(--ocean-500)), hsl(var(--coastal-600)))",
+        "gradient-coral":
+          "linear-gradient(135deg, hsl(var(--coral-500)), hsl(var(--coral-600)))",
+        "hero-pattern":
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='m0 40l40-40h-40z'/%3E%3C/g%3E%3C/svg%3E\")",
       },
       boxShadow: {
-        'coastal': '0 10px 25px -3px rgba(45, 90, 90, 0.15), 0 4px 6px -2px rgba(45, 90, 90, 0.08)',
-        'ocean': '0 20px 25px -5px rgba(45, 90, 90, 0.12), 0 10px 10px -5px rgba(45, 90, 90, 0.06)',
-        'coral': '0 10px 25px -3px rgba(234, 88, 85, 0.15), 0 4px 6px -2px rgba(234, 88, 85, 0.08)',
+        coastal:
+          "0 10px 25px -3px rgba(45, 90, 90, 0.15), 0 4px 6px -2px rgba(45, 90, 90, 0.08)",
+        ocean:
+          "0 20px 25px -5px rgba(45, 90, 90, 0.12), 0 10px 10px -5px rgba(45, 90, 90, 0.06)",
+        coral:
+          "0 10px 25px -3px rgba(234, 88, 85, 0.15), 0 4px 6px -2px rgba(234, 88, 85, 0.08)",
       },
       keyframes: {
         "accordion-down": {
@@ -130,11 +137,11 @@ export default {
             height: "0",
           },
         },
-        "wave": {
+        wave: {
           "0%, 100%": { transform: "rotate(0deg)" },
           "50%": { transform: "rotate(3deg)" },
         },
-        "float": {
+        float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
         },
@@ -142,8 +149,8 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "wave": "wave 6s ease-in-out infinite",
-        "float": "float 3s ease-in-out infinite",
+        wave: "wave 6s ease-in-out infinite",
+        float: "float 3s ease-in-out infinite",
       },
     },
   },

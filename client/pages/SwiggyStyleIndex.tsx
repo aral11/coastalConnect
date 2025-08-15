@@ -52,8 +52,10 @@ import {
 } from "lucide-react";
 
 // Dynamic video URL will be loaded from Supabase
-const DEFAULT_HERO_VIDEO_THUMBNAIL = "https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop";
-const UDUPI_COASTAL_BACKGROUND = "https://images.pexels.com/photos/2099194/pexels-photo-2099194.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";
+const DEFAULT_HERO_VIDEO_THUMBNAIL =
+  "https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop";
+const UDUPI_COASTAL_BACKGROUND =
+  "https://images.pexels.com/photos/2099194/pexels-photo-2099194.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";
 
 export default function SwiggyStyleIndex() {
   const { user, loading: authLoading } = useAuth();
@@ -65,17 +67,27 @@ export default function SwiggyStyleIndex() {
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [isSearching, setIsSearching] = useState(false);
   const [heroVideoUrl, setHeroVideoUrl] = useState<string>("");
-  const [videoThumbnail, setVideoThumbnail] = useState<string>(DEFAULT_HERO_VIDEO_THUMBNAIL);
-  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string>(UDUPI_COASTAL_BACKGROUND);
+  const [videoThumbnail, setVideoThumbnail] = useState<string>(
+    DEFAULT_HERO_VIDEO_THUMBNAIL,
+  );
+  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string>(
+    UDUPI_COASTAL_BACKGROUND,
+  );
 
   // Data state
   const [categories, setCategories] = useState<SupabaseCategory[]>([]);
   const [locations, setLocations] = useState<SupabaseLocation[]>([]);
-  const [featuredServices, setFeaturedServices] = useState<SupabaseService[]>([]);
-  const [trendingServices, setTrendingServices] = useState<SupabaseService[]>([]);
+  const [featuredServices, setFeaturedServices] = useState<SupabaseService[]>(
+    [],
+  );
+  const [trendingServices, setTrendingServices] = useState<SupabaseService[]>(
+    [],
+  );
   const [nearbyServices, setNearbyServices] = useState<SupabaseService[]>([]);
   const [offers, setOffers] = useState<any[]>([]);
-  const [serviceCounts, setServiceCounts] = useState<Record<string, number>>({});
+  const [serviceCounts, setServiceCounts] = useState<Record<string, number>>(
+    {},
+  );
   const [loading, setLoading] = useState(true);
 
   // Stats
@@ -111,16 +123,16 @@ export default function SwiggyStyleIndex() {
       // Load hero video URL from database
       try {
         const { data: videoConfig } = await supabase
-          .from('site_config')
-          .select('value')
-          .eq('key', 'homepage_video_url')
-          .eq('is_public', true)
+          .from("site_config")
+          .select("value")
+          .eq("key", "homepage_video_url")
+          .eq("is_public", true)
           .single();
 
         if (videoConfig?.value) {
           setHeroVideoUrl(videoConfig.value);
           // If it's an Instagram reel, use a coastal Karnataka thumbnail
-          if (videoConfig.value.includes('instagram.com')) {
+          if (videoConfig.value.includes("instagram.com")) {
             setVideoThumbnail(DEFAULT_HERO_VIDEO_THUMBNAIL);
           }
         }
@@ -131,10 +143,10 @@ export default function SwiggyStyleIndex() {
       // Load hero background URL from database
       try {
         const { data: backgroundConfig } = await supabase
-          .from('site_config')
-          .select('value')
-          .eq('key', 'homepage_background_url')
-          .eq('is_public', true)
+          .from("site_config")
+          .select("value")
+          .eq("key", "homepage_background_url")
+          .eq("is_public", true)
           .single();
 
         if (backgroundConfig?.value) {
@@ -173,11 +185,11 @@ export default function SwiggyStyleIndex() {
       // Load dynamic offers from database
       try {
         const { data: couponsData } = await supabase
-          .from('coupons')
-          .select('*')
-          .eq('is_active', true)
-          .gte('valid_until', new Date().toISOString())
-          .order('created_at', { ascending: false })
+          .from("coupons")
+          .select("*")
+          .eq("is_active", true)
+          .gte("valid_until", new Date().toISOString())
+          .order("created_at", { ascending: false })
           .limit(3);
 
         if (couponsData && couponsData.length > 0) {
@@ -189,7 +201,7 @@ export default function SwiggyStyleIndex() {
             bgColor: [
               "from-orange-400 to-red-500",
               "from-green-400 to-blue-500",
-              "from-purple-400 to-pink-500"
+              "from-purple-400 to-pink-500",
             ][index % 3],
           }));
           setOffers(formattedOffers);
@@ -197,12 +209,12 @@ export default function SwiggyStyleIndex() {
           // Fallback offers if none in database
           setOffers([
             {
-              id: 'fallback-1',
+              id: "fallback-1",
               title: "Welcome Offer",
               subtitle: "Special discount for new users",
               code: "WELCOME",
               bgColor: "from-orange-400 to-red-500",
-            }
+            },
           ]);
         }
       } catch (error) {
@@ -210,12 +222,12 @@ export default function SwiggyStyleIndex() {
         // Fallback to default offer
         setOffers([
           {
-            id: 'fallback-1',
+            id: "fallback-1",
             title: "Welcome Offer",
             subtitle: "Special discount for new users",
             code: "WELCOME",
             bgColor: "from-orange-400 to-red-500",
-          }
+          },
         ]);
       }
 
@@ -230,18 +242,34 @@ export default function SwiggyStyleIndex() {
 
   const loadStats = async () => {
     try {
-      const [servicesCount, bookingsCount, locationsCount, avgRatingData] = await Promise.all([
-        supabase.from("services").select("id", { count: "exact", head: true }),
-        supabase.from("bookings").select("id", { count: "exact", head: true }),
-        supabase.from("locations").select("id", { count: "exact", head: true }),
-        supabase.from("services").select("average_rating").not("average_rating", "is", null),
-      ]);
+      const [servicesCount, bookingsCount, locationsCount, avgRatingData] =
+        await Promise.all([
+          supabase
+            .from("services")
+            .select("id", { count: "exact", head: true }),
+          supabase
+            .from("bookings")
+            .select("id", { count: "exact", head: true }),
+          supabase
+            .from("locations")
+            .select("id", { count: "exact", head: true }),
+          supabase
+            .from("services")
+            .select("average_rating")
+            .not("average_rating", "is", null),
+        ]);
 
       // Calculate dynamic average rating
-      const validRatings = avgRatingData.data?.filter(service => service.average_rating > 0) || [];
-      const dynamicAvgRating = validRatings.length > 0
-        ? validRatings.reduce((sum, service) => sum + service.average_rating, 0) / validRatings.length
-        : 4.8;
+      const validRatings =
+        avgRatingData.data?.filter((service) => service.average_rating > 0) ||
+        [];
+      const dynamicAvgRating =
+        validRatings.length > 0
+          ? validRatings.reduce(
+              (sum, service) => sum + service.average_rating,
+              0,
+            ) / validRatings.length
+          : 4.8;
 
       setStats({
         totalServices: servicesCount.count || 0,
@@ -266,28 +294,31 @@ export default function SwiggyStyleIndex() {
   const loadServiceCounts = async () => {
     try {
       const categoryMappings = {
-        'hotels-resorts-homestays': ['hotels-resorts-homestays', 'accommodation'],
-        'restaurants-cafes': ['restaurants-cafes', 'food'],
-        'transportation': ['transportation', 'drivers'],
-        'event-services': ['event-services', 'events'],
-        'wellness-spa': ['wellness-spa', 'beauty'],
-        'content-creators': ['content-creators', 'photography']
+        "hotels-resorts-homestays": [
+          "hotels-resorts-homestays",
+          "accommodation",
+        ],
+        "restaurants-cafes": ["restaurants-cafes", "food"],
+        transportation: ["transportation", "drivers"],
+        "event-services": ["event-services", "events"],
+        "wellness-spa": ["wellness-spa", "beauty"],
+        "content-creators": ["content-creators", "photography"],
       };
 
       const counts: Record<string, number> = {};
 
       for (const [key, categories] of Object.entries(categoryMappings)) {
         const { count } = await supabase
-          .from('services')
-          .select('id', { count: 'exact', head: true })
-          .eq('status', 'approved')
-          .in('service_type', categories);
+          .from("services")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "approved")
+          .in("service_type", categories);
         counts[key] = count || 0;
       }
 
       setServiceCounts(counts);
     } catch (error) {
-      console.error('Error loading service counts:', error);
+      console.error("Error loading service counts:", error);
       setServiceCounts({});
     }
   };
@@ -298,7 +329,7 @@ export default function SwiggyStyleIndex() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "services" },
-        () => loadFeaturedServices()
+        () => loadFeaturedServices(),
       )
       .subscribe();
 
@@ -330,7 +361,7 @@ export default function SwiggyStyleIndex() {
       });
 
       navigate(
-        `/services?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`
+        `/services?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`,
       );
     } catch (error) {
       console.error("Search error:", error);
@@ -343,10 +374,10 @@ export default function SwiggyStyleIndex() {
     try {
       trackEvent("hero_video_play", {
         video_url: heroVideoUrl,
-        user_id: user?.id
+        user_id: user?.id,
       });
       if (heroVideoUrl) {
-        window.open(heroVideoUrl, '_blank', 'noopener,noreferrer');
+        window.open(heroVideoUrl, "_blank", "noopener,noreferrer");
       }
     } catch (error) {
       console.warn("Failed to track video play event:", error);
@@ -364,8 +395,12 @@ export default function SwiggyStyleIndex() {
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">Loading CoastalConnect</h3>
-            <p className="text-gray-600">Preparing your coastal experience...</p>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Loading CoastalConnect
+            </h3>
+            <p className="text-gray-600">
+              Preparing your coastal experience...
+            </p>
           </div>
         </div>
       </div>
@@ -405,27 +440,38 @@ export default function SwiggyStyleIndex() {
                   </span>
                 </h1>
                 <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                  Book authentic homestays, discover local flavors, hire trusted drivers,
-                  and connect with talented creators in beautiful Coastal Karnataka.
+                  Book authentic homestays, discover local flavors, hire trusted
+                  drivers, and connect with talented creators in beautiful
+                  Coastal Karnataka.
                 </p>
               </div>
 
               {/* Stats */}
               <div className="flex justify-center items-center space-x-12">
                 <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">{stats.totalServices}+</div>
-                  <div className="text-sm text-gray-600 font-medium">Verified Services</div>
+                  <div className="text-4xl font-black text-gray-900">
+                    {stats.totalServices}+
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">
+                    Verified Services
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">{stats.avgRating}</div>
+                  <div className="text-4xl font-black text-gray-900">
+                    {stats.avgRating}
+                  </div>
                   <div className="text-sm text-gray-600 font-medium flex items-center justify-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                     Average Rating
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">{stats.happyCustomers}+</div>
-                  <div className="text-sm text-gray-600 font-medium">Happy Travelers</div>
+                  <div className="text-4xl font-black text-gray-900">
+                    {stats.happyCustomers}+
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">
+                    Happy Travelers
+                  </div>
                 </div>
               </div>
 
@@ -438,10 +484,14 @@ export default function SwiggyStyleIndex() {
                       <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-1">
                         <LocationIcon className="h-5 w-5 text-orange-500 mr-3" />
                         <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Location</div>
+                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
+                            Location
+                          </div>
                           <select
                             value={selectedLocation}
-                            onChange={(e) => setSelectedLocation(e.target.value)}
+                            onChange={(e) =>
+                              setSelectedLocation(e.target.value)
+                            }
                             className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold"
                           >
                             <option value="">Choose destination</option>
@@ -458,13 +508,17 @@ export default function SwiggyStyleIndex() {
                       <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-[2]">
                         <Search className="h-5 w-5 text-gray-400 mr-3" />
                         <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Search</div>
+                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
+                            Search
+                          </div>
                           <input
                             type="text"
                             placeholder="Hotels, restaurants, drivers, events..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                            onKeyPress={(e) =>
+                              e.key === "Enter" && handleSearch()
+                            }
                             className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold placeholder-gray-400"
                           />
                         </div>
@@ -499,64 +553,74 @@ export default function SwiggyStyleIndex() {
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {[
                 {
-                  key: 'hotels-resorts-homestays',
+                  key: "hotels-resorts-homestays",
                   label: "Hotels & Homestays",
                   path: "/services?category=hotels-resorts-homestays",
-                  image: "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=300&h=200&fit=crop&auto=format",
-                  alt: "Coastal resort with palm trees"
+                  image:
+                    "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=300&h=200&fit=crop&auto=format",
+                  alt: "Coastal resort with palm trees",
                 },
                 {
-                  key: 'restaurants-cafes',
+                  key: "restaurants-cafes",
                   label: "Restaurants",
                   path: "/services?category=restaurants-cafes",
-                  image: "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=300&h=200&fit=crop&auto=format",
-                  alt: "Coastal cuisine"
+                  image:
+                    "https://images.unsplash.com/photo-1541544181925-6e6e0b4382a5?w=300&h=200&fit=crop&auto=format",
+                  alt: "Coastal cuisine",
                 },
                 {
-                  key: 'transportation',
+                  key: "transportation",
                   label: "Transport",
                   path: "/services?category=transportation",
-                  image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=200&fit=crop&auto=format",
-                  alt: "Local transport"
+                  image:
+                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=200&fit=crop&auto=format",
+                  alt: "Local transport",
                 },
                 {
-                  key: 'event-services',
+                  key: "event-services",
                   label: "Events",
                   path: "/services?category=event-services",
-                  image: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&h=200&fit=crop&auto=format",
-                  alt: "Cultural events"
+                  image:
+                    "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&h=200&fit=crop&auto=format",
+                  alt: "Cultural events",
                 },
                 {
-                  key: 'content-creators',
+                  key: "content-creators",
                   label: "Creators",
                   path: "/services?category=content-creators",
-                  image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&auto=format",
-                  alt: "Content creators"
+                  image:
+                    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&h=200&fit=crop&auto=format",
+                  alt: "Content creators",
                 },
                 {
-                  key: 'wellness-spa',
+                  key: "wellness-spa",
                   label: "Wellness",
                   path: "/services?category=wellness-spa",
-                  image: "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=300&h=200&fit=crop&auto=format",
-                  alt: "Spa and wellness"
+                  image:
+                    "https://images.unsplash.com/photo-1556228724-4ba1e2c8d0ab?w=300&h=200&fit=crop&auto=format",
+                  alt: "Spa and wellness",
                 },
                 {
-                  key: 'visit-guide',
+                  key: "visit-guide",
                   label: "Udupi Guide",
                   path: "/visit-udupi-guide",
-                  image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop&auto=format",
-                  alt: "Udupi attractions"
+                  image:
+                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop&auto=format",
+                  alt: "Udupi attractions",
                 },
               ].map((action, index) => {
                 const count = serviceCounts[action.key] || 0;
-                const isComingSoon = action.key !== 'visit-guide' && count === 0;
+                const isComingSoon =
+                  action.key !== "visit-guide" && count === 0;
 
                 return (
                   <div
                     key={index}
                     onClick={() => !isComingSoon && navigate(action.path)}
                     className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 ${
-                      isComingSoon ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:-translate-y-1'
+                      isComingSoon
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer hover:-translate-y-1"
                     }`}
                   >
                     <div className="aspect-[3/2] relative">
@@ -564,7 +628,7 @@ export default function SwiggyStyleIndex() {
                         src={action.image}
                         alt={action.alt}
                         className={`w-full h-full object-cover ${
-                          isComingSoon ? 'grayscale' : 'group-hover:scale-105'
+                          isComingSoon ? "grayscale" : "group-hover:scale-105"
                         } transition-transform duration-500`}
                         loading="lazy"
                       />
@@ -572,12 +636,18 @@ export default function SwiggyStyleIndex() {
 
                       {/* Badge */}
                       <div className="absolute top-2 right-2">
-                        <div className={`px-2 py-1 rounded-lg text-xs font-bold ${
-                          isComingSoon
-                            ? 'bg-gray-500 text-white'
-                            : 'bg-orange-500 text-white'
-                        }`}>
-                          {isComingSoon ? 'Soon' : action.key === 'visit-guide' ? '📖' : count}
+                        <div
+                          className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                            isComingSoon
+                              ? "bg-gray-500 text-white"
+                              : "bg-orange-500 text-white"
+                          }`}
+                        >
+                          {isComingSoon
+                            ? "Soon"
+                            : action.key === "visit-guide"
+                              ? "📖"
+                              : count}
                         </div>
                       </div>
 
@@ -589,11 +659,10 @@ export default function SwiggyStyleIndex() {
                           </h3>
                           <p className="text-white/90 text-sm font-medium">
                             {isComingSoon
-                              ? 'Coming Soon'
-                              : action.key === 'visit-guide'
-                                ? 'Explore Guide'
-                                : `${count} available`
-                            }
+                              ? "Coming Soon"
+                              : action.key === "visit-guide"
+                                ? "Explore Guide"
+                                : `${count} available`}
                           </p>
                         </div>
                       </div>
@@ -616,7 +685,9 @@ export default function SwiggyStyleIndex() {
                     className="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white min-w-[250px] border border-white/20"
                   >
                     <div className="font-bold text-lg mb-1">{offer.title}</div>
-                    <div className="text-sm opacity-90 mb-2">{offer.subtitle}</div>
+                    <div className="text-sm opacity-90 mb-2">
+                      {offer.subtitle}
+                    </div>
                     <div className="text-xs bg-white/20 px-3 py-1 rounded-full inline-block">
                       Code: {offer.code}
                     </div>
@@ -639,7 +710,8 @@ export default function SwiggyStyleIndex() {
                 What are you looking for?
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                From beachside stays to local delicacies, we've got everything for your perfect coastal getaway
+                From beachside stays to local delicacies, we've got everything
+                for your perfect coastal getaway
               </p>
             </div>
 
@@ -647,7 +719,11 @@ export default function SwiggyStyleIndex() {
               {categories.map((category, index) => (
                 <div
                   key={category.id}
-                  onClick={() => navigate(`/services?category=${category.slug}&location=${selectedLocation}`)}
+                  onClick={() =>
+                    navigate(
+                      `/services?category=${category.slug}&location=${selectedLocation}`,
+                    )
+                  }
                   className="group cursor-pointer bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 overflow-hidden"
                 >
                   {/* Card Header */}
@@ -655,7 +731,9 @@ export default function SwiggyStyleIndex() {
                     {/* Background Pattern */}
                     <div
                       className="absolute inset-0 opacity-5 group-hover:opacity-15 transition-all duration-500"
-                      style={{ background: `linear-gradient(135deg, ${category.color || '#f97316'}, ${category.color || '#f97316'}99)` }}
+                      style={{
+                        background: `linear-gradient(135deg, ${category.color || "#f97316"}, ${category.color || "#f97316"}99)`,
+                      }}
                     ></div>
 
                     {/* Icon */}
@@ -700,7 +778,9 @@ export default function SwiggyStyleIndex() {
                 <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
                   Featured This Week
                 </h2>
-                <p className="text-xl text-gray-600">Hand-picked experiences just for you</p>
+                <p className="text-xl text-gray-600">
+                  Hand-picked experiences just for you
+                </p>
               </div>
               <Link
                 to="/services?featured=true"
@@ -719,12 +799,15 @@ export default function SwiggyStyleIndex() {
                 >
                   <div className="aspect-[4/3] relative overflow-hidden">
                     <img
-                      src={service.primary_image_id || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop"}
+                      src={
+                        service.primary_image_id ||
+                        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop"
+                      }
                       alt={service.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                    
+
                     {/* Rating Badge */}
                     <div className="absolute top-3 left-3 z-10">
                       <div className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center shadow-md">
@@ -732,7 +815,7 @@ export default function SwiggyStyleIndex() {
                         {service.average_rating.toFixed(1)}
                       </div>
                     </div>
-                    
+
                     {/* Favorite Button */}
                     <button className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-md z-10">
                       <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
@@ -760,7 +843,8 @@ export default function SwiggyStyleIndex() {
                         {service.name}
                       </h3>
                       <p className="text-sm text-gray-500 capitalize font-medium">
-                        {service.service_type} • {service.locations?.name || "Coastal Karnataka"}
+                        {service.service_type} •{" "}
+                        {service.locations?.name || "Coastal Karnataka"}
                       </p>
                     </div>
 
@@ -770,10 +854,17 @@ export default function SwiggyStyleIndex() {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500">{service.total_reviews} reviews</span>
-                        <span className="text-xs text-green-600 font-bold">Free cancellation</span>
+                        <span className="text-xs text-gray-500">
+                          {service.total_reviews} reviews
+                        </span>
+                        <span className="text-xs text-green-600 font-bold">
+                          Free cancellation
+                        </span>
                       </div>
-                      <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md">
+                      <Button
+                        size="sm"
+                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md"
+                      >
                         Book Now
                       </Button>
                     </div>
@@ -793,7 +884,8 @@ export default function SwiggyStyleIndex() {
               Ready for Your Coastal Adventure?
             </h2>
             <p className="text-xl lg:text-2xl text-white/90 mb-10 font-medium">
-              Join thousands discovering authentic experiences in Karnataka's coastal paradise
+              Join thousands discovering authentic experiences in Karnataka's
+              coastal paradise
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
@@ -816,7 +908,6 @@ export default function SwiggyStyleIndex() {
           </div>
         </section>
       </div>
-
     </Layout>
   );
 }

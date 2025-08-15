@@ -1,20 +1,20 @@
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
 // Import routes that have proper default exports
-import adminRoutes from './routes/admin.js';
-import bookingApiRoutes from './routes/bookingApi.js';
-import couponsRoutes from './routes/coupons.js';
-import dynamicServicesRoutes from './routes/dynamicServices.js';
-import professionalBookingsRoutes from './routes/professionalBookings.js';
-import searchRoutes from './routes/search.js';
-import seedingRoutes from './routes/seeding.js';
-import statsRoutes from './routes/stats.js';
-import subscriptionRoutes from './routes/subscription.js';
-import vendorsRoutes from './routes/vendors.js';
+import adminRoutes from "./routes/admin.js";
+import bookingApiRoutes from "./routes/bookingApi.js";
+import couponsRoutes from "./routes/coupons.js";
+import dynamicServicesRoutes from "./routes/dynamicServices.js";
+import professionalBookingsRoutes from "./routes/professionalBookings.js";
+import searchRoutes from "./routes/search.js";
+import seedingRoutes from "./routes/seeding.js";
+import statsRoutes from "./routes/stats.js";
+import subscriptionRoutes from "./routes/subscription.js";
+import vendorsRoutes from "./routes/vendors.js";
 // import analyticsRoutes from './routes/analytics.js'; // Temporarily disabled
 
 // Load environment variables
@@ -27,73 +27,76 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Trust proxy for rate limiting and IP detection
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 // CORS configuration
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key']
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-key"],
+  }),
+);
 
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Static file serving
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get("/health", (req, res) => {
   res.json({
-    status: 'healthy',
+    status: "healthy",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
-    version: '1.0.0'
+    environment: process.env.NODE_ENV || "development",
+    version: "1.0.0",
   });
 });
 
 // API Routes - only use routes with proper default exports
-app.use('/api/admin', adminRoutes);
-app.use('/api/booking', bookingApiRoutes);
-app.use('/api/coupons', couponsRoutes);
-app.use('/api/services', dynamicServicesRoutes);
-app.use('/api/professional-bookings', professionalBookingsRoutes);
-app.use('/api/search', searchRoutes);
-app.use('/api/seeding', seedingRoutes);
-app.use('/api/stats', statsRoutes);
-app.use('/api/subscription', subscriptionRoutes);
-app.use('/api/vendors', vendorsRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/booking", bookingApiRoutes);
+app.use("/api/coupons", couponsRoutes);
+app.use("/api/services", dynamicServicesRoutes);
+app.use("/api/professional-bookings", professionalBookingsRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api/seeding", seedingRoutes);
+app.use("/api/stats", statsRoutes);
+app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/vendors", vendorsRoutes);
 // app.use('/api/analytics', analyticsRoutes); // Temporarily disabled
 
 // Basic API endpoints for missing functionality
-app.get('/api/homestays', (req, res) => {
+app.get("/api/homestays", (req, res) => {
   res.json({
     success: true,
     data: [],
-    message: 'Homestays data will be served by dynamic services'
+    message: "Homestays data will be served by dynamic services",
   });
 });
 
-app.get('/api/restaurants', (req, res) => {
+app.get("/api/restaurants", (req, res) => {
   res.json({
     success: true,
     data: [],
-    message: 'Restaurant data will be served by dynamic services'
+    message: "Restaurant data will be served by dynamic services",
   });
 });
 
 // Eateries endpoint with fallback data
-app.get('/api/eateries', async (req, res) => {
+app.get("/api/eateries", async (req, res) => {
   try {
     // Fallback eateries data when database is not available
     const mockEateries = [
       {
         id: 1,
         name: "Shree Krishna Boarding Lodge",
-        description: "Authentic Udupi vegetarian cuisine with traditional flavors",
+        description:
+          "Authentic Udupi vegetarian cuisine with traditional flavors",
         location: "Car Street, Udupi",
         address: "Car Street, Near Krishna Temple, Udupi, Karnataka 576101",
         cuisine_type: "South Indian Vegetarian",
@@ -102,7 +105,8 @@ app.get('/api/eateries', async (req, res) => {
         phone: "+91 8202 520 524",
         opening_hours: "6:00 AM - 10:00 PM",
         price_range: 150,
-        image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
+        image_url:
+          "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop",
         is_active: true,
         featured: true,
         delivery_available: false,
@@ -110,12 +114,13 @@ app.get('/api/eateries', async (req, res) => {
         seating_capacity: 80,
         has_parking: false,
         wifi_available: false,
-        accepts_cards: true
+        accepts_cards: true,
       },
       {
         id: 2,
         name: "Mitra Samaj",
-        description: "Historic restaurant serving authentic Udupi meals since 1950",
+        description:
+          "Historic restaurant serving authentic Udupi meals since 1950",
         location: "Temple Road, Udupi",
         address: "Temple Road, Near Bus Stand, Udupi, Karnataka 576101",
         cuisine_type: "Traditional Udupi",
@@ -124,7 +129,8 @@ app.get('/api/eateries', async (req, res) => {
         phone: "+91 8202 520 100",
         opening_hours: "7:00 AM - 9:30 PM",
         price_range: 120,
-        image_url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+        image_url:
+          "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
         is_active: true,
         featured: true,
         delivery_available: false,
@@ -132,7 +138,7 @@ app.get('/api/eateries', async (req, res) => {
         seating_capacity: 60,
         has_parking: true,
         wifi_available: false,
-        accepts_cards: false
+        accepts_cards: false,
       },
       {
         id: 3,
@@ -146,7 +152,8 @@ app.get('/api/eateries', async (req, res) => {
         phone: "+91 8202 521 234",
         opening_hours: "11:00 AM - 11:00 PM",
         price_range: 250,
-        image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
+        image_url:
+          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
         is_active: true,
         featured: false,
         delivery_available: true,
@@ -154,7 +161,7 @@ app.get('/api/eateries', async (req, res) => {
         seating_capacity: 120,
         has_parking: true,
         wifi_available: true,
-        accepts_cards: true
+        accepts_cards: true,
       },
       {
         id: 4,
@@ -168,7 +175,8 @@ app.get('/api/eateries', async (req, res) => {
         phone: "+91 8202 522 345",
         opening_hours: "12:00 PM - 3:00 PM, 7:00 PM - 11:00 PM",
         price_range: 300,
-        image_url: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&h=300&fit=crop",
+        image_url:
+          "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&h=300&fit=crop",
         is_active: true,
         featured: false,
         delivery_available: true,
@@ -176,7 +184,7 @@ app.get('/api/eateries', async (req, res) => {
         seating_capacity: 100,
         has_parking: true,
         wifi_available: true,
-        accepts_cards: true
+        accepts_cards: true,
       },
       {
         id: 5,
@@ -190,7 +198,8 @@ app.get('/api/eateries', async (req, res) => {
         phone: "+91 8202 523 456",
         opening_hours: "11:30 AM - 3:00 PM, 6:30 PM - 10:30 PM",
         price_range: 200,
-        image_url: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
+        image_url:
+          "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
         is_active: true,
         featured: false,
         delivery_available: false,
@@ -198,28 +207,28 @@ app.get('/api/eateries', async (req, res) => {
         seating_capacity: 75,
         has_parking: true,
         wifi_available: false,
-        accepts_cards: true
-      }
+        accepts_cards: true,
+      },
     ];
 
     res.json({
       success: true,
       data: mockEateries,
       count: mockEateries.length,
-      source: 'fallback'
+      source: "fallback",
     });
   } catch (error) {
-    console.error('Error in eateries endpoint:', error);
+    console.error("Error in eateries endpoint:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch eateries',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: "Failed to fetch eateries",
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });
 
 // Drivers endpoint with fallback data
-app.get('/api/drivers', async (req, res) => {
+app.get("/api/drivers", async (req, res) => {
   try {
     // Fallback drivers data when database is not available
     const mockDrivers = [
@@ -238,7 +247,7 @@ app.get('/api/drivers', async (req, res) => {
         experience_years: 8,
         languages: "Kannada, Hindi, English, Tulu",
         is_available: true,
-        is_active: true
+        is_active: true,
       },
       {
         id: 2,
@@ -255,7 +264,7 @@ app.get('/api/drivers', async (req, res) => {
         experience_years: 12,
         languages: "Kannada, English, Tulu, Konkani",
         is_available: true,
-        is_active: true
+        is_active: true,
       },
       {
         id: 3,
@@ -271,7 +280,7 @@ app.get('/api/drivers', async (req, res) => {
         experience_years: 5,
         languages: "Kannada, Hindi, Tulu",
         is_available: true,
-        is_active: true
+        is_active: true,
       },
       {
         id: 4,
@@ -288,7 +297,7 @@ app.get('/api/drivers', async (req, res) => {
         experience_years: 15,
         languages: "Kannada, English, Hindi, Tulu, Konkani",
         is_available: true,
-        is_active: true
+        is_active: true,
       },
       {
         id: 5,
@@ -304,93 +313,100 @@ app.get('/api/drivers', async (req, res) => {
         experience_years: 10,
         languages: "Kannada, English, Hindi, Tulu",
         is_available: true,
-        is_active: true
-      }
+        is_active: true,
+      },
     ];
 
     res.json({
       success: true,
       data: mockDrivers,
       count: mockDrivers.length,
-      source: 'fallback'
+      source: "fallback",
     });
   } catch (error) {
-    console.error('Error in drivers endpoint:', error);
+    console.error("Error in drivers endpoint:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch drivers',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: "Failed to fetch drivers",
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });
 
-app.get('/api/events', (req, res) => {
+app.get("/api/events", (req, res) => {
   res.json({
     success: true,
     data: [],
-    message: 'Event data will be served by dynamic services'
+    message: "Event data will be served by dynamic services",
   });
 });
 
 // Serve client build files (in production)
-if (process.env.NODE_ENV === 'production') {
-  const clientBuildPath = path.join(__dirname, '../client/dist');
-  
+if (process.env.NODE_ENV === "production") {
+  const clientBuildPath = path.join(__dirname, "../client/dist");
+
   app.use(express.static(clientBuildPath));
 
   // Handle client-side routing
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
   });
 }
 
 // Global error handler
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Error:', err);
-  
-  if (process.env.NODE_ENV === 'production') {
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error'
-    });
-  } else {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-      stack: err.stack
-    });
-  }
-});
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.error("Error:", err);
+
+    if (process.env.NODE_ENV === "production") {
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: err.message,
+        stack: err.stack,
+      });
+    }
+  },
+);
 
 // Graceful shutdown handling
 const shutdown = (signal: string) => {
   console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
-  
+
   server.close(() => {
-    console.log('✅ HTTP server closed');
-    console.log('✅ Graceful shutdown completed');
+    console.log("✅ HTTP server closed");
+    console.log("✅ Graceful shutdown completed");
     process.exit(0);
   });
-  
+
   // Force shutdown after 30 seconds
   setTimeout(() => {
-    console.error('❌ Forced shutdown due to timeout');
+    console.error("❌ Forced shutdown due to timeout");
     process.exit(1);
   }, 30000);
 };
 
 // Handle shutdown signals
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
 
 // Handle uncaught exceptions and rejections
-process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
+process.on("uncaughtException", (error) => {
+  console.error("❌ Uncaught Exception:", error);
   process.exit(1);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
   process.exit(1);
 });
 
@@ -399,7 +415,7 @@ const server = app.listen(PORT, () => {
   console.log(`
 🚀 CoastalConnect Server Started Successfully!
 
-📍 Environment: ${process.env.NODE_ENV || 'development'}
+📍 Environment: ${process.env.NODE_ENV || "development"}
 🌐 Server URL: http://localhost:${PORT}
 🕒 Started at: ${new Date().toISOString()}
 

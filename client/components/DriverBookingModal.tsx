@@ -1,16 +1,35 @@
-import { useState } from 'react';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { VisuallyHidden } from '@/components/ui/visually-hidden';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, CreditCard, IndianRupee, Users, MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import {
+  CalendarIcon,
+  CreditCard,
+  IndianRupee,
+  Users,
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Driver {
   id: number;
@@ -33,15 +52,20 @@ declare global {
   }
 }
 
-export default function DriverBookingModal({ driver, isOpen, onClose, onBookingSuccess }: DriverBookingModalProps) {
+export default function DriverBookingModal({
+  driver,
+  isOpen,
+  onClose,
+  onBookingSuccess,
+}: DriverBookingModalProps) {
   const { user, session, isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
   const [pickupDate, setPickupDate] = useState<Date>();
-  const [pickupTime, setPickupTime] = useState('');
-  const [pickupLocation, setPickupLocation] = useState('');
-  const [dropoffLocation, setDropoffLocation] = useState('');
-  const [passengerName, setPassengerName] = useState(user?.name || '');
-  const [passengerPhone, setPassengerPhone] = useState(user?.phone || '');
+  const [pickupTime, setPickupTime] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [passengerName, setPassengerName] = useState(user?.name || "");
+  const [passengerPhone, setPassengerPhone] = useState(user?.phone || "");
   const [passengers, setPassengers] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -52,8 +76,15 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
   };
 
   const handleBooking = async () => {
-    if (!pickupDate || !pickupTime || !pickupLocation || !dropoffLocation || !passengerName || !passengerPhone) {
-      alert('Please fill all required fields');
+    if (
+      !pickupDate ||
+      !pickupTime ||
+      !pickupLocation ||
+      !dropoffLocation ||
+      !passengerName ||
+      !passengerPhone
+    ) {
+      alert("Please fill all required fields");
       return;
     }
 
@@ -61,22 +92,22 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
 
     try {
       if (!isAuthenticated || !session) {
-        alert('Please login to make a booking');
-        window.location.href = '/login';
+        alert("Please login to make a booking");
+        window.location.href = "/login";
         return;
       }
 
       // Create pickup datetime
-      const [hours, minutes] = pickupTime.split(':');
+      const [hours, minutes] = pickupTime.split(":");
       const pickupDateTime = new Date(pickupDate);
       pickupDateTime.setHours(parseInt(hours), parseInt(minutes));
 
       // Create booking
-      const bookingResponse = await fetch('/api/bookings/driver', {
-        method: 'POST',
+      const bookingResponse = await fetch("/api/bookings/driver", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           driver_id: driver.id,
@@ -85,8 +116,8 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
           pickup_datetime: pickupDateTime.toISOString(),
           passenger_name: passengerName,
           passenger_phone: passengerPhone,
-          passengers_count: passengers
-        })
+          passengers_count: passengers,
+        }),
       });
 
       const bookingData = await bookingResponse.json();
@@ -98,8 +129,8 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
       // Proceed to payment
       handlePayment(bookingData.data);
     } catch (error) {
-      console.error('Booking error:', error);
-      alert('Booking failed. Please try again.');
+      console.error("Booking error:", error);
+      alert("Booking failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -108,8 +139,8 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
   const handlePayment = (bookingData: any) => {
     // Load Razorpay script if not already loaded
     if (!window.Razorpay) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => processPayment(bookingData);
       document.body.appendChild(script);
     } else {
@@ -119,60 +150,65 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
 
   const processPayment = (bookingData: any) => {
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
       amount: bookingData.payment_intent.amount * 100, // Amount in paise
-      currency: 'INR',
-      name: 'coastalConnect',
+      currency: "INR",
+      name: "coastalConnect",
       description: `Driver Booking - ${driver.name}`,
       order_id: bookingData.payment_intent.id,
-      handler: async function(response: any) {
+      handler: async function (response: any) {
         try {
           // Confirm payment on server
-          const token = localStorage.getItem('token') || localStorage.getItem('authToken') || localStorage.getItem('access_token');
-          const confirmResponse = await fetch('/api/bookings/confirm-payment', {
-            method: 'POST',
+          const token =
+            localStorage.getItem("token") ||
+            localStorage.getItem("authToken") ||
+            localStorage.getItem("access_token");
+          const confirmResponse = await fetch("/api/bookings/confirm-payment", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({
               order_id: response.razorpay_order_id,
               payment_id: response.razorpay_payment_id,
               signature: response.razorpay_signature,
               booking_id: bookingData.booking.id,
-              booking_type: 'driver'
-            })
+              booking_type: "driver",
+            }),
           });
 
           const confirmData = await confirmResponse.json();
 
           if (confirmData.success) {
-            alert(`Booking confirmed! Trip code: ${bookingData.booking.trip_code}. You will receive SMS confirmation shortly.`);
+            alert(
+              `Booking confirmed! Trip code: ${bookingData.booking.trip_code}. You will receive SMS confirmation shortly.`,
+            );
             onClose();
             setStep(1);
             // Reset form
             setPickupDate(undefined);
-            setPickupTime('');
-            setPickupLocation('');
-            setDropoffLocation('');
-            setPassengerName('');
-            setPassengerPhone('');
+            setPickupTime("");
+            setPickupLocation("");
+            setDropoffLocation("");
+            setPassengerName("");
+            setPassengerPhone("");
             setPassengers(1);
           } else {
             throw new Error(confirmData.message);
           }
         } catch (error) {
-          console.error('Payment confirmation error:', error);
-          alert('Payment confirmation failed. Please contact support.');
+          console.error("Payment confirmation error:", error);
+          alert("Payment confirmation failed. Please contact support.");
         }
       },
       prefill: {
         name: passengerName,
-        contact: passengerPhone
+        contact: passengerPhone,
       },
       theme: {
-        color: '#2D5A5A'
-      }
+        color: "#2D5A5A",
+      },
     };
 
     const rzp = new window.Razorpay(options);
@@ -182,11 +218,11 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
   const resetAndClose = () => {
     setStep(1);
     setPickupDate(undefined);
-    setPickupTime('');
-    setPickupLocation('');
-    setDropoffLocation('');
-    setPassengerName('');
-    setPassengerPhone('');
+    setPickupTime("");
+    setPickupLocation("");
+    setDropoffLocation("");
+    setPassengerName("");
+    setPassengerPhone("");
     setPassengers(1);
     onClose();
   };
@@ -200,7 +236,8 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
             Book {driver.name}
           </DialogTitle>
           <DialogDescription>
-            Complete your driver booking in {step === 1 ? 'Step 1: Trip Details' : 'Step 2: Passenger Details'}
+            Complete your driver booking in{" "}
+            {step === 1 ? "Step 1: Trip Details" : "Step 2: Passenger Details"}
           </DialogDescription>
         </DialogHeader>
 
@@ -215,7 +252,7 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !pickupDate && "text-muted-foreground"
+                        !pickupDate && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -300,10 +337,15 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
               </div>
             )}
 
-            <Button 
-              onClick={() => setStep(2)} 
+            <Button
+              onClick={() => setStep(2)}
               className="w-full btn-ocean"
-              disabled={!pickupDate || !pickupTime || !pickupLocation || !dropoffLocation}
+              disabled={
+                !pickupDate ||
+                !pickupTime ||
+                !pickupLocation ||
+                !dropoffLocation
+              }
             >
               Continue to Passenger Details
             </Button>
@@ -349,7 +391,11 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
               </div>
               <div className="flex justify-between">
                 <span>Date & Time:</span>
-                <span>{pickupDate && pickupTime ? `${format(pickupDate, "PPP")} at ${pickupTime}` : 'N/A'}</span>
+                <span>
+                  {pickupDate && pickupTime
+                    ? `${format(pickupDate, "PPP")} at ${pickupTime}`
+                    : "N/A"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Passengers:</span>
@@ -368,20 +414,20 @@ export default function DriverBookingModal({ driver, isOpen, onClose, onBookingS
             </div>
 
             <div className="flex space-x-2">
-              <Button 
-                onClick={() => setStep(1)} 
+              <Button
+                onClick={() => setStep(1)}
                 variant="outline"
                 className="flex-1"
               >
                 Back
               </Button>
-              <Button 
-                onClick={handleBooking} 
+              <Button
+                onClick={handleBooking}
                 className="flex-1 btn-ocean"
                 disabled={loading || !passengerName || !passengerPhone}
               >
                 {loading ? (
-                  'Processing...'
+                  "Processing..."
                 ) : (
                   <>
                     <CreditCard className="h-4 w-4 mr-2" />

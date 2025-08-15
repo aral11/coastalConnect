@@ -1,16 +1,34 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { VisuallyHidden } from '@/components/ui/visually-hidden';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { CalendarIcon, CreditCard, IndianRupee, Users, MapPin, Phone, Mail } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import {
+  CalendarIcon,
+  CreditCard,
+  IndianRupee,
+  Users,
+  MapPin,
+  Phone,
+  Mail,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
 
 interface Homestay {
   id: number;
@@ -33,27 +51,40 @@ declare global {
   }
 }
 
-export default function BookingModal({ homestay, isOpen, onClose, onBookingSuccess }: BookingModalProps) {
+export default function BookingModal({
+  homestay,
+  isOpen,
+  onClose,
+  onBookingSuccess,
+}: BookingModalProps) {
   const { user, session, isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
   const [guests, setGuests] = useState(1);
-  const [guestName, setGuestName] = useState(user?.name || '');
-  const [guestPhone, setGuestPhone] = useState(user?.phone || '');
-  const [guestEmail, setGuestEmail] = useState(user?.email || '');
-  const [specialRequests, setSpecialRequests] = useState('');
+  const [guestName, setGuestName] = useState(user?.name || "");
+  const [guestPhone, setGuestPhone] = useState(user?.phone || "");
+  const [guestEmail, setGuestEmail] = useState(user?.email || "");
+  const [specialRequests, setSpecialRequests] = useState("");
   const [loading, setLoading] = useState(false);
 
   const calculateTotal = () => {
     if (!checkInDate || !checkOutDate || !homestay.price_per_night) return 0;
-    const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+    const nights = Math.ceil(
+      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
     return nights * homestay.price_per_night;
   };
 
   const handleBooking = async () => {
-    if (!checkInDate || !checkOutDate || !guestName || !guestPhone || !guestEmail) {
-      alert('Please fill all required fields');
+    if (
+      !checkInDate ||
+      !checkOutDate ||
+      !guestName ||
+      !guestPhone ||
+      !guestEmail
+    ) {
+      alert("Please fill all required fields");
       return;
     }
 
@@ -61,17 +92,17 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
 
     try {
       if (!isAuthenticated || !session) {
-        alert('Please login to make a booking');
-        window.location.href = '/login';
+        alert("Please login to make a booking");
+        window.location.href = "/login";
         return;
       }
 
       // Create booking
-      const bookingResponse = await fetch('/api/bookings/homestay', {
-        method: 'POST',
+      const bookingResponse = await fetch("/api/bookings/homestay", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           homestay_id: homestay.id,
@@ -81,8 +112,8 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
           guest_name: guestName,
           guest_phone: guestPhone,
           guest_email: guestEmail,
-          special_requests: specialRequests
-        })
+          special_requests: specialRequests,
+        }),
       });
 
       const bookingData = await bookingResponse.json();
@@ -94,8 +125,8 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
       // Proceed to payment
       handlePayment(bookingData.data);
     } catch (error) {
-      console.error('Booking error:', error);
-      alert('Booking failed. Please try again.');
+      console.error("Booking error:", error);
+      alert("Booking failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -104,8 +135,8 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
   const handlePayment = (bookingData: any) => {
     // Load Razorpay script if not already loaded
     if (!window.Razorpay) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => processPayment(bookingData);
       document.body.appendChild(script);
     } else {
@@ -115,70 +146,72 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
 
   const processPayment = (bookingData: any) => {
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
       amount: bookingData.payment_intent.amount * 100, // Amount in paise
-      currency: 'INR',
-      name: 'coastalConnect',
+      currency: "INR",
+      name: "coastalConnect",
       description: `Homestay Booking - ${homestay.name}`,
       order_id: bookingData.payment_intent.id,
-      handler: async function(response: any) {
+      handler: async function (response: any) {
         try {
           // Confirm payment on server
-          const confirmResponse = await fetch('/api/bookings/confirm-payment', {
-            method: 'POST',
+          const confirmResponse = await fetch("/api/bookings/confirm-payment", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({
               order_id: response.razorpay_order_id,
               payment_id: response.razorpay_payment_id,
               signature: response.razorpay_signature,
               booking_id: bookingData.booking.id,
-              booking_type: 'homestay'
-            })
+              booking_type: "homestay",
+            }),
           });
 
           const confirmData = await confirmResponse.json();
 
           if (confirmData.success) {
             // Trigger real-time stats update
-            const event = new CustomEvent('booking-confirmed', {
+            const event = new CustomEvent("booking-confirmed", {
               detail: {
                 id: bookingData.booking.id,
-                type: 'homestay',
-                amount: bookingData.booking.total_amount
-              }
+                type: "homestay",
+                amount: bookingData.booking.total_amount,
+              },
             });
             window.dispatchEvent(event);
 
-            alert('Booking confirmed! You will receive SMS confirmation shortly.');
+            alert(
+              "Booking confirmed! You will receive SMS confirmation shortly.",
+            );
             onClose();
             setStep(1);
             // Reset form
             setCheckInDate(undefined);
             setCheckOutDate(undefined);
             setGuests(1);
-            setGuestName('');
-            setGuestPhone('');
-            setGuestEmail('');
-            setSpecialRequests('');
+            setGuestName("");
+            setGuestPhone("");
+            setGuestEmail("");
+            setSpecialRequests("");
           } else {
             throw new Error(confirmData.message);
           }
         } catch (error) {
-          console.error('Payment confirmation error:', error);
-          alert('Payment confirmation failed. Please contact support.');
+          console.error("Payment confirmation error:", error);
+          alert("Payment confirmation failed. Please contact support.");
         }
       },
       prefill: {
         name: guestName,
         email: guestEmail,
-        contact: guestPhone
+        contact: guestPhone,
       },
       theme: {
-        color: '#2D5A5A'
-      }
+        color: "#2D5A5A",
+      },
     };
 
     const rzp = new window.Razorpay(options);
@@ -190,10 +223,10 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
     setCheckInDate(undefined);
     setCheckOutDate(undefined);
     setGuests(1);
-    setGuestName('');
-    setGuestPhone('');
-    setGuestEmail('');
-    setSpecialRequests('');
+    setGuestName("");
+    setGuestPhone("");
+    setGuestEmail("");
+    setSpecialRequests("");
     onClose();
   };
 
@@ -206,7 +239,8 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
             Book {homestay.name}
           </DialogTitle>
           <DialogDescription>
-            Complete your booking in {step === 1 ? 'Step 1: Dates & Guests' : 'Step 2: Guest Details'}
+            Complete your booking in{" "}
+            {step === 1 ? "Step 1: Dates & Guests" : "Step 2: Guest Details"}
           </DialogDescription>
         </DialogHeader>
 
@@ -221,7 +255,7 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !checkInDate && "text-muted-foreground"
+                        !checkInDate && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -248,11 +282,13 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !checkOutDate && "text-muted-foreground"
+                        !checkOutDate && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {checkOutDate ? format(checkOutDate, "PPP") : "Select date"}
+                      {checkOutDate
+                        ? format(checkOutDate, "PPP")
+                        : "Select date"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -294,13 +330,17 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 mt-1">
-                  {Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))} nights × ₹{homestay.price_per_night}
+                  {Math.ceil(
+                    (checkOutDate.getTime() - checkInDate.getTime()) /
+                      (1000 * 60 * 60 * 24),
+                  )}{" "}
+                  nights × ₹{homestay.price_per_night}
                 </div>
               </div>
             )}
 
-            <Button 
-              onClick={() => setStep(2)} 
+            <Button
+              onClick={() => setStep(2)}
               className="w-full btn-coastal"
               disabled={!checkInDate || !checkOutDate}
             >
@@ -352,7 +392,9 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
             </div>
 
             <div>
-              <Label htmlFor="specialRequests">Special Requests (Optional)</Label>
+              <Label htmlFor="specialRequests">
+                Special Requests (Optional)
+              </Label>
               <Textarea
                 id="specialRequests"
                 value={specialRequests}
@@ -373,20 +415,20 @@ export default function BookingModal({ homestay, isOpen, onClose, onBookingSucce
             </div>
 
             <div className="flex space-x-2">
-              <Button 
-                onClick={() => setStep(1)} 
+              <Button
+                onClick={() => setStep(1)}
                 variant="outline"
                 className="flex-1"
               >
                 Back
               </Button>
-              <Button 
-                onClick={handleBooking} 
+              <Button
+                onClick={handleBooking}
                 className="flex-1 btn-coastal"
                 disabled={loading || !guestName || !guestPhone || !guestEmail}
               >
                 {loading ? (
-                  'Processing...'
+                  "Processing..."
                 ) : (
                   <>
                     <CreditCard className="h-4 w-4 mr-2" />

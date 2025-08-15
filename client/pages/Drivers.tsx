@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import ServicePageLayout from '@/components/ServicePageLayout';
-import DriverBookingModal from '@/components/DriverBookingModal';
-import { Car } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
+import ServicePageLayout from "@/components/ServicePageLayout";
+import DriverBookingModal from "@/components/DriverBookingModal";
+import { Car } from "lucide-react";
 
 interface Driver {
   id: number;
@@ -36,44 +36,44 @@ interface Driver {
 export default function Drivers() {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
-  
+
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [filteredDrivers, setFilteredDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
 
   // Filter data
   const categories = [
-    { id: 'sedan', name: 'Sedan', count: 25 },
-    { id: 'suv', name: 'SUV', count: 18 },
-    { id: 'hatchback', name: 'Hatchback', count: 15 },
-    { id: 'muv', name: 'MUV/MPV', count: 12 },
-    { id: 'tempo', name: 'Tempo', count: 8 },
-    { id: 'luxury', name: 'Luxury', count: 5 },
+    { id: "sedan", name: "Sedan", count: 25 },
+    { id: "suv", name: "SUV", count: 18 },
+    { id: "hatchback", name: "Hatchback", count: 15 },
+    { id: "muv", name: "MUV/MPV", count: 12 },
+    { id: "tempo", name: "Tempo", count: 8 },
+    { id: "luxury", name: "Luxury", count: 5 },
   ];
 
   const locations = [
-    { id: 'udupi', name: 'Udupi City', count: 35 },
-    { id: 'manipal', name: 'Manipal', count: 28 },
-    { id: 'malpe', name: 'Malpe', count: 15 },
-    { id: 'kaup', name: 'Kaup', count: 12 },
-    { id: 'kundapur', name: 'Kundapur', count: 8 },
+    { id: "udupi", name: "Udupi City", count: 35 },
+    { id: "manipal", name: "Manipal", count: 28 },
+    { id: "malpe", name: "Malpe", count: 15 },
+    { id: "kaup", name: "Kaup", count: 12 },
+    { id: "kundapur", name: "Kundapur", count: 8 },
   ];
 
   const amenities = [
-    { id: 'ac', name: 'Air Conditioning' },
-    { id: 'gps', name: 'GPS Navigation' },
-    { id: 'music', name: 'Music System' },
-    { id: 'english', name: 'English Speaking' },
-    { id: 'local_expert', name: 'Local Expert' },
-    { id: 'wifi', name: 'WiFi Hotspot' },
-    { id: 'phone_charger', name: 'Phone Charger' },
-    { id: 'water', name: 'Complimentary Water' },
+    { id: "ac", name: "Air Conditioning" },
+    { id: "gps", name: "GPS Navigation" },
+    { id: "music", name: "Music System" },
+    { id: "english", name: "English Speaking" },
+    { id: "local_expert", name: "Local Expert" },
+    { id: "wifi", name: "WiFi Hotspot" },
+    { id: "phone_charger", name: "Phone Charger" },
+    { id: "water", name: "Complimentary Water" },
   ];
 
   useEffect(() => {
@@ -89,13 +89,13 @@ export default function Drivers() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Use Supabase getServices function to fetch driver/transport services
-      const { getServices } = await import('@/lib/supabase');
+      const { getServices } = await import("@/lib/supabase");
       const servicesData = await getServices({
-        type: 'driver',
-        status: 'approved',
-        limit: 50
+        type: "driver",
+        status: "approved",
+        limit: 50,
       });
 
       if (servicesData && servicesData.length > 0) {
@@ -104,18 +104,24 @@ export default function Drivers() {
           id: service.id,
           name: service.name,
           description: service.description,
-          location: service.locations?.name || service.location || 'Udupi',
+          location: service.locations?.name || service.location || "Udupi",
           phone: service.phone,
-          vehicle_type: service.vehicle_type || 'Sedan',
-          vehicle_number: service.vehicle_number || `KA 20 ${String.fromCharCode(65 + Math.floor(Math.random() * 26))} ${Math.floor(Math.random() * 9000) + 1000}`,
-          license_number: service.license_number || `DL-${new Date().getFullYear()}${Math.floor(Math.random() * 1000000000)}`,
-          rating: service.average_rating || (Math.random() * 1.5 + 3.5),
-          total_reviews: service.total_reviews || Math.floor(Math.random() * 200) + 50,
-          hourly_rate: service.base_price || Math.floor(Math.random() * 200) + 250,
+          vehicle_type: service.vehicle_type || "Sedan",
+          vehicle_number:
+            service.vehicle_number ||
+            `KA 20 ${String.fromCharCode(65 + Math.floor(Math.random() * 26))} ${Math.floor(Math.random() * 9000) + 1000}`,
+          license_number:
+            service.license_number ||
+            `DL-${new Date().getFullYear()}${Math.floor(Math.random() * 1000000000)}`,
+          rating: service.average_rating || Math.random() * 1.5 + 3.5,
+          total_reviews:
+            service.total_reviews || Math.floor(Math.random() * 200) + 50,
+          hourly_rate:
+            service.base_price || Math.floor(Math.random() * 200) + 250,
           experience_years: Math.floor(Math.random() * 15) + 2,
-          languages: service.languages || 'Kannada, English, Hindi',
-          is_available: service.status === 'approved',
-          is_active: service.status === 'approved',
+          languages: service.languages || "Kannada, English, Hindi",
+          is_available: service.status === "approved",
+          is_active: service.status === "approved",
           ac_available: Math.random() > 0.3,
           music_system: Math.random() > 0.4,
           gps_enabled: Math.random() > 0.2,
@@ -124,22 +130,30 @@ export default function Drivers() {
           safety_rating: Math.floor(Math.random() * 2) + 4, // 4-5 stars
           distance: Math.floor(Math.random() * 10) + 1,
           estimated_arrival: Math.floor(Math.random() * 15) + 5,
-          vehicle_model: ['Maruti Dzire', 'Hyundai Xcent', 'Toyota Innova', 'Mahindra Scorpio', 'Tata Nexon'][Math.floor(Math.random() * 5)],
+          vehicle_model: [
+            "Maruti Dzire",
+            "Hyundai Xcent",
+            "Toyota Innova",
+            "Mahindra Scorpio",
+            "Tata Nexon",
+          ][Math.floor(Math.random() * 5)],
           profile_image: `https://ui-avatars.com/api/?name=${encodeURIComponent(service.name)}&size=200&background=3B82F6&color=FFFFFF&bold=true&format=png`,
           vehicle_image: `https://images.unsplash.com/photo-${1600000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`,
           trending: Math.random() > 0.8,
-          featured: Math.random() > 0.9
+          featured: Math.random() > 0.9,
         }));
-        
+
         setDrivers(enhancedDrivers);
       } else {
         // No driver services found, will use fallback data
-        throw new Error('No driver services found in database');
+        throw new Error("No driver services found in database");
       }
     } catch (error) {
-      console.error('Error fetching drivers:', error);
-      setError(error instanceof Error ? error.message : 'An unknown error occurred');
-      
+      console.error("Error fetching drivers:", error);
+      setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      );
+
       // Fallback data
       const fallbackData: Driver[] = [
         {
@@ -164,7 +178,7 @@ export default function Drivers() {
           distance: 2,
           estimated_arrival: 8,
           trending: true,
-          featured: true
+          featured: true,
         },
         {
           id: 2,
@@ -188,7 +202,7 @@ export default function Drivers() {
           distance: 5,
           estimated_arrival: 12,
           trending: false,
-          featured: false
+          featured: false,
         },
         {
           id: 3,
@@ -212,10 +226,10 @@ export default function Drivers() {
           distance: 8,
           estimated_arrival: 25,
           trending: false,
-          featured: false
-        }
+          featured: false,
+        },
       ];
-      
+
       setDrivers(fallbackData);
       setError(null);
     } finally {
@@ -224,7 +238,7 @@ export default function Drivers() {
   };
 
   const loadFavorites = () => {
-    const saved = localStorage.getItem('driver_favorites');
+    const saved = localStorage.getItem("driver_favorites");
     if (saved) {
       setFavorites(JSON.parse(saved));
     }
@@ -232,21 +246,26 @@ export default function Drivers() {
 
   const toggleFavorite = (driverId: number) => {
     const newFavorites = favorites.includes(driverId)
-      ? favorites.filter(id => id !== driverId)
+      ? favorites.filter((id) => id !== driverId)
       : [...favorites, driverId];
-    
+
     setFavorites(newFavorites);
-    localStorage.setItem('driver_favorites', JSON.stringify(newFavorites));
+    localStorage.setItem("driver_favorites", JSON.stringify(newFavorites));
   };
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      const filtered = drivers.filter(driver =>
-        driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        driver.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        driver.vehicle_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        driver.vehicle_model?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        driver.languages?.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = drivers.filter(
+        (driver) =>
+          driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          driver.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          driver.vehicle_type
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          driver.vehicle_model
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          driver.languages?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredDrivers(filtered);
     } else {
@@ -256,35 +275,37 @@ export default function Drivers() {
 
   const handleFilterChange = (filters: any) => {
     let filtered = [...drivers];
-    
-    if (filters.category && filters.category !== 'all') {
-      filtered = filtered.filter(driver => 
-        driver.vehicle_type?.toLowerCase().includes(filters.category)
+
+    if (filters.category && filters.category !== "all") {
+      filtered = filtered.filter((driver) =>
+        driver.vehicle_type?.toLowerCase().includes(filters.category),
       );
     }
-    
-    if (filters.location && filters.location !== 'all') {
-      filtered = filtered.filter(driver => 
-        driver.location.toLowerCase().includes(filters.location)
+
+    if (filters.location && filters.location !== "all") {
+      filtered = filtered.filter((driver) =>
+        driver.location.toLowerCase().includes(filters.location),
       );
     }
-    
+
     if (filters.available !== undefined) {
-      filtered = filtered.filter(driver => driver.is_available === filters.available);
+      filtered = filtered.filter(
+        (driver) => driver.is_available === filters.available,
+      );
     }
-    
+
     if (filters.priceRange && filters.priceRange[0] !== undefined) {
-      filtered = filtered.filter(driver => {
+      filtered = filtered.filter((driver) => {
         const rate = driver.hourly_rate || 0;
         return rate >= filters.priceRange[0] && rate <= filters.priceRange[1];
       });
     }
-    
+
     setFilteredDrivers(filtered);
   };
 
   const handleBookDriver = (item: any) => {
-    const driver = drivers.find(d => d.id === item.id);
+    const driver = drivers.find((d) => d.id === item.id);
     if (driver) {
       setSelectedDriver(driver);
       setIsBookingModalOpen(true);
@@ -302,22 +323,24 @@ export default function Drivers() {
 
   const handleSortChange = (sortBy: string) => {
     let sorted = [...filteredDrivers];
-    
+
     switch (sortBy) {
-      case 'rating':
+      case "rating":
         sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
-      case 'price_low':
+      case "price_low":
         sorted.sort((a, b) => (a.hourly_rate || 0) - (b.hourly_rate || 0));
         break;
-      case 'price_high':
+      case "price_high":
         sorted.sort((a, b) => (b.hourly_rate || 0) - (a.hourly_rate || 0));
         break;
-      case 'distance':
+      case "distance":
         sorted.sort((a, b) => (a.distance || 0) - (b.distance || 0));
         break;
-      case 'experience':
-        sorted.sort((a, b) => (b.experience_years || 0) - (a.experience_years || 0));
+      case "experience":
+        sorted.sort(
+          (a, b) => (b.experience_years || 0) - (a.experience_years || 0),
+        );
         break;
       default:
         // Recommended: available first, then featured, then trending, then by rating
@@ -331,7 +354,7 @@ export default function Drivers() {
           return (b.rating || 0) - (a.rating || 0);
         });
     }
-    
+
     setFilteredDrivers(sorted);
   };
 
@@ -342,15 +365,15 @@ export default function Drivers() {
         description="Professional local drivers who know coastal Karnataka like the back of their hand. Safe, reliable, and experienced."
         icon={<Car className="h-8 w-8" />}
         serviceType="driver"
-        items={filteredDrivers.map(driver => ({
+        items={filteredDrivers.map((driver) => ({
           ...driver,
-          type: 'driver' as const,
+          type: "driver" as const,
           price: driver.hourly_rate,
           features: getDriverFeatures(driver),
           availability: {
             available: driver.is_available || false,
-            estimated_arrival: driver.estimated_arrival
-          }
+            estimated_arrival: driver.estimated_arrival,
+          },
         }))}
         loading={loading}
         error={error}
@@ -370,12 +393,12 @@ export default function Drivers() {
         favorites={favorites}
         onRefresh={fetchDrivers}
         sortOptions={[
-          { value: 'recommended', label: 'Recommended' },
-          { value: 'distance', label: 'Nearest First' },
-          { value: 'rating', label: 'Highest Rated' },
-          { value: 'price_low', label: 'Price: Low to High' },
-          { value: 'price_high', label: 'Price: High to Low' },
-          { value: 'experience', label: 'Most Experienced' },
+          { value: "recommended", label: "Recommended" },
+          { value: "distance", label: "Nearest First" },
+          { value: "rating", label: "Highest Rated" },
+          { value: "price_low", label: "Price: Low to High" },
+          { value: "price_high", label: "Price: High to Low" },
+          { value: "experience", label: "Most Experienced" },
         ]}
         onSortChange={handleSortChange}
       />
@@ -395,10 +418,10 @@ export default function Drivers() {
 
 function getDriverFeatures(driver: Driver): string[] {
   const features: string[] = [];
-  if (driver.ac_available) features.push('AC');
-  if (driver.gps_enabled) features.push('GPS');
-  if (driver.music_system) features.push('Music');
-  if (driver.english_speaking) features.push('English');
-  if (driver.local_expertise) features.push('Local Expert');
+  if (driver.ac_available) features.push("AC");
+  if (driver.gps_enabled) features.push("GPS");
+  if (driver.music_system) features.push("Music");
+  if (driver.english_speaking) features.push("English");
+  if (driver.local_expertise) features.push("Local Expert");
   return features;
 }

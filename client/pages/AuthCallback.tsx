@@ -15,20 +15,25 @@ export default function AuthCallback() {
     if (!loading) {
       if (user) {
         // Check for pending booking
-        const pendingBooking = localStorage.getItem('pendingBooking');
+        const pendingBooking = localStorage.getItem("pendingBooking");
         if (pendingBooking) {
-          localStorage.removeItem('pendingBooking');
-          navigate('/booking/continue', { replace: true });
+          localStorage.removeItem("pendingBooking");
+          navigate("/booking/continue", { replace: true });
         } else {
           // Redirect to dashboard or home based on user role
-          const redirectPath = user.role === 'admin' ? '/admin' : 
-                              user.role === 'vendor' ? '/vendor-dashboard' : 
-                              user.role === 'event_organizer' ? '/organizer-dashboard' : '/';
+          const redirectPath =
+            user.role === "admin"
+              ? "/admin"
+              : user.role === "vendor"
+                ? "/vendor-dashboard"
+                : user.role === "event_organizer"
+                  ? "/organizer-dashboard"
+                  : "/";
           navigate(redirectPath, { replace: true });
         }
       } else {
         // OAuth failed, redirect to login
-        navigate('/login?error=oauth_failed', { replace: true });
+        navigate("/login?error=oauth_failed", { replace: true });
       }
     }
   }, [user, loading, navigate]);

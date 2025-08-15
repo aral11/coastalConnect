@@ -1,9 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Calendar,
   MapPin,
@@ -19,18 +25,18 @@ import {
   TrendingUp,
   RefreshCw,
   Edit,
-  ArrowLeft
-} from 'lucide-react';
+  ArrowLeft,
+} from "lucide-react";
 
 interface Booking {
   id: number;
-  type: 'homestay' | 'driver';
+  type: "homestay" | "driver";
   booking_reference: string;
   guest_name?: string;
   passenger_name?: string;
   total_amount: number;
-  booking_status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
-  payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
+  booking_status: "pending" | "confirmed" | "completed" | "cancelled";
+  payment_status: "pending" | "paid" | "failed" | "refunded";
   check_in_date?: Date;
   pickup_datetime?: Date;
   location?: string;
@@ -55,28 +61,28 @@ export default function Dashboard() {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
 
       if (!token) {
-        setError('Authentication token not found');
+        setError("Authentication token not found");
         setBookings([]);
         return;
       }
 
-      const response = await fetch('/api/bookings/user', {
+      const response = await fetch("/api/bookings/user", {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          setError('Authentication expired. Please login again.');
+          setError("Authentication expired. Please login again.");
           // Could redirect to login here
           return;
         } else if (response.status === 503) {
-          setError('Service temporarily unavailable. Please try again later.');
+          setError("Service temporarily unavailable. Please try again later.");
         } else {
           setError(`Server error (${response.status}). Please try again.`);
         }
@@ -89,7 +95,7 @@ export default function Dashboard() {
         let combinedBookings: Booking[] = [];
 
         // Handle different response formats
-        if (data.data && typeof data.data === 'object') {
+        if (data.data && typeof data.data === "object") {
           // Format 1: { homestays: [], drivers: [] }
           if (data.data.homestays || data.data.drivers) {
             const homestays = data.data.homestays || [];
@@ -99,15 +105,15 @@ export default function Dashboard() {
               ...homestays.map((b: any, index: number) => ({
                 ...b,
                 id: b.id || `homestay-${index}`, // Ensure unique ID
-                type: 'homestay' as const,
-                location: `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date).toLocaleDateString()}`
+                type: "homestay" as const,
+                location: `${b.guest_name || "Guest"} - Check-in: ${new Date(b.check_in_date).toLocaleDateString()}`,
               })),
               ...drivers.map((b: any, index: number) => ({
                 ...b,
                 id: b.id || `driver-${index}`, // Ensure unique ID
-                type: 'driver' as const,
-                location: `${b.pickup_location || 'Pickup'} to ${b.dropoff_location || 'Destination'}`
-              }))
+                type: "driver" as const,
+                location: `${b.pickup_location || "Pickup"} to ${b.dropoff_location || "Destination"}`,
+              })),
             ];
           }
           // Format 2: Array of bookings with service_type
@@ -115,28 +121,38 @@ export default function Dashboard() {
             combinedBookings = data.data.map((b: any, index: number) => ({
               ...b,
               id: b.id || `booking-${index}`, // Ensure unique ID
-              type: b.service_type || b.type || 'unknown',
-              location: b.service_type === 'homestay'
-                ? `${b.guest_name || 'Guest'} - Check-in: ${new Date(b.check_in_date || b.created_at).toLocaleDateString()}`
-                : `${b.pickup_location || 'Pickup'} to ${b.dropoff_location || 'Destination'}`
+              type: b.service_type || b.type || "unknown",
+              location:
+                b.service_type === "homestay"
+                  ? `${b.guest_name || "Guest"} - Check-in: ${new Date(b.check_in_date || b.created_at).toLocaleDateString()}`
+                  : `${b.pickup_location || "Pickup"} to ${b.dropoff_location || "Destination"}`,
             }));
           }
         }
 
         // Sort by creation date
-        combinedBookings.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        combinedBookings.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
         setBookings(combinedBookings);
 
         if (combinedBookings.length === 0) {
-          setError('No bookings found. Start exploring to make your first booking!');
+          setError(
+            "No bookings found. Start exploring to make your first booking!",
+          );
         }
       } else {
-        setError(data.message || 'Failed to load bookings');
+        setError(data.message || "Failed to load bookings");
         setBookings([]);
       }
     } catch (err) {
-      console.error('Error fetching bookings:', err);
-      setError(err instanceof Error ? err.message : 'Failed to load bookings. Please check your connection and try again.');
+      console.error("Error fetching bookings:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to load bookings. Please check your connection and try again.",
+      );
       setBookings([]);
     } finally {
       setLoading(false);
@@ -149,9 +165,11 @@ export default function Dashboard() {
         <Card className="max-w-md w-full mx-4">
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
-            <p className="text-gray-600 mb-6">Please login to view your dashboard.</p>
-            <Button 
-              onClick={() => window.location.href = '/login'} 
+            <p className="text-gray-600 mb-6">
+              Please login to view your dashboard.
+            </p>
+            <Button
+              onClick={() => (window.location.href = "/login")}
               className="btn-coastal"
             >
               Go to Login
@@ -164,23 +182,28 @@ export default function Dashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': 
-      case 'accepted': return 'bg-green-100 text-green-800';
-      case 'completed': return 'bg-blue-100 text-blue-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "confirmed":
+      case "accepted":
+        return "bg-green-100 text-green-800";
+      case "completed":
+        return "bg-blue-100 text-blue-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'confirmed':
-      case 'completed':
+      case "confirmed":
+      case "completed":
         return <CheckCircle className="h-4 w-4" />;
-      case 'pending':
+      case "pending":
         return <Clock className="h-4 w-4" />;
-      case 'cancelled':
+      case "cancelled":
         return <AlertCircle className="h-4 w-4" />;
       default:
         return null;
@@ -188,12 +211,14 @@ export default function Dashboard() {
   };
 
   const totalSpent = bookings
-    .filter(b => b.payment_status === 'paid')
+    .filter((b) => b.payment_status === "paid")
     .reduce((sum, booking) => sum + booking.total_amount, 0);
-  
-  const completedBookings = bookings.filter(b => b.booking_status === 'completed').length;
-  const homestayBookings = bookings.filter(b => b.type === 'homestay').length;
-  const driverBookings = bookings.filter(b => b.type === 'driver').length;
+
+  const completedBookings = bookings.filter(
+    (b) => b.booking_status === "completed",
+  ).length;
+  const homestayBookings = bookings.filter((b) => b.type === "homestay").length;
+  const driverBookings = bookings.filter((b) => b.type === "driver").length;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-coastal-50 to-white">
@@ -205,7 +230,7 @@ export default function Dashboard() {
               <Button
                 variant="ghost"
                 className="text-white/80 hover:text-white hover:bg-white/10 mb-4 -ml-2"
-                onClick={() => window.location.href = '/'}
+                onClick={() => (window.location.href = "/")}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Home
@@ -216,10 +241,12 @@ export default function Dashboard() {
             <div className="text-right">
               <div className="text-sm opacity-75">Member since</div>
               <div className="font-medium">
-                {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-IN', { 
-                  month: 'long', 
-                  year: 'numeric' 
-                }) : 'Recently joined'}
+                {user?.created_at
+                  ? new Date(user.created_at).toLocaleDateString("en-IN", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "Recently joined"}
               </div>
             </div>
           </div>
@@ -234,8 +261,12 @@ export default function Dashboard() {
               <div className="flex items-center">
                 <IndianRupee className="h-8 w-8 text-coastal-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Spent</p>
-                  <p className="text-2xl font-bold">₹{totalSpent.toLocaleString()}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Spent
+                  </p>
+                  <p className="text-2xl font-bold">
+                    ₹{totalSpent.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -296,13 +327,15 @@ export default function Dashboard() {
                       Your recent homestay and driver bookings
                     </CardDescription>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={fetchUserBookings}
                     disabled={loading}
                   >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                    <RefreshCw
+                      className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                    />
                     Refresh
                   </Button>
                 </div>
@@ -326,13 +359,24 @@ export default function Dashboard() {
                     <div className="text-gray-400 mb-4">
                       <Calendar className="h-12 w-12 mx-auto" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No bookings yet</h3>
-                    <p className="text-gray-600 mb-4">Start exploring coastal Karnataka and make your first booking!</p>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No bookings yet
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      Start exploring coastal Karnataka and make your first
+                      booking!
+                    </p>
                     <div className="flex gap-2 justify-center">
-                      <Button onClick={() => window.location.href = '/hotels'} className="btn-coastal">
+                      <Button
+                        onClick={() => (window.location.href = "/hotels")}
+                        className="btn-coastal"
+                      >
                         Find Homestays
                       </Button>
-                      <Button onClick={() => window.location.href = '/drivers'} variant="outline">
+                      <Button
+                        onClick={() => (window.location.href = "/drivers")}
+                        variant="outline"
+                      >
                         Book Drivers
                       </Button>
                     </div>
@@ -340,17 +384,22 @@ export default function Dashboard() {
                 ) : (
                   <div className="space-y-4">
                     {bookings.map((booking, index) => (
-                      <div key={`booking-${booking.type || 'unknown'}-${booking.id || index}-${index}`} className="border rounded-lg p-4 space-y-3">
+                      <div
+                        key={`booking-${booking.type || "unknown"}-${booking.id || index}-${index}`}
+                        className="border rounded-lg p-4 space-y-3"
+                      >
                         <div className="flex justify-between items-start">
                           <div className="flex items-center space-x-3">
-                            {booking.type === 'homestay' ? (
+                            {booking.type === "homestay" ? (
                               <Home className="h-5 w-5 text-coastal-600" />
                             ) : (
                               <Car className="h-5 w-5 text-ocean-600" />
                             )}
                             <div>
                               <div className="font-medium">
-                                {booking.type === 'homestay' ? 'Homestay Booking' : 'Driver Trip'}
+                                {booking.type === "homestay"
+                                  ? "Homestay Booking"
+                                  : "Driver Trip"}
                               </div>
                               <div className="text-sm text-gray-600">
                                 Ref: {booking.booking_reference}
@@ -358,14 +407,24 @@ export default function Dashboard() {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <Badge className={getStatusColor(booking.booking_status)}>
+                            <Badge
+                              className={getStatusColor(booking.booking_status)}
+                            >
                               {getStatusIcon(booking.booking_status)}
-                              <span className="ml-1 capitalize">{booking.booking_status}</span>
+                              <span className="ml-1 capitalize">
+                                {booking.booking_status}
+                              </span>
                             </Badge>
-                            <Badge variant="outline" className={
-                              booking.payment_status === 'paid' ? 'text-green-600' : 
-                              booking.payment_status === 'failed' ? 'text-red-600' : 'text-yellow-600'
-                            }>
+                            <Badge
+                              variant="outline"
+                              className={
+                                booking.payment_status === "paid"
+                                  ? "text-green-600"
+                                  : booking.payment_status === "failed"
+                                    ? "text-red-600"
+                                    : "text-yellow-600"
+                              }
+                            >
                               {booking.payment_status}
                             </Badge>
                           </div>
@@ -374,22 +433,29 @@ export default function Dashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div className="flex items-center">
                             <User className="h-4 w-4 mr-2 text-gray-400" />
-                            <span>{booking.guest_name || booking.passenger_name}</span>
+                            <span>
+                              {booking.guest_name || booking.passenger_name}
+                            </span>
                           </div>
                           <div className="flex items-center">
                             <Calendar className="h-4 w-4 mr-2 text-gray-400" />
                             <span>
-                              {booking.check_in_date 
-                                ? new Date(booking.check_in_date).toLocaleDateString('en-IN')
-                                : booking.pickup_datetime 
-                                ? new Date(booking.pickup_datetime).toLocaleDateString('en-IN')
-                                : 'N/A'
-                              }
+                              {booking.check_in_date
+                                ? new Date(
+                                    booking.check_in_date,
+                                  ).toLocaleDateString("en-IN")
+                                : booking.pickup_datetime
+                                  ? new Date(
+                                      booking.pickup_datetime,
+                                    ).toLocaleDateString("en-IN")
+                                  : "N/A"}
                             </span>
                           </div>
                           <div className="flex items-center">
                             <IndianRupee className="h-4 w-4 mr-2 text-gray-400" />
-                            <span className="font-medium">₹{booking.total_amount}</span>
+                            <span className="font-medium">
+                              ₹{booking.total_amount}
+                            </span>
                           </div>
                         </div>
 
@@ -402,17 +468,26 @@ export default function Dashboard() {
                           <Button variant="outline" size="sm">
                             View Details
                           </Button>
-                          {booking.booking_status === 'completed' && (
-                            <Button variant="outline" size="sm" className="text-yellow-600">
+                          {booking.booking_status === "completed" && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-yellow-600"
+                            >
                               <Star className="h-3 w-3 mr-1" />
                               Rate
                             </Button>
                           )}
-                          {booking.booking_status === 'confirmed' && booking.type === 'homestay' && (
-                            <Button variant="outline" size="sm" className="text-red-600">
-                              Cancel
-                            </Button>
-                          )}
+                          {booking.booking_status === "confirmed" &&
+                            booking.type === "homestay" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600"
+                              >
+                                Cancel
+                              </Button>
+                            )}
                         </div>
                       </div>
                     ))}
@@ -433,27 +508,35 @@ export default function Dashboard() {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Full Name</label>
+                    <label className="text-sm font-medium text-gray-700">
+                      Full Name
+                    </label>
                     <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-                      {user?.name || 'Not provided'}
+                      {user?.name || "Not provided"}
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
+                    <label className="text-sm font-medium text-gray-700">
+                      Email
+                    </label>
                     <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-                      {user?.email || 'Not provided'}
+                      {user?.email || "Not provided"}
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Phone</label>
+                    <label className="text-sm font-medium text-gray-700">
+                      Phone
+                    </label>
                     <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-                      {user?.phone || 'Not provided'}
+                      {user?.phone || "Not provided"}
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Account Type</label>
+                    <label className="text-sm font-medium text-gray-700">
+                      Account Type
+                    </label>
                     <div className="mt-1 p-3 border rounded-lg bg-gray-50 capitalize">
-                      {user?.role || 'customer'}
+                      {user?.role || "customer"}
                     </div>
                   </div>
                 </div>
@@ -483,14 +566,18 @@ export default function Dashboard() {
                       <h3 className="text-xl font-bold">Loyalty Points</h3>
                       <TrendingUp className="h-6 w-6" />
                     </div>
-                    <div className="text-3xl font-bold mb-2">{Math.floor(totalSpent / 10)} Points</div>
+                    <div className="text-3xl font-bold mb-2">
+                      {Math.floor(totalSpent / 10)} Points
+                    </div>
                     <div className="text-sm opacity-90">
                       Earn 1 point for every ₹10 spent
                     </div>
                     <div className="w-full bg-white/20 rounded-full h-2 mt-3">
-                      <div 
-                        className="bg-white h-2 rounded-full" 
-                        style={{ width: `${Math.min((totalSpent % 3000) / 30, 100)}%` }}
+                      <div
+                        className="bg-white h-2 rounded-full"
+                        style={{
+                          width: `${Math.min((totalSpent % 3000) / 30, 100)}%`,
+                        }}
                       ></div>
                     </div>
                   </div>

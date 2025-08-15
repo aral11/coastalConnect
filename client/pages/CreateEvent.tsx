@@ -1,14 +1,20 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { supabase } from '@/lib/supabase';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/lib/supabase";
 import {
   Calendar,
   Clock,
@@ -23,8 +29,8 @@ import {
   CheckCircle,
   ArrowLeft,
   Save,
-  Send
-} from 'lucide-react';
+  Send,
+} from "lucide-react";
 
 interface EventForm {
   title: string;
@@ -34,18 +40,18 @@ interface EventForm {
   location: string;
   detailed_address: string;
   venue_name: string;
-  venue_capacity: number | '';
+  venue_capacity: number | "";
   event_date: string;
   start_time: string;
   end_time: string;
   is_multi_day: boolean;
   end_date: string;
-  entry_fee: number | '';
+  entry_fee: number | "";
   is_free: boolean;
   registration_required: boolean;
   registration_url: string;
   registration_deadline: string;
-  max_attendees: number | '';
+  max_attendees: number | "";
   image_url: string;
   contact_phone: string;
   contact_email: string;
@@ -66,127 +72,143 @@ interface EventForm {
 
 export default function CreateEvent() {
   const [formData, setFormData] = useState<EventForm>({
-    title: '',
-    description: '',
-    category: '',
-    subcategory: '',
-    location: '',
-    detailed_address: '',
-    venue_name: '',
-    venue_capacity: '',
-    event_date: '',
-    start_time: '',
-    end_time: '',
+    title: "",
+    description: "",
+    category: "",
+    subcategory: "",
+    location: "",
+    detailed_address: "",
+    venue_name: "",
+    venue_capacity: "",
+    event_date: "",
+    start_time: "",
+    end_time: "",
     is_multi_day: false,
-    end_date: '',
-    entry_fee: '',
+    end_date: "",
+    entry_fee: "",
     is_free: true,
     registration_required: false,
-    registration_url: '',
-    registration_deadline: '',
-    max_attendees: '',
-    image_url: '',
-    contact_phone: '',
-    contact_email: '',
-    website_url: '',
-    requirements: '',
-    amenities: '',
-    accessibility_info: '',
-    cancellation_policy: '',
-    tags: '',
-    age_restrictions: '',
-    languages: '',
+    registration_url: "",
+    registration_deadline: "",
+    max_attendees: "",
+    image_url: "",
+    contact_phone: "",
+    contact_email: "",
+    website_url: "",
+    requirements: "",
+    amenities: "",
+    accessibility_info: "",
+    cancellation_policy: "",
+    tags: "",
+    age_restrictions: "",
+    languages: "",
     certificates_provided: false,
     weather_dependency: false,
-    backup_plan: '',
+    backup_plan: "",
     live_streaming: false,
-    recording_allowed: true
+    recording_allowed: true,
   });
 
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const categories = [
-    { value: 'kambala', label: 'Kambala & Traditional Sports' },
-    { value: 'festival', label: 'Festival' },
-    { value: 'cultural', label: 'Cultural Event' },
-    { value: 'religious', label: 'Religious Event' },
-    { value: 'sports', label: 'Sports Competition' },
-    { value: 'educational', label: 'Educational Workshop' },
-    { value: 'workshop', label: 'Workshop/Training' },
-    { value: 'conference', label: 'Conference/Seminar' },
-    { value: 'concert', label: 'Concert/Performance' },
-    { value: 'exhibition', label: 'Exhibition/Market' },
-    { value: 'competition', label: 'Competition' },
-    { value: 'community', label: 'Community Event' },
-    { value: 'charity', label: 'Charity Event' },
-    { value: 'other', label: 'Other' }
+    { value: "kambala", label: "Kambala & Traditional Sports" },
+    { value: "festival", label: "Festival" },
+    { value: "cultural", label: "Cultural Event" },
+    { value: "religious", label: "Religious Event" },
+    { value: "sports", label: "Sports Competition" },
+    { value: "educational", label: "Educational Workshop" },
+    { value: "workshop", label: "Workshop/Training" },
+    { value: "conference", label: "Conference/Seminar" },
+    { value: "concert", label: "Concert/Performance" },
+    { value: "exhibition", label: "Exhibition/Market" },
+    { value: "competition", label: "Competition" },
+    { value: "community", label: "Community Event" },
+    { value: "charity", label: "Charity Event" },
+    { value: "other", label: "Other" },
   ];
 
   const locations = [
-    { value: 'udupi', label: 'Udupi' },
-    { value: 'manipal', label: 'Manipal' },
-    { value: 'malpe', label: 'Malpe' },
-    { value: 'kaup', label: 'Kaup' },
-    { value: 'other', label: 'Other Location' }
+    { value: "udupi", label: "Udupi" },
+    { value: "manipal", label: "Manipal" },
+    { value: "malpe", label: "Malpe" },
+    { value: "kaup", label: "Kaup" },
+    { value: "other", label: "Other Location" },
   ];
 
   const handleInputChange = (field: keyof EventForm, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const validateStep1 = () => {
-    return formData.title && formData.description && formData.category && 
-           formData.location && formData.detailed_address;
+    return (
+      formData.title &&
+      formData.description &&
+      formData.category &&
+      formData.location &&
+      formData.detailed_address
+    );
   };
 
   const validateStep2 = () => {
-    return formData.event_date && formData.start_time && formData.end_time &&
-           formData.contact_phone && formData.contact_email;
+    return (
+      formData.event_date &&
+      formData.start_time &&
+      formData.end_time &&
+      formData.contact_phone &&
+      formData.contact_email
+    );
   };
 
   const handleSubmit = async (submitForApproval = false) => {
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Check if user is authenticated and has proper role
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!user) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
       // Check if user has event_organizer role
       const { data: userProfile } = await supabase
-        .from('users')
-        .select('role, vendor_status')
-        .eq('id', user.id)
+        .from("users")
+        .select("role, vendor_status")
+        .eq("id", user.id)
         .single();
 
-      if (userProfile?.role !== 'event_organizer') {
-        setError('Only verified event organizers can create events. Please register as an event organizer first.');
+      if (userProfile?.role !== "event_organizer") {
+        setError(
+          "Only verified event organizers can create events. Please register as an event organizer first.",
+        );
         return;
       }
 
-      if (userProfile?.vendor_status !== 'approved') {
-        setError('Your organizer account must be approved before creating events. Please contact support.');
+      if (userProfile?.vendor_status !== "approved") {
+        setError(
+          "Your organizer account must be approved before creating events. Please contact support.",
+        );
         return;
       }
 
-      const response = await fetch('/api/organizers/events', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+      const response = await fetch("/api/organizers/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
@@ -194,11 +216,14 @@ export default function CreateEvent() {
       if (data.success) {
         if (submitForApproval) {
           // Submit for approval immediately
-          const submitResponse = await fetch(`/api/organizers/events/${data.data.id}/submit`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          
+          const submitResponse = await fetch(
+            `/api/organizers/events/${data.data.id}/submit`,
+            {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
+
           if (submitResponse.ok) {
             setSuccess(true);
           }
@@ -206,10 +231,10 @@ export default function CreateEvent() {
           setSuccess(true);
         }
       } else {
-        setError(data.message || 'Failed to create event');
+        setError(data.message || "Failed to create event");
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -221,21 +246,23 @@ export default function CreateEvent() {
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Event Created Successfully!</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Event Created Successfully!
+            </h2>
             <p className="text-gray-600 mb-6">
               Your event has been created and is ready for review.
             </p>
             <div className="space-y-2">
-              <Button 
+              <Button
                 className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={() => window.location.href = '/organizer-dashboard'}
+                onClick={() => (window.location.href = "/organizer-dashboard")}
               >
                 Go to Dashboard
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.location.href = '/organizer/events'}
+                onClick={() => (window.location.href = "/organizer/events")}
               >
                 Manage Events
               </Button>
@@ -253,15 +280,17 @@ export default function CreateEvent() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Button 
-                variant="ghost" 
-                onClick={() => window.location.href = '/organizer-dashboard'}
+              <Button
+                variant="ghost"
+                onClick={() => (window.location.href = "/organizer-dashboard")}
                 className="mr-4"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Dashboard
               </Button>
-              <h1 className="text-2xl font-bold text-gray-900">Create New Event</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Create New Event
+              </h1>
             </div>
             <Badge variant="secondary">Step {step} of 3</Badge>
           </div>
@@ -272,22 +301,34 @@ export default function CreateEvent() {
         {/* Step Indicator */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center space-x-4">
-            <div className={`flex items-center ${step >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+            <div
+              className={`flex items-center ${step >= 1 ? "text-blue-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              >
                 1
               </div>
               <span className="ml-2 font-medium">Basic Details</span>
             </div>
             <div className="w-8 h-px bg-gray-300"></div>
-            <div className={`flex items-center ${step >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+            <div
+              className={`flex items-center ${step >= 2 ? "text-blue-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              >
                 2
               </div>
               <span className="ml-2 font-medium">Date & Contact</span>
             </div>
             <div className="w-8 h-px bg-gray-300"></div>
-            <div className={`flex items-center ${step >= 3 ? 'text-blue-600' : 'text-gray-400'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+            <div
+              className={`flex items-center ${step >= 3 ? "text-blue-600" : "text-gray-400"}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              >
                 3
               </div>
               <span className="ml-2 font-medium">Additional Info</span>
@@ -298,9 +339,9 @@ export default function CreateEvent() {
         <Card className="shadow-xl">
           <CardHeader>
             <CardTitle>
-              {step === 1 && 'Event Basic Information'}
-              {step === 2 && 'Date, Time & Contact Details'}
-              {step === 3 && 'Additional Information & Settings'}
+              {step === 1 && "Event Basic Information"}
+              {step === 2 && "Date, Time & Contact Details"}
+              {step === 3 && "Additional Information & Settings"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -319,7 +360,7 @@ export default function CreateEvent() {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    onChange={(e) => handleInputChange("title", e.target.value)}
                     placeholder="Enter event title"
                     required
                   />
@@ -330,7 +371,9 @@ export default function CreateEvent() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("description", e.target.value)
+                    }
                     placeholder="Describe your event in detail"
                     rows={4}
                     required
@@ -340,15 +383,17 @@ export default function CreateEvent() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="category">Event Category *</Label>
-                    <Select 
-                      value={formData.category} 
-                      onValueChange={(value) => handleInputChange('category', value)}
+                    <Select
+                      value={formData.category}
+                      onValueChange={(value) =>
+                        handleInputChange("category", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map(cat => (
+                        {categories.map((cat) => (
                           <SelectItem key={cat.value} value={cat.value}>
                             {cat.label}
                           </SelectItem>
@@ -361,7 +406,9 @@ export default function CreateEvent() {
                     <Input
                       id="subcategory"
                       value={formData.subcategory}
-                      onChange={(e) => handleInputChange('subcategory', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("subcategory", e.target.value)
+                      }
                       placeholder="e.g., Dance, Music, Art"
                     />
                   </div>
@@ -370,15 +417,17 @@ export default function CreateEvent() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="location">Location *</Label>
-                    <Select 
-                      value={formData.location} 
-                      onValueChange={(value) => handleInputChange('location', value)}
+                    <Select
+                      value={formData.location}
+                      onValueChange={(value) =>
+                        handleInputChange("location", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
                       <SelectContent>
-                        {locations.map(loc => (
+                        {locations.map((loc) => (
                           <SelectItem key={loc.value} value={loc.value}>
                             {loc.label}
                           </SelectItem>
@@ -391,7 +440,9 @@ export default function CreateEvent() {
                     <Input
                       id="venue_name"
                       value={formData.venue_name}
-                      onChange={(e) => handleInputChange('venue_name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("venue_name", e.target.value)
+                      }
                       placeholder="Name of the venue"
                     />
                   </div>
@@ -402,7 +453,9 @@ export default function CreateEvent() {
                   <Textarea
                     id="detailed_address"
                     value={formData.detailed_address}
-                    onChange={(e) => handleInputChange('detailed_address', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("detailed_address", e.target.value)
+                    }
                     placeholder="Complete address with landmarks"
                     required
                   />
@@ -415,7 +468,12 @@ export default function CreateEvent() {
                       id="venue_capacity"
                       type="number"
                       value={formData.venue_capacity}
-                      onChange={(e) => handleInputChange('venue_capacity', parseInt(e.target.value) || '')}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "venue_capacity",
+                          parseInt(e.target.value) || "",
+                        )
+                      }
                       placeholder="Maximum capacity"
                     />
                   </div>
@@ -424,7 +482,9 @@ export default function CreateEvent() {
                     <Input
                       id="image_url"
                       value={formData.image_url}
-                      onChange={(e) => handleInputChange('image_url', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("image_url", e.target.value)
+                      }
                       placeholder="https://example.com/image.jpg"
                     />
                   </div>
@@ -442,7 +502,9 @@ export default function CreateEvent() {
                       id="event_date"
                       type="date"
                       value={formData.event_date}
-                      onChange={(e) => handleInputChange('event_date', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("event_date", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -452,7 +514,9 @@ export default function CreateEvent() {
                       id="start_time"
                       type="time"
                       value={formData.start_time}
-                      onChange={(e) => handleInputChange('start_time', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("start_time", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -462,7 +526,9 @@ export default function CreateEvent() {
                       id="end_time"
                       type="time"
                       value={formData.end_time}
-                      onChange={(e) => handleInputChange('end_time', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("end_time", e.target.value)
+                      }
                       required
                     />
                   </div>
@@ -472,9 +538,13 @@ export default function CreateEvent() {
                   <Checkbox
                     id="is_multi_day"
                     checked={formData.is_multi_day}
-                    onCheckedChange={(checked) => handleInputChange('is_multi_day', checked)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange("is_multi_day", checked)
+                    }
                   />
-                  <Label htmlFor="is_multi_day">This is a multi-day event</Label>
+                  <Label htmlFor="is_multi_day">
+                    This is a multi-day event
+                  </Label>
                 </div>
 
                 {formData.is_multi_day && (
@@ -484,7 +554,9 @@ export default function CreateEvent() {
                       id="end_date"
                       type="date"
                       value={formData.end_date}
-                      onChange={(e) => handleInputChange('end_date', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("end_date", e.target.value)
+                      }
                     />
                   </div>
                 )}
@@ -494,7 +566,9 @@ export default function CreateEvent() {
                     <Checkbox
                       id="is_free"
                       checked={formData.is_free}
-                      onCheckedChange={(checked) => handleInputChange('is_free', checked)}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("is_free", checked)
+                      }
                     />
                     <Label htmlFor="is_free">This is a free event</Label>
                   </div>
@@ -506,7 +580,12 @@ export default function CreateEvent() {
                         id="entry_fee"
                         type="number"
                         value={formData.entry_fee}
-                        onChange={(e) => handleInputChange('entry_fee', parseInt(e.target.value) || '')}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "entry_fee",
+                            parseInt(e.target.value) || "",
+                          )
+                        }
                         placeholder="0"
                       />
                     </div>
@@ -518,19 +597,30 @@ export default function CreateEvent() {
                     <Checkbox
                       id="registration_required"
                       checked={formData.registration_required}
-                      onCheckedChange={(checked) => handleInputChange('registration_required', checked)}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("registration_required", checked)
+                      }
                     />
-                    <Label htmlFor="registration_required">Registration required</Label>
+                    <Label htmlFor="registration_required">
+                      Registration required
+                    </Label>
                   </div>
 
                   {formData.registration_required && (
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="registration_url">Registration URL</Label>
+                        <Label htmlFor="registration_url">
+                          Registration URL
+                        </Label>
                         <Input
                           id="registration_url"
                           value={formData.registration_url}
-                          onChange={(e) => handleInputChange('registration_url', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "registration_url",
+                              e.target.value,
+                            )
+                          }
                           placeholder="https://forms.google.com/..."
                         />
                       </div>
@@ -540,7 +630,12 @@ export default function CreateEvent() {
                           id="max_attendees"
                           type="number"
                           value={formData.max_attendees}
-                          onChange={(e) => handleInputChange('max_attendees', parseInt(e.target.value) || '')}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "max_attendees",
+                              parseInt(e.target.value) || "",
+                            )
+                          }
                           placeholder="Unlimited"
                         />
                       </div>
@@ -554,7 +649,9 @@ export default function CreateEvent() {
                     <Input
                       id="contact_phone"
                       value={formData.contact_phone}
-                      onChange={(e) => handleInputChange('contact_phone', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("contact_phone", e.target.value)
+                      }
                       placeholder="+91 9876543210"
                       required
                     />
@@ -565,7 +662,9 @@ export default function CreateEvent() {
                       id="contact_email"
                       type="email"
                       value={formData.contact_email}
-                      onChange={(e) => handleInputChange('contact_email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("contact_email", e.target.value)
+                      }
                       placeholder="contact@event.com"
                       required
                     />
@@ -578,11 +677,15 @@ export default function CreateEvent() {
             {step === 3 && (
               <div className="space-y-6">
                 <div>
-                  <Label htmlFor="requirements">Requirements for Attendees</Label>
+                  <Label htmlFor="requirements">
+                    Requirements for Attendees
+                  </Label>
                   <Textarea
                     id="requirements"
                     value={formData.requirements}
-                    onChange={(e) => handleInputChange('requirements', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("requirements", e.target.value)
+                    }
                     placeholder="What should attendees bring or know?"
                     rows={3}
                   />
@@ -593,7 +696,9 @@ export default function CreateEvent() {
                   <Textarea
                     id="amenities"
                     value={formData.amenities}
-                    onChange={(e) => handleInputChange('amenities', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("amenities", e.target.value)
+                    }
                     placeholder="Parking, food, WiFi, etc."
                     rows={3}
                   />
@@ -605,7 +710,9 @@ export default function CreateEvent() {
                     <Input
                       id="tags"
                       value={formData.tags}
-                      onChange={(e) => handleInputChange('tags', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("tags", e.target.value)
+                      }
                       placeholder="cultural, music, dance, family"
                     />
                   </div>
@@ -614,7 +721,9 @@ export default function CreateEvent() {
                     <Input
                       id="languages"
                       value={formData.languages}
-                      onChange={(e) => handleInputChange('languages', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("languages", e.target.value)
+                      }
                       placeholder="Kannada, English, Hindi"
                     />
                   </div>
@@ -627,33 +736,49 @@ export default function CreateEvent() {
                       <Checkbox
                         id="certificates_provided"
                         checked={formData.certificates_provided}
-                        onCheckedChange={(checked) => handleInputChange('certificates_provided', checked)}
+                        onCheckedChange={(checked) =>
+                          handleInputChange("certificates_provided", checked)
+                        }
                       />
-                      <Label htmlFor="certificates_provided">Certificates provided</Label>
+                      <Label htmlFor="certificates_provided">
+                        Certificates provided
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="weather_dependency"
                         checked={formData.weather_dependency}
-                        onCheckedChange={(checked) => handleInputChange('weather_dependency', checked)}
+                        onCheckedChange={(checked) =>
+                          handleInputChange("weather_dependency", checked)
+                        }
                       />
-                      <Label htmlFor="weather_dependency">Weather dependent</Label>
+                      <Label htmlFor="weather_dependency">
+                        Weather dependent
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="live_streaming"
                         checked={formData.live_streaming}
-                        onCheckedChange={(checked) => handleInputChange('live_streaming', checked)}
+                        onCheckedChange={(checked) =>
+                          handleInputChange("live_streaming", checked)
+                        }
                       />
-                      <Label htmlFor="live_streaming">Live streaming available</Label>
+                      <Label htmlFor="live_streaming">
+                        Live streaming available
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="recording_allowed"
                         checked={formData.recording_allowed}
-                        onCheckedChange={(checked) => handleInputChange('recording_allowed', checked)}
+                        onCheckedChange={(checked) =>
+                          handleInputChange("recording_allowed", checked)
+                        }
                       />
-                      <Label htmlFor="recording_allowed">Recording allowed</Label>
+                      <Label htmlFor="recording_allowed">
+                        Recording allowed
+                      </Label>
                     </div>
                   </div>
                 </div>
@@ -664,7 +789,9 @@ export default function CreateEvent() {
                     <Textarea
                       id="backup_plan"
                       value={formData.backup_plan}
-                      onChange={(e) => handleInputChange('backup_plan', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("backup_plan", e.target.value)
+                      }
                       placeholder="What happens if weather doesn't cooperate?"
                       rows={3}
                     />
@@ -672,11 +799,15 @@ export default function CreateEvent() {
                 )}
 
                 <div>
-                  <Label htmlFor="cancellation_policy">Cancellation Policy</Label>
+                  <Label htmlFor="cancellation_policy">
+                    Cancellation Policy
+                  </Label>
                   <Textarea
                     id="cancellation_policy"
                     value={formData.cancellation_policy}
-                    onChange={(e) => handleInputChange('cancellation_policy', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("cancellation_policy", e.target.value)
+                    }
                     placeholder="Your event cancellation and refund policy"
                     rows={3}
                   />
@@ -687,17 +818,17 @@ export default function CreateEvent() {
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-6">
               {step > 1 && (
-                <Button 
-                  type="button" 
+                <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setStep(step - 1)}
                 >
                   Previous
                 </Button>
               )}
-              
+
               {step < 3 ? (
-                <Button 
+                <Button
                   type="button"
                   className="ml-auto"
                   onClick={() => setStep(step + 1)}
@@ -710,7 +841,7 @@ export default function CreateEvent() {
                 </Button>
               ) : (
                 <div className="ml-auto space-x-3">
-                  <Button 
+                  <Button
                     type="button"
                     variant="outline"
                     onClick={() => handleSubmit(false)}
@@ -719,7 +850,7 @@ export default function CreateEvent() {
                     <Save className="h-4 w-4 mr-2" />
                     Save as Draft
                   </Button>
-                  <Button 
+                  <Button
                     type="button"
                     onClick={() => handleSubmit(true)}
                     disabled={loading}

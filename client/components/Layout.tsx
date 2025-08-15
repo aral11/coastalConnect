@@ -1,13 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Navigation from './Navigation';
-import MobileBottomNav from './MobileBottomNav';
-import FloatingSearch from './FloatingSearch';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import FooterStats from '@/components/FooterStats';
-import { designSystem, layouts } from '@/lib/design-system';
+import React from "react";
+import { Link } from "react-router-dom";
+import Navigation from "./Navigation";
+import MobileBottomNav from "./MobileBottomNav";
+import FloatingSearch from "./FloatingSearch";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import FooterStats from "@/components/FooterStats";
+import { designSystem, layouts } from "@/lib/design-system";
 import {
   MapPin,
   Phone,
@@ -23,8 +23,8 @@ import {
   Clock,
   Award,
   Zap,
-  ArrowUp
-} from 'lucide-react';
+  ArrowUp,
+} from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,11 +33,11 @@ interface LayoutProps {
   fullWidth?: boolean;
 }
 
-export default function Layout({ 
-  children, 
-  className = '', 
+export default function Layout({
+  children,
+  className = "",
   showBackToTop = true,
-  fullWidth = false 
+  fullWidth = false,
 }: LayoutProps) {
   const [showScrollTop, setShowScrollTop] = React.useState(false);
 
@@ -46,12 +46,12 @@ export default function Layout({
       setShowScrollTop(window.scrollY > 400);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -61,10 +61,10 @@ export default function Layout({
 
       {/* Main Content */}
       <main className={`flex-1 ${className} pb-16 lg:pb-0`}>
-        {fullWidth ? children : (
-          <div className={layouts.container}>
-            {children}
-          </div>
+        {fullWidth ? (
+          children
+        ) : (
+          <div className={layouts.container}>{children}</div>
         )}
       </main>
 
@@ -98,42 +98,42 @@ function Footer() {
 
   const footerSections = [
     {
-      title: 'Services',
+      title: "Services",
       links: [
-        { label: 'Hotels & Homestays', href: '/homestays' },
-        { label: 'Restaurants & Cafes', href: '/eateries' },
-        { label: 'Local Transport', href: '/drivers' },
-        { label: 'Content Creators', href: '/creators' },
-        { label: 'Events & Experiences', href: '/events' },
-        { label: 'All Services', href: '/services' }
-      ]
+        { label: "Hotels & Homestays", href: "/homestays" },
+        { label: "Restaurants & Cafes", href: "/eateries" },
+        { label: "Local Transport", href: "/drivers" },
+        { label: "Content Creators", href: "/creators" },
+        { label: "Events & Experiences", href: "/events" },
+        { label: "All Services", href: "/services" },
+      ],
     },
     {
-      title: 'Business',
+      title: "Business",
       links: [
-        { label: 'List Your Business', href: '/vendor-register' },
-        { label: 'Event Organizer Portal', href: '/organizer-register' },
-        { label: 'Business Dashboard', href: '/business-dashboard' },
-        { label: 'Partner with Us', href: '/partner-with-us' }
-      ]
+        { label: "List Your Business", href: "/vendor-register" },
+        { label: "Event Organizer Portal", href: "/organizer-register" },
+        { label: "Business Dashboard", href: "/business-dashboard" },
+        { label: "Partner with Us", href: "/partner-with-us" },
+      ],
     },
     {
-      title: 'Support',
+      title: "Support",
       links: [
-        { label: 'Help Center', href: '/help' },
-        { label: 'Customer Support', href: '/support' },
-        { label: 'Safety Guidelines', href: '/safety' },
-        { label: 'Contact Us', href: '/contact' }
-      ]
+        { label: "Help Center", href: "/help" },
+        { label: "Customer Support", href: "/support" },
+        { label: "Safety Guidelines", href: "/safety" },
+        { label: "Contact Us", href: "/contact" },
+      ],
     },
     {
-      title: 'Company',
+      title: "Company",
       links: [
-        { label: 'About coastalConnect', href: '/about' },
-        { label: 'Terms of Service', href: '/terms' },
-        { label: 'Privacy Policy', href: '/privacy' }
-      ]
-    }
+        { label: "About coastalConnect", href: "/about" },
+        { label: "Terms of Service", href: "/terms" },
+        { label: "Privacy Policy", href: "/privacy" },
+      ],
+    },
   ];
 
   return (
@@ -152,14 +152,19 @@ function Footer() {
                   className="h-10"
                 />
                 <div>
-                  <div className="text-white font-bold text-xl">coastalConnect</div>
-                  <div className="text-sm text-gray-400">Udupi & Manipal Services</div>
+                  <div className="text-white font-bold text-xl">
+                    coastalConnect
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    Udupi & Manipal Services
+                  </div>
                 </div>
               </div>
-              
+
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Discover authentic Udupi and Manipal experiences with our comprehensive platform connecting
-                travelers to hotels, homestays, restaurants, local transport, and talented creators.
+                Discover authentic Udupi and Manipal experiences with our
+                comprehensive platform connecting travelers to hotels,
+                homestays, restaurants, local transport, and talented creators.
                 Experience the real charm of Udupi and Manipal.
               </p>
 
@@ -227,7 +232,9 @@ function Footer() {
             {/* Links Sections */}
             {footerSections.map((section) => (
               <div key={section.title}>
-                <h3 className="text-white font-semibold mb-4">{section.title}</h3>
+                <h3 className="text-white font-semibold mb-4">
+                  {section.title}
+                </h3>
                 <ul className="space-y-3">
                   {section.links.map((link) => (
                     <li key={link.href}>
@@ -266,7 +273,10 @@ function Footer() {
               </div>
               <div className="text-sm text-gray-400">
                 <div>
-                  <a href="tel:+918105003858" className="hover:text-white transition-colors">
+                  <a
+                    href="tel:+918105003858"
+                    className="hover:text-white transition-colors"
+                  >
                     📞 +91 8105 003 858
                   </a>
                 </div>
@@ -281,12 +291,20 @@ function Footer() {
               </div>
               <div className="text-sm text-gray-400">
                 <div>
-                  <a href="mailto:admin@coastalconnect.in" className="hover:text-white transition-colors">
+                  <a
+                    href="mailto:admin@coastalconnect.in"
+                    className="hover:text-white transition-colors"
+                  >
                     📧 admin@coastalconnect.in
                   </a>
                 </div>
                 <div>
-                  <a href="https://www.coastalconnect.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <a
+                    href="https://www.coastalconnect.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
                     🌐 www.coastalconnect.in
                   </a>
                 </div>
@@ -300,19 +318,28 @@ function Footer() {
               </div>
               <div className="text-sm text-gray-400">
                 <div>
-                  <a href="https://instagram.com/coastalvibes.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <a
+                    href="https://instagram.com/coastalvibes.in"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
                     📸 @coastalvibes.in
                   </a>
                 </div>
                 <div>
-                  <a href="https://youtube.com/c/coastalvibes" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <a
+                    href="https://youtube.com/c/coastalvibes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
                     🎬 Coastal Vibes Channel
                   </a>
                 </div>
               </div>
             </div>
           </div>
-
 
           {/* Platform Statistics - Dynamic from Supabase */}
           <FooterStats />
@@ -326,22 +353,38 @@ function Footer() {
             <div className="text-sm text-gray-400 text-center md:text-left">
               <div>© {currentYear} coastalConnect. All rights reserved.</div>
               <div className="mt-1">
-                Founded by <span className="text-white font-medium">Aral Aldrin John D'Souza</span> • 
-                Powered by <span className="text-blue-400">Coastal Vibes</span>
+                Founded by{" "}
+                <span className="text-white font-medium">
+                  Aral Aldrin John D'Souza
+                </span>{" "}
+                • Powered by{" "}
+                <span className="text-blue-400">Coastal Vibes</span>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-6 text-sm">
-              <Link to="/terms" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/terms"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Terms
               </Link>
-              <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/privacy"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Privacy
               </Link>
-              <Link to="/cookies" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/cookies"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Cookies
               </Link>
-              <Link to="/sitemap" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                to="/sitemap"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Sitemap
               </Link>
             </div>
@@ -357,23 +400,38 @@ export function MobileBottomBar() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-gray-200 shadow-lg">
       <div className="grid grid-cols-5 h-16">
-        <Link to="/" className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50">
+        <Link
+          to="/"
+          className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50"
+        >
           <MapPin className="h-5 w-5 text-gray-600" />
           <span className="text-gray-600">Home</span>
         </Link>
-        <Link to="/search" className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50">
+        <Link
+          to="/search"
+          className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50"
+        >
           <Users className="h-5 w-5 text-gray-600" />
           <span className="text-gray-600">Search</span>
         </Link>
-        <Link to="/bookings" className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50">
+        <Link
+          to="/bookings"
+          className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50"
+        >
           <Heart className="h-5 w-5 text-gray-600" />
           <span className="text-gray-600">Bookings</span>
         </Link>
-        <Link to="/favorites" className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50">
+        <Link
+          to="/favorites"
+          className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50"
+        >
           <Star className="h-5 w-5 text-gray-600" />
           <span className="text-gray-600">Favorites</span>
         </Link>
-        <Link to="/profile" className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50">
+        <Link
+          to="/profile"
+          className="flex flex-col items-center justify-center text-xs space-y-1 hover:bg-gray-50"
+        >
           <Users className="h-5 w-5 text-gray-600" />
           <span className="text-gray-600">Profile</span>
         </Link>

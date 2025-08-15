@@ -41,10 +41,10 @@ export default function ModernLoginFixed() {
   const [error, setError] = useState("");
 
   // Get redirect URL from location state or query params
-  const redirectTo = 
-    (location.state as any)?.from?.pathname || 
-    new URLSearchParams(location.search).get('redirect') || 
-    '/dashboard';
+  const redirectTo =
+    (location.state as any)?.from?.pathname ||
+    new URLSearchParams(location.search).get("redirect") ||
+    "/dashboard";
 
   // Redirect if already logged in
   useEffect(() => {
@@ -55,13 +55,13 @@ export default function ModernLoginFixed() {
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       setError("Please fill in all fields");
       return;
     }
 
-    if (!email.includes('@')) {
+    if (!email.includes("@")) {
       setError("Please enter a valid email address");
       return;
     }
@@ -76,7 +76,7 @@ export default function ModernLoginFixed() {
 
     try {
       await signIn(email, password);
-      
+
       // Track login event
       try {
         await trackEvent("user_login", {
@@ -88,22 +88,24 @@ export default function ModernLoginFixed() {
       }
 
       // Handle pending booking
-      const pendingBooking = localStorage.getItem('pendingBooking');
+      const pendingBooking = localStorage.getItem("pendingBooking");
       if (pendingBooking) {
-        localStorage.removeItem('pendingBooking');
-        navigate('/booking/continue', { replace: true });
+        localStorage.removeItem("pendingBooking");
+        navigate("/booking/continue", { replace: true });
       } else {
         navigate(redirectTo, { replace: true });
       }
     } catch (error: any) {
       console.error("Login error:", error);
-      
+
       // Handle specific Supabase auth errors
-      if (error.message?.includes('Invalid login credentials')) {
+      if (error.message?.includes("Invalid login credentials")) {
         setError("Invalid email or password. Please try again.");
-      } else if (error.message?.includes('Email not confirmed')) {
-        setError("Please check your email and click the confirmation link before signing in.");
-      } else if (error.message?.includes('Too many requests')) {
+      } else if (error.message?.includes("Email not confirmed")) {
+        setError(
+          "Please check your email and click the confirmation link before signing in.",
+        );
+      } else if (error.message?.includes("Too many requests")) {
         setError("Too many login attempts. Please try again later.");
       } else {
         setError(error.message || "Login failed. Please try again.");
@@ -188,7 +190,10 @@ export default function ModernLoginFixed() {
 
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <div className="relative">
@@ -207,7 +212,10 @@ export default function ModernLoginFixed() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -228,7 +236,11 @@ export default function ModernLoginFixed() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={loading}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -266,7 +278,9 @@ export default function ModernLoginFixed() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 

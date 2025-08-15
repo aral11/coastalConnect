@@ -6,28 +6,34 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/contexts/SupabaseAuthContext";
 import { trackEvent, supabase } from "@/lib/supabase";
-import { 
-  Eye, 
-  EyeOff, 
-  Lock, 
-  Loader2, 
-  AlertCircle, 
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Loader2,
+  AlertCircle,
   CheckCircle,
-  ArrowLeft 
+  ArrowLeft,
 } from "lucide-react";
 
 export default function ResetPassword() {
   const { resetPassword } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  
+
   // Check if this is a reset password callback or request
-  const accessToken = searchParams.get('access_token');
-  const refreshToken = searchParams.get('refresh_token');
+  const accessToken = searchParams.get("access_token");
+  const refreshToken = searchParams.get("refresh_token");
   const isCallback = !!(accessToken && refreshToken);
 
   // Form state
@@ -53,8 +59,10 @@ export default function ResetPassword() {
 
     try {
       await resetPassword(email);
-      setSuccess("Password reset email sent! Please check your inbox and follow the instructions.");
-      
+      setSuccess(
+        "Password reset email sent! Please check your inbox and follow the instructions.",
+      );
+
       // Track password reset request
       try {
         await trackEvent("password_reset_request", { email });
@@ -63,7 +71,9 @@ export default function ResetPassword() {
       }
     } catch (error: any) {
       console.error("Password reset error:", error);
-      setError(error.message || "Failed to send reset email. Please try again.");
+      setError(
+        error.message || "Failed to send reset email. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -93,15 +103,17 @@ export default function ResetPassword() {
     try {
       // Update password using Supabase Auth
       const { data, error } = await supabase.auth.updateUser({
-        password: password
+        password: password,
       });
 
       if (error) throw error;
 
-      setSuccess("Password updated successfully! Please log in with your new password.");
+      setSuccess(
+        "Password updated successfully! Please log in with your new password.",
+      );
 
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } catch (error: any) {
       console.error("Password update error:", error);
@@ -121,17 +133,18 @@ export default function ResetPassword() {
               <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">CC</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">coastalConnect</span>
+              <span className="text-xl font-bold text-gray-900">
+                coastalConnect
+              </span>
             </Link>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">
             {isCallback ? "Set New Password" : "Reset Password"}
           </h1>
           <p className="text-gray-600">
-            {isCallback 
-              ? "Enter your new password below" 
-              : "Enter your email to receive reset instructions"
-            }
+            {isCallback
+              ? "Enter your new password below"
+              : "Enter your email to receive reset instructions"}
           </p>
         </div>
 
@@ -142,10 +155,9 @@ export default function ResetPassword() {
               {isCallback ? "New Password" : "Password Reset"}
             </CardTitle>
             <CardDescription>
-              {isCallback 
-                ? "Choose a strong password for your account" 
-                : "We'll send you a link to reset your password"
-              }
+              {isCallback
+                ? "Choose a strong password for your account"
+                : "We'll send you a link to reset your password"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -163,12 +175,18 @@ export default function ResetPassword() {
               </Alert>
             )}
 
-            <form onSubmit={isCallback ? handlePasswordUpdate : handleResetRequest} className="space-y-4">
+            <form
+              onSubmit={isCallback ? handlePasswordUpdate : handleResetRequest}
+              className="space-y-4"
+            >
               {!isCallback ? (
                 /* Reset Request Form */
                 <>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Email Address
                     </label>
                     <Input
@@ -202,7 +220,10 @@ export default function ResetPassword() {
                 /* New Password Form */
                 <>
                   <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="password"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       New Password
                     </label>
                     <div className="relative">
@@ -234,7 +255,10 @@ export default function ResetPassword() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Confirm Password
                     </label>
                     <Input

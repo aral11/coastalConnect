@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Building2, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  FileText, 
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import {
+  Building2,
+  MapPin,
+  Phone,
+  Mail,
+  FileText,
   Upload,
   CheckCircle,
   AlertCircle,
@@ -21,14 +21,14 @@ import {
   Home,
   ChefHat,
   Car,
-  Calendar
-} from 'lucide-react';
-import Layout from '@/components/Layout';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
+  Calendar,
+} from "lucide-react";
+import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
 
 interface VendorFormData {
   businessName: string;
-  businessType: 'homestay' | 'restaurant' | 'driver' | 'event_services';
+  businessType: "homestay" | "restaurant" | "driver" | "event_services";
   businessDescription: string;
   businessAddress: string;
   city: string;
@@ -44,29 +44,29 @@ interface VendorFormData {
 
 const businessTypes = [
   {
-    value: 'homestay',
-    label: 'Hotels & Homestays',
+    value: "homestay",
+    label: "Hotels & Homestays",
     icon: <Home className="h-6 w-6" />,
-    description: 'Accommodation services, hotels, resorts, homestays'
+    description: "Accommodation services, hotels, resorts, homestays",
   },
   {
-    value: 'restaurant',
-    label: 'Restaurants & Cafes',
+    value: "restaurant",
+    label: "Restaurants & Cafes",
     icon: <ChefHat className="h-6 w-6" />,
-    description: 'Food & beverage services, restaurants, cafes, catering'
+    description: "Food & beverage services, restaurants, cafes, catering",
   },
   {
-    value: 'driver',
-    label: 'Transportation',
+    value: "driver",
+    label: "Transportation",
     icon: <Car className="h-6 w-6" />,
-    description: 'Local transport, taxi services, tour operators'
+    description: "Local transport, taxi services, tour operators",
   },
   {
-    value: 'event_services',
-    label: 'Event Services',
+    value: "event_services",
+    label: "Event Services",
     icon: <Calendar className="h-6 w-6" />,
-    description: 'Photography, decorations, event planning services'
-  }
+    description: "Photography, decorations, event planning services",
+  },
 ];
 
 export default function VendorRegister() {
@@ -78,34 +78,45 @@ export default function VendorRegister() {
   const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState<VendorFormData>({
-    businessName: '',
-    businessType: 'homestay',
-    businessDescription: '',
-    businessAddress: '',
-    city: 'Udupi',
-    state: 'Karnataka',
-    contactPerson: user?.name || '',
-    contactPhone: user?.phone || '',
-    contactEmail: user?.email || '',
-    businessLicense: '',
-    gstNumber: '',
-    panNumber: '',
-    aadharNumber: ''
+    businessName: "",
+    businessType: "homestay",
+    businessDescription: "",
+    businessAddress: "",
+    city: "Udupi",
+    state: "Karnataka",
+    contactPerson: user?.name || "",
+    contactPhone: user?.phone || "",
+    contactEmail: user?.email || "",
+    businessLicense: "",
+    gstNumber: "",
+    panNumber: "",
+    aadharNumber: "",
   });
 
   const updateFormData = (field: keyof VendorFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateStep = () => {
     switch (currentStep) {
       case 1:
-        return formData.businessName && formData.businessType && formData.businessDescription;
+        return (
+          formData.businessName &&
+          formData.businessType &&
+          formData.businessDescription
+        );
       case 2:
-        return formData.businessAddress && formData.city && formData.contactPerson && 
-               formData.contactPhone && formData.contactEmail;
+        return (
+          formData.businessAddress &&
+          formData.city &&
+          formData.contactPerson &&
+          formData.contactPhone &&
+          formData.contactEmail
+        );
       case 3:
-        return formData.businessLicense && formData.gstNumber && formData.panNumber;
+        return (
+          formData.businessLicense && formData.gstNumber && formData.panNumber
+        );
       default:
         return false;
     }
@@ -125,8 +136,8 @@ export default function VendorRegister() {
 
   const handleSubmit = async () => {
     if (!isAuthenticated || !session) {
-      setError('Please login to submit vendor application');
-      navigate('/login');
+      setError("Please login to submit vendor application");
+      navigate("/login");
       return;
     }
 
@@ -134,11 +145,11 @@ export default function VendorRegister() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/api/vendor-applications', {
-        method: 'POST',
+      const response = await fetch("/api/vendor-applications", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token}`,
         },
         body: JSON.stringify({
           business_name: formData.businessName,
@@ -153,8 +164,8 @@ export default function VendorRegister() {
           business_license: formData.businessLicense,
           gst_number: formData.gstNumber,
           pan_number: formData.panNumber,
-          aadhar_number: formData.aadharNumber
-        })
+          aadhar_number: formData.aadharNumber,
+        }),
       });
 
       const data = await response.json();
@@ -162,10 +173,12 @@ export default function VendorRegister() {
       if (data.success) {
         setSuccess(true);
       } else {
-        throw new Error(data.message || 'Failed to submit application');
+        throw new Error(data.message || "Failed to submit application");
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to submit application');
+      setError(
+        error instanceof Error ? error.message : "Failed to submit application",
+      );
     } finally {
       setLoading(false);
     }
@@ -183,15 +196,15 @@ export default function VendorRegister() {
                 You need to be logged in to register as a vendor
               </p>
               <div className="space-y-3">
-                <Button 
-                  onClick={() => navigate('/login')}
+                <Button
+                  onClick={() => navigate("/login")}
                   className="w-full bg-orange-500 hover:bg-orange-600"
                 >
                   Login to Continue
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/signup')}
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/signup")}
                   className="w-full"
                 >
                   Create Account
@@ -211,32 +224,39 @@ export default function VendorRegister() {
           <Card>
             <CardContent className="p-8 text-center">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Application Submitted!
+              </h2>
               <p className="text-gray-600 mb-6">
-                Your vendor application has been submitted successfully. Our team will review your 
-                application and get back to you within 2-3 business days.
+                Your vendor application has been submitted successfully. Our
+                team will review your application and get back to you within 2-3
+                business days.
               </p>
-              
+
               <div className="bg-blue-50 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-blue-900 mb-2">What happens next?</h3>
+                <h3 className="font-semibold text-blue-900 mb-2">
+                  What happens next?
+                </h3>
                 <ul className="text-sm text-blue-800 space-y-1 text-left">
                   <li>• Our team will verify your business documents</li>
                   <li>• We may contact you for additional information</li>
-                  <li>• Once approved, you'll get access to the vendor dashboard</li>
+                  <li>
+                    • Once approved, you'll get access to the vendor dashboard
+                  </li>
                   <li>• You can then start listing your services</li>
                 </ul>
               </div>
 
               <div className="space-y-3">
-                <Button 
-                  onClick={() => navigate('/dashboard')}
+                <Button
+                  onClick={() => navigate("/dashboard")}
                   className="w-full bg-orange-500 hover:bg-orange-600"
                 >
                   Go to Dashboard
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/')}
+                <Button
+                  variant="outline"
+                  onClick={() => navigate("/")}
                   className="w-full"
                 >
                   Return to Homepage
@@ -252,7 +272,9 @@ export default function VendorRegister() {
   const renderBusinessTypeStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Business Information</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Business Information
+        </h2>
         <p className="text-gray-600">Tell us about your business</p>
       </div>
 
@@ -261,7 +283,7 @@ export default function VendorRegister() {
         <Input
           id="businessName"
           value={formData.businessName}
-          onChange={(e) => updateFormData('businessName', e.target.value)}
+          onChange={(e) => updateFormData("businessName", e.target.value)}
           placeholder="Enter your business name"
         />
       </div>
@@ -273,20 +295,24 @@ export default function VendorRegister() {
             <button
               key={type.value}
               type="button"
-              onClick={() => updateFormData('businessType', type.value as any)}
+              onClick={() => updateFormData("businessType", type.value as any)}
               className={`p-4 border-2 rounded-lg text-left transition-colors ${
                 formData.businessType === type.value
-                  ? 'border-orange-500 bg-orange-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                  ? "border-orange-500 bg-orange-50"
+                  : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <div className="flex items-center space-x-3">
-                <div className={`${formData.businessType === type.value ? 'text-orange-600' : 'text-gray-400'}`}>
+                <div
+                  className={`${formData.businessType === type.value ? "text-orange-600" : "text-gray-400"}`}
+                >
                   {type.icon}
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">{type.label}</div>
-                  <div className="text-sm text-gray-600">{type.description}</div>
+                  <div className="text-sm text-gray-600">
+                    {type.description}
+                  </div>
                 </div>
               </div>
             </button>
@@ -299,7 +325,9 @@ export default function VendorRegister() {
         <Textarea
           id="businessDescription"
           value={formData.businessDescription}
-          onChange={(e) => updateFormData('businessDescription', e.target.value)}
+          onChange={(e) =>
+            updateFormData("businessDescription", e.target.value)
+          }
           placeholder="Describe your business, services offered, and what makes you unique"
           rows={4}
         />
@@ -310,7 +338,9 @@ export default function VendorRegister() {
   const renderContactStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Contact & Location</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Contact & Location
+        </h2>
         <p className="text-gray-600">Where can customers find you?</p>
       </div>
 
@@ -319,7 +349,7 @@ export default function VendorRegister() {
         <Textarea
           id="businessAddress"
           value={formData.businessAddress}
-          onChange={(e) => updateFormData('businessAddress', e.target.value)}
+          onChange={(e) => updateFormData("businessAddress", e.target.value)}
           placeholder="Enter complete business address"
           rows={3}
         />
@@ -331,7 +361,7 @@ export default function VendorRegister() {
           <Input
             id="city"
             value={formData.city}
-            onChange={(e) => updateFormData('city', e.target.value)}
+            onChange={(e) => updateFormData("city", e.target.value)}
           />
         </div>
         <div>
@@ -339,7 +369,7 @@ export default function VendorRegister() {
           <Input
             id="state"
             value={formData.state}
-            onChange={(e) => updateFormData('state', e.target.value)}
+            onChange={(e) => updateFormData("state", e.target.value)}
           />
         </div>
       </div>
@@ -351,7 +381,7 @@ export default function VendorRegister() {
         <Input
           id="contactPerson"
           value={formData.contactPerson}
-          onChange={(e) => updateFormData('contactPerson', e.target.value)}
+          onChange={(e) => updateFormData("contactPerson", e.target.value)}
           placeholder="Primary contact person name"
         />
       </div>
@@ -363,7 +393,7 @@ export default function VendorRegister() {
             id="contactPhone"
             type="tel"
             value={formData.contactPhone}
-            onChange={(e) => updateFormData('contactPhone', e.target.value)}
+            onChange={(e) => updateFormData("contactPhone", e.target.value)}
             placeholder="+91-9876543210"
           />
         </div>
@@ -373,7 +403,7 @@ export default function VendorRegister() {
             id="contactEmail"
             type="email"
             value={formData.contactEmail}
-            onChange={(e) => updateFormData('contactEmail', e.target.value)}
+            onChange={(e) => updateFormData("contactEmail", e.target.value)}
             placeholder="business@example.com"
           />
         </div>
@@ -384,7 +414,9 @@ export default function VendorRegister() {
   const renderDocumentsStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Business Documents</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Business Documents
+        </h2>
         <p className="text-gray-600">We need these details for verification</p>
       </div>
 
@@ -393,7 +425,7 @@ export default function VendorRegister() {
         <Input
           id="businessLicense"
           value={formData.businessLicense}
-          onChange={(e) => updateFormData('businessLicense', e.target.value)}
+          onChange={(e) => updateFormData("businessLicense", e.target.value)}
           placeholder="Business license or shop act number"
         />
       </div>
@@ -403,7 +435,7 @@ export default function VendorRegister() {
         <Input
           id="gstNumber"
           value={formData.gstNumber}
-          onChange={(e) => updateFormData('gstNumber', e.target.value)}
+          onChange={(e) => updateFormData("gstNumber", e.target.value)}
           placeholder="22AAAAA0000A1Z5"
         />
       </div>
@@ -413,7 +445,7 @@ export default function VendorRegister() {
         <Input
           id="panNumber"
           value={formData.panNumber}
-          onChange={(e) => updateFormData('panNumber', e.target.value)}
+          onChange={(e) => updateFormData("panNumber", e.target.value)}
           placeholder="ABCDE1234F"
         />
       </div>
@@ -423,7 +455,7 @@ export default function VendorRegister() {
         <Input
           id="aadharNumber"
           value={formData.aadharNumber}
-          onChange={(e) => updateFormData('aadharNumber', e.target.value)}
+          onChange={(e) => updateFormData("aadharNumber", e.target.value)}
           placeholder="1234 5678 9012"
         />
       </div>
@@ -432,8 +464,9 @@ export default function VendorRegister() {
         <div className="flex items-center space-x-2">
           <AlertCircle className="h-5 w-5 text-yellow-600" />
           <div className="text-sm text-yellow-800">
-            <strong>Note:</strong> All information will be verified during the approval process. 
-            Please ensure all details are accurate and up-to-date.
+            <strong>Note:</strong> All information will be verified during the
+            approval process. Please ensure all details are accurate and
+            up-to-date.
           </div>
         </div>
       </div>
@@ -449,20 +482,30 @@ export default function VendorRegister() {
               <Building2 className="h-6 w-6 text-orange-600" />
               <span>Become a Vendor</span>
             </CardTitle>
-            
+
             {/* Progress Steps */}
             <div className="flex items-center justify-between mt-6">
               {[1, 2, 3].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    currentStep >= step ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-600'
-                  }`}>
-                    {currentStep > step ? <CheckCircle className="h-4 w-4" /> : step}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                      currentStep >= step
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {currentStep > step ? (
+                      <CheckCircle className="h-4 w-4" />
+                    ) : (
+                      step
+                    )}
                   </div>
                   {step < 3 && (
-                    <div className={`w-12 h-0.5 mx-2 ${
-                      currentStep > step ? 'bg-orange-500' : 'bg-gray-200'
-                    }`} />
+                    <div
+                      className={`w-12 h-0.5 mx-2 ${
+                        currentStep > step ? "bg-orange-500" : "bg-gray-200"
+                      }`}
+                    />
                   )}
                 </div>
               ))}
@@ -483,10 +526,10 @@ export default function VendorRegister() {
             <div className="flex justify-between pt-6 border-t">
               <Button
                 variant="outline"
-                onClick={currentStep === 1 ? () => navigate('/') : prevStep}
+                onClick={currentStep === 1 ? () => navigate("/") : prevStep}
                 disabled={loading}
               >
-                {currentStep === 1 ? 'Cancel' : 'Back'}
+                {currentStep === 1 ? "Cancel" : "Back"}
               </Button>
 
               {currentStep < 3 ? (
@@ -504,7 +547,7 @@ export default function VendorRegister() {
                   disabled={!validateStep() || loading}
                   className="bg-orange-500 hover:bg-orange-600"
                 >
-                  {loading ? 'Submitting...' : 'Submit Application'}
+                  {loading ? "Submitting..." : "Submit Application"}
                 </Button>
               )}
             </div>

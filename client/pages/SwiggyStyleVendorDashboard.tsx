@@ -3,18 +3,24 @@
  * Modern analytics, real-time data, and actionable insights
  */
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import Layout from '@/components/Layout';
-import { useAuth } from '@/contexts/SupabaseAuthContext';
-import { supabase, trackEvent } from '@/lib/supabase';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
+import { supabase, trackEvent } from "@/lib/supabase";
 import {
   TrendingUp,
   TrendingDown,
@@ -62,7 +68,7 @@ import {
   ExternalLink,
   RefreshCw,
   Calendar as CalIcon,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface VendorMetrics {
   totalBookings: number;
@@ -83,7 +89,7 @@ interface VendorMetrics {
 export default function SwiggyStyleVendorDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const [metrics, setMetrics] = useState<VendorMetrics>({
     totalBookings: 0,
     totalRevenue: 0,
@@ -99,9 +105,9 @@ export default function SwiggyStyleVendorDashboard() {
     reviews: [],
     services: [],
   });
-  
+
   const [loading, setLoading] = useState(true);
-  const [selectedTimeRange, setSelectedTimeRange] = useState('30days');
+  const [selectedTimeRange, setSelectedTimeRange] = useState("30days");
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -112,7 +118,7 @@ export default function SwiggyStyleVendorDashboard() {
   const loadVendorData = async () => {
     try {
       setLoading(true);
-      
+
       // Simulate vendor data loading - replace with real Supabase queries
       const mockData: VendorMetrics = {
         totalBookings: 127,
@@ -124,41 +130,111 @@ export default function SwiggyStyleVendorDashboard() {
         completionRate: 98,
         repeatCustomers: 34,
         bookingTrends: [
-          { month: 'Jan', bookings: 15, revenue: 12000 },
-          { month: 'Feb', bookings: 22, revenue: 18500 },
-          { month: 'Mar', bookings: 28, revenue: 23400 },
-          { month: 'Apr', bookings: 25, revenue: 21300 },
-          { month: 'May', bookings: 37, revenue: 28900 },
+          { month: "Jan", bookings: 15, revenue: 12000 },
+          { month: "Feb", bookings: 22, revenue: 18500 },
+          { month: "Mar", bookings: 28, revenue: 23400 },
+          { month: "Apr", bookings: 25, revenue: 21300 },
+          { month: "May", bookings: 37, revenue: 28900 },
         ],
         recentBookings: [
-          { id: 1, customer: 'Priya Sharma', service: 'Beachside Homestay', amount: 2400, status: 'confirmed', date: '2024-01-15' },
-          { id: 2, customer: 'Raj Patel', service: 'Local Food Tour', amount: 800, status: 'pending', date: '2024-01-14' },
-          { id: 3, customer: 'Anita Kumar', service: 'Driver Service', amount: 1200, status: 'completed', date: '2024-01-13' },
+          {
+            id: 1,
+            customer: "Priya Sharma",
+            service: "Beachside Homestay",
+            amount: 2400,
+            status: "confirmed",
+            date: "2024-01-15",
+          },
+          {
+            id: 2,
+            customer: "Raj Patel",
+            service: "Local Food Tour",
+            amount: 800,
+            status: "pending",
+            date: "2024-01-14",
+          },
+          {
+            id: 3,
+            customer: "Anita Kumar",
+            service: "Driver Service",
+            amount: 1200,
+            status: "completed",
+            date: "2024-01-13",
+          },
         ],
         upcomingBookings: [
-          { id: 4, customer: 'Vikram Singh', service: 'Heritage Homestay', amount: 3200, date: '2024-01-20', time: '2:00 PM' },
-          { id: 5, customer: 'Meera Nair', service: 'Cooking Experience', amount: 1500, date: '2024-01-22', time: '10:00 AM' },
+          {
+            id: 4,
+            customer: "Vikram Singh",
+            service: "Heritage Homestay",
+            amount: 3200,
+            date: "2024-01-20",
+            time: "2:00 PM",
+          },
+          {
+            id: 5,
+            customer: "Meera Nair",
+            service: "Cooking Experience",
+            amount: 1500,
+            date: "2024-01-22",
+            time: "10:00 AM",
+          },
         ],
         reviews: [
-          { id: 1, customer: 'Rahul M.', rating: 5, comment: 'Amazing experience! The homestay was perfect.', date: '2024-01-10' },
-          { id: 2, customer: 'Sneha K.', rating: 4, comment: 'Great location and friendly hosts.', date: '2024-01-08' },
+          {
+            id: 1,
+            customer: "Rahul M.",
+            rating: 5,
+            comment: "Amazing experience! The homestay was perfect.",
+            date: "2024-01-10",
+          },
+          {
+            id: 2,
+            customer: "Sneha K.",
+            rating: 4,
+            comment: "Great location and friendly hosts.",
+            date: "2024-01-08",
+          },
         ],
         services: [
-          { id: 1, name: 'Beachside Homestay', type: 'homestay', status: 'active', bookings: 45, rating: 4.8, price: 2400 },
-          { id: 2, name: 'Local Food Tour', type: 'experience', status: 'active', bookings: 32, rating: 4.6, price: 800 },
-          { id: 3, name: 'Driver Service', type: 'transport', status: 'active', bookings: 28, rating: 4.7, price: 1200 },
+          {
+            id: 1,
+            name: "Beachside Homestay",
+            type: "homestay",
+            status: "active",
+            bookings: 45,
+            rating: 4.8,
+            price: 2400,
+          },
+          {
+            id: 2,
+            name: "Local Food Tour",
+            type: "experience",
+            status: "active",
+            bookings: 32,
+            rating: 4.6,
+            price: 800,
+          },
+          {
+            id: 3,
+            name: "Driver Service",
+            type: "transport",
+            status: "active",
+            bookings: 28,
+            rating: 4.7,
+            price: 1200,
+          },
         ],
       };
-      
+
       setMetrics(mockData);
-      
-      await trackEvent('vendor_dashboard_viewed', {
+
+      await trackEvent("vendor_dashboard_viewed", {
         vendor_id: user?.id,
         time_range: selectedTimeRange,
       });
-      
     } catch (error) {
-      console.error('Error loading vendor data:', error);
+      console.error("Error loading vendor data:", error);
     } finally {
       setLoading(false);
     }
@@ -167,38 +243,67 @@ export default function SwiggyStyleVendorDashboard() {
   const loadNotifications = async () => {
     // Mock notifications - replace with real data
     setNotifications([
-      { id: 1, type: 'booking', message: 'New booking from Priya Sharma', time: '5 min ago', unread: true },
-      { id: 2, type: 'review', message: 'New 5-star review received', time: '2 hours ago', unread: true },
-      { id: 3, type: 'payment', message: 'Payment of ₹2,400 received', time: '1 day ago', unread: false },
+      {
+        id: 1,
+        type: "booking",
+        message: "New booking from Priya Sharma",
+        time: "5 min ago",
+        unread: true,
+      },
+      {
+        id: 2,
+        type: "review",
+        message: "New 5-star review received",
+        time: "2 hours ago",
+        unread: true,
+      },
+      {
+        id: 3,
+        type: "payment",
+        message: "Payment of ₹2,400 received",
+        time: "1 day ago",
+        unread: false,
+      },
     ]);
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
       minimumFractionDigits: 0,
     }).format(price);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'bg-blue-100 text-blue-700';
-      case 'pending': return 'bg-yellow-100 text-yellow-700';
-      case 'completed': return 'bg-green-100 text-green-700';
-      case 'cancelled': return 'bg-red-100 text-red-700';
-      case 'active': return 'bg-green-100 text-green-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case "confirmed":
+        return "bg-blue-100 text-blue-700";
+      case "pending":
+        return "bg-yellow-100 text-yellow-700";
+      case "completed":
+        return "bg-green-100 text-green-700";
+      case "cancelled":
+        return "bg-red-100 text-red-700";
+      case "active":
+        return "bg-green-100 text-green-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
   const getServiceIcon = (type: string) => {
     switch (type) {
-      case 'homestay': return '🏠';
-      case 'restaurant': return '🍽️';
-      case 'transport': return '🚗';
-      case 'experience': return '🎭';
-      default: return '🏖️';
+      case "homestay":
+        return "🏠";
+      case "restaurant":
+        return "🍽️";
+      case "transport":
+        return "🚗";
+      case "experience":
+        return "🎭";
+      default:
+        return "🏖️";
     }
   };
 
@@ -209,8 +314,12 @@ export default function SwiggyStyleVendorDashboard() {
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-200 border-t-orange-500 mx-auto"></div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-gray-900">Loading Dashboard</h3>
-              <p className="text-gray-600">Fetching your business insights...</p>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Loading Dashboard
+              </h3>
+              <p className="text-gray-600">
+                Fetching your business insights...
+              </p>
             </div>
           </div>
         </div>
@@ -226,13 +335,20 @@ export default function SwiggyStyleVendorDashboard() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Vendor Dashboard</h1>
-                <p className="text-gray-600 mt-1">Manage your business and track performance</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Vendor Dashboard
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  Manage your business and track performance
+                </p>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 {/* Time Range Selector */}
-                <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+                <Select
+                  value={selectedTimeRange}
+                  onValueChange={setSelectedTimeRange}
+                >
                   <SelectTrigger className="w-40">
                     <SelectValue />
                   </SelectTrigger>
@@ -247,7 +363,7 @@ export default function SwiggyStyleVendorDashboard() {
                 {/* Notifications */}
                 <Button variant="outline" size="sm" className="relative">
                   <Bell className="h-4 w-4" />
-                  {notifications.some(n => n.unread) && (
+                  {notifications.some((n) => n.unread) && (
                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                   )}
                 </Button>
@@ -269,8 +385,12 @@ export default function SwiggyStyleVendorDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Total Bookings</p>
-                    <p className="text-2xl font-bold text-gray-900">{metrics.totalBookings}</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Total Bookings
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {metrics.totalBookings}
+                    </p>
                     <div className="flex items-center text-sm text-green-600 mt-2">
                       <TrendingUp className="h-4 w-4 mr-1" />
                       <span>+12% from last month</span>
@@ -287,8 +407,12 @@ export default function SwiggyStyleVendorDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Total Revenue</p>
-                    <p className="text-2xl font-bold text-gray-900">{formatPrice(metrics.totalRevenue)}</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Total Revenue
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {formatPrice(metrics.totalRevenue)}
+                    </p>
                     <div className="flex items-center text-sm text-green-600 mt-2">
                       <TrendingUp className="h-4 w-4 mr-1" />
                       <span>+18% from last month</span>
@@ -305,8 +429,12 @@ export default function SwiggyStyleVendorDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Average Rating</p>
-                    <p className="text-2xl font-bold text-gray-900">{metrics.averageRating}</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Average Rating
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {metrics.averageRating}
+                    </p>
                     <div className="flex items-center text-sm text-yellow-600 mt-2">
                       <Star className="h-4 w-4 mr-1 fill-current" />
                       <span>{metrics.totalReviews} reviews</span>
@@ -323,8 +451,12 @@ export default function SwiggyStyleVendorDashboard() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">Profile Views</p>
-                    <p className="text-2xl font-bold text-gray-900">{metrics.viewsThisMonth}</p>
+                    <p className="text-sm font-medium text-gray-600 mb-1">
+                      Profile Views
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {metrics.viewsThisMonth}
+                    </p>
                     <div className="flex items-center text-sm text-purple-600 mt-2">
                       <Eye className="h-4 w-4 mr-1" />
                       <span>This month</span>
@@ -351,19 +483,23 @@ export default function SwiggyStyleVendorDashboard() {
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">Response Rate</span>
-                    <span className="font-semibold">{metrics.responseRate}%</span>
+                    <span className="font-semibold">
+                      {metrics.responseRate}%
+                    </span>
                   </div>
                   <Progress value={metrics.responseRate} className="h-2" />
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">Completion Rate</span>
-                    <span className="font-semibold">{metrics.completionRate}%</span>
+                    <span className="font-semibold">
+                      {metrics.completionRate}%
+                    </span>
                   </div>
                   <Progress value={metrics.completionRate} className="h-2" />
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">Customer Satisfaction</span>
@@ -374,8 +510,12 @@ export default function SwiggyStyleVendorDashboard() {
 
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Repeat Customers</span>
-                    <span className="text-lg font-bold text-green-600">{metrics.repeatCustomers}</span>
+                    <span className="text-sm text-gray-600">
+                      Repeat Customers
+                    </span>
+                    <span className="text-lg font-bold text-green-600">
+                      {metrics.repeatCustomers}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -392,15 +532,24 @@ export default function SwiggyStyleVendorDashboard() {
                 {/* Simple chart representation */}
                 <div className="space-y-4">
                   {metrics.bookingTrends.map((trend, index) => (
-                    <div key={trend.month} className="flex items-center space-x-4">
-                      <span className="w-8 text-sm font-medium text-gray-600">{trend.month}</span>
+                    <div
+                      key={trend.month}
+                      className="flex items-center space-x-4"
+                    >
+                      <span className="w-8 text-sm font-medium text-gray-600">
+                        {trend.month}
+                      </span>
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm text-gray-600">{trend.bookings} bookings</span>
-                          <span className="text-sm font-semibold">{formatPrice(trend.revenue)}</span>
+                          <span className="text-sm text-gray-600">
+                            {trend.bookings} bookings
+                          </span>
+                          <span className="text-sm font-semibold">
+                            {formatPrice(trend.revenue)}
+                          </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-orange-500 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${(trend.bookings / 40) * 100}%` }}
                           ></div>
@@ -409,7 +558,7 @@ export default function SwiggyStyleVendorDashboard() {
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="mt-6 pt-4 border-t border-gray-200">
                   <Button variant="outline" className="w-full">
                     <BarChart3 className="h-4 w-4 mr-2" />
@@ -449,14 +598,25 @@ export default function SwiggyStyleVendorDashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       {metrics.recentBookings.map((booking) => (
-                        <div key={booking.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                        <div
+                          key={booking.id}
+                          className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+                        >
                           <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900">{booking.customer}</h4>
-                            <p className="text-sm text-gray-600">{booking.service}</p>
-                            <p className="text-xs text-gray-500">{booking.date}</p>
+                            <h4 className="font-semibold text-gray-900">
+                              {booking.customer}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {booking.service}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {booking.date}
+                            </p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold text-gray-900">{formatPrice(booking.amount)}</p>
+                            <p className="font-semibold text-gray-900">
+                              {formatPrice(booking.amount)}
+                            </p>
                             <Badge className={getStatusColor(booking.status)}>
                               {booking.status}
                             </Badge>
@@ -483,16 +643,30 @@ export default function SwiggyStyleVendorDashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       {metrics.upcomingBookings.map((booking) => (
-                        <div key={booking.id} className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <div
+                          key={booking.id}
+                          className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-200"
+                        >
                           <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900">{booking.customer}</h4>
-                            <p className="text-sm text-gray-600">{booking.service}</p>
-                            <p className="text-xs text-blue-600 font-medium">{booking.date} at {booking.time}</p>
+                            <h4 className="font-semibold text-gray-900">
+                              {booking.customer}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {booking.service}
+                            </p>
+                            <p className="text-xs text-blue-600 font-medium">
+                              {booking.date} at {booking.time}
+                            </p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold text-gray-900">{formatPrice(booking.amount)}</p>
+                            <p className="font-semibold text-gray-900">
+                              {formatPrice(booking.amount)}
+                            </p>
                             <div className="flex space-x-1 mt-2">
-                              <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white">
+                              <Button
+                                size="sm"
+                                className="bg-green-500 hover:bg-green-600 text-white"
+                              >
                                 Accept
                               </Button>
                               <Button size="sm" variant="outline">
@@ -526,40 +700,61 @@ export default function SwiggyStyleVendorDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {metrics.services.map((service) => (
-                      <div key={service.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                      <div
+                        key={service.id}
+                        className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                      >
                         <div className="aspect-video bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center">
-                          <span className="text-4xl">{getServiceIcon(service.type)}</span>
+                          <span className="text-4xl">
+                            {getServiceIcon(service.type)}
+                          </span>
                         </div>
-                        
+
                         <div className="p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-semibold text-gray-900">{service.name}</h4>
+                            <h4 className="font-semibold text-gray-900">
+                              {service.name}
+                            </h4>
                             <Badge className={getStatusColor(service.status)}>
                               {service.status}
                             </Badge>
                           </div>
-                          
-                          <p className="text-sm text-gray-600 capitalize mb-3">{service.type}</p>
-                          
+
+                          <p className="text-sm text-gray-600 capitalize mb-3">
+                            {service.type}
+                          </p>
+
                           <div className="flex items-center justify-between text-sm mb-3">
                             <span className="text-gray-600">Price:</span>
-                            <span className="font-semibold">{formatPrice(service.price)}</span>
+                            <span className="font-semibold">
+                              {formatPrice(service.price)}
+                            </span>
                           </div>
-                          
+
                           <div className="flex items-center justify-between text-sm mb-4">
                             <span className="flex items-center text-gray-600">
                               <Star className="h-3 w-3 mr-1 fill-current text-yellow-400" />
                               {service.rating}
                             </span>
-                            <span className="text-gray-600">{service.bookings} bookings</span>
+                            <span className="text-gray-600">
+                              {service.bookings} bookings
+                            </span>
                           </div>
-                          
+
                           <div className="flex space-x-2">
-                            <Button size="sm" variant="outline" className="flex-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1"
+                            >
                               <Edit className="h-3 w-3 mr-1" />
                               Edit
                             </Button>
-                            <Button size="sm" variant="outline" className="flex-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1"
+                            >
                               <Eye className="h-3 w-3 mr-1" />
                               View
                             </Button>
@@ -586,24 +781,37 @@ export default function SwiggyStyleVendorDashboard() {
                     </span>
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <Star className="h-4 w-4 fill-current text-yellow-400" />
-                      <span>{metrics.averageRating} average • {metrics.totalReviews} reviews</span>
+                      <span>
+                        {metrics.averageRating} average • {metrics.totalReviews}{" "}
+                        reviews
+                      </span>
                     </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {metrics.reviews.map((review) => (
-                      <div key={review.id} className="p-4 bg-gray-50 rounded-xl">
+                      <div
+                        key={review.id}
+                        className="p-4 bg-gray-50 rounded-xl"
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-2">
-                            <span className="font-semibold text-gray-900">{review.customer}</span>
+                            <span className="font-semibold text-gray-900">
+                              {review.customer}
+                            </span>
                             <div className="flex">
                               {[...Array(review.rating)].map((_, i) => (
-                                <Star key={i} className="h-4 w-4 fill-current text-yellow-400" />
+                                <Star
+                                  key={i}
+                                  className="h-4 w-4 fill-current text-yellow-400"
+                                />
                               ))}
                             </div>
                           </div>
-                          <span className="text-sm text-gray-500">{review.date}</span>
+                          <span className="text-sm text-gray-500">
+                            {review.date}
+                          </span>
                         </div>
                         <p className="text-gray-700">{review.comment}</p>
                         <div className="flex items-center space-x-2 mt-3">
@@ -619,11 +827,9 @@ export default function SwiggyStyleVendorDashboard() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="mt-6 text-center">
-                    <Button variant="outline">
-                      View All Reviews
-                    </Button>
+                    <Button variant="outline">View All Reviews</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -642,18 +848,42 @@ export default function SwiggyStyleVendorDashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       {[
-                        { type: 'Homestays', percentage: 45, amount: 40230, color: 'bg-blue-500' },
-                        { type: 'Food Tours', percentage: 30, amount: 26820, color: 'bg-green-500' },
-                        { type: 'Transport', percentage: 25, amount: 22350, color: 'bg-purple-500' },
+                        {
+                          type: "Homestays",
+                          percentage: 45,
+                          amount: 40230,
+                          color: "bg-blue-500",
+                        },
+                        {
+                          type: "Food Tours",
+                          percentage: 30,
+                          amount: 26820,
+                          color: "bg-green-500",
+                        },
+                        {
+                          type: "Transport",
+                          percentage: 25,
+                          amount: 22350,
+                          color: "bg-purple-500",
+                        },
                       ].map((item) => (
-                        <div key={item.type} className="flex items-center justify-between">
+                        <div
+                          key={item.type}
+                          className="flex items-center justify-between"
+                        >
                           <div className="flex items-center space-x-3">
-                            <div className={`w-4 h-4 rounded ${item.color}`}></div>
+                            <div
+                              className={`w-4 h-4 rounded ${item.color}`}
+                            ></div>
                             <span className="text-gray-700">{item.type}</span>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold">{formatPrice(item.amount)}</p>
-                            <p className="text-sm text-gray-500">{item.percentage}%</p>
+                            <p className="font-semibold">
+                              {formatPrice(item.amount)}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {item.percentage}%
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -677,10 +907,12 @@ export default function SwiggyStyleVendorDashboard() {
                         </div>
                         <Progress value={67} className="h-2" />
                       </div>
-                      
+
                       <div>
                         <div className="flex justify-between text-sm mb-2">
-                          <span className="text-gray-600">Returning Customers</span>
+                          <span className="text-gray-600">
+                            Returning Customers
+                          </span>
                           <span className="font-semibold">33%</span>
                         </div>
                         <Progress value={33} className="h-2" />
@@ -688,12 +920,20 @@ export default function SwiggyStyleVendorDashboard() {
 
                       <div className="pt-4 border-t border-gray-200 space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">Average Booking Value</span>
-                          <span className="font-semibold">{formatPrice(1840)}</span>
+                          <span className="text-sm text-gray-600">
+                            Average Booking Value
+                          </span>
+                          <span className="font-semibold">
+                            {formatPrice(1840)}
+                          </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-sm text-gray-600">Customer Lifetime Value</span>
-                          <span className="font-semibold">{formatPrice(4320)}</span>
+                          <span className="text-sm text-gray-600">
+                            Customer Lifetime Value
+                          </span>
+                          <span className="font-semibold">
+                            {formatPrice(4320)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -742,15 +982,27 @@ export default function SwiggyStyleVendorDashboard() {
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">New booking notifications</span>
-                      <input type="checkbox" defaultChecked className="rounded" />
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="rounded"
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Review notifications</span>
-                      <input type="checkbox" defaultChecked className="rounded" />
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="rounded"
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Payment notifications</span>
-                      <input type="checkbox" defaultChecked className="rounded" />
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="rounded"
+                      />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Marketing emails</span>

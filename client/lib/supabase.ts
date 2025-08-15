@@ -17,8 +17,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce',
-    redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+    flowType: "pkce",
+    redirectTo:
+      typeof window !== "undefined" ? window.location.origin : undefined,
   },
   realtime: {
     params: {
@@ -265,9 +266,9 @@ export const getServiceCategories = async () => {
 
         return {
           ...category,
-          service_count: count || 0
+          service_count: count || 0,
         };
-      })
+      }),
     );
 
     return categoriesWithCount;

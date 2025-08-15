@@ -71,14 +71,26 @@ function App() {
               <Route path="/creators" element={<SwiggyStyleServices />} />
 
               {/* Event Organizer Routes */}
-              <Route path="/organizer-register" element={<EventOrganizerRegister />} />
-              <Route path="/organizer-login" element={<EventOrganizerLogin />} />
-              <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
+              <Route
+                path="/organizer-register"
+                element={<EventOrganizerRegister />}
+              />
+              <Route
+                path="/organizer-login"
+                element={<EventOrganizerLogin />}
+              />
+              <Route
+                path="/organizer-dashboard"
+                element={<EventOrganizerDashboard />}
+              />
               <Route path="/create-event" element={<CreateEvent />} />
 
               {/* Vendor Routes */}
               <Route path="/vendor-register" element={<VendorRegister />} />
-              <Route path="/vendor-dashboard" element={<SwiggyStyleVendorDashboard />} />
+              <Route
+                path="/vendor-dashboard"
+                element={<SwiggyStyleVendorDashboard />}
+              />
 
               {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />

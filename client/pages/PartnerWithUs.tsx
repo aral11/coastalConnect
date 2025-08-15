@@ -56,7 +56,11 @@ export default function PartnerWithUs() {
       title: "Hotels & Homestays",
       icon: <Home className="h-8 w-8" />,
       description: "List your property and welcome travelers",
-      benefits: ["24/7 booking system", "Digital payment processing", "Guest management tools"],
+      benefits: [
+        "24/7 booking system",
+        "Digital payment processing",
+        "Guest management tools",
+      ],
       color: "from-blue-500 to-cyan-500",
     },
     {
@@ -64,7 +68,11 @@ export default function PartnerWithUs() {
       title: "Restaurants & Cafes",
       icon: <UtensilsCrossed className="h-8 w-8" />,
       description: "Showcase your culinary offerings",
-      benefits: ["Online menu management", "Table booking system", "Customer reviews"],
+      benefits: [
+        "Online menu management",
+        "Table booking system",
+        "Customer reviews",
+      ],
       color: "from-orange-500 to-red-500",
     },
     {
@@ -80,7 +88,11 @@ export default function PartnerWithUs() {
       title: "Wellness & Spa",
       icon: <Heart className="h-8 w-8" />,
       description: "Provide relaxation and wellness services",
-      benefits: ["Appointment scheduling", "Service packages", "Client management"],
+      benefits: [
+        "Appointment scheduling",
+        "Service packages",
+        "Client management",
+      ],
       color: "from-purple-500 to-pink-500",
     },
     {
@@ -88,7 +100,11 @@ export default function PartnerWithUs() {
       title: "Event Services",
       icon: <PartyPopper className="h-8 w-8" />,
       description: "Organize memorable experiences",
-      benefits: ["Event planning tools", "Vendor coordination", "Booking management"],
+      benefits: [
+        "Event planning tools",
+        "Vendor coordination",
+        "Booking management",
+      ],
       color: "from-yellow-500 to-orange-500",
     },
     {
@@ -96,21 +112,53 @@ export default function PartnerWithUs() {
       title: "Content Creators",
       icon: <Camera className="h-8 w-8" />,
       description: "Showcase your creative talents",
-      benefits: ["Portfolio showcase", "Booking calendar", "Client communication"],
+      benefits: [
+        "Portfolio showcase",
+        "Booking calendar",
+        "Client communication",
+      ],
       color: "from-indigo-500 to-purple-500",
     },
   ];
 
   const platformBenefits = [
-    { icon: <Users className="h-6 w-6" />, title: "Growing Customer Base", description: "Access thousands of travelers" },
-    { icon: <Shield className="h-6 w-6" />, title: "Secure Platform", description: "Safe and verified transactions" },
-    { icon: <TrendingUp className="h-6 w-6" />, title: "Business Growth", description: "Analytics and insights" },
-    { icon: <Star className="h-6 w-6" />, title: "Quality Assurance", description: "Verified reviews and ratings" },
-    { icon: <Zap className="h-6 w-6" />, title: "Instant Bookings", description: "Real-time booking system" },
-    { icon: <DollarSign className="h-6 w-6" />, title: "Competitive Rates", description: "Low commission fees" },
+    {
+      icon: <Users className="h-6 w-6" />,
+      title: "Growing Customer Base",
+      description: "Access thousands of travelers",
+    },
+    {
+      icon: <Shield className="h-6 w-6" />,
+      title: "Secure Platform",
+      description: "Safe and verified transactions",
+    },
+    {
+      icon: <TrendingUp className="h-6 w-6" />,
+      title: "Business Growth",
+      description: "Analytics and insights",
+    },
+    {
+      icon: <Star className="h-6 w-6" />,
+      title: "Quality Assurance",
+      description: "Verified reviews and ratings",
+    },
+    {
+      icon: <Zap className="h-6 w-6" />,
+      title: "Instant Bookings",
+      description: "Real-time booking system",
+    },
+    {
+      icon: <DollarSign className="h-6 w-6" />,
+      title: "Competitive Rates",
+      description: "Low commission fees",
+    },
   ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -155,7 +203,7 @@ export default function PartnerWithUs() {
         message: "",
       });
       setSelectedPartnerType("");
-      
+
       alert("Thank you for your interest! We'll contact you within 24 hours.");
     } catch (error) {
       console.error("Error submitting partnership inquiry:", error);
@@ -176,26 +224,32 @@ export default function PartnerWithUs() {
               <Crown className="h-4 w-4 mr-2" />
               Join Our Growing Network
             </Badge>
-            
+
             <h1 className="text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
               Partner with
               <span className="block bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
                 CoastalConnect
               </span>
             </h1>
-            
+
             <p className="text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Join hundreds of successful partners and grow your business with Coastal Karnataka's leading platform for tourism and local services.
+              Join hundreds of successful partners and grow your business with
+              Coastal Karnataka's leading platform for tourism and local
+              services.
             </p>
 
             <div className="flex justify-center items-center space-x-12">
               <div className="text-center">
                 <div className="text-3xl font-black text-gray-900">500+</div>
-                <div className="text-sm text-gray-600 font-medium">Active Partners</div>
+                <div className="text-sm text-gray-600 font-medium">
+                  Active Partners
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-black text-gray-900">10K+</div>
-                <div className="text-sm text-gray-600 font-medium">Monthly Bookings</div>
+                <div className="text-sm text-gray-600 font-medium">
+                  Monthly Bookings
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-black text-gray-900">4.8</div>
@@ -216,7 +270,8 @@ export default function PartnerWithUs() {
                 Choose Your Partnership
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Select the category that best fits your business and start growing with us
+                Select the category that best fits your business and start
+                growing with us
               </p>
             </div>
 
@@ -227,20 +282,27 @@ export default function PartnerWithUs() {
                   onClick={() => setSelectedPartnerType(type.id)}
                   className={`cursor-pointer rounded-3xl p-8 border-2 transition-all duration-300 transform hover:-translate-y-2 ${
                     selectedPartnerType === type.id
-                      ? 'border-orange-500 shadow-2xl scale-105'
-                      : 'border-gray-200 hover:border-orange-300 hover:shadow-xl'
+                      ? "border-orange-500 shadow-2xl scale-105"
+                      : "border-gray-200 hover:border-orange-300 hover:shadow-xl"
                   }`}
                 >
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${type.color} flex items-center justify-center text-white mb-6`}>
+                  <div
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${type.color} flex items-center justify-center text-white mb-6`}
+                  >
                     {type.icon}
                   </div>
-                  
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{type.title}</h3>
+
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                    {type.title}
+                  </h3>
                   <p className="text-gray-600 mb-6">{type.description}</p>
-                  
+
                   <ul className="space-y-2">
                     {type.benefits.map((benefit, index) => (
-                      <li key={index} className="flex items-center text-sm text-gray-600">
+                      <li
+                        key={index}
+                        className="flex items-center text-sm text-gray-600"
+                      >
                         <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
                         {benefit}
                       </li>
@@ -266,11 +328,16 @@ export default function PartnerWithUs() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {platformBenefits.map((benefit, index) => (
-                <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500 mb-6">
                     {benefit.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{benefit.title}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {benefit.title}
+                  </h3>
                   <p className="text-gray-600">{benefit.description}</p>
                 </div>
               ))}
@@ -286,14 +353,20 @@ export default function PartnerWithUs() {
                 Ready to Get Started?
               </h2>
               <p className="text-xl text-gray-600">
-                Fill out the form below and we'll get back to you within 24 hours
+                Fill out the form below and we'll get back to you within 24
+                hours
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-gray-50 rounded-3xl p-8 space-y-6">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-gray-50 rounded-3xl p-8 space-y-6"
+            >
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name
+                  </label>
                   <Input
                     name="name"
                     value={formData.name}
@@ -304,7 +377,9 @@ export default function PartnerWithUs() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
                   <Input
                     type="email"
                     name="email"
@@ -319,7 +394,9 @@ export default function PartnerWithUs() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
                   <Input
                     name="phone"
                     value={formData.phone}
@@ -330,7 +407,9 @@ export default function PartnerWithUs() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Name
+                  </label>
                   <Input
                     name="businessName"
                     value={formData.businessName}
@@ -344,7 +423,9 @@ export default function PartnerWithUs() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Partnership Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Partnership Type
+                  </label>
                   <select
                     name="businessType"
                     value={selectedPartnerType}
@@ -361,7 +442,9 @@ export default function PartnerWithUs() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
                   <Input
                     name="location"
                     value={formData.location}
@@ -374,7 +457,9 @@ export default function PartnerWithUs() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tell us about your business</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tell us about your business
+                </label>
                 <textarea
                   name="message"
                   value={formData.message}
@@ -406,13 +491,21 @@ export default function PartnerWithUs() {
         {/* Contact Info */}
         <section className="py-16 bg-gray-50 border-t border-gray-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Need Help? Contact Us Directly</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              Need Help? Contact Us Directly
+            </h3>
             <div className="flex justify-center items-center space-x-8">
-              <a href="mailto:partners@coastalconnect.in" className="flex items-center text-orange-500 hover:text-orange-600 font-semibold">
+              <a
+                href="mailto:partners@coastalconnect.in"
+                className="flex items-center text-orange-500 hover:text-orange-600 font-semibold"
+              >
                 <Mail className="h-5 w-5 mr-2" />
                 partners@coastalconnect.in
               </a>
-              <a href="tel:+919876543210" className="flex items-center text-orange-500 hover:text-orange-600 font-semibold">
+              <a
+                href="tel:+919876543210"
+                className="flex items-center text-orange-500 hover:text-orange-600 font-semibold"
+              >
                 <Phone className="h-5 w-5 mr-2" />
                 +91 98765 43210
               </a>

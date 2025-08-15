@@ -65,7 +65,7 @@ export default function ModernSignupFixed() {
   // Redirect if already logged in
   useEffect(() => {
     if (user && !authLoading) {
-      navigate('/dashboard', { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [user, authLoading, navigate]);
 
@@ -75,7 +75,7 @@ export default function ModernSignupFixed() {
       return false;
     }
 
-    if (!formData.email.includes('@')) {
+    if (!formData.email.includes("@")) {
       setError("Please enter a valid email address");
       return false;
     }
@@ -100,7 +100,7 @@ export default function ModernSignupFixed() {
       return false;
     }
 
-    if (formData.role === 'vendor' && !formData.businessName.trim()) {
+    if (formData.role === "vendor" && !formData.businessName.trim()) {
       setError("Please enter your business name");
       return false;
     }
@@ -110,7 +110,7 @@ export default function ModernSignupFixed() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -124,14 +124,14 @@ export default function ModernSignupFixed() {
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         role: formData.role,
-        ...(formData.role === 'vendor' && {
+        ...(formData.role === "vendor" && {
           business_name: formData.businessName.trim(),
           business_type: formData.businessType,
         }),
       };
 
       await signUp(formData.email, formData.password, userData);
-      
+
       // Track signup event
       try {
         await trackEvent("user_signup", {
@@ -146,13 +146,17 @@ export default function ModernSignupFixed() {
       setSuccess(true);
     } catch (error: any) {
       console.error("Signup error:", error);
-      
+
       // Handle specific Supabase auth errors
-      if (error.message?.includes('User already registered')) {
-        setError("An account with this email already exists. Please sign in instead.");
-      } else if (error.message?.includes('Password should be at least 6 characters')) {
+      if (error.message?.includes("User already registered")) {
+        setError(
+          "An account with this email already exists. Please sign in instead.",
+        );
+      } else if (
+        error.message?.includes("Password should be at least 6 characters")
+      ) {
         setError("Password must be at least 6 characters long.");
-      } else if (error.message?.includes('Invalid email')) {
+      } else if (error.message?.includes("Invalid email")) {
         setError("Please enter a valid email address.");
       } else {
         setError(error.message || "Sign up failed. Please try again.");
@@ -163,11 +167,11 @@ export default function ModernSignupFixed() {
   };
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (error) {
       setError("");
@@ -193,14 +197,17 @@ export default function ModernSignupFixed() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Check Your Email</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Check Your Email
+            </h2>
             <p className="text-gray-600">
-              We've sent a confirmation link to <strong>{formData.email}</strong>. 
-              Please click the link to verify your account before signing in.
+              We've sent a confirmation link to{" "}
+              <strong>{formData.email}</strong>. Please click the link to verify
+              your account before signing in.
             </p>
             <div className="pt-4">
-              <Button 
-                onClick={() => navigate('/login')}
+              <Button
+                onClick={() => navigate("/login")}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               >
                 Go to Sign In
@@ -225,7 +232,9 @@ export default function ModernSignupFixed() {
               coastal<span className="text-orange-500">Connect</span>
             </h1>
           </div>
-          <h2 className="text-xl font-semibold text-gray-900">Create Account</h2>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Create Account
+          </h2>
           <p className="text-gray-600">Join our coastal community today</p>
         </div>
 
@@ -251,7 +260,10 @@ export default function ModernSignupFixed() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name */}
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="name"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Full Name *
                 </label>
                 <div className="relative">
@@ -261,7 +273,7 @@ export default function ModernSignupFixed() {
                     type="text"
                     placeholder="Enter your full name"
                     value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     className="pl-10"
                     required
                     disabled={loading}
@@ -271,7 +283,10 @@ export default function ModernSignupFixed() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email Address *
                 </label>
                 <div className="relative">
@@ -281,7 +296,7 @@ export default function ModernSignupFixed() {
                     type="email"
                     placeholder="your@email.com"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     className="pl-10"
                     required
                     disabled={loading}
@@ -291,7 +306,10 @@ export default function ModernSignupFixed() {
 
               {/* Phone */}
               <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="phone"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Phone Number
                 </label>
                 <div className="relative">
@@ -301,7 +319,7 @@ export default function ModernSignupFixed() {
                     type="tel"
                     placeholder="Your phone number"
                     value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     className="pl-10"
                     disabled={loading}
                   />
@@ -315,7 +333,7 @@ export default function ModernSignupFixed() {
                 </label>
                 <Select
                   value={formData.role}
-                  onValueChange={(value) => handleInputChange('role', value)}
+                  onValueChange={(value) => handleInputChange("role", value)}
                   disabled={loading}
                 >
                   <SelectTrigger>
@@ -324,16 +342,21 @@ export default function ModernSignupFixed() {
                   <SelectContent>
                     <SelectItem value="customer">Customer</SelectItem>
                     <SelectItem value="vendor">Service Provider</SelectItem>
-                    <SelectItem value="event_organizer">Event Organizer</SelectItem>
+                    <SelectItem value="event_organizer">
+                      Event Organizer
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {/* Business Details for Vendors */}
-              {formData.role === 'vendor' && (
+              {formData.role === "vendor" && (
                 <>
                   <div className="space-y-2">
-                    <label htmlFor="businessName" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="businessName"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Business Name *
                     </label>
                     <Input
@@ -341,7 +364,9 @@ export default function ModernSignupFixed() {
                       type="text"
                       placeholder="Your business name"
                       value={formData.businessName}
-                      onChange={(e) => handleInputChange('businessName', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("businessName", e.target.value)
+                      }
                       required
                       disabled={loading}
                     />
@@ -353,7 +378,9 @@ export default function ModernSignupFixed() {
                     </label>
                     <Select
                       value={formData.businessType}
-                      onValueChange={(value) => handleInputChange('businessType', value)}
+                      onValueChange={(value) =>
+                        handleInputChange("businessType", value)
+                      }
                       disabled={loading}
                     >
                       <SelectTrigger>
@@ -363,7 +390,9 @@ export default function ModernSignupFixed() {
                         <SelectItem value="homestay">Homestay/Hotel</SelectItem>
                         <SelectItem value="restaurant">Restaurant</SelectItem>
                         <SelectItem value="driver">Transportation</SelectItem>
-                        <SelectItem value="event_services">Event Services</SelectItem>
+                        <SelectItem value="event_services">
+                          Event Services
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -372,7 +401,10 @@ export default function ModernSignupFixed() {
 
               {/* Password */}
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password *
                 </label>
                 <div className="relative">
@@ -382,7 +414,9 @@ export default function ModernSignupFixed() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     className="pl-10 pr-10"
                     required
                     disabled={loading}
@@ -393,14 +427,21 @@ export default function ModernSignupFixed() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={loading}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
               <div className="space-y-2">
-                <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Confirm Password *
                 </label>
                 <div className="relative">
@@ -410,7 +451,9 @@ export default function ModernSignupFixed() {
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     className="pl-10 pr-10"
                     required
                     disabled={loading}
@@ -421,7 +464,11 @@ export default function ModernSignupFixed() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={loading}
                   >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -431,16 +478,27 @@ export default function ModernSignupFixed() {
                 <Checkbox
                   id="terms"
                   checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => handleInputChange('agreeToTerms', checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("agreeToTerms", checked as boolean)
+                  }
                   disabled={loading}
                 />
-                <label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
+                <label
+                  htmlFor="terms"
+                  className="text-sm text-gray-600 leading-relaxed"
+                >
                   I agree to the{" "}
-                  <Link to="/terms" className="text-orange-600 hover:text-orange-700">
+                  <Link
+                    to="/terms"
+                    className="text-orange-600 hover:text-orange-700"
+                  >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy" className="text-orange-600 hover:text-orange-700">
+                  <Link
+                    to="/privacy"
+                    className="text-orange-600 hover:text-orange-700"
+                  >
                     Privacy Policy
                   </Link>
                 </label>

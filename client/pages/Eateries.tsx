@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import ServicePageLayout from '@/components/ServicePageLayout';
-import ProfessionalBookingModal from '@/components/ProfessionalBookingModal';
-import { ChefHat } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import ServicePageLayout from "@/components/ServicePageLayout";
+import ProfessionalBookingModal from "@/components/ProfessionalBookingModal";
+import { ChefHat } from "lucide-react";
 
 interface Eatery {
   id: number;
@@ -52,41 +52,41 @@ export default function Eateries() {
   const [selectedEatery, setSelectedEatery] = useState<Eatery | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   // Filter data
   const categories = [
-    { id: 'south_indian', name: 'South Indian', count: 45 },
-    { id: 'north_indian', name: 'North Indian', count: 23 },
-    { id: 'chinese', name: 'Chinese', count: 18 },
-    { id: 'continental', name: 'Continental', count: 12 },
-    { id: 'seafood', name: 'Seafood', count: 34 },
-    { id: 'vegetarian', name: 'Vegetarian', count: 56 },
-    { id: 'fast_food', name: 'Fast Food', count: 28 },
-    { id: 'desserts', name: 'Desserts', count: 15 }
+    { id: "south_indian", name: "South Indian", count: 45 },
+    { id: "north_indian", name: "North Indian", count: 23 },
+    { id: "chinese", name: "Chinese", count: 18 },
+    { id: "continental", name: "Continental", count: 12 },
+    { id: "seafood", name: "Seafood", count: 34 },
+    { id: "vegetarian", name: "Vegetarian", count: 56 },
+    { id: "fast_food", name: "Fast Food", count: 28 },
+    { id: "desserts", name: "Desserts", count: 15 },
   ];
 
   const locations = [
-    { id: 'udupi', name: 'Udupi', count: 67 },
-    { id: 'manipal', name: 'Manipal', count: 89 },
-    { id: 'malpe', name: 'Malpe', count: 23 },
-    { id: 'kaup', name: 'Kaup', count: 12 },
-    { id: 'kundapur', name: 'Kundapur', count: 34 }
+    { id: "udupi", name: "Udupi", count: 67 },
+    { id: "manipal", name: "Manipal", count: 89 },
+    { id: "malpe", name: "Malpe", count: 23 },
+    { id: "kaup", name: "Kaup", count: 12 },
+    { id: "kundapur", name: "Kundapur", count: 34 },
   ];
 
   const amenities = [
-    { id: 'wifi', name: 'Free WiFi' },
-    { id: 'parking', name: 'Parking Available' },
-    { id: 'cards', name: 'Cards Accepted' },
-    { id: 'outdoor', name: 'Outdoor Seating' },
-    { id: 'delivery', name: 'Home Delivery' },
-    { id: 'takeaway', name: 'Takeaway' },
-    { id: 'bar', name: 'Bar Available' },
-    { id: 'live_music', name: 'Live Music' },
-    { id: 'family', name: 'Family Friendly' },
-    { id: 'pure_veg', name: 'Pure Vegetarian' },
-    { id: 'halal', name: 'Halal Certified' }
+    { id: "wifi", name: "Free WiFi" },
+    { id: "parking", name: "Parking Available" },
+    { id: "cards", name: "Cards Accepted" },
+    { id: "outdoor", name: "Outdoor Seating" },
+    { id: "delivery", name: "Home Delivery" },
+    { id: "takeaway", name: "Takeaway" },
+    { id: "bar", name: "Bar Available" },
+    { id: "live_music", name: "Live Music" },
+    { id: "family", name: "Family Friendly" },
+    { id: "pure_veg", name: "Pure Vegetarian" },
+    { id: "halal", name: "Halal Certified" },
   ];
 
   useEffect(() => {
@@ -102,13 +102,13 @@ export default function Eateries() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Use Supabase getServices function to fetch restaurant/eatery data
-      const { getServices } = await import('@/lib/supabase');
+      const { getServices } = await import("@/lib/supabase");
       const servicesData = await getServices({
-        type: 'restaurant',
-        status: 'approved',
-        limit: 50
+        type: "restaurant",
+        status: "approved",
+        limit: 50,
       });
 
       if (servicesData && servicesData.length > 0) {
@@ -117,16 +117,20 @@ export default function Eateries() {
           id: service.id,
           name: service.name,
           description: service.description,
-          location: service.locations?.name || service.location || 'Udupi',
+          location: service.locations?.name || service.location || "Udupi",
           address: service.address,
-          cuisine_type: service.cuisine_type || 'Indian',
-          rating: service.average_rating || (Math.random() * 1.5 + 3.5),
-          total_reviews: service.total_reviews || Math.floor(Math.random() * 200) + 50,
+          cuisine_type: service.cuisine_type || "Indian",
+          rating: service.average_rating || Math.random() * 1.5 + 3.5,
+          total_reviews:
+            service.total_reviews || Math.floor(Math.random() * 200) + 50,
           phone: service.phone,
           opening_hours: service.opening_hours || "9:00 AM - 10:00 PM",
-          price_range: service.base_price || Math.floor(Math.random() * 300) + 150,
-          image_url: service.primary_image_id || `https://images.unsplash.com/photo-${1550000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`,
-          is_active: service.status === 'approved',
+          price_range:
+            service.base_price || Math.floor(Math.random() * 300) + 150,
+          image_url:
+            service.primary_image_id ||
+            `https://images.unsplash.com/photo-${1550000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`,
+          is_active: service.status === "approved",
           featured: service.is_featured || Math.random() > 0.8,
           seating_capacity: Math.floor(Math.random() * 80) + 20,
           delivery_available: Math.random() > 0.3,
@@ -140,36 +144,48 @@ export default function Eateries() {
           distance: Math.floor(Math.random() * 15) + 1,
           featured: Math.random() > 0.8,
           trending: Math.random() > 0.7,
-          popular_dishes: ['Masala Dosa', 'Sambar Rice', 'Filter Coffee'].slice(0, Math.floor(Math.random() * 3) + 1),
-          offers: Math.random() > 0.7 ? [{
-            type: 'discount',
-            description: '20% off on orders above ₹500',
-            discount: 20
-          }] : []
+          popular_dishes: ["Masala Dosa", "Sambar Rice", "Filter Coffee"].slice(
+            0,
+            Math.floor(Math.random() * 3) + 1,
+          ),
+          offers:
+            Math.random() > 0.7
+              ? [
+                  {
+                    type: "discount",
+                    description: "20% off on orders above ₹500",
+                    discount: 20,
+                  },
+                ]
+              : [],
         }));
-        
+
         setEateries(enhancedEateries);
       } else {
         // No restaurant services found, will use fallback data
-        throw new Error('No restaurant services found in database');
+        throw new Error("No restaurant services found in database");
       }
     } catch (error) {
-      console.error('Error fetching eateries:', error);
-      setError(error instanceof Error ? error.message : 'An unknown error occurred');
-      
+      console.error("Error fetching eateries:", error);
+      setError(
+        error instanceof Error ? error.message : "An unknown error occurred",
+      );
+
       // Fallback data
       const fallbackData: Eatery[] = [
         {
           id: 1,
           name: "Mitra Samaj Restaurant",
-          description: "Authentic Udupi cuisine served in traditional style with fresh ingredients and age-old recipes.",
+          description:
+            "Authentic Udupi cuisine served in traditional style with fresh ingredients and age-old recipes.",
           location: "Car Street, Udupi",
           cuisine_type: "South Indian",
           rating: 4.6,
           total_reviews: 234,
           price_range: 350,
           opening_hours: "6:00 AM - 10:00 PM",
-          image_url: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+          image_url:
+            "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
           delivery_available: true,
           takeaway_available: true,
           wifi_available: false,
@@ -177,19 +193,21 @@ export default function Eateries() {
           pure_veg: true,
           family_friendly: true,
           trending: true,
-          featured: true
+          featured: true,
         },
         {
           id: 2,
           name: "Coastal Spice Restaurant",
-          description: "Fresh seafood and coastal delicacies with a modern twist. Famous for our fish curry and prawn preparations.",
+          description:
+            "Fresh seafood and coastal delicacies with a modern twist. Famous for our fish curry and prawn preparations.",
           location: "Malpe Beach Road, Udupi",
           cuisine_type: "Seafood",
           rating: 4.4,
           total_reviews: 189,
           price_range: 550,
           opening_hours: "11:00 AM - 11:00 PM",
-          image_url: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=300&fit=crop",
+          image_url:
+            "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=300&fit=crop",
           delivery_available: true,
           takeaway_available: true,
           wifi_available: true,
@@ -198,35 +216,39 @@ export default function Eateries() {
           outdoor_seating: true,
           family_friendly: true,
           trending: false,
-          featured: false
+          featured: false,
         },
         {
           id: 3,
           name: "Manipal Food Court",
-          description: "Multiple cuisine options under one roof. Perfect for students and families looking for variety.",
+          description:
+            "Multiple cuisine options under one roof. Perfect for students and families looking for variety.",
           location: "Tiger Circle, Manipal",
           cuisine_type: "Multi Cuisine",
           rating: 4.2,
           total_reviews: 567,
           price_range: 250,
           opening_hours: "9:00 AM - 12:00 AM",
-          image_url: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop",
+          image_url:
+            "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop",
           delivery_available: true,
           takeaway_available: true,
           wifi_available: true,
           has_parking: true,
           accepts_cards: true,
           family_friendly: true,
-          offers: [{
-            type: 'discount',
-            description: '15% off for students',
-            discount: 15
-          }],
+          offers: [
+            {
+              type: "discount",
+              description: "15% off for students",
+              discount: 15,
+            },
+          ],
           trending: true,
-          featured: false
-        }
+          featured: false,
+        },
       ];
-      
+
       setEateries(fallbackData);
       setError(null);
     } finally {
@@ -235,7 +257,7 @@ export default function Eateries() {
   };
 
   const loadFavorites = () => {
-    const saved = localStorage.getItem('eatery_favorites');
+    const saved = localStorage.getItem("eatery_favorites");
     if (saved) {
       setFavorites(JSON.parse(saved));
     }
@@ -243,20 +265,23 @@ export default function Eateries() {
 
   const toggleFavorite = (eateryId: number) => {
     const newFavorites = favorites.includes(eateryId)
-      ? favorites.filter(id => id !== eateryId)
+      ? favorites.filter((id) => id !== eateryId)
       : [...favorites, eateryId];
-    
+
     setFavorites(newFavorites);
-    localStorage.setItem('eatery_favorites', JSON.stringify(newFavorites));
+    localStorage.setItem("eatery_favorites", JSON.stringify(newFavorites));
   };
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      const filtered = eateries.filter(eatery =>
-        eatery.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        eatery.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        eatery.cuisine_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        eatery.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = eateries.filter(
+        (eatery) =>
+          eatery.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          eatery.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          eatery.cuisine_type
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          eatery.description?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredEateries(filtered);
     } else {
@@ -266,32 +291,33 @@ export default function Eateries() {
 
   const handleFilterChange = (filters: any) => {
     let filtered = [...eateries];
-    
-    if (filters.category && filters.category !== 'all') {
-      filtered = filtered.filter(eatery => 
-        eatery.cuisine_type?.toLowerCase().includes(filters.category) ||
-        (filters.category === 'vegetarian' && eatery.pure_veg)
+
+    if (filters.category && filters.category !== "all") {
+      filtered = filtered.filter(
+        (eatery) =>
+          eatery.cuisine_type?.toLowerCase().includes(filters.category) ||
+          (filters.category === "vegetarian" && eatery.pure_veg),
       );
     }
-    
-    if (filters.location && filters.location !== 'all') {
-      filtered = filtered.filter(eatery => 
-        eatery.location.toLowerCase().includes(filters.location)
+
+    if (filters.location && filters.location !== "all") {
+      filtered = filtered.filter((eatery) =>
+        eatery.location.toLowerCase().includes(filters.location),
       );
     }
-    
+
     if (filters.priceRange && filters.priceRange[0] !== undefined) {
-      filtered = filtered.filter(eatery => {
+      filtered = filtered.filter((eatery) => {
         const price = eatery.price_range || 0;
         return price >= filters.priceRange[0] && price <= filters.priceRange[1];
       });
     }
-    
+
     setFilteredEateries(filtered);
   };
 
   const bookEatery = (item: any) => {
-    const eatery = eateries.find(e => e.id === item.id);
+    const eatery = eateries.find((e) => e.id === item.id);
     if (eatery) {
       setSelectedEatery(eatery);
       setIsBookingModalOpen(true);
@@ -305,18 +331,18 @@ export default function Eateries() {
 
   const handleSortChange = (sortBy: string) => {
     let sorted = [...filteredEateries];
-    
+
     switch (sortBy) {
-      case 'rating':
+      case "rating":
         sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
-      case 'price_low':
+      case "price_low":
         sorted.sort((a, b) => (a.price_range || 0) - (b.price_range || 0));
         break;
-      case 'price_high':
+      case "price_high":
         sorted.sort((a, b) => (b.price_range || 0) - (a.price_range || 0));
         break;
-      case 'distance':
+      case "distance":
         sorted.sort((a, b) => (a.distance || 0) - (b.distance || 0));
         break;
       default:
@@ -329,11 +355,9 @@ export default function Eateries() {
           return (b.rating || 0) - (a.rating || 0);
         });
     }
-    
+
     setFilteredEateries(sorted);
   };
-
-
 
   return (
     <>
@@ -342,11 +366,11 @@ export default function Eateries() {
         description="Discover authentic local cuisine experiences with traditional Udupi flavors and coastal Karnataka specialties"
         icon={<ChefHat className="h-8 w-8" />}
         serviceType="eatery"
-        items={filteredEateries.map(eatery => ({
+        items={filteredEateries.map((eatery) => ({
           ...eatery,
-          type: 'eatery' as const,
+          type: "eatery" as const,
           price: eatery.price_range,
-          features: getAmenities(eatery)
+          features: getAmenities(eatery),
         }))}
         loading={loading}
         error={error}
@@ -366,11 +390,11 @@ export default function Eateries() {
         favorites={favorites}
         onRefresh={fetchEateries}
         sortOptions={[
-          { value: 'recommended', label: 'Recommended' },
-          { value: 'rating', label: 'Highest Rated' },
-          { value: 'distance', label: 'Distance' },
-          { value: 'price_low', label: 'Price: Low to High' },
-          { value: 'price_high', label: 'Price: High to Low' },
+          { value: "recommended", label: "Recommended" },
+          { value: "rating", label: "Highest Rated" },
+          { value: "distance", label: "Distance" },
+          { value: "price_low", label: "Price: Low to High" },
+          { value: "price_high", label: "Price: High to Low" },
         ]}
         onSortChange={handleSortChange}
       />
@@ -383,12 +407,12 @@ export default function Eateries() {
           service={{
             id: selectedEatery.id,
             name: selectedEatery.name,
-            type: 'restaurant',
+            type: "restaurant",
             price: selectedEatery.price_range || 500,
             location: selectedEatery.location,
             rating: selectedEatery.rating,
             image: selectedEatery.image_url,
-            description: selectedEatery.description
+            description: selectedEatery.description,
           }}
         />
       )}
@@ -398,13 +422,13 @@ export default function Eateries() {
 
 function getAmenities(eatery: Eatery): string[] {
   const amenityList = [];
-  if (eatery.wifi_available) amenityList.push('WiFi');
-  if (eatery.has_parking) amenityList.push('Parking');
-  if (eatery.accepts_cards) amenityList.push('Cards');
-  if (eatery.delivery_available) amenityList.push('Delivery');
-  if (eatery.takeaway_available) amenityList.push('Takeaway');
-  if (eatery.outdoor_seating) amenityList.push('Outdoor');
-  if (eatery.family_friendly) amenityList.push('Family');
-  if (eatery.pure_veg) amenityList.push('Veg');
+  if (eatery.wifi_available) amenityList.push("WiFi");
+  if (eatery.has_parking) amenityList.push("Parking");
+  if (eatery.accepts_cards) amenityList.push("Cards");
+  if (eatery.delivery_available) amenityList.push("Delivery");
+  if (eatery.takeaway_available) amenityList.push("Takeaway");
+  if (eatery.outdoor_seating) amenityList.push("Outdoor");
+  if (eatery.family_friendly) amenityList.push("Family");
+  if (eatery.pure_veg) amenityList.push("Veg");
   return amenityList;
 }

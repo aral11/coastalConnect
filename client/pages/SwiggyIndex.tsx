@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Layout from '@/components/Layout';
-import SwiggyLocationSelector from '@/components/SwiggyLocationSelector';
-import SwiggyCategories from '@/components/SwiggyCategories';
-import SwiggyOffers from '@/components/SwiggyOffers';
-import SwiggyVendors from '@/components/SwiggyVendors';
-import { swiggyTheme } from '@/lib/swiggy-design-system';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Layout from "@/components/Layout";
+import SwiggyLocationSelector from "@/components/SwiggyLocationSelector";
+import SwiggyCategories from "@/components/SwiggyCategories";
+import SwiggyOffers from "@/components/SwiggyOffers";
+import SwiggyVendors from "@/components/SwiggyVendors";
+import { swiggyTheme } from "@/lib/swiggy-design-system";
 import {
   Search,
   Star,
@@ -22,12 +22,12 @@ import {
   Percent,
   Zap,
   Download,
-  PlayCircle
-} from 'lucide-react';
+  PlayCircle,
+} from "lucide-react";
 
 export default function SwiggyIndex() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('Udupi, Karnataka');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("Udupi, Karnataka");
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -36,7 +36,7 @@ export default function SwiggyIndex() {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -53,12 +53,14 @@ export default function SwiggyIndex() {
               <div className="mb-6">
                 <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 leading-tight">
                   Order food &<br />
-                  <span className="text-orange-500">experiences</span><br />
+                  <span className="text-orange-500">experiences</span>
+                  <br />
                   from local vendors
                 </h1>
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed">
-                  Discover authentic homestays, restaurants, drivers, and creators in coastal Karnataka. 
-                  Your gateway to local experiences.
+                  Discover authentic homestays, restaurants, drivers, and
+                  creators in coastal Karnataka. Your gateway to local
+                  experiences.
                 </p>
               </div>
 
@@ -86,7 +88,7 @@ export default function SwiggyIndex() {
                   </div>
 
                   {/* Search Button */}
-                  <Button 
+                  <Button
                     onClick={handleSearch}
                     className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg text-lg"
                   >
@@ -98,10 +100,10 @@ export default function SwiggyIndex() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="text-sm text-gray-500">Popular:</span>
                   {[
-                    'Malpe homestays',
-                    'Udupi restaurants',
-                    'Beach photography',
-                    'Local drivers'
+                    "Malpe homestays",
+                    "Udupi restaurants",
+                    "Beach photography",
+                    "Local drivers",
                   ].map((search, index) => (
                     <button
                       key={index}
@@ -162,13 +164,10 @@ export default function SwiggyIndex() {
       </section>
 
       {/* Categories Section */}
-      <SwiggyCategories 
-        className="py-12 lg:py-16 bg-gray-50"
-        maxItems={8}
-      />
+      <SwiggyCategories className="py-12 lg:py-16 bg-gray-50" maxItems={8} />
 
       {/* Popular Vendors Section */}
-      <SwiggyVendors 
+      <SwiggyVendors
         title="Popular near you"
         subtitle="Top-rated services in your area"
         className="py-12 lg:py-16 bg-white"
@@ -176,14 +175,14 @@ export default function SwiggyIndex() {
       />
 
       {/* Offers Section */}
-      <SwiggyOffers 
+      <SwiggyOffers
         title="Deals for you"
         subtitle="Curated offers just for you"
         className="py-12 lg:py-16 bg-gray-50"
       />
 
       {/* Homestays Section */}
-      <SwiggyVendors 
+      <SwiggyVendors
         title="Best homestays"
         subtitle="Authentic local stays"
         type="homestay"
@@ -192,7 +191,7 @@ export default function SwiggyIndex() {
       />
 
       {/* Restaurants Section */}
-      <SwiggyVendors 
+      <SwiggyVendors
         title="Best food near you"
         subtitle="Top restaurants and cafes"
         type="restaurant"
@@ -208,7 +207,8 @@ export default function SwiggyIndex() {
               Why CoastalConnect?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Your trusted marketplace for authentic coastal Karnataka experiences
+              Your trusted marketplace for authentic coastal Karnataka
+              experiences
             </p>
           </div>
 
@@ -216,24 +216,28 @@ export default function SwiggyIndex() {
             {[
               {
                 icon: <Shield className="h-12 w-12 text-green-500" />,
-                title: 'Verified Services',
-                description: 'All vendors are personally verified for quality and authenticity'
+                title: "Verified Services",
+                description:
+                  "All vendors are personally verified for quality and authenticity",
               },
               {
                 icon: <Clock className="h-12 w-12 text-blue-500" />,
-                title: 'Quick Delivery',
-                description: 'Fast response times and efficient service delivery'
+                title: "Quick Delivery",
+                description:
+                  "Fast response times and efficient service delivery",
               },
               {
                 icon: <Star className="h-12 w-12 text-yellow-500" />,
-                title: 'Top Rated',
-                description: 'Highly rated services with genuine customer reviews'
+                title: "Top Rated",
+                description:
+                  "Highly rated services with genuine customer reviews",
               },
               {
                 icon: <Heart className="h-12 w-12 text-red-500" />,
-                title: 'Local Community',
-                description: 'Supporting local businesses and authentic experiences'
-              }
+                title: "Local Community",
+                description:
+                  "Supporting local businesses and authentic experiences",
+              },
             ].map((feature, index) => (
               <div key={index} className="text-center">
                 <div className="mx-auto mb-4 w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center">
@@ -242,9 +246,7 @@ export default function SwiggyIndex() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">
-                  {feature.description}
-                </p>
+                <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -265,33 +267,40 @@ export default function SwiggyIndex() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {[
-              { name: 'Udupi', status: 'live', count: '200+' },
-              { name: 'Manipal', status: 'live', count: '150+' },
-              { name: 'Malpe', status: 'live', count: '80+' },
-              { name: 'Kaup', status: 'live', count: '45+' },
-              { name: 'Kundapura', status: 'coming', count: 'Soon' },
-              { name: 'Mangalore', status: 'coming', count: 'Soon' }
+              { name: "Udupi", status: "live", count: "200+" },
+              { name: "Manipal", status: "live", count: "150+" },
+              { name: "Malpe", status: "live", count: "80+" },
+              { name: "Kaup", status: "live", count: "45+" },
+              { name: "Kundapura", status: "coming", count: "Soon" },
+              { name: "Mangalore", status: "coming", count: "Soon" },
             ].map((city, index) => (
-              <div 
+              <div
                 key={index}
                 className={`
                   bg-white rounded-lg p-4 text-center border-2 transition-colors
-                  ${city.status === 'live' 
-                    ? 'border-green-200 hover:border-green-300' 
-                    : 'border-gray-200'
+                  ${
+                    city.status === "live"
+                      ? "border-green-200 hover:border-green-300"
+                      : "border-gray-200"
                   }
                 `}
               >
-                <div className={`
+                <div
+                  className={`
                   w-3 h-3 rounded-full mx-auto mb-2
-                  ${city.status === 'live' ? 'bg-green-500' : 'bg-gray-400'}
-                `} />
-                <h3 className="font-semibold text-gray-900 mb-1">{city.name}</h3>
-                <p className={`
+                  ${city.status === "live" ? "bg-green-500" : "bg-gray-400"}
+                `}
+                />
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  {city.name}
+                </h3>
+                <p
+                  className={`
                   text-sm
-                  ${city.status === 'live' ? 'text-green-600' : 'text-gray-500'}
-                `}>
-                  {city.count} {city.status === 'live' ? 'vendors' : ''}
+                  ${city.status === "live" ? "text-green-600" : "text-gray-500"}
+                `}
+                >
+                  {city.count} {city.status === "live" ? "vendors" : ""}
                 </p>
               </div>
             ))}
@@ -357,29 +366,33 @@ export default function SwiggyIndex() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                name: 'Malpe Beach Area',
-                description: 'Beach resorts, water sports, seafood',
-                count: '45+ places',
-                image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=200&fit=crop'
+                name: "Malpe Beach Area",
+                description: "Beach resorts, water sports, seafood",
+                count: "45+ places",
+                image:
+                  "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=200&fit=crop",
               },
               {
-                name: 'Udupi City Center',
-                description: 'Temples, restaurants, shopping',
-                count: '120+ places',
-                image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=300&h=200&fit=crop'
+                name: "Udupi City Center",
+                description: "Temples, restaurants, shopping",
+                count: "120+ places",
+                image:
+                  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=300&h=200&fit=crop",
               },
               {
-                name: 'Manipal University Area',
-                description: 'Student-friendly, cafes, hostels',
-                count: '80+ places',
-                image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop'
+                name: "Manipal University Area",
+                description: "Student-friendly, cafes, hostels",
+                count: "80+ places",
+                image:
+                  "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop",
               },
               {
-                name: 'Kaup Lighthouse',
-                description: 'Scenic views, photography spots',
-                count: '25+ places',
-                image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop'
-              }
+                name: "Kaup Lighthouse",
+                description: "Scenic views, photography spots",
+                count: "25+ places",
+                image:
+                  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop",
+              },
             ].map((location, index) => (
               <Link
                 key={index}
@@ -394,7 +407,9 @@ export default function SwiggyIndex() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute bottom-2 left-3 text-white">
-                    <div className="font-semibold text-sm">{location.count}</div>
+                    <div className="font-semibold text-sm">
+                      {location.count}
+                    </div>
                   </div>
                 </div>
                 <div className="p-4">
