@@ -57,9 +57,15 @@ function App() {
               <Route path="/homestays" element={<SwiggyStyleServices />} />
               <Route path="/restaurants" element={<SwiggyStyleServices />} />
               <Route path="/transport" element={<SwiggyStyleServices />} />
-              <Route path="/events" element={<SwiggyStyleServices />} />
+              <Route path="/events" element={<Events />} />
               <Route path="/wellness" element={<SwiggyStyleServices />} />
               <Route path="/creators" element={<SwiggyStyleServices />} />
+
+              {/* Event Organizer Routes */}
+              <Route path="/organizer-register" element={<EventOrganizerRegister />} />
+              <Route path="/organizer-login" element={<EventOrganizerLogin />} />
+              <Route path="/organizer-dashboard" element={<EventOrganizerDashboard />} />
+              <Route path="/create-event" element={<CreateEvent />} />
 
               {/* Dashboard */}
               <Route path="/vendor-dashboard" element={<SwiggyStyleVendorDashboard />} />
