@@ -66,7 +66,8 @@ function App() {
               <Route path="/signup" element={<ModernSignupFixed />} />
 
               {/* Info Pages */}
-              <Route path="/about" element={<About />} />
+              <Route path="/about" element={<SwiggyStyleAbout />} />
+              <Route path="/about/legacy" element={<About />} />
               <Route path="/contact" element={<Contact />} />
 
               {/* Setup & Demo Routes */}
