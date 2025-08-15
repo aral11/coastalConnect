@@ -18,6 +18,7 @@ import SwiggyStyleAbout from "@/pages/SwiggyStyleAbout";
 import ModernServiceDetail from "@/pages/ModernServiceDetail";
 import ModernLoginFixed from "@/pages/ModernLoginFixed";
 import ModernSignupFixed from "@/pages/ModernSignupFixed";
+import AuthCallback from "@/pages/AuthCallback";
 import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 
