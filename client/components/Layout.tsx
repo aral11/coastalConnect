@@ -255,7 +255,7 @@ function Footer() {
               </div>
               <div className="text-sm text-gray-400">
                 <div>🟢 Live: Udupi & Manipal</div>
-                <div>🏖️ Focus: Coastal Karnataka</div>
+                <div>🎯 Primary Markets Only</div>
               </div>
             </div>
 
