@@ -51,9 +51,8 @@ import {
   Volume2,
 } from "lucide-react";
 
-// Instagram video placeholder - replace with actual video URL
-const HERO_VIDEO_URL = "https://player.vimeo.com/video/123456789?background=1&autoplay=1&loop=1&muted=1";
-const HERO_VIDEO_THUMBNAIL = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop";
+// Dynamic video URL will be loaded from Supabase
+const DEFAULT_HERO_VIDEO_THUMBNAIL = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop";
 
 export default function SwiggyStyleIndex() {
   const { user, loading: authLoading } = useAuth();
