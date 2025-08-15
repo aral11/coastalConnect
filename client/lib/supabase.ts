@@ -261,29 +261,45 @@ export const getServiceCategories = async () => {
       .eq("is_active", true)
       .order("display_order", { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+      console.warn("Error fetching service categories:", error);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      console.warn("No service categories found in database");
+      return [];
+    }
 
     // Manually count services for each category
     const categoriesWithCount = await Promise.all(
       data.map(async (category) => {
-        const { count } = await supabase
-          .from("services")
-          .select("*", { count: "exact", head: true })
-          .eq("category_id", category.id)
-          .eq("status", "approved")
-          .eq("is_active", true);
+        try {
+          const { count } = await supabase
+            .from("services")
+            .select("*", { count: "exact", head: true })
+            .eq("category_id", category.id)
+            .eq("status", "approved")
+            .eq("is_active", true);
 
-        return {
-          ...category,
-          service_count: count || 0,
-        };
+          return {
+            ...category,
+            service_count: count || 0,
+          };
+        } catch (error) {
+          console.warn(`Error counting services for category ${category.name}:`, error);
+          return {
+            ...category,
+            service_count: 0,
+          };
+        }
       }),
     );
 
     return categoriesWithCount;
   } catch (error) {
     console.error("Error fetching service categories:", error);
-    throw error;
+    return [];
   }
 };
 
