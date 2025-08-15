@@ -284,16 +284,16 @@ export default function SwiggyStyleIndex() {
       <div className="min-h-screen bg-white">
         {/* Enhanced Hero Section - Swiggy Style with Video */}
         <section className="relative min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden">
-          {/* Background Video */}
+          {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <div className="relative w-full h-full">
               <img
-                src={DEFAULT_HERO_VIDEO_THUMBNAIL}
-                alt="Coastal Karnataka beauty"
+                src={UDUPI_COASTAL_BACKGROUND}
+                alt="Beautiful Udupi coastal landscape with palms and beach"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-900/20 via-transparent to-red-900/20"></div>
-              <div className="absolute inset-0 bg-white/40"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-900/30 via-transparent to-red-900/30"></div>
+              <div className="absolute inset-0 bg-white/30"></div>
             </div>
           </div>
 
