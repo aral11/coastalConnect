@@ -150,7 +150,8 @@ export default function Eateries() {
         
         setEateries(enhancedEateries);
       } else {
-        throw new Error('Failed to fetch eateries');
+        // No restaurant services found, will use fallback data
+        throw new Error('No restaurant services found in database');
       }
     } catch (error) {
       console.error('Error fetching eateries:', error);
