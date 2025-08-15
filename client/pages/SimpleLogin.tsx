@@ -3,12 +3,19 @@
  * Works as a demo/placeholder until Supabase is configured
  */
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Mail,
   Lock,
@@ -18,22 +25,25 @@ import {
   Chrome,
   Facebook,
   AlertCircle,
-  CheckCircle
-} from 'lucide-react';
+  CheckCircle,
+} from "lucide-react";
 
 export default function SimpleLogin() {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setMessage(null);
   };
 
@@ -46,21 +56,21 @@ export default function SimpleLogin() {
     setTimeout(() => {
       setIsLoading(false);
       setMessage({
-        type: 'success',
-        text: 'Demo login successful! (Supabase integration pending)'
+        type: "success",
+        text: "Demo login successful! (Supabase integration pending)",
       });
-      
+
       // Redirect to dashboard after demo login
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate("/dashboard");
       }, 1500);
     }, 1000);
   };
 
   const handleSocialLogin = (provider: string) => {
     setMessage({
-      type: 'error',
-      text: `${provider} login will be available once Supabase is configured.`
+      type: "error",
+      text: `${provider} login will be available once Supabase is configured.`,
     });
   };
 
@@ -70,45 +80,62 @@ export default function SimpleLogin() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center space-x-2 mb-6">
-            <Link to="/" className="flex items-center text-gray-600 hover:text-gray-800 transition-colors">
+            <Link
+              to="/"
+              className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+            >
               <ArrowLeft className="h-5 w-5 mr-2" />
               Back to Home
             </Link>
           </div>
-          
+
           <div className="space-y-2">
             <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-600">Sign in to your CoastalConnect account</p>
+            <p className="text-gray-600">
+              Sign in to your CoastalConnect account
+            </p>
           </div>
         </div>
 
         {/* Login Card */}
         <Card className="border-0 shadow-xl">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl font-semibold text-center">Sign In</CardTitle>
+            <CardTitle className="text-xl font-semibold text-center">
+              Sign In
+            </CardTitle>
             <CardDescription className="text-center">
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-4">
             {/* Demo Notice */}
             <Alert className="border-blue-200 bg-blue-50">
               <AlertCircle className="h-4 w-4 text-blue-600" />
               <AlertDescription className="text-blue-700">
-                <strong>Demo Mode:</strong> This is a preview of the login page. Supabase integration pending.
+                <strong>Demo Mode:</strong> This is a preview of the login page.
+                Supabase integration pending.
               </AlertDescription>
             </Alert>
 
             {/* Message Alert */}
             {message && (
-              <Alert variant={message.type === 'error' ? 'destructive' : undefined} className={message.type === 'success' ? 'border-green-200 bg-green-50' : ''}>
-                {message.type === 'success' ? (
+              <Alert
+                variant={message.type === "error" ? "destructive" : undefined}
+                className={
+                  message.type === "success"
+                    ? "border-green-200 bg-green-50"
+                    : ""
+                }
+              >
+                {message.type === "success" ? (
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 ) : (
                   <AlertCircle className="h-4 w-4" />
                 )}
-                <AlertDescription className={message.type === 'success' ? 'text-green-700' : ''}>
+                <AlertDescription
+                  className={message.type === "success" ? "text-green-700" : ""}
+                >
                   {message.text}
                 </AlertDescription>
               </Alert>
@@ -118,7 +145,10 @@ export default function SimpleLogin() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <div className="relative">
@@ -128,7 +158,7 @@ export default function SimpleLogin() {
                     type="email"
                     placeholder="demo@coastalconnect.com"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     className="pl-10 h-12"
                     disabled={isLoading}
                   />
@@ -137,7 +167,10 @@ export default function SimpleLogin() {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -147,7 +180,9 @@ export default function SimpleLogin() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     className="pl-10 pr-10 h-12"
                     disabled={isLoading}
                   />
@@ -157,15 +192,19 @@ export default function SimpleLogin() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* Forgot Password Link */}
               <div className="text-right">
-                <Link 
-                  to="/forgot-password" 
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-orange-600 hover:text-orange-700 font-medium"
                 >
                   Forgot Password?
@@ -184,7 +223,7 @@ export default function SimpleLogin() {
                     <span>Signing In...</span>
                   </div>
                 ) : (
-                  'Demo Sign In'
+                  "Demo Sign In"
                 )}
               </Button>
             </form>
@@ -195,7 +234,9 @@ export default function SimpleLogin() {
                 <span className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -205,7 +246,7 @@ export default function SimpleLogin() {
                 type="button"
                 variant="outline"
                 className="h-12"
-                onClick={() => handleSocialLogin('Google')}
+                onClick={() => handleSocialLogin("Google")}
                 disabled={isLoading}
               >
                 <Chrome className="h-5 w-5 mr-2" />
@@ -215,7 +256,7 @@ export default function SimpleLogin() {
                 type="button"
                 variant="outline"
                 className="h-12"
-                onClick={() => handleSocialLogin('Facebook')}
+                onClick={() => handleSocialLogin("Facebook")}
                 disabled={isLoading}
               >
                 <Facebook className="h-5 w-5 mr-2" />
@@ -227,19 +268,23 @@ export default function SimpleLogin() {
           <CardFooter className="pt-4">
             <div className="text-center w-full space-y-2">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link 
-                  to="/signup" 
+                Don't have an account?{" "}
+                <Link
+                  to="/signup"
                   className="font-medium text-orange-600 hover:text-orange-700"
                 >
                   Sign up for free
                 </Link>
               </p>
               <p className="text-xs text-gray-500">
-                By signing in, you agree to our{' '}
-                <Link to="/terms" className="text-orange-600 hover:underline">Terms of Service</Link>
-                {' '}and{' '}
-                <Link to="/privacy" className="text-orange-600 hover:underline">Privacy Policy</Link>
+                By signing in, you agree to our{" "}
+                <Link to="/terms" className="text-orange-600 hover:underline">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy" className="text-orange-600 hover:underline">
+                  Privacy Policy
+                </Link>
               </p>
             </div>
           </CardFooter>
@@ -248,8 +293,11 @@ export default function SimpleLogin() {
         {/* Setup Info */}
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Want full functionality?{' '}
-            <Link to="/setup" className="text-orange-600 hover:text-orange-700 font-medium">
+            Want full functionality?{" "}
+            <Link
+              to="/setup"
+              className="text-orange-600 hover:text-orange-700 font-medium"
+            >
               Configure Supabase
             </Link>
           </p>

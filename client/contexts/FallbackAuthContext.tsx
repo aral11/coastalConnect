@@ -3,7 +3,7 @@
  * This prevents crashes while we transition to the new SupabaseAuthContext
  */
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from "react";
 
 // Define minimal auth interface for compatibility
 interface User {
@@ -35,30 +35,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated: false,
     loading: false,
     login: async () => {
-      console.log('Login called - using fallback auth provider');
+      console.log("Login called - using fallback auth provider");
       // For demo purposes, just log
     },
     logout: async () => {
-      console.log('Logout called - using fallback auth provider');
+      console.log("Logout called - using fallback auth provider");
       // For demo purposes, just log
     },
     signup: async () => {
-      console.log('Signup called - using fallback auth provider');
+      console.log("Signup called - using fallback auth provider");
       // For demo purposes, just log
-    }
+    },
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
