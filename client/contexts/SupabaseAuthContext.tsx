@@ -324,6 +324,43 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      // Track Google sign-in attempt
+      try {
+        await trackEvent("google_sign_in_attempt", { success: true });
+      } catch (error) {
+        console.warn("Failed to track Google sign in event:", error);
+      }
+    } catch (error: any) {
+      try {
+        await trackEvent("google_sign_in_attempt", {
+          success: false,
+          error: error.message,
+        });
+      } catch (trackError) {
+        console.warn("Failed to track Google sign in attempt:", trackError);
+      }
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resetPassword = async (email: string) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
