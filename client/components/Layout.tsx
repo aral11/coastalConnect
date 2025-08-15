@@ -105,7 +105,6 @@ function Footer() {
         { label: 'Local Transport', href: '/drivers' },
         { label: 'Content Creators', href: '/creators' },
         { label: 'Events & Experiences', href: '/events' },
-        { label: 'Beauty & Wellness', href: '/beauty-wellness' },
         { label: 'All Services', href: '/services' }
       ]
     },
@@ -115,9 +114,7 @@ function Footer() {
         { label: 'List Your Business', href: '/vendor-register' },
         { label: 'Event Organizer Portal', href: '/organizer-register' },
         { label: 'Business Dashboard', href: '/business-dashboard' },
-        { label: 'Partner with Us', href: '/partner-with-us' },
-        { label: 'Advertise with Us', href: '/advertise' },
-        { label: 'Bulk Bookings', href: '/bulk-bookings' }
+        { label: 'Partner with Us', href: '/partner-with-us' }
       ]
     },
     {
@@ -126,8 +123,6 @@ function Footer() {
         { label: 'Help Center', href: '/help' },
         { label: 'Customer Support', href: '/support' },
         { label: 'Safety Guidelines', href: '/safety' },
-        { label: 'Report an Issue', href: '/report-issue' },
-        { label: 'Send Feedback', href: '/feedback' },
         { label: 'Contact Us', href: '/contact' }
       ]
     },
@@ -135,9 +130,6 @@ function Footer() {
       title: 'Company',
       links: [
         { label: 'About coastalConnect', href: '/about' },
-        { label: 'Join Our Team', href: '/careers' },
-        { label: 'Press & Media', href: '/press' },
-        { label: 'Travel Blog', href: '/blog' },
         { label: 'Terms of Service', href: '/terms' },
         { label: 'Privacy Policy', href: '/privacy' }
       ]
