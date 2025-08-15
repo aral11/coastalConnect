@@ -99,9 +99,23 @@ export default function Drivers() {
       });
 
       if (servicesData && servicesData.length > 0) {
-        // Enhance drivers with additional mock data
-        const enhancedDrivers = data.data.map((driver: Driver) => ({
-          ...driver,
+        // Enhance services with additional driver-specific mock data
+        const enhancedDrivers = servicesData.map((service: any) => ({
+          id: service.id,
+          name: service.name,
+          description: service.description,
+          location: service.locations?.name || service.location || 'Udupi',
+          phone: service.phone,
+          vehicle_type: service.vehicle_type || 'Sedan',
+          vehicle_number: service.vehicle_number || `KA 20 ${String.fromCharCode(65 + Math.floor(Math.random() * 26))} ${Math.floor(Math.random() * 9000) + 1000}`,
+          license_number: service.license_number || `DL-${new Date().getFullYear()}${Math.floor(Math.random() * 1000000000)}`,
+          rating: service.average_rating || (Math.random() * 1.5 + 3.5),
+          total_reviews: service.total_reviews || Math.floor(Math.random() * 200) + 50,
+          hourly_rate: service.base_price || Math.floor(Math.random() * 200) + 250,
+          experience_years: Math.floor(Math.random() * 15) + 2,
+          languages: service.languages || 'Kannada, English, Hindi',
+          is_available: service.status === 'approved',
+          is_active: service.status === 'approved',
           ac_available: Math.random() > 0.3,
           music_system: Math.random() > 0.4,
           gps_enabled: Math.random() > 0.2,
