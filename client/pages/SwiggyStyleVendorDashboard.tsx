@@ -298,30 +298,63 @@ export default function SwiggyStyleVendorDashboard() {
   };
 
   const loadNotifications = async () => {
-    // Mock notifications - replace with real data
-    setNotifications([
-      {
-        id: 1,
-        type: "booking",
-        message: "New booking from Priya Sharma",
-        time: "5 min ago",
-        unread: true,
-      },
-      {
-        id: 2,
-        type: "review",
-        message: "New 5-star review received",
-        time: "2 hours ago",
-        unread: true,
-      },
-      {
-        id: 3,
-        type: "payment",
-        message: "Payment of ₹2,400 received",
-        time: "1 day ago",
-        unread: false,
-      },
-    ]);
+    // Real notifications will be implemented when notification system is ready
+    // For now, show recent activity from bookings and reviews
+    try {
+      if (user?.role === 'vendor') {
+        const [recentBookings, recentReviews] = await Promise.allSettled([
+          supabase
+            .from("bookings")
+            .select("*, services(name)")
+            .eq("vendor_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(3),
+          supabase
+            .from("reviews")
+            .select("*, services(name)")
+            .eq("user_id", user.id)
+            .eq("status", "approved")
+            .order("created_at", { ascending: false })
+            .limit(2)
+        ]);
+
+        const notifications = [];
+        let id = 1;
+
+        // Add booking notifications
+        if (recentBookings.status === 'fulfilled' && recentBookings.value.data) {
+          recentBookings.value.data.forEach(booking => {
+            notifications.push({
+              id: id++,
+              type: "booking",
+              message: `Booking from ${booking.guest_name} for ${booking.services?.name || 'service'}`,
+              time: new Date(booking.created_at).toLocaleDateString(),
+              unread: new Date(booking.created_at) > new Date(Date.now() - 24*60*60*1000) // Last 24 hours
+            });
+          });
+        }
+
+        // Add review notifications
+        if (recentReviews.status === 'fulfilled' && recentReviews.value.data) {
+          recentReviews.value.data.forEach(review => {
+            notifications.push({
+              id: id++,
+              type: "review",
+              message: `New ${review.rating}-star review for ${review.services?.name || 'service'}`,
+              time: new Date(review.created_at).toLocaleDateString(),
+              unread: new Date(review.created_at) > new Date(Date.now() - 24*60*60*1000)
+            });
+          });
+        }
+
+        setNotifications(notifications);
+      } else {
+        setNotifications([]);
+      }
+    } catch (error) {
+      console.error("Error loading notifications:", error);
+      setNotifications([]);
+    }
   };
 
   const formatPrice = (price: number) => {
