@@ -247,7 +247,7 @@ export default function Index() {
               <span className="block bg-gradient-to-r from-ocean-300 to-white bg-clip-text text-transparent">
                 coastalConnect
               </span>
-              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal | Mangalore Coming Soon</div>
+              <div className="text-3xl lg:text-4xl text-white/80 mt-2">Udupi • Manipal</div>
             </h1>
 
             <p className="text-xl lg:text-2xl mb-8 text-white/90 max-w-3xl mx-auto leading-relaxed">
