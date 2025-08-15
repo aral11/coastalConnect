@@ -70,10 +70,10 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* Dashboard Routes */}
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/bookings" element={<Dashboard />} />
-              <Route path="/vendor" element={<SwiggyStyleVendorDashboard />} />
+              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+              <Route path="/dashboard" element={<RoleBasedRoute><Dashboard /></RoleBasedRoute>} />
+              <Route path="/bookings" element={<RoleBasedRoute><Dashboard /></RoleBasedRoute>} />
+              <Route path="/vendor" element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>} />
               <Route path="/api-test" element={<ApiTest />} />
 
               {/* Info Pages */}
