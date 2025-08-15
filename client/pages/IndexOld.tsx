@@ -482,7 +482,7 @@ export default function Index() {
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="font-semibold text-purple-900">Live in</div>
               <div className="text-sm text-purple-700">Udupi & Manipal</div>
-              <div className="text-xs text-purple-600">Mangalore coming soon</div>
+              <div className="text-xs text-purple-600">Primary service areas</div>
             </div>
           </div>
         </div>
