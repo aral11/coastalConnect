@@ -34,7 +34,7 @@ import Eateries from "@/pages/Eateries";
 import NotFound from "@/pages/NotFound";
 
 // Import new pages
-import AdminDashboard from "@/pages/AdminDashboard";
+import AdminDashboard from "@/pages/AdminDashboardFull";
 import Dashboard from "@/pages/Dashboard";
 import Help from "@/pages/Help";
 import Terms from "@/pages/Terms";
