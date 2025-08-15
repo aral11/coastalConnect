@@ -35,8 +35,8 @@ export default function MobileBottomNav() {
     },
     {
       id: 'discover',
-      label: 'Discover', 
-      href: '/search',
+      label: 'Discover',
+      href: '/services',
       icon: <Compass className="h-5 w-5" />,
       activeIcon: <Compass className="h-5 w-5 fill-current" />
     },
