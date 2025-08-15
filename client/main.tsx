@@ -14,6 +14,7 @@ import "./global.css";
 import ModernIndex from "@/pages/ModernIndex";
 import SwiggyStyleIndex from "@/pages/SwiggyStyleIndex";
 import ModernServices from "@/pages/ModernServices";
+import SwiggyStyleServices from "@/pages/SwiggyStyleServices";
 import ModernServiceDetail from "@/pages/ModernServiceDetail";
 import ModernLoginFixed from "@/pages/ModernLoginFixed";
 import ModernSignupFixed from "@/pages/ModernSignupFixed";
