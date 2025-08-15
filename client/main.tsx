@@ -68,6 +68,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/bookings" element={<Dashboard />} />
               <Route path="/vendor" element={<SwiggyStyleVendorDashboard />} />
+              <Route path="/api-test" element={<ApiTest />} />
 
               {/* Info Pages */}
               <Route path="/about" element={<SwiggyStyleAbout />} />
