@@ -30,6 +30,8 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { designSystem } from '@/lib/design-system';
+import { supabase, trackEvent } from '@/lib/supabase';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 interface BookingItem {
   id: string;
