@@ -105,6 +105,14 @@ export default function SwiggyStyleIndex() {
       loadInitialData();
       setupRealTimeSubscriptions();
     }
+
+    // Safety timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      console.log('Loading timeout reached, forcing app to load');
+      setLoading(false);
+    }, 10000); // 10 seconds max
+
+    return () => clearTimeout(timeout);
   }, [authLoading]);
 
   const loadInitialData = async () => {
