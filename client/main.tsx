@@ -15,8 +15,8 @@ import ModernIndexDemo from '@/pages/ModernIndexDemo';
 import SimpleHome from '@/pages/SimpleHome';
 import SetupRequired from '@/pages/SetupRequired';
 import ModernServices from '@/pages/ModernServices';
-import ModernLogin from '@/pages/ModernLogin';
-import ModernSignup from '@/pages/ModernSignup';
+import SimpleLogin from '@/pages/SimpleLogin';
+import SimpleSignup from '@/pages/SimpleSignup';
 
 // Import legacy pages for compatibility
 import Services from '@/pages/Services';
