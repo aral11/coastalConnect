@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 
 export default function ModernIndex() {
-  const { user, trackEvent: authTrackEvent } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Search state
@@ -72,17 +72,23 @@ export default function ModernIndex() {
   useEffect(() => {
     loadInitialData();
     setupRealTimeSubscriptions();
-  }, []);
+  }, [authLoading]);
 
   const loadInitialData = async () => {
     try {
       setLoading(true);
 
-      // Track page view
-      await trackEvent("page_view", {
-        page: "homepage",
-        user_id: user?.id,
-      });
+      // Track page view (only if auth is not loading)
+      if (!authLoading) {
+        try {
+          await trackEvent("page_view", {
+            page: "homepage",
+            user_id: user?.id,
+          });
+        } catch (error) {
+          console.warn("Failed to track page view:", error);
+        }
+      }
 
       // Load data in parallel
       const [
@@ -177,11 +183,16 @@ export default function ModernIndex() {
     setIsSearching(true);
 
     try {
-      await trackEvent("search_performed", {
-        query: searchQuery,
-        location_id: selectedLocation,
-        user_id: user?.id,
-      });
+      // Track search event
+      try {
+        await trackEvent("search_performed", {
+          query: searchQuery,
+          location_id: selectedLocation,
+          user_id: user?.id,
+        });
+      } catch (error) {
+        console.warn("Failed to track search event:", error);
+      }
 
       navigate(
         `/search?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`,
@@ -194,11 +205,15 @@ export default function ModernIndex() {
   };
 
   const handleCategoryClick = async (category: SupabaseCategory) => {
-    await trackEvent("category_clicked", {
-      category_id: category.id,
-      category_name: category.name,
-      user_id: user?.id,
-    });
+    try {
+      await trackEvent("category_clicked", {
+        category_id: category.id,
+        category_name: category.name,
+        user_id: user?.id,
+      });
+    } catch (error) {
+      console.warn("Failed to track category click:", error);
+    }
 
     navigate(
       `/services?category=${category.slug}&location=${selectedLocation}`,
@@ -206,12 +221,16 @@ export default function ModernIndex() {
   };
 
   const handleServiceClick = async (service: SupabaseService) => {
-    await trackEvent("service_clicked", {
-      service_id: service.id,
-      service_name: service.name,
-      service_type: service.service_type,
-      user_id: user?.id,
-    });
+    try {
+      await trackEvent("service_clicked", {
+        service_id: service.id,
+        service_name: service.name,
+        service_type: service.service_type,
+        user_id: user?.id,
+      });
+    } catch (error) {
+      console.warn("Failed to track service click:", error);
+    }
 
     navigate(`/service/${service.id}`);
   };
@@ -350,7 +369,13 @@ export default function ModernIndex() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <button
                     className="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors group"
-                    onClick={() => trackEvent("hero_video_play")}
+                    onClick={() => {
+                      try {
+                        trackEvent("hero_video_play");
+                      } catch (error) {
+                        console.warn("Failed to track video play event:", error);
+                      }
+                    }}
                   >
                     <PlayCircle className="h-10 w-10 text-orange-500 group-hover:scale-110 transition-transform" />
                   </button>
@@ -463,9 +488,13 @@ export default function ModernIndex() {
                     className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      trackEvent("service_favorited", {
-                        service_id: service.id,
-                      });
+                      try {
+                        trackEvent("service_favorited", {
+                          service_id: service.id,
+                        });
+                      } catch (error) {
+                        console.warn("Failed to track favorite event:", error);
+                      }
                     }}
                   >
                     <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
