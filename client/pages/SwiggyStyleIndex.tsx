@@ -185,14 +185,25 @@ export default function SwiggyStyleIndex() {
         console.warn("Failed to load background URL:", error);
       }
 
-      // Load data in parallel with better error handling
-      const dataResults = await Promise.allSettled([
+      console.log("Loading core data...");
+
+      // Load data in parallel with better error handling and shorter timeout
+      const dataPromises = [
         getServiceCategories(),
         getLocations(true),
         getServices({ featured: true, status: "approved", limit: 12 }),
         getServices({ status: "approved", limit: 8 }),
         getServices({ status: "approved", limit: 16 }),
-      ]);
+      ];
+
+      // Add timeout to each promise
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Database query timeout')), 3000)
+      );
+
+      const dataResults = await Promise.allSettled(
+        dataPromises.map(p => Promise.race([p, timeoutPromise]))
+      );
 
       // Extract results with fallbacks
       const categoriesData = dataResults[0].status === 'fulfilled' ? dataResults[0].value : [];
@@ -200,6 +211,14 @@ export default function SwiggyStyleIndex() {
       const featuredData = dataResults[2].status === 'fulfilled' ? dataResults[2].value : [];
       const trendingData = dataResults[3].status === 'fulfilled' ? dataResults[3].value : [];
       const nearbyData = dataResults[4].status === 'fulfilled' ? dataResults[4].value : [];
+
+      console.log("Data loaded:", {
+        categories: categoriesData?.length || 0,
+        locations: locationsData?.length || 0,
+        featured: featuredData?.length || 0,
+        trending: trendingData?.length || 0,
+        nearby: nearbyData?.length || 0
+      });
 
 
       setCategories(categoriesData || []);
