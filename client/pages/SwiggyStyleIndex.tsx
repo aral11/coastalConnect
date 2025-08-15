@@ -106,6 +106,7 @@ export default function SwiggyStyleIndex() {
 
   const loadInitialData = async () => {
     try {
+      console.log('loadInitialData called, setting loading to true');
       setLoading(true);
 
       // Debug: Check Supabase connection
