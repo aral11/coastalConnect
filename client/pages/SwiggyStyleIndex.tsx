@@ -801,7 +801,7 @@ export default function SwiggyStyleIndex() {
                     <img
                       src={
                         service.primary_image_id ||
-                        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop"
+                        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format"
                       }
                       alt={service.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
