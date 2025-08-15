@@ -591,23 +591,27 @@ export default function SwiggyStyleIndex() {
                           </div>
 
                           {/* Content Overlay */}
-                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <h3 className="font-bold text-base mb-1 leading-tight">
-                              {action.label}
-                            </h3>
-                            <p className="text-xs opacity-90">
-                              {isComingSoon
-                                ? 'Coming Soon'
-                                : action.key === 'visit-guide'
-                                  ? 'Discover Udupi'
-                                  : `${count} option${count !== 1 ? 's' : ''} available`
-                              }
-                            </p>
-                            {!isComingSoon && (
-                              <div className="flex items-center mt-2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                                Explore <ArrowRight className="h-3 w-3 ml-1" />
-                              </div>
-                            )}
+                          <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                            <div className="bg-black/20 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+                              <h3 className="font-bold text-lg mb-2 leading-tight tracking-wide">
+                                {action.label}
+                              </h3>
+                              <p className="text-sm opacity-95 font-medium">
+                                {isComingSoon
+                                  ? 'Coming Soon'
+                                  : action.key === 'visit-guide'
+                                    ? 'Discover Udupi'
+                                    : `${count} option${count !== 1 ? 's' : ''} available`
+                                }
+                              </p>
+                              {!isComingSoon && (
+                                <div className="flex items-center mt-3 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                                  <span className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30">
+                                    Explore <ArrowRight className="h-4 w-4 ml-1 inline" />
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
