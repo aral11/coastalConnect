@@ -22,7 +22,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
