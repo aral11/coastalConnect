@@ -350,7 +350,7 @@ export default function SwiggyStyleIndex() {
           <div className="absolute inset-0 z-0">
             <div className="relative w-full h-full">
               <img
-                src={UDUPI_COASTAL_BACKGROUND}
+                src={heroBackgroundUrl}
                 alt="Beautiful Udupi coastal landscape with palms and beach"
                 className="w-full h-full object-cover"
               />
