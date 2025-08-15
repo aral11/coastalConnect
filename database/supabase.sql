@@ -831,6 +831,134 @@ CREATE POLICY "Authenticated users can upload documents" ON storage.objects
     );
 
 -- ==============================================
+-- 13. ADDITIONAL CONTENT TABLES
+-- ==============================================
+
+-- Festivals Table (for dedicated festival content)
+CREATE TABLE festivals (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    long_description TEXT,
+
+    -- Timing
+    festival_date DATE,
+    festival_month INTEGER, -- for recurring festivals
+    duration_days INTEGER DEFAULT 1,
+    recurring_annually BOOLEAN DEFAULT true,
+
+    -- Location
+    location_id UUID REFERENCES locations(id),
+    venue VARCHAR(255),
+    venue_address TEXT,
+
+    -- Festival details
+    category VARCHAR(100), -- religious, cultural, traditional, modern
+    significance TEXT,
+    rituals TEXT,
+    special_foods TEXT,
+
+    -- Media
+    primary_image_url VARCHAR(500),
+    gallery_images TEXT[], -- array of image URLs
+
+    -- Features
+    is_major_festival BOOLEAN DEFAULT false,
+    is_unesco_recognized BOOLEAN DEFAULT false,
+    tourist_friendly BOOLEAN DEFAULT true,
+
+    -- SEO and metadata
+    meta_title VARCHAR(255),
+    meta_description TEXT,
+    tags TEXT[],
+
+    -- Status
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Visit Guide Content Table
+CREATE TABLE visit_guide_content (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    section VARCHAR(100) NOT NULL, -- 'seasons', 'festivals', 'cuisine', 'attractions', 'cultural_insights'
+    title VARCHAR(255) NOT NULL,
+    subtitle VARCHAR(255),
+    content TEXT NOT NULL,
+
+    -- Media
+    primary_image_url VARCHAR(500),
+    images TEXT[], -- array of image URLs
+
+    -- Metadata
+    display_order INTEGER DEFAULT 0,
+    is_featured BOOLEAN DEFAULT false,
+    season VARCHAR(50), -- for seasonal content
+    month INTEGER, -- for month-specific content
+
+    -- SEO
+    slug VARCHAR(255),
+    tags TEXT[],
+
+    -- Status
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Cultural Attractions Table
+CREATE TABLE cultural_attractions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    detailed_description TEXT,
+
+    -- Location
+    location_id UUID REFERENCES locations(id),
+    address TEXT,
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
+
+    -- Details
+    category VARCHAR(100), -- temple, beach, historical, natural, museum
+    established_year INTEGER,
+    opening_hours VARCHAR(255),
+    entry_fee VARCHAR(100),
+    best_time_to_visit VARCHAR(255),
+
+    -- Facilities
+    parking_available BOOLEAN DEFAULT false,
+    guided_tours BOOLEAN DEFAULT false,
+    wheelchair_accessible BOOLEAN DEFAULT false,
+    photography_allowed BOOLEAN DEFAULT true,
+
+    -- Media
+    primary_image_url VARCHAR(500),
+    gallery_images TEXT[],
+
+    -- Ratings
+    average_rating DECIMAL(3,2) DEFAULT 0,
+    total_reviews INTEGER DEFAULT 0,
+
+    -- Features
+    is_unesco_site BOOLEAN DEFAULT false,
+    is_featured BOOLEAN DEFAULT false,
+    tourist_priority INTEGER DEFAULT 1, -- 1-5 scale
+
+    -- SEO
+    meta_title VARCHAR(255),
+    meta_description TEXT,
+    tags TEXT[],
+
+    -- Status
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ==============================================
 -- 14. FUNCTIONS & TRIGGERS
 -- ==============================================
 
