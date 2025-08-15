@@ -1,6 +1,6 @@
 [build]
-  command = "echo 'Static deployment test'"
-  publish = "netlify-deploy"
+  command = "echo 'Deploying CoastalConnect'"
+  publish = "."
 
 [build.environment]
   NODE_ENV = "production"
