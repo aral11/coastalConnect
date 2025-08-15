@@ -746,14 +746,16 @@ export default function SwiggyStyleIndex() {
                       {category.icon || "🏨"}
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg text-gray-900 group-hover:text-orange-500 transition-colors mb-2">
+                      <h3 className="font-bold text-xl text-gray-900 group-hover:text-orange-500 transition-colors mb-3 leading-tight tracking-wide">
                         {category.name}
                       </h3>
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-base text-gray-600 font-semibold mb-2">
                         {category.service_count || 0} options available
                       </p>
-                      <div className="inline-flex items-center text-xs text-orange-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        Explore <ChevronRight className="h-3 w-3 ml-1" />
+                      <div className="inline-flex items-center text-sm text-orange-500 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                        <span className="bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                          Explore <ChevronRight className="h-4 w-4 ml-1 inline" />
+                        </span>
                       </div>
                     </div>
                   </div>
