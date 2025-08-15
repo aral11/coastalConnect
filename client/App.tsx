@@ -106,7 +106,8 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<ModernIndex />} />
+          <Route path="/" element={<SimpleHome />} />
+          <Route path="/modern" element={<ModernIndex />} />
           <Route path="/legacy" element={<Index />} />
           <Route path="/search" element={<Search />} />
           <Route path="/explore" element={<Explore />} />
