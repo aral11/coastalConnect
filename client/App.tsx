@@ -83,7 +83,6 @@ const App = () => {
 
   return (
   <QueryClientProvider client={queryClient}>
-    <SupabaseAuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -249,7 +248,6 @@ const App = () => {
         </Routes>
       </BrowserRouter>
       </TooltipProvider>
-    </SupabaseAuthProvider>
   </QueryClientProvider>
   );
 };
