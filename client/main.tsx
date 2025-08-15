@@ -29,6 +29,7 @@ import CreateEvent from "@/pages/CreateEvent";
 import VisitUdupiGuide from "@/pages/VisitUdupiGuide";
 import Contact from "@/pages/Contact";
 import PartnerWithUs from "@/pages/PartnerWithUs";
+import Drivers from "@/pages/Drivers";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
