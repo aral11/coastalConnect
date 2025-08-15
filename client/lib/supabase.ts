@@ -141,7 +141,7 @@ export const getCurrentUser = async () => {
     } = await supabase.auth.getUser();
 
     // If there's an auth session missing error, just return null (user not authenticated)
-    if (error && error.message.includes('Auth session missing')) {
+    if (error && error.message.includes("Auth session missing")) {
       return null;
     }
 
@@ -149,7 +149,7 @@ export const getCurrentUser = async () => {
     return user;
   } catch (error: any) {
     // Handle auth session missing gracefully
-    if (error.message && error.message.includes('Auth session missing')) {
+    if (error.message && error.message.includes("Auth session missing")) {
       return null;
     }
     throw error;
@@ -243,19 +243,21 @@ export const getServices = async (filters?: {
 export const getServiceCategories = async () => {
   const { data, error } = await supabase
     .from("service_categories")
-    .select(`
+    .select(
+      `
       *,
       services(count)
-    `)
+    `,
+    )
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
 
   // Add service_count field for each category
-  const categoriesWithCount = data?.map(category => ({
+  const categoriesWithCount = data?.map((category) => ({
     ...category,
-    service_count: category.services?.[0]?.count || 0
+    service_count: category.services?.[0]?.count || 0,
   }));
 
   return categoriesWithCount;
