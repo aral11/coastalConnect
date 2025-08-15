@@ -54,7 +54,8 @@ function App() {
           <BrowserRouter>
             <Routes>
               {/* Modern Routes - Full Supabase Integration */}
-              <Route path="/" element={<ModernIndex />} />
+              <Route path="/" element={<SwiggyStyleIndex />} />
+              <Route path="/modern" element={<ModernIndex />} />
               <Route path="/services" element={<ModernServices />} />
               <Route path="/services/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLoginFixed />} />
