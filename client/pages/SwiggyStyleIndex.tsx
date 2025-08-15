@@ -416,7 +416,7 @@ export default function SwiggyStyleIndex() {
     }
   };
 
-  if (loading || authLoading) {
+  if (false && (loading || authLoading)) { // Temporarily bypassed for debugging
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center">
         <div className="text-center space-y-4">
