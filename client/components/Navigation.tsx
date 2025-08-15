@@ -49,7 +49,7 @@ interface NavigationProps {
 }
 
 export default function Navigation({ className = "" }: NavigationProps) {
-  const { user, isAuthenticated, logout, hasRole, canAccess } = useAuth();
+  const { user, isAuthenticated, hasRole, canAccess, logout } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
