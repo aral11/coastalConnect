@@ -558,6 +558,40 @@ export default function SwiggyStyleIndex() {
                 </div>
               </div>
 
+              {/* Instagram Video Section */}
+              {heroVideoUrl && (
+                <div className="max-w-2xl mx-auto mb-8">
+                  <div
+                    className="relative bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
+                    onClick={handlePlayVideo}
+                  >
+                    <div className="aspect-video relative">
+                      <img
+                        src={videoThumbnail}
+                        alt="Coastal Karnataka Experience"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform shadow-lg">
+                          <PlayCircle className="h-12 w-12 text-orange-500" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3">
+                          <h3 className="text-white font-semibold text-lg mb-1">
+                            Experience Coastal Karnataka
+                          </h3>
+                          <p className="text-white/90 text-sm">
+                            Watch our Instagram reel showcasing the beauty of Udupi & Manipal
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Search Bar */}
               <div className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
