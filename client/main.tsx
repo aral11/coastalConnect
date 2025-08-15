@@ -78,24 +78,95 @@ function App() {
             <Route path="/login" element={<ModernLogin />} />
             <Route path="/signup" element={<ModernSignup />} />
             
-            {/* Legacy Routes for compatibility */}
+            {/* Legacy Routes for compatibility - using placeholders for now */}
             <Route path="/legacy" element={<SimpleHome />} />
-            <Route path="/legacy-services" element={<Services />} />
-            <Route path="/hotels" element={<Hotels />} />
-            <Route path="/hotels/:id" element={<Hotels />} />
-            <Route path="/homestays" element={<Hotels />} />
-            <Route path="/homestays/:id" element={<Hotels />} />
-            <Route path="/drivers" element={<Drivers />} />
-            <Route path="/drivers/:id" element={<Drivers />} />
-            <Route path="/eateries" element={<Eateries />} />
-            <Route path="/eateries/:id" element={<Eateries />} />
-            <Route path="/EateriesOld" element={<Eateries />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events/:id" element={<Events />} />
-            
-            {/* Admin & Dashboard */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/legacy-services" element={<SimpleHome />} />
+            <Route path="/hotels" element={
+              <PlaceholderPage
+                title="Hotels & Homestays"
+                description="Discover comfortable accommodations along coastal Karnataka."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/hotels/:id" element={
+              <PlaceholderPage
+                title="Hotel Details"
+                description="View detailed information about this accommodation."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/homestays" element={
+              <PlaceholderPage
+                title="Homestays"
+                description="Experience authentic local hospitality in coastal Karnataka."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/homestays/:id" element={
+              <PlaceholderPage
+                title="Homestay Details"
+                description="Learn more about this homestay experience."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/drivers" element={
+              <PlaceholderPage
+                title="Transport Services"
+                description="Reliable drivers for your coastal Karnataka travels."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/drivers/:id" element={
+              <PlaceholderPage
+                title="Driver Profile"
+                description="View driver details and book transport services."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/eateries" element={
+              <PlaceholderPage
+                title="Restaurants & Eateries"
+                description="Discover authentic coastal Karnataka cuisine."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/eateries/:id" element={
+              <PlaceholderPage
+                title="Restaurant Details"
+                description="Explore menu and book tables at this restaurant."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/events" element={
+              <PlaceholderPage
+                title="Events & Experiences"
+                description="Join exciting events and cultural experiences."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/events/:id" element={
+              <PlaceholderPage
+                title="Event Details"
+                description="Learn more about this event and book tickets."
+                icon={<Info className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+
+            {/* Admin & Dashboard - using placeholders for now */}
+            <Route path="/dashboard" element={
+              <PlaceholderPage
+                title="User Dashboard"
+                description="Manage your bookings and account settings."
+                icon={<Users className="h-16 w-16 text-orange-500" />}
+              />
+            } />
+            <Route path="/admin" element={
+              <PlaceholderPage
+                title="Admin Dashboard"
+                description="Administrative controls and analytics."
+                icon={<Shield className="h-16 w-16 text-orange-500" />}
+              />
+            } />
             
             {/* Info Pages */}
             <Route path="/about" element={<About />} />
