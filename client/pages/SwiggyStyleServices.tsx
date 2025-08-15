@@ -164,22 +164,31 @@ export default function SwiggyStyleServices() {
         user_id: user?.id,
       });
 
-      const searchOptions = {
-        query: searchQuery,
-        categories: filters.categories,
-        location: filters.location,
-        serviceTypes: filters.serviceType,
-        priceMin: filters.priceRange[0],
-        priceMax: filters.priceRange[1],
-        minRating: filters.rating,
-        featured: filters.featured,
+      // Use getServices for better parameter handling
+      const results = await getServices({
+        type: filters.serviceType?.[0], // Take first service type
+        location_id: filters.location,
         status: "approved",
-        sortBy: sortBy,
-        page: currentPage,
+        featured: filters.featured,
         limit: itemsPerPage,
-      };
+        offset: (currentPage - 1) * itemsPerPage,
+      });
 
-      const results = await searchServices(searchOptions);
+      // If there's a search query, use searchServices instead
+      if (searchQuery.trim()) {
+        const searchResults = await searchServices(searchQuery, {
+          type: filters.serviceType?.[0],
+          location_id: filters.location,
+          min_price: filters.priceRange[0],
+          max_price: filters.priceRange[1],
+          min_rating: filters.rating,
+        });
+
+        setServices(searchResults || []);
+        setTotalResults(searchResults?.length || 0);
+        setHasMore(false); // Search results don't support pagination
+        return;
+      }
       
       if (currentPage === 1) {
         setServices(results || []);
