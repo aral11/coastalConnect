@@ -30,6 +30,7 @@ import {
   Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase, trackEvent } from "@/lib/supabase";
 
 interface Driver {
   id: number;
