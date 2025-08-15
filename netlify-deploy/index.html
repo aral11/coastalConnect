@@ -1,66 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoastalConnect - Coming Soon</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
-        }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🏖️ CoastalConnect</h1>
-        <p>Your gateway to coastal Karnataka experiences</p>
-        <p>Hotels • Restaurants • Transport • Events • Local Creators</p>
-        <a href="mailto:admin@coastalconnect.in" class="btn">Contact Us</a>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script>
-        // Auto-redirect to main app when ready
-        setTimeout(() => {
-            if (window.location.pathname === '/') {
-                console.log('CoastalConnect is loading...');
-            }
-        }, 1000);
+    <!-- Primary Meta Tags -->
+    <title>
+      CoastalConnect - Discover Coastal Karnataka Services | Hotels,
+      Restaurants, Drivers & More
+    </title>
+    <meta
+      name="title"
+      content="CoastalConnect - Discover Coastal Karnataka Services | Hotels, Restaurants, Drivers & More"
+    />
+    <meta
+      name="description"
+      content="Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators in coastal Karnataka. Your complete guide to Udupi, Manipal, and surrounding areas."
+    />
+    <meta
+      name="keywords"
+      content="coastal karnataka, udupi, manipal, homestays, hotels, resorts, restaurants, drivers, creators, booking, tourism, local services"
+    />
+    <meta name="author" content="CoastalConnect" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://coastalconnect.com" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://coastalconnect.com" />
+    <meta
+      property="og:title"
+      content="CoastalConnect - Discover Coastal Karnataka Services"
+    />
+    <meta
+      property="og:description"
+      content="Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators in coastal Karnataka."
+    />
+    <meta
+      property="og:image"
+      content="https://coastalconnect.com/og-image.jpg"
+    />
+    <meta property="og:site_name" content="CoastalConnect" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://coastalconnect.com" />
+    <meta
+      property="twitter:title"
+      content="CoastalConnect - Discover Coastal Karnataka Services"
+    />
+    <meta
+      property="twitter:description"
+      content="Book authentic hotels, resorts & homestays, discover local restaurants, hire trusted drivers, and connect with talented creators in coastal Karnataka."
+    />
+    <meta
+      property="twitter:image"
+      content="https://coastalconnect.com/og-image.jpg"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/coastalconnect-logo.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#fb7c25" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TravelAgency",
+        "name": "CoastalConnect",
+        "description": "Complete travel and service platform for coastal Karnataka",
+        "url": "https://coastalconnect.com",
+        "logo": "https://coastalconnect.com/coastalconnect-logo.svg",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-8105003858",
+          "contactType": "customer service",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi", "Kannada", "Tulu"]
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Udupi",
+          "addressRegion": "Karnataka",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "13.3409",
+          "longitude": "74.7421"
+        },
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Udupi"
+          },
+          {
+            "@type": "City",
+            "name": "Manipal"
+          },
+          {
+            "@type": "City",
+            "name": "Malpe"
+          }
+        ]
+      }
     </script>
-</body>
+    <script type="module" crossorigin src="/assets/index-CrFsXvUr.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CoTXZ0OT.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+  </body>
 </html>
