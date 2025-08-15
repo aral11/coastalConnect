@@ -61,7 +61,24 @@ import {
 
 const queryClient = new QueryClient();
 
-const App = () => (
+// Check if Supabase is configured
+const isSupabaseConfigured = () => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+  return supabaseUrl &&
+         supabaseKey &&
+         supabaseUrl !== 'https://your-project.supabase.co' &&
+         supabaseKey !== 'your-supabase-anon-key';
+};
+
+const App = () => {
+  // Show setup page if Supabase is not configured
+  if (!isSupabaseConfigured()) {
+    return <SetupRequired />;
+  }
+
+  return (
   <QueryClientProvider client={queryClient}>
     <SupabaseAuthProvider>
       <TooltipProvider>
@@ -230,7 +247,8 @@ const App = () => (
       </TooltipProvider>
     </SupabaseAuthProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
