@@ -321,25 +321,8 @@ function Footer() {
           </div>
 
 
-          {/* Platform Statistics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white mb-1">500+</div>
-              <div className="text-sm text-gray-400">Verified Vendors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white mb-1">10k+</div>
-              <div className="text-sm text-gray-400">Happy Customers</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white mb-1">50+</div>
-              <div className="text-sm text-gray-400">Local Creators</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-white mb-1">4.8★</div>
-              <div className="text-sm text-gray-400">Average Rating</div>
-            </div>
-          </div>
+          {/* Platform Statistics - Dynamic from Supabase */}
+          <PlatformStats />
         </div>
       </div>
 
