@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 
 export default function ModernLoginFixed() {
-  const { user, signIn, loading: authLoading } = useAuth();
+  const { user, signIn, signInWithGoogle, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
