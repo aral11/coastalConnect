@@ -494,10 +494,15 @@ export default function VisitUdupiGuide() {
                     <h3 class="item-title">${attraction.name}</h3>
                     <div class="item-meta">
                         <span class="meta-item">📍 ${attraction.location}</span>
-                        <span class="meta-item">🏷️ ${attraction.category}</span>
+                        <span class="meta-item">🏷️ ${attraction.type}</span>
                         <span class="meta-item">⭐ ${attraction.rating}/5</span>
                     </div>
                     <p class="item-description">${attraction.description}</p>
+                    <div class="highlights">
+                        <div class="highlights-title">Duration & Entry:</div>
+                        <p><strong>Duration:</strong> ${attraction.duration} | <strong>Entry Fee:</strong> ${attraction.entry_fee}</p>
+                        <p><strong>Best Time to Visit:</strong> ${attraction.best_time_to_visit}</p>
+                    </div>
                     ${attraction.highlights?.length ? `
                         <div class="highlights">
                             <div class="highlights-title">Highlights:</div>
@@ -506,12 +511,10 @@ export default function VisitUdupiGuide() {
                             </ul>
                         </div>
                     ` : ''}
-                    ${attraction.visiting_tips?.length ? `
+                    ${attraction.nearby_attractions?.length ? `
                         <div class="highlights">
-                            <div class="highlights-title">Visiting Tips:</div>
-                            <ul class="highlights-list">
-                                ${attraction.visiting_tips.map(tip => `<li>${tip}</li>`).join('')}
-                            </ul>
+                            <div class="highlights-title">Nearby Attractions:</div>
+                            <p>${attraction.nearby_attractions.join(', ')}</p>
                         </div>
                     ` : ''}
                 </div>
@@ -528,23 +531,56 @@ export default function VisitUdupiGuide() {
                 into traditions, customs, and way of life in this spiritual town.
             </p>
 
-            ${guideData.cultural_insights.map(insight => `
-                <div class="item">
-                    <h3 class="item-title">${insight.title}</h3>
-                    <div class="item-meta">
-                        <span class="meta-item">🏷️ ${insight.category}</span>
-                    </div>
-                    <p class="item-description">${insight.description}</p>
-                    ${insight.practical_tips?.length ? `
-                        <div class="highlights">
-                            <div class="highlights-title">Practical Tips:</div>
-                            <ul class="highlights-list">
-                                ${insight.practical_tips.map(tip => `<li>${tip}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
+            <div class="item">
+                <h3 class="item-title">Dvaita Philosophy Tradition</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Philosophy</span>
                 </div>
-            `).join('')}
+                <p class="item-description">Udupi is the birthplace of Dvaita philosophy founded by Sri Madhvacharya. The eight Mathas (monasteries) continue this 700-year-old tradition of learning and worship.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Practical Tips:</div>
+                    <ul class="highlights-list">
+                        <li>Dress modestly when visiting temples</li>
+                        <li>Remove shoes before entering temple premises</li>
+                        <li>Photography may be restricted inside temples</li>
+                        <li>Maintain silence and respect during prayer times</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3 class="item-title">Local Customs & Etiquette</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Social Customs</span>
+                </div>
+                <p class="item-description">Udupi has a strong tradition of hospitality and spiritual living. Understanding local customs helps visitors connect better with the community.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Practical Tips:</div>
+                    <ul class="highlights-list">
+                        <li>Greet with 'Namaste' with palms joined</li>
+                        <li>Use right hand for giving/receiving items</li>
+                        <li>Accept prasadam (temple offerings) with both hands</li>
+                        <li>Respect local festivals and processions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3 class="item-title">Vegetarian Food Culture</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Culinary Tradition</span>
+                </div>
+                <p class="item-description">Udupi is synonymous with pure vegetarian cuisine. The temple traditions have influenced the entire region's food culture, making it a vegetarian paradise.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Practical Tips:</div>
+                    <ul class="highlights-list">
+                        <li>Most restaurants are strictly vegetarian</li>
+                        <li>Try the famous temple prasadam</li>
+                        <li>Meals are traditionally served on banana leaves</li>
+                        <li>Don't waste food - it's considered disrespectful</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -557,25 +593,81 @@ export default function VisitUdupiGuide() {
                 Discover the authentic flavors that have made this town a culinary destination.
             </p>
 
-            ${guideData.cuisine.map(dish => `
-                <div class="item">
-                    <h3 class="item-title">${dish.name}</h3>
-                    <div class="item-meta">
-                        <span class="meta-item">🏷️ ${dish.category}</span>
-                        <span class="meta-item">🌶️ ${dish.spice_level}</span>
-                        <span class="meta-item">💰 ${dish.price_range}</span>
-                    </div>
-                    <p class="item-description">${dish.description}</p>
-                    ${dish.best_places?.length ? `
-                        <div class="highlights">
-                            <div class="highlights-title">Best Places to Try:</div>
-                            <ul class="highlights-list">
-                                ${dish.best_places.map(place => `<li>${place}</li>`).join('')}
-                            </ul>
-                        </div>
-                    ` : ''}
+            <div class="item">
+                <h3 class="item-title">Udupi Sambar</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Main Course</span>
+                    <span class="meta-item">🌶️ Medium</span>
+                    <span class="meta-item">💰 ₹30-50</span>
                 </div>
-            `).join('')}
+                <p class="item-description">The world-famous tangy lentil curry that originated in Udupi. Made with vegetables, tamarind, and a special blend of spices.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Best Places to Try:</div>
+                    <ul class="highlights-list">
+                        <li>Woodlands Restaurant</li>
+                        <li>Mitra Samaj</li>
+                        <li>Sri Krishna Bhavan</li>
+                        <li>Hotel Udupi Residency</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3 class="item-title">Masala Dosa</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Breakfast</span>
+                    <span class="meta-item">🌶️ Mild</span>
+                    <span class="meta-item">💰 ₹40-80</span>
+                </div>
+                <p class="item-description">Crispy rice crepe filled with spiced potato curry, served with coconut chutney and sambar. An Udupi breakfast staple.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Best Places to Try:</div>
+                    <ul class="highlights-list">
+                        <li>Woodlands Restaurant</li>
+                        <li>Geetha Darshini</li>
+                        <li>Hotel Janatha</li>
+                        <li>Malpe Sea View Restaurant</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3 class="item-title">Goli Baje</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Snack</span>
+                    <span class="meta-item">🌶️ Mild</span>
+                    <span class="meta-item">💰 ₹20-30</span>
+                </div>
+                <p class="item-description">Deep-fried flour dumplings with a crispy exterior and soft interior, perfect with tea or coffee. A local favorite.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Best Places to Try:</div>
+                    <ul class="highlights-list">
+                        <li>Local tea stalls</li>
+                        <li>Thindlu stalls</li>
+                        <li>Hotel Udupi Residency</li>
+                        <li>Mitra Samaj</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3 class="item-title">Fish Curry Rice (Coastal Special)</h3>
+                <div class="item-meta">
+                    <span class="meta-item">🏷️ Main Course</span>
+                    <span class="meta-item">🌶️ Medium-Hot</span>
+                    <span class="meta-item">💰 ₹150-250</span>
+                </div>
+                <p class="item-description">Fresh coastal fish cooked in coconut-based curry with traditional spices, served with steamed rice. A regional specialty.</p>
+                <div class="highlights">
+                    <div class="highlights-title">Best Places to Try:</div>
+                    <ul class="highlights-list">
+                        <li>Malpe Sea View Restaurant</li>
+                        <li>Paradise Isle Beach Resort</li>
+                        <li>Local coastal restaurants</li>
+                        <li>Fisherman's Wharf</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
