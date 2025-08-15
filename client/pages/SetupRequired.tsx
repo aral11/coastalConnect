@@ -129,7 +129,7 @@ VITE_DEBUG_MODE=true`;
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900">Get API Credentials</h4>
                   <p className="text-sm text-gray-600 mt-1">
-                    Copy your project URL and anon key from Settings > API
+                    Copy your project URL and anon key from Settings &gt; API
                   </p>
                   <div className="flex space-x-2 mt-2">
                     <Badge variant="outline">
