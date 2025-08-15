@@ -52,7 +52,7 @@ export default function PaymentGateway({
   onError,
   onCancel
 }: PaymentProps) {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [loading, setLoading] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [selectedGateway, setSelectedGateway] = useState<'razorpay' | 'stripe'>('razorpay');
@@ -114,7 +114,7 @@ export default function PaymentGateway({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Authorization': `Bearer ${session?.access_token}`
         },
         body: JSON.stringify({
           amount: amount,
@@ -148,7 +148,7 @@ export default function PaymentGateway({
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                'Authorization': `Bearer ${session?.access_token}`
               },
               body: JSON.stringify({
                 order_id: response.razorpay_order_id,
@@ -210,7 +210,7 @@ export default function PaymentGateway({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Authorization': `Bearer ${session?.access_token}`
         },
         body: JSON.stringify({
           amount: amount,
@@ -251,7 +251,7 @@ export default function PaymentGateway({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            'Authorization': `Bearer ${session?.access_token}`
           },
           body: JSON.stringify({
             payment_intent_id: paymentIntent.id
