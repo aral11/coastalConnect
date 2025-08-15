@@ -221,15 +221,28 @@ export default function SwiggyStyleIndex() {
       });
 
 
-      setCategories(categoriesData || []);
-      setLocations(locationsData || []);
+      // Set data with fallbacks
+      const finalCategories = categoriesData && categoriesData.length > 0 ? categoriesData : [
+        { id: '1', name: 'Hotels & Homestays', description: 'Comfortable accommodations', icon: '🏨', is_active: true },
+        { id: '2', name: 'Restaurants', description: 'Local dining experiences', icon: '🍽️', is_active: true },
+        { id: '3', name: 'Transport', description: 'Local transportation', icon: '🚗', is_active: true },
+        { id: '4', name: 'Events', description: 'Special occasions', icon: '🎉', is_active: true }
+      ];
+
+      const finalLocations = locationsData && locationsData.length > 0 ? locationsData : [
+        { id: '1', name: 'Udupi', region: 'Karnataka', is_active: true },
+        { id: '2', name: 'Manipal', region: 'Karnataka', is_active: true }
+      ];
+
+      setCategories(finalCategories);
+      setLocations(finalLocations);
       setFeaturedServices(featuredData || []);
       setTrendingServices(trendingData || []);
       setNearbyServices(nearbyData || []);
 
       // Set default location
-      if (locationsData && locationsData.length > 0) {
-        setSelectedLocation(locationsData[0].id);
+      if (finalLocations.length > 0) {
+        setSelectedLocation(finalLocations[0].id);
       }
 
       // Load dynamic offers from database
