@@ -704,7 +704,7 @@ export default function SwiggyStyleIndex() {
             </button>
             <div className="aspect-video bg-black rounded-xl overflow-hidden">
               <iframe
-                src={HERO_VIDEO_URL}
+                src={heroVideoUrl}
                 className="w-full h-full"
                 allowFullScreen
                 title="CoastalConnect Experience Video"
