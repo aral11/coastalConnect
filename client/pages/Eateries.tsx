@@ -112,9 +112,23 @@ export default function Eateries() {
       });
 
       if (servicesData && servicesData.length > 0) {
-        // Enhance eateries with additional mock data for demo
-        const enhancedEateries = data.data.map((eatery: Eatery) => ({
-          ...eatery,
+        // Enhance services with additional eatery-specific mock data
+        const enhancedEateries = servicesData.map((service: any) => ({
+          id: service.id,
+          name: service.name,
+          description: service.description,
+          location: service.locations?.name || service.location || 'Udupi',
+          address: service.address,
+          cuisine_type: service.cuisine_type || 'Indian',
+          rating: service.average_rating || (Math.random() * 1.5 + 3.5),
+          total_reviews: service.total_reviews || Math.floor(Math.random() * 200) + 50,
+          phone: service.phone,
+          opening_hours: service.opening_hours || "9:00 AM - 10:00 PM",
+          price_range: service.base_price || Math.floor(Math.random() * 300) + 150,
+          image_url: service.primary_image_id || `https://images.unsplash.com/photo-${1550000000000 + Math.floor(Math.random() * 100000000)}?w=400&h=300&fit=crop`,
+          is_active: service.status === 'approved',
+          featured: service.is_featured || Math.random() > 0.8,
+          seating_capacity: Math.floor(Math.random() * 80) + 20,
           delivery_available: Math.random() > 0.3,
           takeaway_available: Math.random() > 0.2,
           wifi_available: Math.random() > 0.4,
