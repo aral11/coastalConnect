@@ -104,6 +104,7 @@ function Footer() {
         { label: "Restaurants & Cafes", href: "/eateries" },
         { label: "Local Transport", href: "/drivers" },
         { label: "Content Creators", href: "/creators" },
+        { label: "Media Gallery", href: "/gallery" },
         { label: "Events & Experiences", href: "/events" },
         { label: "All Services", href: "/services" },
       ],
