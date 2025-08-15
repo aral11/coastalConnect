@@ -103,15 +103,15 @@ export default function Eateries() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('/api/eateries');
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.success && data.data) {
+      // Use Supabase getServices function to fetch restaurant/eatery data
+      const { getServices } = await import('@/lib/supabase');
+      const servicesData = await getServices({
+        type: 'restaurant',
+        status: 'approved',
+        limit: 50
+      });
+
+      if (servicesData && servicesData.length > 0) {
         // Enhance eateries with additional mock data for demo
         const enhancedEateries = data.data.map((eatery: Eatery) => ({
           ...eatery,
