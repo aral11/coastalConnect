@@ -118,8 +118,9 @@ export default function ModernIndex() {
 
       // Load stats
       await loadStats();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading data:", error);
+      console.error("Error details:", error.message || error.toString());
     } finally {
       setLoading(false);
     }
