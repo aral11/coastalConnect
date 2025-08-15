@@ -82,8 +82,9 @@ const App = () => (
           <Route path="/eateries/:id" element={<Eateries />} />
           <Route path="/events" element={<Events />} />
           <Route path="/events/:id" element={<Events />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:id" element={<Services />} />
+          <Route path="/services" element={<ModernServices />} />
+          <Route path="/services/:id" element={<ModernServiceDetail />} />
+          <Route path="/legacy-services" element={<Services />} />
           <Route path="/creators" element={<Creators />} />
           <Route path="/creators/:id" element={<Creators />} />
           <Route path="/offers" element={<Services />} />
