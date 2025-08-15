@@ -430,7 +430,7 @@ export default function SwiggyStyleIndex() {
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                   <div className="aspect-[4/3] relative">
                     <img
-                      src={HERO_VIDEO_THUMBNAIL}
+                      src={DEFAULT_HERO_VIDEO_THUMBNAIL}
                       alt="Experience Coastal Karnataka"
                       className="w-full h-full object-cover"
                     />
