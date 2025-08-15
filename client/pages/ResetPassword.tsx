@@ -91,10 +91,15 @@ export default function ResetPassword() {
     setError("");
 
     try {
-      // TODO: Implement password update using Supabase
-      // For now, redirect to login
+      // Update password using Supabase Auth
+      const { data, error } = await supabase.auth.updateUser({
+        password: password
+      });
+
+      if (error) throw error;
+
       setSuccess("Password updated successfully! Please log in with your new password.");
-      
+
       setTimeout(() => {
         navigate('/login');
       }, 2000);
