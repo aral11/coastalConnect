@@ -691,17 +691,19 @@ export default function SwiggyStyleIndex() {
           </div>
 
           {/* Floating Offers Banner */}
-          <div className="absolute bottom-6 left-4 right-4 z-20">
+          <div className="absolute bottom-8 left-4 right-4 z-20">
             <div className="max-w-7xl mx-auto">
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
                 {offers.map((offer) => (
                   <div
                     key={offer.id}
-                    className={`flex-shrink-0 bg-gradient-to-r ${offer.bgColor} rounded-lg p-3 text-white min-w-[180px] shadow-lg backdrop-blur-sm`}
+                    className={`flex-shrink-0 bg-gradient-to-r ${offer.bgColor} rounded-xl p-4 text-white min-w-[200px] shadow-xl backdrop-blur-sm border border-white/20`}
                   >
-                    <div className="font-bold text-base">{offer.title}</div>
-                    <div className="text-xs opacity-90">{offer.subtitle}</div>
-                    <div className="text-xs opacity-75 mt-1">Code: {offer.code}</div>
+                    <div className="font-bold text-lg mb-1">{offer.title}</div>
+                    <div className="text-sm opacity-95 mb-2">{offer.subtitle}</div>
+                    <div className="text-xs opacity-85 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full inline-block">
+                      Code: {offer.code}
+                    </div>
                   </div>
                 ))}
               </div>
