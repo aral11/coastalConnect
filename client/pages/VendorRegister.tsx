@@ -24,7 +24,7 @@ import {
   Calendar
 } from 'lucide-react';
 import Layout from '@/components/Layout';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 
 interface VendorFormData {
   businessName: string;
