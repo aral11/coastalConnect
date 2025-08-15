@@ -301,20 +301,51 @@ export default function BookingFlow({ item, onBookingComplete, onCancel }: Booki
     }
   };
 
-  const sendConfirmationEmail = async (booking: any) => {
+  const sendBookingNotification = async (booking: any) => {
     try {
-      await fetch('/api/notifications/booking-confirmation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: booking.contactInfo.email,
-          bookingDetails: booking,
-        }),
-      });
+      // Create notification record in Supabase
+      const { error: notificationError } = await supabase
+        .from('notifications')
+        .insert([
+          {
+            user_id: booking.user_id,
+            type: 'booking_confirmation',
+            title: 'Booking Submitted',
+            message: `Your booking for ${item.name} has been submitted and is pending vendor approval.`,
+            booking_id: booking.id,
+            is_read: false,
+            created_at: new Date().toISOString(),
+          }
+        ]);
+
+      if (notificationError) {
+        console.warn('Failed to create notification:', notificationError);
+      }
+
+      // Also try to get vendor info to send them a notification
+      const { data: service } = await supabase
+        .from('services')
+        .select('vendor_id')
+        .eq('id', item.id)
+        .single();
+
+      if (service?.vendor_id) {
+        await supabase
+          .from('notifications')
+          .insert([
+            {
+              user_id: service.vendor_id,
+              type: 'new_booking',
+              title: 'New Booking Request',
+              message: `You have a new booking request for ${item.name}.`,
+              booking_id: booking.id,
+              is_read: false,
+              created_at: new Date().toISOString(),
+            }
+          ]);
+      }
     } catch (error) {
-      console.error('Failed to send confirmation email:', error);
+      console.error('Failed to send booking notification:', error);
     }
   };
 
