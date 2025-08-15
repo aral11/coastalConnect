@@ -328,7 +328,7 @@ export default function SwiggyStyleIndex() {
     <Layout fullWidth>
       <div className="min-h-screen bg-white">
         {/* Enhanced Hero Section - Swiggy Style with Video */}
-        <section className="relative min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden">
+        <section className="relative min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden border-b border-gray-100">
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
             <div className="relative w-full h-full">
