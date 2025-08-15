@@ -298,7 +298,15 @@ export default function ModernLoginFixed() {
             </Button>
           </CardContent>
 
-          <CardFooter className="pt-4">
+          <CardFooter className="pt-4 space-y-2">
+            <div className="text-center text-sm text-gray-600 w-full">
+              <Link
+                to="/reset-password"
+                className="text-orange-600 hover:text-orange-700 font-medium"
+              >
+                Forgot your password?
+              </Link>
+            </div>
             <div className="text-center text-sm text-gray-600 w-full">
               Don't have an account?{" "}
               <Link
