@@ -190,6 +190,411 @@ export default function VisitUdupiGuide() {
     }
   };
 
+  const generateProfessionalPDFContent = (): string => {
+    const currentDate = new Date().toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visit Udupi - CoastalConnect Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #374151;
+            background: #ffffff;
+        }
+
+        .page {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            background: white;
+            min-height: 297mm;
+        }
+
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+            color: white;
+            text-align: center;
+            page-break-after: always;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .cover-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin: 2rem 0;
+            line-height: 1.1;
+        }
+
+        .cover-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .cover-image {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 1rem;
+            margin: 2rem 0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .cover-footer {
+            position: absolute;
+            bottom: 2rem;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .section {
+            page-break-before: always;
+            padding: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f97316;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #f97316;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-intro {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            background: #f9fafb;
+        }
+
+        .item-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: #f97316;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .item-description {
+            color: #4b5563;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .highlights {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlights-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlights-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .highlights-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.25rem;
+            color: #78350f;
+        }
+
+        .highlights-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #f3f4f6;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f97316;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        @media print {
+            .page { margin: 0; padding: 15mm; }
+            .section { page-break-before: always; }
+            .cover-page { page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="logo">CoastalConnect</div>
+        <h1 class="cover-title">Visit Udupi</h1>
+        <p class="cover-subtitle">Your Complete Guide to Coastal Karnataka</p>
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=300&fit=crop"
+             alt="Udupi Krishna Temple" class="cover-image">
+        <div class="cover-footer">
+            Generated on ${currentDate} | coastalconnect.in
+        </div>
+    </div>
+
+    <!-- Festivals Section -->
+    <div class="page">
+        <div class="section">
+            <h2 class="section-title">🎭 Festivals & Celebrations</h2>
+            <p class="section-intro">
+                Udupi is a land of vibrant festivals and spiritual celebrations. From the grandeur of Krishna Janmashtami
+                to the unique tradition of Paryaya, each festival offers a glimpse into the rich cultural heritage of coastal Karnataka.
+            </p>
+
+            ${guideData.festivals.map(festival => `
+                <div class="item">
+                    <h3 class="item-title">${festival.name}</h3>
+                    <div class="item-meta">
+                        <span class="meta-item">📅 ${festival.date}</span>
+                        <span class="meta-item">📍 ${festival.location}</span>
+                        <span class="meta-item">🎯 ${festival.type}</span>
+                    </div>
+                    <p class="item-description">${festival.description}</p>
+                    <div class="highlights">
+                        <div class="highlights-title">Cultural Significance:</div>
+                        <p>${festival.significance}</p>
+                    </div>
+                    ${festival.best_viewing_spots?.length ? `
+                        <div class="highlights">
+                            <div class="highlights-title">Best Viewing Spots:</div>
+                            <ul class="highlights-list">
+                                ${festival.best_viewing_spots.map(spot => `<li>${spot}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    <!-- Seasons Section -->
+    <div class="page">
+        <div class="section">
+            <h2 class="section-title">🌤️ Best Time to Visit</h2>
+            <p class="section-intro">
+                Plan your visit to Udupi according to the seasons. Each season offers unique experiences,
+                from the festival-rich winter months to the lush green monsoon period.
+            </p>
+
+            ${guideData.seasons.map(season => `
+                <div class="item">
+                    <h3 class="item-title">${season.name}</h3>
+                    <div class="item-meta">
+                        <span class="meta-item">📅 ${season.months}</span>
+                        <span class="meta-item">🌡️ ${season.temperature_range}</span>
+                        <span class="meta-item">🌧️ ${season.rainfall}</span>
+                    </div>
+                    <p class="item-description">${season.weather}</p>
+                    <div class="highlights">
+                        <div class="highlights-title">Ideal For:</div>
+                        <ul class="highlights-list">
+                            ${season.ideal_for.map(activity => `<li>${activity}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="highlights">
+                        <div class="highlights-title">Advantages:</div>
+                        <ul class="highlights-list">
+                            ${season.pros.map(pro => `<li>${pro}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    <!-- Attractions Section -->
+    <div class="page">
+        <div class="section">
+            <h2 class="section-title">🏛️ Must-Visit Attractions</h2>
+            <p class="section-intro">
+                Discover the spiritual, cultural, and natural wonders of Udupi. From ancient temples to pristine beaches,
+                these attractions showcase the best of coastal Karnataka.
+            </p>
+
+            ${guideData.attractions.map(attraction => `
+                <div class="item">
+                    <h3 class="item-title">${attraction.name}</h3>
+                    <div class="item-meta">
+                        <span class="meta-item">📍 ${attraction.location}</span>
+                        <span class="meta-item">🏷️ ${attraction.category}</span>
+                        <span class="meta-item">⭐ ${attraction.rating}/5</span>
+                    </div>
+                    <p class="item-description">${attraction.description}</p>
+                    ${attraction.highlights?.length ? `
+                        <div class="highlights">
+                            <div class="highlights-title">Highlights:</div>
+                            <ul class="highlights-list">
+                                ${attraction.highlights.map(highlight => `<li>${highlight}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    ${attraction.visiting_tips?.length ? `
+                        <div class="highlights">
+                            <div class="highlights-title">Visiting Tips:</div>
+                            <ul class="highlights-list">
+                                ${attraction.visiting_tips.map(tip => `<li>${tip}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    <!-- Cultural Insights Section -->
+    <div class="page">
+        <div class="section">
+            <h2 class="section-title">🎯 Cultural Insights</h2>
+            <p class="section-intro">
+                Understanding the local culture enhances your experience in Udupi. Here are essential insights
+                into traditions, customs, and way of life in this spiritual town.
+            </p>
+
+            ${guideData.cultural_insights.map(insight => `
+                <div class="item">
+                    <h3 class="item-title">${insight.title}</h3>
+                    <div class="item-meta">
+                        <span class="meta-item">🏷️ ${insight.category}</span>
+                    </div>
+                    <p class="item-description">${insight.description}</p>
+                    ${insight.practical_tips?.length ? `
+                        <div class="highlights">
+                            <div class="highlights-title">Practical Tips:</div>
+                            <ul class="highlights-list">
+                                ${insight.practical_tips.map(tip => `<li>${tip}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    <!-- Local Cuisine Section -->
+    <div class="page">
+        <div class="section">
+            <h2 class="section-title">🍽️ Local Cuisine</h2>
+            <p class="section-intro">
+                Udupi cuisine is world-renowned for its vegetarian delicacies and temple food traditions.
+                Discover the authentic flavors that have made this town a culinary destination.
+            </p>
+
+            ${guideData.cuisine.map(dish => `
+                <div class="item">
+                    <h3 class="item-title">${dish.name}</h3>
+                    <div class="item-meta">
+                        <span class="meta-item">🏷️ ${dish.category}</span>
+                        <span class="meta-item">🌶️ ${dish.spice_level}</span>
+                        <span class="meta-item">💰 ${dish.price_range}</span>
+                    </div>
+                    <p class="item-description">${dish.description}</p>
+                    ${dish.best_places?.length ? `
+                        <div class="highlights">
+                            <div class="highlights-title">Best Places to Try:</div>
+                            <ul class="highlights-list">
+                                ${dish.best_places.map(place => `<li>${place}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('')}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="page">
+        <div class="footer">
+            <div class="footer-logo">CoastalConnect</div>
+            <p class="footer-text">
+                Your trusted companion for exploring coastal Karnataka<br>
+                Visit us at coastalconnect.in for bookings and updates<br>
+                Generated on ${currentDate}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    `;
+  };
+
   const generatePDFContent = (): string => {
     let content = `UDUPI VISITOR GUIDE\n\n`;
     content += `Generated on: ${new Date().toLocaleDateString()}\n\n`;
