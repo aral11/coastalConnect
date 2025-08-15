@@ -127,6 +127,22 @@ export default function SwiggyStyleIndex() {
         console.warn("Failed to load video URL:", error);
       }
 
+      // Load hero background URL from database
+      try {
+        const { data: backgroundConfig } = await supabase
+          .from('site_config')
+          .select('value')
+          .eq('key', 'homepage_background_url')
+          .eq('is_public', true)
+          .single();
+
+        if (backgroundConfig?.value) {
+          setHeroBackgroundUrl(backgroundConfig.value);
+        }
+      } catch (error) {
+        console.warn("Failed to load background URL:", error);
+      }
+
       // Load data in parallel
       const [
         categoriesData,
