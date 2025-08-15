@@ -440,8 +440,8 @@ export default function SwiggyStyleIndex() {
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                   <div className="aspect-[4/3] relative">
                     <img
-                      src={DEFAULT_HERO_VIDEO_THUMBNAIL}
-                      alt="Experience Coastal Karnataka"
+                      src={videoThumbnail}
+                      alt="Experience Beautiful Coastal Karnataka - Watch Our Story"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
