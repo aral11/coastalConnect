@@ -247,11 +247,16 @@ export default function SwiggyStyleIndex() {
   };
 
   const handlePlayVideo = () => {
-    setShowVideoPlayer(true);
     try {
-      trackEvent("hero_video_play", { user_id: user?.id });
+      trackEvent("hero_video_play", {
+        video_url: heroVideoUrl,
+        user_id: user?.id
+      });
+      if (heroVideoUrl) {
+        window.open(heroVideoUrl, '_blank', 'noopener,noreferrer');
+      }
     } catch (error) {
-      console.warn("Failed to track video play:", error);
+      console.warn("Failed to track video play event:", error);
     }
   };
 
