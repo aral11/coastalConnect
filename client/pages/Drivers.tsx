@@ -90,15 +90,15 @@ export default function Drivers() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('/api/drivers');
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (data.success && data.data) {
+      // Use Supabase getServices function to fetch driver/transport services
+      const { getServices } = await import('@/lib/supabase');
+      const servicesData = await getServices({
+        type: 'driver',
+        status: 'approved',
+        limit: 50
+      });
+
+      if (servicesData && servicesData.length > 0) {
         // Enhance drivers with additional mock data
         const enhancedDrivers = data.data.map((driver: Driver) => ({
           ...driver,
