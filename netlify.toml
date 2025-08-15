@@ -3,13 +3,28 @@
   functions = "netlify/functions"
   publish = "dist/spa"
 
+[build.environment]
+  VITE_APP_NAME = "CoastalConnect"
+  VITE_APP_DESCRIPTION = "Your gateway to coastal Karnataka experiences"
+  VITE_CONTACT_EMAIL = "support@coastalconnect.com"
+  VITE_CONTACT_PHONE = "+91-9876543210"
+  DB_TYPE = "supabase"
 
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
-  
+
 [[redirects]]
   force = true
   from = "/api/*"
   status = 200
   to = "/.netlify/functions/api/:splat"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' data:;"
