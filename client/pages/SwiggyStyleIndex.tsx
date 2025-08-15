@@ -712,7 +712,7 @@ export default function SwiggyStyleIndex() {
         </section>
 
         {/* Categories Section - Enhanced */}
-        <section className="py-20 bg-gray-50">
+        <section className="pt-32 pb-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <Badge className="bg-orange-100 text-orange-700 border-orange-200 mb-4">
