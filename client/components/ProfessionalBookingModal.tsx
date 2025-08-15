@@ -208,25 +208,50 @@ export default function ProfessionalBookingModal({ isOpen, onClose, service }: B
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/bookings/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(bookingData)
+      // Create booking directly in Supabase
+      const bookingPayload = {
+        service_id: service?.id.toString(),
+        user_id: user?.id,
+        service_type: service?.type,
+        guest_name: bookingData.guest_name,
+        guest_email: bookingData.guest_email,
+        guest_phone: bookingData.guest_phone,
+        check_in_date: bookingData.check_in_date,
+        check_out_date: bookingData.check_out_date,
+        guests: bookingData.guests,
+        rooms: bookingData.rooms || 1,
+        special_requests: bookingData.special_requests || '',
+        total_amount: calculateTotal(),
+        status: 'pending',
+        payment_status: 'pending',
+        payment_method: bookingData.payment_method,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      const { data: booking, error: bookingError } = await supabase
+        .from('bookings')
+        .insert([bookingPayload])
+        .select()
+        .single();
+
+      if (bookingError) {
+        setError(bookingError.message || 'Booking failed. Please try again.');
+        return;
+      }
+
+      // Track booking event
+      await trackEvent('service_booking_created', {
+        booking_id: booking.id,
+        service_id: service?.id,
+        service_type: service?.type,
+        user_id: user?.id,
+        amount: calculateTotal(),
       });
 
-      const data = await response.json();
-
-      if (data.success) {
-        setBookingReference(data.data.booking_reference);
-        setBookingComplete(true);
-        setCurrentStep('confirmation');
-      } else {
-        setError(data.message || 'Booking failed. Please try again.');
-      }
+      setBookingReference(booking.id);
+      setBookingComplete(true);
+      setCurrentStep('confirmation');
     } catch (error) {
       setError('Network error. Please check your connection and try again.');
       console.error('Booking error:', error);
