@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,13 +34,14 @@ declare global {
 }
 
 export default function DriverBookingModal({ driver, isOpen, onClose, onBookingSuccess }: DriverBookingModalProps) {
+  const { user, session, isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
   const [pickupDate, setPickupDate] = useState<Date>();
   const [pickupTime, setPickupTime] = useState('');
   const [pickupLocation, setPickupLocation] = useState('');
   const [dropoffLocation, setDropoffLocation] = useState('');
-  const [passengerName, setPassengerName] = useState('');
-  const [passengerPhone, setPassengerPhone] = useState('');
+  const [passengerName, setPassengerName] = useState(user?.name || '');
+  const [passengerPhone, setPassengerPhone] = useState(user?.phone || '');
   const [passengers, setPassengers] = useState(1);
   const [loading, setLoading] = useState(false);
 
