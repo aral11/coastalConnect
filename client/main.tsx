@@ -109,9 +109,9 @@ function App() {
               />
               <Route
                 path="/organizer-dashboard"
-                element={<EventOrganizerDashboard />}
+                element={<EventOrganizerRoute><EventOrganizerDashboard /></EventOrganizerRoute>}
               />
-              <Route path="/create-event" element={<CreateEvent />} />
+              <Route path="/create-event" element={<EventOrganizerRoute><CreateEvent /></EventOrganizerRoute>} />
 
               {/* Vendor Routes */}
               <Route path="/vendor-register" element={<VendorRegister />} />
