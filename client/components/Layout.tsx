@@ -153,7 +153,7 @@ function Footer() {
                 />
                 <div>
                   <div className="text-white font-bold text-xl">coastalConnect</div>
-                  <div className="text-sm text-gray-400">Your Coastal Karnataka Experience</div>
+                  <div className="text-sm text-gray-400">Udupi & Manipal Services</div>
                 </div>
               </div>
               
