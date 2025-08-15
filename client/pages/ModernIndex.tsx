@@ -235,7 +235,7 @@ export default function ModernIndex() {
     navigate(`/service/${service.id}`);
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
         <div className="text-center">
