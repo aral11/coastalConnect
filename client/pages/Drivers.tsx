@@ -133,7 +133,8 @@ export default function Drivers() {
         
         setDrivers(enhancedDrivers);
       } else {
-        throw new Error('Failed to fetch drivers');
+        // No driver services found, will use fallback data
+        throw new Error('No driver services found in database');
       }
     } catch (error) {
       console.error('Error fetching drivers:', error);
