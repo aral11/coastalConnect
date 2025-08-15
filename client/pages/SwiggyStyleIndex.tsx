@@ -211,20 +211,36 @@ export default function SwiggyStyleIndex() {
 
   const loadStats = async () => {
     try {
-      const [servicesCount, bookingsCount] = await Promise.all([
+      const [servicesCount, bookingsCount, locationsCount, avgRatingData] = await Promise.all([
         supabase.from("services").select("id", { count: "exact", head: true }),
         supabase.from("bookings").select("id", { count: "exact", head: true }),
+        supabase.from("locations").select("id", { count: "exact", head: true }),
+        supabase.from("services").select("average_rating").not("average_rating", "is", null),
       ]);
+
+      // Calculate dynamic average rating
+      const validRatings = avgRatingData.data?.filter(service => service.average_rating > 0) || [];
+      const dynamicAvgRating = validRatings.length > 0
+        ? validRatings.reduce((sum, service) => sum + service.average_rating, 0) / validRatings.length
+        : 4.8;
 
       setStats({
         totalServices: servicesCount.count || 0,
         totalBookings: bookingsCount.count || 0,
-        happyCustomers: Math.floor((bookingsCount.count || 0) * 0.9),
-        citiesCovered: locations.length,
-        avgRating: 4.8,
+        happyCustomers: Math.floor((bookingsCount.count || 0) * 0.95), // Assuming 95% satisfaction
+        citiesCovered: locationsCount.count || 0,
+        avgRating: Number(dynamicAvgRating.toFixed(1)),
       });
     } catch (error) {
       console.error("Error loading stats:", error);
+      // Fallback stats
+      setStats({
+        totalServices: 0,
+        totalBookings: 0,
+        happyCustomers: 0,
+        citiesCovered: 0,
+        avgRating: 4.8,
+      });
     }
   };
 
