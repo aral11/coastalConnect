@@ -56,7 +56,7 @@ import {
   Sparkles,
   Crown,
   ThumbsUp,
-  WiFi,
+  Wifi,
   Car,
   Coffee,
   Utensils,
