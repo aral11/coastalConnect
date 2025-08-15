@@ -154,9 +154,28 @@ export default function CreateEvent() {
     setError('');
 
     try {
-      const token = localStorage.getItem('organizer_token');
-      if (!token) {
-        window.location.href = '/organizer-login';
+      // Check if user is authenticated and has proper role
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        window.location.href = '/login';
+        return;
+      }
+
+      // Check if user has event_organizer role
+      const { data: userProfile } = await supabase
+        .from('users')
+        .select('role, vendor_status')
+        .eq('id', user.id)
+        .single();
+
+      if (userProfile?.role !== 'event_organizer') {
+        setError('Only verified event organizers can create events. Please register as an event organizer first.');
+        return;
+      }
+
+      if (userProfile?.vendor_status !== 'approved') {
+        setError('Your organizer account must be approved before creating events. Please contact support.');
         return;
       }
 
