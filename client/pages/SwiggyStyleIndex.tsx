@@ -283,7 +283,7 @@ export default function SwiggyStyleIndex() {
           <div className="absolute inset-0 z-0">
             <div className="relative w-full h-full">
               <img
-                src={HERO_VIDEO_THUMBNAIL}
+                src={DEFAULT_HERO_VIDEO_THUMBNAIL}
                 alt="Coastal Karnataka beauty"
                 className="w-full h-full object-cover"
               />
