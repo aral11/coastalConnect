@@ -269,19 +269,33 @@ export default function BookingFlow({ item, onBookingComplete, onCancel }: Booki
         throw new Error(bookingError.message);
       }
 
-      if (response.ok) {
-        const result = await response.json();
-        
-        // Send confirmation email
-        await sendConfirmationEmail(bookingPayload);
-        
-        onBookingComplete(bookingPayload);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Booking failed. Please try again.');
+      // Track booking event
+      await trackEvent('booking_created', {
+        booking_id: booking.id,
+        service_type: item.type,
+        user_id: user.id,
+        amount: calculateTotal(),
+        timestamp: new Date().toISOString(),
+      });
+
+      // Send confirmation notification (this could be handled by a Supabase function)
+      try {
+        await sendBookingNotification(booking);
+      } catch (notificationError) {
+        console.warn('Failed to send notification:', notificationError);
       }
-    } catch (err) {
-      setError('Network error. Please check your connection and try again.');
+
+      // Complete the booking flow
+      onBookingComplete({
+        ...booking,
+        bookingId: booking.id,
+        status: 'pending',
+        message: 'Your booking has been submitted! The vendor will confirm shortly.',
+      });
+
+    } catch (err: any) {
+      console.error('Booking error:', err);
+      setError(err.message || 'Booking failed. Please try again.');
     } finally {
       setLoading(false);
     }
