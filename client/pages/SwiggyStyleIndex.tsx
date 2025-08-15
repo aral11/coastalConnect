@@ -107,8 +107,9 @@ export default function SwiggyStyleIndex() {
 
     // Safety timeout to prevent infinite loading
     const timeout = setTimeout(() => {
+      console.warn("Loading timeout reached - forcing app to load");
       setLoading(false);
-    }, 10000); // 10 seconds max
+    }, 5000); // 5 seconds max
 
     return () => clearTimeout(timeout);
   }, [authLoading]);
