@@ -68,7 +68,7 @@ function App() {
             <ScrollToTop />
             <Routes>
               {/* Core Routes */}
-              <Route path="/" element={<div className="min-h-screen bg-green-100 flex items-center justify-center"><h1 className="text-3xl font-bold">PHASE 1 LOADING TEST</h1></div>} />
+              <Route path="/" element={<SwiggyStyleIndex />} />
               {/* Phase 2 Features - Hidden for Phase 1 */}
               {/* <Route path="/services" element={<SwiggyStyleServices />} />
               <Route path="/service/:id" element={<ModernServiceDetail />} />
