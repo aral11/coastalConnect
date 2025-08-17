@@ -44,7 +44,7 @@ import ApiTest from "@/pages/ApiTest";
 import MediaGallery from "@/pages/MediaGallery";
 import SimpleGuide from "@/pages/SimpleGuide";
 import Feedback from "@/pages/Feedback";
-import SimplePhase1Homepage from "@/pages/SimplePhase1Homepage";
+import MinimalPhase1 from "@/pages/MinimalPhase1";
 import ScrollToTop from "@/components/ScrollToTop";
 import RoleBasedRoute, {
   AdminRoute,
