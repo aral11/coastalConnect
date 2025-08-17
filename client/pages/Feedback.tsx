@@ -1,573 +1,276 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Layout from '@/components/Layout';
-import PageHeader from '@/components/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/components/ui/use-toast';
-import { 
-  ArrowLeft,
-  MessageCircle,
-  Star,
-  Send,
-  ThumbsUp,
-  ThumbsDown,
-  Heart,
-  Award,
-  TrendingUp,
-  Users,
-  Lightbulb,
-  Bug,
-  Smile,
-  Meh,
-  Frown
-} from 'lucide-react';
+import React, { useState } from "react";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { submitGuideFeedback } from "../lib/supabase";
+import { useToast } from "../hooks/use-toast";
+import { MessageSquare, Users, MapPin, Calendar, Car, Utensils } from "lucide-react";
 
-interface FeedbackForm {
-  name: string;
-  email: string;
-  phone: string;
-  feedbackType: string;
-  serviceUsed: string;
-  overallRating: number;
-  experienceRating: {
-    booking: number;
-    service: number;
-    communication: number;
-    value: number;
-  };
-  wouldRecommend: string;
-  improvementAreas: string[];
-  positiveAspects: string;
-  suggestions: string;
-  additionalComments: string;
-}
-
-const feedbackTypes = [
-  { value: 'general', label: 'General Feedback', icon: MessageCircle },
-  { value: 'service', label: 'Service Experience', icon: Star },
-  { value: 'suggestion', label: 'Suggestion/Idea', icon: Lightbulb },
-  { value: 'complaint', label: 'Complaint/Issue', icon: ThumbsDown },
-  { value: 'compliment', label: 'Compliment/Praise', icon: ThumbsUp },
-  { value: 'bug', label: 'Website/App Issue', icon: Bug }
-];
-
-const servicesUsed = [
-  'Homestays',
-  'Eateries/Restaurants',
-  'Transportation/Drivers',
-  'Local Creators',
-  'Event Management',
-  'Beauty & Wellness',
-  'Arts & History Tours',
-  'Other Services',
-  'Multiple Services'
-];
-
-const improvementOptions = [
-  'Booking Process',
-  'Customer Service',
-  'Website/App Experience',
-  'Service Quality',
-  'Communication',
-  'Pricing',
-  'Variety of Options',
-  'Response Time',
-  'Mobile Experience',
-  'Payment Process'
-];
-
-export default function Feedback() {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FeedbackForm>({
-    name: '',
-    email: '',
-    phone: '',
-    feedbackType: '',
-    serviceUsed: '',
-    overallRating: 0,
-    experienceRating: {
-      booking: 0,
-      service: 0,
-      communication: 0,
-      value: 0
-    },
-    wouldRecommend: '',
-    improvementAreas: [],
-    positiveAspects: '',
-    suggestions: '',
-    additionalComments: ''
+const Feedback: React.FC = () => {
+  const [feedbackData, setFeedbackData] = useState({
+    name: "",
+    email: "",
+    message: "",
+    want_all_in_one: false
   });
-
-  const handleInputChange = (field: keyof FeedbackForm, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleRatingChange = (category: string, rating: number) => {
-    if (category === 'overall') {
-      setFormData(prev => ({ ...prev, overallRating: rating }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        experienceRating: {
-          ...prev.experienceRating,
-          [category]: rating
-        }
-      }));
-    }
-  };
-
-  const handleImprovementChange = (area: string, checked: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      improvementAreas: checked
-        ? [...prev.improvementAreas, area]
-        : prev.improvementAreas.filter(item => item !== area)
-    }));
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    
+    if (!feedbackData.name.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Name required",
+        description: "Please enter your name to submit feedback."
+      });
+      return;
+    }
 
     try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Feedback Submitted!",
-          description: "Thank you for your valuable feedback. We appreciate your input!",
-        });
-        
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          feedbackType: '',
-          serviceUsed: '',
-          overallRating: 0,
-          experienceRating: {
-            booking: 0,
-            service: 0,
-            communication: 0,
-            value: 0
-          },
-          wouldRecommend: '',
-          improvementAreas: [],
-          positiveAspects: '',
-          suggestions: '',
-          additionalComments: ''
-        });
-      } else {
-        throw new Error('Failed to submit feedback');
-      }
-    } catch (error) {
+      setIsSubmitting(true);
+      await submitGuideFeedback(feedbackData);
+      
       toast({
-        title: "Error",
-        description: "Failed to submit feedback. Please try again.",
+        title: "Thanks! Your input helps shape CoastalConnect.",
+        description: "We'll consider your feedback for future updates."
+      });
+      
+      setFeedbackData({
+        name: "",
+        email: "",
+        message: "",
+        want_all_in_one: false
+      });
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      toast({
         variant: "destructive",
+        title: "Submission Failed",
+        description: "Unable to submit feedback. Please try again."
       });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  const StarRating = ({ rating, onRatingChange, label }: { rating: number; onRatingChange: (rating: number) => void; label: string }) => (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            type="button"
-            onClick={() => onRatingChange(star)}
-            className={`p-1 rounded transition-colors ${
-              star <= rating ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-400'
-            }`}
-          >
-            <Star className={`h-6 w-6 ${star <= rating ? 'fill-current' : ''}`} />
-          </button>
-        ))}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-12">
+      <div className="max-w-4xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Help Shape CoastalConnect
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Your feedback is invaluable in helping us create the perfect platform for 
+            Udupi & Manipal visitors and locals alike.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Feedback Form */}
+          <Card className="shadow-xl border-0">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <MessageSquare className="w-6 h-6 text-orange-500" />
+                Share Your Thoughts
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Name *
+                  </label>
+                  <Input
+                    type="text"
+                    value={feedbackData.name}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, name: e.target.value }))}
+                    required
+                    placeholder="Your full name"
+                    className="w-full border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email (optional)
+                  </label>
+                  <Input
+                    type="email"
+                    value={feedbackData.email}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="your.email@example.com"
+                    className="w-full border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    We'll only use this to follow up on your feedback if needed
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    What features would you like to see?
+                  </label>
+                  <textarea
+                    value={feedbackData.message}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, message: e.target.value }))}
+                    className="w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    placeholder="Tell us about features you'd love to see, improvements to the current guide, or any other suggestions..."
+                  />
+                </div>
+                
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      id="want_all_in_one"
+                      checked={feedbackData.want_all_in_one}
+                      onChange={(e) => setFeedbackData(prev => ({ ...prev, want_all_in_one: e.target.checked }))}
+                      className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 mt-0.5"
+                    />
+                    <div>
+                      <label htmlFor="want_all_in_one" className="text-sm font-medium text-orange-900">
+                        Yes—bring everything into one platform!
+                      </label>
+                      <p className="text-xs text-orange-700 mt-1">
+                        I want bookings, festivals, driver booking, event management, and more all in one place.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 text-lg font-semibold disabled:opacity-50"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Feedback"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* What We're Planning */}
+          <div className="space-y-6">
+            <Card className="shadow-xl border-0">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900">
+                  What We're Planning for Phase 2
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Calendar className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Online Bookings</h4>
+                    <p className="text-sm text-gray-600">
+                      Book hotels, restaurants, and experiences directly through the platform
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Users className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Festival Management</h4>
+                    <p className="text-sm text-gray-600">
+                      Complete event organization tools for local festivals and celebrations
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Car className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Driver Booking</h4>
+                    <p className="text-sm text-gray-600">
+                      Connect with verified local drivers for tours and transportation
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Utensils className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Food Delivery</h4>
+                    <p className="text-sm text-gray-600">
+                      Order from local restaurants with delivery to hotels and hostels
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-yellow-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Interactive Maps</h4>
+                    <p className="text-sm text-gray-600">
+                      Detailed maps with walking routes, public transport, and attractions
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-xl border-0 bg-gradient-to-r from-orange-50 to-cyan-50">
+              <CardContent className="p-6 text-center">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Your Voice Matters!
+                </h3>
+                <p className="text-gray-700 text-sm">
+                  Every piece of feedback helps us prioritize features and build exactly 
+                  what Udupi & Manipal needs. Whether you're a visitor, local resident, 
+                  or business owner, we want to hear from you.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className="mt-12 text-center">
+          <Card className="shadow-lg border-0 bg-white">
+            <CardContent className="p-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Want to Chat Directly?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                We love talking to our users! Reach out if you have questions, 
+                suggestions, or just want to say hello.
+              </p>
+              <div className="flex justify-center space-x-6 text-sm text-gray-600">
+                <a 
+                  href="mailto:hello@coastalconnect.in" 
+                  className="hover:text-orange-600 transition-colors"
+                >
+                  hello@coastalconnect.in
+                </a>
+                <span>•</span>
+                <a 
+                  href="tel:+918202520187" 
+                  className="hover:text-orange-600 transition-colors"
+                >
+                  +91 820 252 0187
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-      <p className="text-sm text-gray-600">
-        {rating === 0 && 'No rating'}
-        {rating === 1 && 'Poor'}
-        {rating === 2 && 'Fair'}
-        {rating === 3 && 'Good'}
-        {rating === 4 && 'Very Good'}
-        {rating === 5 && 'Excellent'}
-      </p>
     </div>
   );
+};
 
-  const getOverallMood = () => {
-    if (formData.overallRating <= 2) return <Frown className="h-12 w-12 text-red-500" />;
-    if (formData.overallRating <= 3) return <Meh className="h-12 w-12 text-yellow-500" />;
-    if (formData.overallRating >= 4) return <Smile className="h-12 w-12 text-green-500" />;
-    return <MessageCircle className="h-12 w-12 text-gray-400" />;
-  };
-
-  return (
-    <Layout>
-      <div className="min-h-screen">
-        {/* Page Header */}
-        <PageHeader
-          title="Share Your Feedback"
-          subtitle="Help us improve by sharing your experience and suggestions"
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Feedback', href: '/feedback' }
-          ]}
-        />
-
-        {/* Back Button */}
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
-
-        <div className="container mx-auto px-4 py-8">
-          {/* Feedback Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <Award className="h-10 w-10 text-orange-500 mx-auto mb-3" />
-                <div className="text-2xl font-bold text-gray-900">4.8</div>
-                <div className="text-sm text-gray-600">Average Rating</div>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <Users className="h-10 w-10 text-blue-500 mx-auto mb-3" />
-                <div className="text-2xl font-bold text-gray-900">2,547</div>
-                <div className="text-sm text-gray-600">Reviews Received</div>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <TrendingUp className="h-10 w-10 text-green-500 mx-auto mb-3" />
-                <div className="text-2xl font-bold text-gray-900">96%</div>
-                <div className="text-sm text-gray-600">Would Recommend</div>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <Heart className="h-10 w-10 text-red-500 mx-auto mb-3" />
-                <div className="text-2xl font-bold text-gray-900">89%</div>
-                <div className="text-sm text-gray-600">Customer Satisfaction</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Feedback Form */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <MessageCircle className="h-5 w-5 text-orange-500" />
-                    <span>Feedback Form</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Your feedback helps us improve our services and create better experiences
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Personal Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Name *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder="Your full name"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          placeholder="your.email@example.com"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="+91 9876543210"
-                      />
-                    </div>
-
-                    {/* Feedback Type */}
-                    <div className="space-y-2">
-                      <Label>Feedback Type *</Label>
-                      <Select value={formData.feedbackType} onValueChange={(value) => handleInputChange('feedbackType', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select feedback type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {feedbackTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Service Used */}
-                    <div className="space-y-2">
-                      <Label>Service Used</Label>
-                      <Select value={formData.serviceUsed} onValueChange={(value) => handleInputChange('serviceUsed', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select service you used" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {servicesUsed.map((service) => (
-                            <SelectItem key={service} value={service}>
-                              {service}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Overall Rating */}
-                    <StarRating
-                      rating={formData.overallRating}
-                      onRatingChange={(rating) => handleRatingChange('overall', rating)}
-                      label="Overall Experience *"
-                    />
-
-                    {/* Detailed Ratings */}
-                    <div className="space-y-4">
-                      <Label>Rate Your Experience</Label>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <StarRating
-                          rating={formData.experienceRating.booking}
-                          onRatingChange={(rating) => handleRatingChange('booking', rating)}
-                          label="Booking Process"
-                        />
-                        <StarRating
-                          rating={formData.experienceRating.service}
-                          onRatingChange={(rating) => handleRatingChange('service', rating)}
-                          label="Service Quality"
-                        />
-                        <StarRating
-                          rating={formData.experienceRating.communication}
-                          onRatingChange={(rating) => handleRatingChange('communication', rating)}
-                          label="Communication"
-                        />
-                        <StarRating
-                          rating={formData.experienceRating.value}
-                          onRatingChange={(rating) => handleRatingChange('value', rating)}
-                          label="Value for Money"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Recommendation */}
-                    <div className="space-y-3">
-                      <Label>Would you recommend CoastalConnect to others? *</Label>
-                      <RadioGroup value={formData.wouldRecommend} onValueChange={(value) => handleInputChange('wouldRecommend', value)}>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="definitely" id="definitely" />
-                          <Label htmlFor="definitely">Definitely</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="probably" id="probably" />
-                          <Label htmlFor="probably">Probably</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="maybe" id="maybe" />
-                          <Label htmlFor="maybe">Maybe</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="probably-not" id="probably-not" />
-                          <Label htmlFor="probably-not">Probably Not</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="definitely-not" id="definitely-not" />
-                          <Label htmlFor="definitely-not">Definitely Not</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-
-                    {/* Improvement Areas */}
-                    <div className="space-y-3">
-                      <Label>Areas for Improvement (Select all that apply)</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {improvementOptions.map((option) => (
-                          <div key={option} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={option}
-                              checked={formData.improvementAreas.includes(option)}
-                              onCheckedChange={(checked) => handleImprovementChange(option, checked as boolean)}
-                            />
-                            <Label htmlFor={option} className="text-sm">{option}</Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Text Feedback */}
-                    <div className="space-y-2">
-                      <Label htmlFor="positiveAspects">What did you like most about your experience?</Label>
-                      <Textarea
-                        id="positiveAspects"
-                        value={formData.positiveAspects}
-                        onChange={(e) => handleInputChange('positiveAspects', e.target.value)}
-                        placeholder="Tell us what made your experience great..."
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="suggestions">Suggestions for Improvement</Label>
-                      <Textarea
-                        id="suggestions"
-                        value={formData.suggestions}
-                        onChange={(e) => handleInputChange('suggestions', e.target.value)}
-                        placeholder="How can we make your experience better?"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="additionalComments">Additional Comments</Label>
-                      <Textarea
-                        id="additionalComments"
-                        value={formData.additionalComments}
-                        onChange={(e) => handleInputChange('additionalComments', e.target.value)}
-                        placeholder="Any other feedback you'd like to share?"
-                        rows={4}
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-                    >
-                      {loading ? (
-                        <div className="flex items-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Submitting...
-                        </div>
-                      ) : (
-                        <div className="flex items-center">
-                          <Send className="h-4 w-4 mr-2" />
-                          Submit Feedback
-                        </div>
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Mood Indicator */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Experience</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  {getOverallMood()}
-                  <p className="text-gray-600 mt-2">
-                    {formData.overallRating === 0 && 'How was your experience?'}
-                    {formData.overallRating <= 2 && 'We\'re sorry to hear that'}
-                    {formData.overallRating === 3 && 'Thank you for your feedback'}
-                    {formData.overallRating >= 4 && 'We\'re glad you enjoyed it!'}
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Why Feedback Matters */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Why Your Feedback Matters</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-start space-x-3">
-                    <TrendingUp className="h-5 w-5 text-green-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-gray-900">Improve Services</p>
-                      <p className="text-sm text-gray-600">Help us enhance our offerings</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Users className="h-5 w-5 text-blue-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-gray-900">Help Others</p>
-                      <p className="text-sm text-gray-600">Guide future travelers</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Heart className="h-5 w-5 text-red-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium text-gray-900">Build Community</p>
-                      <p className="text-sm text-gray-600">Strengthen our coastal community</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Links */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Need Help?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Link to="/support" className="flex items-center space-x-2 text-orange-600 hover:text-orange-700">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>Contact Support</span>
-                  </Link>
-                  <Link to="/help" className="flex items-center space-x-2 text-orange-600 hover:text-orange-700">
-                    <Star className="h-4 w-4" />
-                    <span>Help Center</span>
-                  </Link>
-                  <Link to="/contact" className="flex items-center space-x-2 text-orange-600 hover:text-orange-700">
-                    <Send className="h-4 w-4" />
-                    <span>Contact Us</span>
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Layout>
-  );
-}
+export default Feedback;
