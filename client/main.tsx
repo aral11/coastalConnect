@@ -43,6 +43,8 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import ApiTest from "@/pages/ApiTest";
 import MediaGallery from "@/pages/MediaGallery";
+import Guide from "@/pages/Guide";
+import Feedback from "@/pages/Feedback";
 import ScrollToTop from "@/components/ScrollToTop";
 import RoleBasedRoute, {
   AdminRoute,
