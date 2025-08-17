@@ -133,6 +133,48 @@ export interface SupabaseReview {
   created_at: string;
 }
 
+// Phase 1 Guide Tables
+export interface GuideCategory {
+  id: string;
+  name: string;
+  slug: string;
+  sort_order: number;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GuideItem {
+  id: string;
+  category_id: string;
+  title: string;
+  description?: string;
+  address?: string;
+  city: "Udupi" | "Manipal";
+  area?: string;
+  phone?: string;
+  website?: string;
+  gmaps_url?: string;
+  price_range?: string;
+  cuisine_or_type?: string;
+  tags?: string[];
+  image_url?: string;
+  is_verified: boolean;
+  is_featured: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GuideFeedback {
+  id: string;
+  name: string;
+  email?: string;
+  message?: string;
+  want_all_in_one: boolean;
+  created_at: string;
+}
+
 // Auth helper functions
 export const getCurrentUser = async () => {
   try {
