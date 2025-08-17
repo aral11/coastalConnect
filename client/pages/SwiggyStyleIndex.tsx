@@ -17,81 +17,32 @@ import {
 } from "@/lib/supabase";
 import {
   Search,
+  Download,
   MapPin,
   Star,
-  Clock,
-  Users,
-  TrendingUp,
-  Zap,
-  ArrowRight,
   Heart,
-  Filter,
-  ChevronDown,
-  PlayCircle,
-  Award,
-  Percent,
-  Phone,
-  Mail,
+  ArrowRight,
   ChevronRight,
-  Eye,
-  Calendar,
-  MapPin as LocationIcon,
-  Timer,
   Sparkles,
   Shield,
-  Crown,
-  FastForward,
+  Calendar,
+  Users,
   Camera,
-  Volume2,
+  Navigation,
+  Coffee,
+  Utensils,
+  Building,
+  Car,
+  TreePine,
+  Music
 } from "lucide-react";
 
-// Authentic Udupi and Manipal images - Dynamic video URL will be loaded from Supabase
-const DEFAULT_HERO_VIDEO_THUMBNAIL =
-  "https://images.unsplash.com/photo-1605792657660-596af9009e82?w=800&h=600&fit=crop&auto=format"; // Krishna Temple Udupi
-const UDUPI_COASTAL_BACKGROUND =
-  "https://images.unsplash.com/photo-1598948485421-33cf1262965f?w=1920&h=1080&fit=crop&auto=format"; // Coastal Karnataka beach
-
 export default function SwiggyStyleIndex() {
-  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Search state
+  const [categories, setCategories] = useState<GuideCategory[]>([]);
+  const [featuredItems, setFeaturedItems] = useState<GuideItem[]>([]);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [isSearching, setIsSearching] = useState(false);
-  const [heroVideoUrl, setHeroVideoUrl] = useState<string>("");
-  const [videoThumbnail, setVideoThumbnail] = useState<string>(
-    DEFAULT_HERO_VIDEO_THUMBNAIL,
-  );
-  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string>(
-    UDUPI_COASTAL_BACKGROUND,
-  );
-
-  // Data state
-  const [categories, setCategories] = useState<SupabaseCategory[]>([]);
-  const [locations, setLocations] = useState<SupabaseLocation[]>([]);
-  const [featuredServices, setFeaturedServices] = useState<SupabaseService[]>(
-    [],
-  );
-  const [trendingServices, setTrendingServices] = useState<SupabaseService[]>(
-    [],
-  );
-  const [nearbyServices, setNearbyServices] = useState<SupabaseService[]>([]);
-  const [offers, setOffers] = useState<any[]>([]);
-  const [serviceCounts, setServiceCounts] = useState<Record<string, number>>(
-    {},
-  );
-  const [loading, setLoading] = useState(true);
-
-  // Stats
-  const [stats, setStats] = useState({
-    totalServices: 0,
-    totalBookings: 0,
-    happyCustomers: 0,
-    citiesCovered: 0,
-    avgRating: 4.8,
-  });
 
   useEffect(() => {
     if (!authLoading) {
