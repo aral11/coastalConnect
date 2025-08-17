@@ -13,7 +13,10 @@ const TestHomepage: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-lg font-semibold">Next Steps:</h2>
-            <p>This confirms routing is working. The issue is with Phase1Homepage component.</p>
+            <p>
+              This confirms routing is working. The issue is with Phase1Homepage
+              component.
+            </p>
           </div>
         </div>
       </div>

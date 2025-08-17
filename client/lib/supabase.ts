@@ -278,7 +278,9 @@ export const getServices = async (filters?: {
       );
     }
 
-    const { data, error } = await query.order("created_at", { ascending: false });
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
 
     if (error) {
       console.warn("Error fetching services:", error);
@@ -327,7 +329,10 @@ export const getServiceCategories = async () => {
             service_count: count || 0,
           };
         } catch (error) {
-          console.warn(`Error counting services for category ${category.name}:`, error);
+          console.warn(
+            `Error counting services for category ${category.name}:`,
+            error,
+          );
           return {
             ...category,
             service_count: 0,
@@ -486,9 +491,7 @@ export const getEvents = async (filters?: {
   limit?: number;
   offset?: number;
 }) => {
-  let query = supabase
-    .from("events")
-    .select(`
+  let query = supabase.from("events").select(`
       *,
       locations(name, type),
       users!organizer_id(name, email)
@@ -513,7 +516,7 @@ export const getEvents = async (filters?: {
   }
 
   if (filters?.upcoming) {
-    query = query.gte("event_date", new Date().toISOString().split('T')[0]);
+    query = query.gte("event_date", new Date().toISOString().split("T")[0]);
   }
 
   if (filters?.limit) {
@@ -523,7 +526,7 @@ export const getEvents = async (filters?: {
   if (filters?.offset) {
     query = query.range(
       filters.offset,
-      filters.offset + (filters.limit || 20) - 1
+      filters.offset + (filters.limit || 20) - 1,
     );
   }
 
@@ -537,11 +540,13 @@ export const getEvents = async (filters?: {
 export const getEventById = async (id: string) => {
   const { data, error } = await supabase
     .from("events")
-    .select(`
+    .select(
+      `
       *,
       locations(name, type, latitude, longitude),
       users!organizer_id(name, email, phone)
-    `)
+    `,
+    )
     .eq("id", id)
     .single();
 
@@ -558,10 +563,12 @@ export const getFestivals = async (filters?: {
 }) => {
   let query = supabase
     .from("festivals")
-    .select(`
+    .select(
+      `
       *,
       locations(name, type)
-    `)
+    `,
+    )
     .eq("is_active", true);
 
   if (filters?.category) {
@@ -614,10 +621,12 @@ export const getCulturalAttractions = async (filters?: {
 }) => {
   let query = supabase
     .from("cultural_attractions")
-    .select(`
+    .select(
+      `
       *,
       locations(name, type)
-    `)
+    `,
+    )
     .eq("is_active", true);
 
   if (filters?.category) {
@@ -673,9 +682,7 @@ export const getGuideItems = async (filters?: {
   offset?: number;
 }) => {
   try {
-    let query = supabase
-      .from("guide_items")
-      .select(`
+    let query = supabase.from("guide_items").select(`
         *,
         guide_categories(name, slug)
       `);
@@ -694,7 +701,7 @@ export const getGuideItems = async (filters?: {
 
     if (filters?.search) {
       query = query.or(
-        `title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,cuisine_or_type.ilike.%${filters.search}%`
+        `title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,cuisine_or_type.ilike.%${filters.search}%`,
       );
     }
 
@@ -705,11 +712,13 @@ export const getGuideItems = async (filters?: {
     if (filters?.offset) {
       query = query.range(
         filters.offset,
-        filters.offset + (filters.limit || 20) - 1
+        filters.offset + (filters.limit || 20) - 1,
       );
     }
 
-    const { data, error } = await query.order("sort_order", { ascending: true });
+    const { data, error } = await query.order("sort_order", {
+      ascending: true,
+    });
 
     if (error) {
       console.warn("Error fetching guide items:", error);
@@ -727,10 +736,12 @@ export const getGuideItemById = async (id: string) => {
   try {
     const { data, error } = await supabase
       .from("guide_items")
-      .select(`
+      .select(
+        `
         *,
         guide_categories(name, slug)
-      `)
+      `,
+      )
       .eq("id", id)
       .single();
 

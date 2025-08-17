@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Search, 
-  MapPin, 
-  Star, 
+import {
+  Search,
+  MapPin,
+  Star,
   Download,
   ArrowLeft,
   Phone,
   ExternalLink,
   Clock,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
 
 const SimpleGuide: React.FC = () => {
@@ -27,85 +27,97 @@ const SimpleGuide: React.FC = () => {
     { id: "3", name: "Places", slug: "places" },
     { id: "4", name: "Experiences", slug: "experiences" },
     { id: "5", name: "Transport", slug: "transport" },
-    { id: "6", name: "Festivals", slug: "festivals" }
+    { id: "6", name: "Festivals", slug: "festivals" },
   ];
 
   const samplePlaces = [
     {
       id: "1",
       title: "Woodlands Restaurant",
-      description: "Famous South Indian vegetarian restaurant serving authentic Udupi cuisine with traditional flavors.",
+      description:
+        "Famous South Indian vegetarian restaurant serving authentic Udupi cuisine with traditional flavors.",
       address: "Car Street, Udupi",
       city: "Udupi",
       phone: "+91 820 252 0187",
       price_range: "₹200-500",
       cuisine_or_type: "South Indian Vegetarian",
       category: "restaurants",
-      image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400",
+      image_url:
+        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400",
       is_featured: true,
-      is_verified: true
+      is_verified: true,
     },
     {
       id: "2",
       title: "Krishna Temple",
-      description: "Historic temple dedicated to Lord Krishna, famous for its architecture and spiritual significance.",
+      description:
+        "Historic temple dedicated to Lord Krishna, famous for its architecture and spiritual significance.",
       address: "Car Street, Udupi",
       city: "Udupi",
       phone: "+91 820 252 0020",
       price_range: "Free",
       cuisine_or_type: "Religious Temple",
       category: "places",
-      image_url: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400",
+      image_url:
+        "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400",
       is_featured: true,
-      is_verified: true
+      is_verified: true,
     },
     {
       id: "3",
       title: "Malpe Beach",
-      description: "Beautiful beach with golden sand, water sports, and stunning sunset views.",
+      description:
+        "Beautiful beach with golden sand, water sports, and stunning sunset views.",
       address: "Malpe, Udupi",
       city: "Udupi",
       phone: "+91 820 252 1234",
       price_range: "Free",
       cuisine_or_type: "Beach",
       category: "places",
-      image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
+      image_url:
+        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400",
       is_featured: true,
-      is_verified: true
+      is_verified: true,
     },
     {
       id: "4",
       title: "The Ocean Pearl",
-      description: "Luxury hotel with modern amenities and excellent service in the heart of Manipal.",
+      description:
+        "Luxury hotel with modern amenities and excellent service in the heart of Manipal.",
       address: "Manipal-576104",
       city: "Manipal",
       phone: "+91 820 292 0000",
       price_range: "₹4000-8000",
       cuisine_or_type: "Luxury Hotel",
       category: "stays",
-      image_url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
+      image_url:
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
       is_featured: false,
-      is_verified: true
-    }
+      is_verified: true,
+    },
   ];
 
-  const filteredPlaces = samplePlaces.filter(place => {
-    const matchesCategory = selectedCategory === "all" || place.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
+  const filteredPlaces = samplePlaces.filter((place) => {
+    const matchesCategory =
+      selectedCategory === "all" || place.category === selectedCategory;
+    const matchesSearch =
+      !searchQuery ||
       place.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       place.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       place.cuisine_or_type.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     return matchesCategory && matchesSearch;
   });
 
   const handleDownloadPDF = () => {
-    alert("PDF download will be available once the backend is fully configured!");
+    alert(
+      "PDF download will be available once the backend is fully configured!",
+    );
   };
 
   const openInGoogleMaps = (place: any) => {
     const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(place.title + " " + place.address)}`;
-    window.open(mapsUrl, '_blank');
+    window.open(mapsUrl, "_blank");
   };
 
   return (
@@ -115,12 +127,15 @@ const SimpleGuide: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/" className="flex items-center text-gray-600 hover:text-gray-900">
+              <Link
+                to="/"
+                className="flex items-center text-gray-600 hover:text-gray-900"
+              >
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Back to Home
               </Link>
             </div>
-            <Button 
+            <Button
               onClick={handleDownloadPDF}
               className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg"
             >
@@ -128,13 +143,14 @@ const SimpleGuide: React.FC = () => {
               Download PDF
             </Button>
           </div>
-          
+
           <div className="mt-6">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
               Udupi & Manipal Visitor Guide
             </h1>
             <p className="text-lg text-gray-600">
-              Discover the best places to eat, stay, and explore in coastal Karnataka
+              Discover the best places to eat, stay, and explore in coastal
+              Karnataka
             </p>
           </div>
         </div>
@@ -172,7 +188,9 @@ const SimpleGuide: React.FC = () => {
               {categories.map((category) => (
                 <Button
                   key={category.id}
-                  variant={selectedCategory === category.slug ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category.slug ? "default" : "outline"
+                  }
                   onClick={() => setSelectedCategory(category.slug)}
                   className={`rounded-full px-6 py-2 font-medium transition-all duration-200 ${
                     selectedCategory === category.slug
@@ -190,8 +208,13 @@ const SimpleGuide: React.FC = () => {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-lg text-gray-700">
-            Found <span className="font-semibold text-orange-600">{filteredPlaces.length}</span> places
-            {selectedCategory !== "all" && ` in ${categories.find(c => c.slug === selectedCategory)?.name}`}
+            Found{" "}
+            <span className="font-semibold text-orange-600">
+              {filteredPlaces.length}
+            </span>{" "}
+            places
+            {selectedCategory !== "all" &&
+              ` in ${categories.find((c) => c.slug === selectedCategory)?.name}`}
           </p>
         </div>
 
@@ -221,7 +244,7 @@ const SimpleGuide: React.FC = () => {
                   </Badge>
                 )}
               </div>
-              
+
               <CardContent className="p-6">
                 <div className="space-y-3">
                   <div className="flex justify-between items-start">
@@ -232,11 +255,11 @@ const SimpleGuide: React.FC = () => {
                       {place.city}
                     </Badge>
                   </div>
-                  
+
                   <p className="text-gray-600 text-sm line-clamp-2">
                     {place.description}
                   </p>
-                  
+
                   <div className="flex items-center gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
@@ -247,7 +270,7 @@ const SimpleGuide: React.FC = () => {
                       {place.price_range}
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-2 pt-2">
                     <Button
                       onClick={() => openInGoogleMaps(place)}
@@ -257,10 +280,12 @@ const SimpleGuide: React.FC = () => {
                       <MapPin className="w-4 h-4 mr-1" />
                       Maps
                     </Button>
-                    
+
                     {place.phone && (
                       <Button
-                        onClick={() => window.open(`tel:${place.phone}`, '_blank')}
+                        onClick={() =>
+                          window.open(`tel:${place.phone}`, "_blank")
+                        }
                         size="sm"
                         variant="outline"
                         className="flex-1"
@@ -280,8 +305,12 @@ const SimpleGuide: React.FC = () => {
         {filteredPlaces.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No places found</h3>
-            <p className="text-gray-500">Try adjusting your search or filters</p>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No places found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filters
+            </p>
           </div>
         )}
 
@@ -290,8 +319,9 @@ const SimpleGuide: React.FC = () => {
           <div className="text-center space-y-4">
             <h3 className="text-2xl font-bold text-gray-900">Phase 1 Demo</h3>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              This is a Phase 1 demonstration with sample data. The complete guide with real places 
-              and live data will be available once the Supabase database is fully configured.
+              This is a Phase 1 demonstration with sample data. The complete
+              guide with real places and live data will be available once the
+              Supabase database is fully configured.
             </p>
             <Link to="/feedback">
               <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg font-semibold rounded-lg">

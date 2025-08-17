@@ -50,7 +50,7 @@ import RoleBasedRoute, {
   AdminRoute,
   VendorRoute,
   EventOrganizerRoute,
-  PublicRoute
+  PublicRoute,
 } from "@/components/RoleBasedRoute";
 
 const queryClient = new QueryClient();
@@ -61,15 +61,15 @@ function App() {
       <SupabaseAuthProvider>
         <NotificationProvider>
           <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              {/* Core Routes */}
-              <Route path="/" element={<MinimalPhase1 />} />
-              {/* Phase 2 Features - Hidden for Phase 1 */}
-              {/* <Route path="/services" element={<SwiggyStyleServices />} />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                {/* Core Routes */}
+                <Route path="/" element={<MinimalPhase1 />} />
+                {/* Phase 2 Features - Hidden for Phase 1 */}
+                {/* <Route path="/services" element={<SwiggyStyleServices />} />
               <Route path="/service/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLogin />} />
               <Route path="/signup" element={<ModernSignup />} />
@@ -83,14 +83,14 @@ function App() {
               <Route path="/vendor" element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>} />
               <Route path="/api-test" element={<ApiTest />} /> */}
 
-              {/* Info Pages */}
-              {/* Phase 1 Core Pages */}
-              <Route path="/guide" element={<SimpleGuide />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/contact" element={<Contact />} />
+                {/* Info Pages */}
+                {/* Phase 1 Core Pages */}
+                <Route path="/guide" element={<SimpleGuide />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/contact" element={<Contact />} />
 
-              {/* Phase 2 Features - Hidden for Phase 1 */}
-              {/* <Route path="/about" element={<SwiggyStyleAbout />} />
+                {/* Phase 2 Features - Hidden for Phase 1 */}
+                {/* <Route path="/about" element={<SwiggyStyleAbout />} />
               <Route path="/help" element={<Help />} />
               <Route path="/support" element={<Help />} />
               <Route path="/safety" element={<Help />} />
@@ -134,10 +134,10 @@ function App() {
                 element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>}
               /> */}
 
-              {/* Catch-all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
           </TooltipProvider>
         </NotificationProvider>
       </SupabaseAuthProvider>

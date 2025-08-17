@@ -1,5 +1,5 @@
-import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
-import { createClient } from '@supabase/supabase-js';
+import { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
+import { createClient } from "@supabase/supabase-js";
 
 // Initialize Supabase with service role key for server-side operations
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
@@ -36,53 +36,64 @@ interface GuideItem {
   };
 }
 
-const generateHTMLContent = (categories: GuideCategory[], items: GuideItem[]): string => {
-  const currentDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+const generateHTMLContent = (
+  categories: GuideCategory[],
+  items: GuideItem[],
+): string => {
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   const generateCategorySection = (category: GuideCategory): string => {
-    const categoryItems = items.filter(item => item.category_id === category.id);
-    
-    if (categoryItems.length === 0) return '';
+    const categoryItems = items.filter(
+      (item) => item.category_id === category.id,
+    );
 
-    const itemsHTML = categoryItems.map(item => {
-      const tags = item.tags ? item.tags.join(', ') : '';
-      const badges = [];
-      if (item.is_featured) badges.push('⭐ Featured');
-      if (item.is_verified) badges.push('✓ Verified');
-      
-      return `
+    if (categoryItems.length === 0) return "";
+
+    const itemsHTML = categoryItems
+      .map((item) => {
+        const tags = item.tags ? item.tags.join(", ") : "";
+        const badges = [];
+        if (item.is_featured) badges.push("⭐ Featured");
+        if (item.is_verified) badges.push("✓ Verified");
+
+        return `
         <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid #ff6600; border-radius: 0 8px 8px 0;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
             <h4 style="margin: 0; color: #1a1a1a; font-size: 18px; font-weight: 600;">${item.title}</h4>
-            ${badges.length > 0 ? `<span style="font-size: 12px; color: #ff6600; font-weight: 500;">${badges.join(' • ')}</span>` : ''}
+            ${badges.length > 0 ? `<span style="font-size: 12px; color: #ff6600; font-weight: 500;">${badges.join(" • ")}</span>` : ""}
           </div>
           
-          ${item.description ? `<p style="margin: 8px 0; color: #4a5568; font-size: 14px; line-height: 1.4;">${item.description}</p>` : ''}
+          ${item.description ? `<p style="margin: 8px 0; color: #4a5568; font-size: 14px; line-height: 1.4;">${item.description}</p>` : ""}
           
           <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; font-size: 13px; color: #666;">
-            ${item.address ? `<span><strong>📍 Address:</strong> ${item.address}</span>` : ''}
-            ${item.phone ? `<span><strong>📞 Phone:</strong> ${item.phone}</span>` : ''}
-            ${item.price_range ? `<span><strong>💰 Price:</strong> ${item.price_range}</span>` : ''}
-            ${item.cuisine_or_type ? `<span><strong>🏷️ Type:</strong> ${item.cuisine_or_type}</span>` : ''}
+            ${item.address ? `<span><strong>📍 Address:</strong> ${item.address}</span>` : ""}
+            ${item.phone ? `<span><strong>📞 Phone:</strong> ${item.phone}</span>` : ""}
+            ${item.price_range ? `<span><strong>💰 Price:</strong> ${item.price_range}</span>` : ""}
+            ${item.cuisine_or_type ? `<span><strong>🏷️ Type:</strong> ${item.cuisine_or_type}</span>` : ""}
           </div>
           
-          ${tags ? `<div style="margin-top: 8px; font-size: 12px; color: #666; font-style: italic;">Tags: ${tags}</div>` : ''}
+          ${tags ? `<div style="margin-top: 8px; font-size: 12px; color: #666; font-style: italic;">Tags: ${tags}</div>` : ""}
           
-          ${item.address ? `
+          ${
+            item.address
+              ? `
             <div style="margin-top: 10px;">
-              <a href="https://www.google.com/maps/search/${encodeURIComponent(item.title + ' ' + item.address)}" 
+              <a href="https://www.google.com/maps/search/${encodeURIComponent(item.title + " " + item.address)}" 
                  style="color: #1a73e8; text-decoration: none; font-size: 12px; font-weight: 500;">
                 🗺️ View on Google Maps
               </a>
             </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       `;
-    }).join('');
+      })
+      .join("");
 
     return `
       <div style="page-break-before: auto; margin-bottom: 40px;">
@@ -262,11 +273,11 @@ const generateHTMLContent = (categories: GuideCategory[], items: GuideItem[]): s
           <span class="stat-label">Categories</span>
         </div>
         <div class="stat">
-          <span class="stat-number">${items.filter(i => i.is_verified).length}</span>
+          <span class="stat-number">${items.filter((i) => i.is_verified).length}</span>
           <span class="stat-label">Verified</span>
         </div>
         <div class="stat">
-          <span class="stat-number">${items.filter(i => i.is_featured).length}</span>
+          <span class="stat-number">${items.filter((i) => i.is_featured).length}</span>
           <span class="stat-label">Featured</span>
         </div>
       </div>
@@ -276,7 +287,7 @@ const generateHTMLContent = (categories: GuideCategory[], items: GuideItem[]): s
         with real-time updates, search, and direct booking options!
       </div>
 
-      ${categories.map(generateCategorySection).join('')}
+      ${categories.map(generateCategorySection).join("")}
 
       <div class="contact-info">
         <h3>Connect With Us</h3>
@@ -302,110 +313,116 @@ const generateHTMLContent = (categories: GuideCategory[], items: GuideItem[]): s
 const convertHTMLToPDF = async (html: string): Promise<Buffer> => {
   // For Netlify Functions, we'll use a simple HTML-to-PDF approach
   // In production, you might want to use puppeteer or a dedicated PDF service
-  
+
   try {
     // Try to use puppeteer if available
-    const puppeteer = await import('puppeteer');
-    
+    const puppeteer = await import("puppeteer");
+
     const browser = await puppeteer.default.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: true
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
     });
-    
+
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    
+    await page.setContent(html, { waitUntil: "networkidle0" });
+
     const pdfBuffer = await page.pdf({
-      format: 'A4',
+      format: "A4",
       printBackground: true,
       margin: {
-        top: '20mm',
-        right: '15mm',
-        bottom: '20mm',
-        left: '15mm'
-      }
+        top: "20mm",
+        right: "15mm",
+        bottom: "20mm",
+        left: "15mm",
+      },
     });
-    
+
     await browser.close();
     return pdfBuffer;
-    
   } catch (error) {
-    console.error('Puppeteer not available, using fallback method:', error);
-    
+    console.error("Puppeteer not available, using fallback method:", error);
+
     // Fallback: Return HTML as PDF-like response (browser will handle PDF generation)
     const htmlWithPrintStyles = html.replace(
-      '</head>',
+      "</head>",
       `
         <style>
           @media print {
             body { -webkit-print-color-adjust: exact; color-adjust: exact; }
           }
         </style>
-      </head>`
+      </head>`,
     );
-    
-    return Buffer.from(htmlWithPrintStyles, 'utf-8');
+
+    return Buffer.from(htmlWithPrintStyles, "utf-8");
   }
 };
 
-export const handler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
+export const handler: Handler = async (
+  event: HandlerEvent,
+  context: HandlerContext,
+) => {
   try {
     // Set CORS headers
     const headers = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     };
 
-    if (event.httpMethod === 'OPTIONS') {
+    if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,
         headers,
-        body: '',
+        body: "",
       };
     }
 
-    if (event.httpMethod !== 'GET') {
+    if (event.httpMethod !== "GET") {
       return {
         statusCode: 405,
         headers,
-        body: JSON.stringify({ error: 'Method not allowed' }),
+        body: JSON.stringify({ error: "Method not allowed" }),
       };
     }
 
-    console.log('Fetching guide data from Supabase...');
+    console.log("Fetching guide data from Supabase...");
 
     // Fetch categories and items from Supabase
     const [categoriesResponse, itemsResponse] = await Promise.all([
       supabase
-        .from('guide_categories')
-        .select('*')
-        .eq('active', true)
-        .order('sort_order', { ascending: true }),
-      
+        .from("guide_categories")
+        .select("*")
+        .eq("active", true)
+        .order("sort_order", { ascending: true }),
+
       supabase
-        .from('guide_items')
-        .select(`
+        .from("guide_items")
+        .select(
+          `
           *,
           guide_categories(name, slug)
-        `)
-        .order('sort_order', { ascending: true })
+        `,
+        )
+        .order("sort_order", { ascending: true }),
     ]);
 
     if (categoriesResponse.error) {
-      console.error('Error fetching categories:', categoriesResponse.error);
-      throw new Error('Failed to fetch guide categories');
+      console.error("Error fetching categories:", categoriesResponse.error);
+      throw new Error("Failed to fetch guide categories");
     }
 
     if (itemsResponse.error) {
-      console.error('Error fetching items:', itemsResponse.error);
-      throw new Error('Failed to fetch guide items');
+      console.error("Error fetching items:", itemsResponse.error);
+      throw new Error("Failed to fetch guide items");
     }
 
     const categories = categoriesResponse.data || [];
     const items = itemsResponse.data || [];
 
-    console.log(`Found ${categories.length} categories and ${items.length} items`);
+    console.log(
+      `Found ${categories.length} categories and ${items.length} items`,
+    );
 
     // Generate HTML content
     const htmlContent = generateHTMLContent(categories, items);
@@ -417,26 +434,26 @@ export const handler: Handler = async (event: HandlerEvent, context: HandlerCont
       statusCode: 200,
       headers: {
         ...headers,
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="CoastalConnect_Udupi_Manipal_Guide.pdf"',
-        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+        "Content-Type": "application/pdf",
+        "Content-Disposition":
+          'attachment; filename="CoastalConnect_Udupi_Manipal_Guide.pdf"',
+        "Cache-Control": "public, max-age=3600", // Cache for 1 hour
       },
-      body: pdfBuffer.toString('base64'),
+      body: pdfBuffer.toString("base64"),
       isBase64Encoded: true,
     };
-
   } catch (error) {
-    console.error('Error generating PDF:', error);
+    console.error("Error generating PDF:", error);
 
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        error: 'Failed to generate PDF',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        error: "Failed to generate PDF",
+        message: error instanceof Error ? error.message : "Unknown error",
       }),
     };
   }

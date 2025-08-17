@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  getGuideCategories, 
-  getGuideItems, 
-  GuideCategory, 
-  GuideItem 
+import {
+  getGuideCategories,
+  getGuideItems,
+  GuideCategory,
+  GuideItem,
 } from "@/lib/supabase";
 import {
   Search,
@@ -29,7 +29,7 @@ import {
   Building,
   Car,
   TreePine,
-  Music
+  Music,
 } from "lucide-react";
 
 const Phase1Homepage: React.FC = () => {
@@ -48,9 +48,9 @@ const Phase1Homepage: React.FC = () => {
       setLoading(true);
       const [categoriesData, itemsData] = await Promise.all([
         getGuideCategories(),
-        getGuideItems({ featured: true, limit: 6 })
+        getGuideItems({ featured: true, limit: 6 }),
       ]);
-      
+
       setCategories(categoriesData);
       setFeaturedItems(itemsData);
     } catch (error) {
@@ -65,19 +65,19 @@ const Phase1Homepage: React.FC = () => {
     if (searchQuery.trim()) {
       navigate(`/guide?search=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate('/guide');
+      navigate("/guide");
     }
   };
 
   const handleDownloadPDF = async () => {
     try {
-      const response = await fetch('/.netlify/functions/generate-guide-pdf');
+      const response = await fetch("/.netlify/functions/generate-guide-pdf");
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = 'CoastalConnect_Udupi_Manipal_Guide.pdf';
+        a.download = "CoastalConnect_Udupi_Manipal_Guide.pdf";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -90,25 +90,39 @@ const Phase1Homepage: React.FC = () => {
 
   const getCategoryIcon = (slug: string) => {
     switch (slug) {
-      case 'restaurants': return <Utensils className="w-6 h-6" />;
-      case 'stays': return <Building className="w-6 h-6" />;
-      case 'places': return <TreePine className="w-6 h-6" />;
-      case 'experiences': return <Camera className="w-6 h-6" />;
-      case 'transport': return <Car className="w-6 h-6" />;
-      case 'festivals': return <Music className="w-6 h-6" />;
-      default: return <Navigation className="w-6 h-6" />;
+      case "restaurants":
+        return <Utensils className="w-6 h-6" />;
+      case "stays":
+        return <Building className="w-6 h-6" />;
+      case "places":
+        return <TreePine className="w-6 h-6" />;
+      case "experiences":
+        return <Camera className="w-6 h-6" />;
+      case "transport":
+        return <Car className="w-6 h-6" />;
+      case "festivals":
+        return <Music className="w-6 h-6" />;
+      default:
+        return <Navigation className="w-6 h-6" />;
     }
   };
 
   const getCategoryColor = (slug: string) => {
     switch (slug) {
-      case 'restaurants': return 'from-red-500 to-orange-500';
-      case 'stays': return 'from-blue-500 to-cyan-500';
-      case 'places': return 'from-green-500 to-emerald-500';
-      case 'experiences': return 'from-purple-500 to-pink-500';
-      case 'transport': return 'from-yellow-500 to-amber-500';
-      case 'festivals': return 'from-indigo-500 to-purple-500';
-      default: return 'from-gray-500 to-slate-500';
+      case "restaurants":
+        return "from-red-500 to-orange-500";
+      case "stays":
+        return "from-blue-500 to-cyan-500";
+      case "places":
+        return "from-green-500 to-emerald-500";
+      case "experiences":
+        return "from-purple-500 to-pink-500";
+      case "transport":
+        return "from-yellow-500 to-amber-500";
+      case "festivals":
+        return "from-indigo-500 to-purple-500";
+      default:
+        return "from-gray-500 to-slate-500";
     }
   };
 
@@ -133,18 +147,27 @@ const Phase1Homepage: React.FC = () => {
               CoastalConnect
             </Link>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/guide" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+              <Link
+                to="/guide"
+                className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
+              >
                 Guide
               </Link>
-              <Link to="/feedback" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+              <Link
+                to="/feedback"
+                className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
+              >
                 Feedback
               </Link>
-              <Link to="/contact" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+              <Link
+                to="/contact"
+                className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
+              >
                 Contact
               </Link>
-              <Button 
+              <Button
                 onClick={handleDownloadPDF}
-                variant="outline" 
+                variant="outline"
                 size="sm"
                 className="border-orange-500 text-orange-600 hover:bg-orange-50"
               >
@@ -181,7 +204,7 @@ const Phase1Homepage: React.FC = () => {
                 </span>
               </h1>
               <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                Discover the best places to eat, stay, visit, and experience in 
+                Discover the best places to eat, stay, visit, and experience in
                 beautiful coastal Karnataka. Your complete guide to local gems.
               </p>
             </div>
@@ -189,8 +212,8 @@ const Phase1Homepage: React.FC = () => {
             {/* Call to Action Buttons */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <Link to="/guide">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 >
                   <Navigation className="w-5 h-5 mr-2" />
@@ -198,10 +221,10 @@ const Phase1Homepage: React.FC = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              
-              <Button 
+
+              <Button
                 onClick={handleDownloadPDF}
-                variant="outline" 
+                variant="outline"
                 size="lg"
                 className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 px-8 py-4 text-lg font-semibold rounded-xl"
               >
@@ -212,7 +235,10 @@ const Phase1Homepage: React.FC = () => {
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto">
-              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+              <form
+                onSubmit={handleSearch}
+                className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+              >
                 <div className="flex">
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -224,7 +250,7 @@ const Phase1Homepage: React.FC = () => {
                       className="pl-12 pr-4 py-4 text-lg border-0 focus:ring-0 focus:outline-none bg-transparent"
                     />
                   </div>
-                  <Button 
+                  <Button
                     type="submit"
                     className="bg-orange-500 hover:bg-orange-600 text-white px-8 rounded-none rounded-r-2xl"
                   >
@@ -244,7 +270,8 @@ const Phase1Homepage: React.FC = () => {
             Explore by Category
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Browse our comprehensive guide organized by what matters most to visitors
+            Browse our comprehensive guide organized by what matters most to
+            visitors
           </p>
         </div>
 
@@ -253,7 +280,9 @@ const Phase1Homepage: React.FC = () => {
             <Link key={category.id} to={`/guide?category=${category.slug}`}>
               <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 shadow-lg overflow-hidden bg-white h-full">
                 <CardContent className="p-0">
-                  <div className={`bg-gradient-to-br ${getCategoryColor(category.slug)} p-8 text-white`}>
+                  <div
+                    className={`bg-gradient-to-br ${getCategoryColor(category.slug)} p-8 text-white`}
+                  >
                     <div className="flex items-center justify-between mb-4">
                       <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
                         {getCategoryIcon(category.slug)}
@@ -262,12 +291,15 @@ const Phase1Homepage: React.FC = () => {
                     </div>
                     <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
                     <p className="text-white/90 text-sm">
-                      Discover the best {category.name.toLowerCase()} in Udupi & Manipal
+                      Discover the best {category.name.toLowerCase()} in Udupi &
+                      Manipal
                     </p>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-sm">View all places</span>
+                      <span className="text-gray-600 text-sm">
+                        View all places
+                      </span>
                       <ArrowRight className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
@@ -293,10 +325,16 @@ const Phase1Homepage: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredItems.map((item) => (
-                <Card key={item.id} className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg overflow-hidden bg-white">
+                <Card
+                  key={item.id}
+                  className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg overflow-hidden bg-white"
+                >
                   <div className="relative overflow-hidden">
                     <img
-                      src={item.image_url || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400"}
+                      src={
+                        item.image_url ||
+                        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400"
+                      }
                       alt={item.title}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
@@ -306,7 +344,7 @@ const Phase1Homepage: React.FC = () => {
                       Featured
                     </Badge>
                   </div>
-                  
+
                   <CardContent className="p-6">
                     <div className="space-y-3">
                       <div className="flex justify-between items-start">
@@ -317,13 +355,13 @@ const Phase1Homepage: React.FC = () => {
                           {item.city}
                         </Badge>
                       </div>
-                      
+
                       {item.description && (
                         <p className="text-gray-600 text-sm line-clamp-2">
                           {item.description}
                         </p>
                       )}
-                      
+
                       {item.cuisine_or_type && (
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <MapPin className="w-4 h-4" />
@@ -338,8 +376,8 @@ const Phase1Homepage: React.FC = () => {
 
             <div className="text-center mt-12">
               <Link to="/guide">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg"
                 >
                   View All Places
@@ -358,21 +396,28 @@ const Phase1Homepage: React.FC = () => {
             What's Coming in Phase 2?
           </h2>
           <p className="text-lg text-gray-600 mb-8">
-            We're building something bigger! Your feedback will help us prioritize these features:
+            We're building something bigger! Your feedback will help us
+            prioritize these features:
           </p>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-lg p-4 shadow-md">
               <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-700">Online Bookings</p>
+              <p className="text-sm font-medium text-gray-700">
+                Online Bookings
+              </p>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <Users className="w-8 h-8 text-green-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-700">Event Management</p>
+              <p className="text-sm font-medium text-gray-700">
+                Event Management
+              </p>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <Car className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-700">Driver Booking</p>
+              <p className="text-sm font-medium text-gray-700">
+                Driver Booking
+              </p>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
               <Coffee className="w-8 h-8 text-red-500 mx-auto mb-2" />
@@ -381,8 +426,8 @@ const Phase1Homepage: React.FC = () => {
           </div>
 
           <Link to="/feedback">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-lg"
             >
               <Heart className="w-5 h-5 mr-2" />
@@ -397,27 +442,39 @@ const Phase1Homepage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4 text-orange-500">CoastalConnect</h3>
+              <h3 className="text-xl font-bold mb-4 text-orange-500">
+                CoastalConnect
+              </h3>
               <p className="text-gray-400 text-sm">
-                Your trusted companion for exploring the beautiful coastal region of Udupi & Manipal.
+                Your trusted companion for exploring the beautiful coastal
+                region of Udupi & Manipal.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <div className="space-y-2 text-sm">
-                <Link to="/guide" className="block text-gray-400 hover:text-white transition-colors">
+                <Link
+                  to="/guide"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Visitor Guide
                 </Link>
-                <Link to="/feedback" className="block text-gray-400 hover:text-white transition-colors">
+                <Link
+                  to="/feedback"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Feedback
                 </Link>
-                <Link to="/contact" className="block text-gray-400 hover:text-white transition-colors">
+                <Link
+                  to="/contact"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Contact Us
                 </Link>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <div className="space-y-2 text-sm text-gray-400">
@@ -427,7 +484,7 @@ const Phase1Homepage: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
             <p className="text-gray-400 text-sm">
               © 2024 CoastalConnect. Made with ❤️ for coastal Karnataka.
