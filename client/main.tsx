@@ -68,7 +68,7 @@ function App() {
             <ScrollToTop />
             <Routes>
               {/* Core Routes */}
-              <Route path="/" element={<SwiggyStyleIndex />} />
+              <Route path="/" element={<Phase1Homepage />} />
               <Route path="/services" element={<SwiggyStyleServices />} />
               <Route path="/service/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLogin />} />
