@@ -88,6 +88,8 @@ function App() {
               <Route path="/help" element={<Help />} />
               <Route path="/support" element={<Help />} />
               <Route path="/safety" element={<Help />} />
+              <Route path="/guide" element={<Guide />} />
+              <Route path="/feedback" element={<Feedback />} />
               <Route path="/visit-udupi-guide" element={<VisitUdupiGuide />} />
               <Route path="/partner-with-us" element={<PartnerWithUs />} />
               <Route path="/gallery" element={<MediaGallery />} />
