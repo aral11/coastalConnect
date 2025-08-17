@@ -1,6 +1,6 @@
 /**
  * CoastalConnect Phase 1 - Visitor Guide Homepage
- * Simplified for Phase 1 launch
+ * Simple, focused visitor guide
  */
 
 import React, { useState, useEffect } from "react";
@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  getGuideCategories,
-  getGuideItems,
-  GuideCategory,
-  GuideItem
+import { 
+  getGuideCategories, 
+  getGuideItems, 
+  GuideCategory, 
+  GuideItem 
 } from "@/lib/supabase";
 import {
   Search,
@@ -41,936 +41,405 @@ export default function SwiggyStyleIndex() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<GuideCategory[]>([]);
   const [featuredItems, setFeaturedItems] = useState<GuideItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    if (!authLoading) {
-      loadInitialData();
-      setupRealTimeSubscriptions();
-    }
+    loadData();
+  }, []);
 
-    // Safety timeout to prevent infinite loading
-    const timeout = setTimeout(() => {
-      console.warn("Loading timeout reached - forcing app to load");
-      setLoading(false);
-    }, 5000); // 5 seconds max
-
-    return () => clearTimeout(timeout);
-  }, [authLoading]);
-
-  const loadInitialData = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      console.log("Starting to load initial data...");
-
-      // Test Supabase connection first
-      try {
-        const { data: testData, error: testError } = await supabase
-          .from('service_categories')
-          .select('id')
-          .limit(1);
-
-        if (testError) {
-          console.error("Supabase connection test failed:", testError);
-          // Continue with fallback data
-        } else {
-          console.log("Supabase connection successful");
-        }
-      } catch (error) {
-        console.error("Supabase connection error:", error);
-        // Continue with fallback data
-      }
-
-      // Track page view
-      if (!authLoading) {
-        try {
-          await trackEvent("page_view", {
-            page: "swiggy_homepage",
-            user_id: user?.id,
-          });
-        } catch (error) {
-          console.warn("Failed to track page view:", error);
-        }
-      }
-
-      // Load hero video URL from database
-      try {
-        const { data: videoConfig } = await supabase
-          .from("site_config")
-          .select("value")
-          .eq("key", "homepage_video_url")
-          .eq("is_public", true)
-          .single();
-
-        if (videoConfig?.value) {
-          setHeroVideoUrl(videoConfig.value);
-          // If it's an Instagram reel, use a coastal Karnataka thumbnail
-          if (videoConfig.value.includes("instagram.com")) {
-            setVideoThumbnail(DEFAULT_HERO_VIDEO_THUMBNAIL);
-          }
-        }
-      } catch (error) {
-        console.warn("Failed to load video URL:", error);
-      }
-
-      // Load hero background URL from database
-      try {
-        const { data: backgroundConfig } = await supabase
-          .from("site_config")
-          .select("value")
-          .eq("key", "homepage_background_url")
-          .eq("is_public", true)
-          .single();
-
-        if (backgroundConfig?.value) {
-          setHeroBackgroundUrl(backgroundConfig.value);
-        }
-      } catch (error) {
-        console.warn("Failed to load background URL:", error);
-      }
-
-      console.log("Loading core data...");
-
-      // Load data in parallel with better error handling and shorter timeout
-      const dataPromises = [
-        getServiceCategories(),
-        getLocations(true),
-        getServices({ featured: true, status: "approved", limit: 12 }),
-        getServices({ status: "approved", limit: 8 }),
-        getServices({ status: "approved", limit: 16 }),
-      ];
-
-      // Add timeout to each promise
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Database query timeout')), 3000)
-      );
-
-      const dataResults = await Promise.allSettled(
-        dataPromises.map(p => Promise.race([p, timeoutPromise]))
-      );
-
-      // Extract results with fallbacks
-      const categoriesData = dataResults[0].status === 'fulfilled' ? dataResults[0].value : [];
-      const locationsData = dataResults[1].status === 'fulfilled' ? dataResults[1].value : [];
-      const featuredData = dataResults[2].status === 'fulfilled' ? dataResults[2].value : [];
-      const trendingData = dataResults[3].status === 'fulfilled' ? dataResults[3].value : [];
-      const nearbyData = dataResults[4].status === 'fulfilled' ? dataResults[4].value : [];
-
-      console.log("Data loaded:", {
-        categories: categoriesData?.length || 0,
-        locations: locationsData?.length || 0,
-        featured: featuredData?.length || 0,
-        trending: trendingData?.length || 0,
-        nearby: nearbyData?.length || 0
-      });
-
-
-      // Set data with fallbacks
-      const finalCategories = categoriesData && categoriesData.length > 0 ? categoriesData : [
-        { id: '1', name: 'Hotels & Homestays', description: 'Comfortable accommodations', icon: '🏨', is_active: true },
-        { id: '2', name: 'Restaurants', description: 'Local dining experiences', icon: '🍽️', is_active: true },
-        { id: '3', name: 'Transport', description: 'Local transportation', icon: '🚗', is_active: true },
-        { id: '4', name: 'Events', description: 'Special occasions', icon: '🎉', is_active: true }
-      ];
-
-      const finalLocations = locationsData && locationsData.length > 0 ? locationsData : [
-        { id: '1', name: 'Udupi', region: 'Karnataka', is_active: true },
-        { id: '2', name: 'Manipal', region: 'Karnataka', is_active: true }
-      ];
-
-      setCategories(finalCategories);
-      setLocations(finalLocations);
-      setFeaturedServices(featuredData || []);
-      setTrendingServices(trendingData || []);
-      setNearbyServices(nearbyData || []);
-
-      // Set default location
-      if (finalLocations.length > 0) {
-        setSelectedLocation(finalLocations[0].id);
-      }
-
-      // Load dynamic offers from database
-      try {
-        const { data: couponsData } = await supabase
-          .from("coupons")
-          .select("*")
-          .eq("is_active", true)
-          .gte("valid_until", new Date().toISOString())
-          .order("created_at", { ascending: false })
-          .limit(3);
-
-        if (couponsData && couponsData.length > 0) {
-          const formattedOffers = couponsData.map((coupon, index) => ({
-            id: coupon.id,
-            title: coupon.title,
-            subtitle: coupon.description,
-            code: coupon.code,
-            bgColor: [
-              "from-orange-400 to-red-500",
-              "from-green-400 to-blue-500",
-              "from-purple-400 to-pink-500",
-            ][index % 3],
-          }));
-          setOffers(formattedOffers);
-        } else {
-          // Fallback offers if none in database
-          setOffers([
-            {
-              id: "fallback-1",
-              title: "Welcome Offer",
-              subtitle: "Special discount for new users",
-              code: "WELCOME",
-              bgColor: "from-orange-400 to-red-500",
-            },
-          ]);
-        }
-      } catch (error) {
-        console.warn("Failed to load offers:", error);
-        // Fallback to default offer
-        setOffers([
-          {
-            id: "fallback-1",
-            title: "Welcome Offer",
-            subtitle: "Special discount for new users",
-            code: "WELCOME",
-            bgColor: "from-orange-400 to-red-500",
-          },
-        ]);
-      }
-
-      // Load additional data with error handling
-      const additionalResults = await Promise.allSettled([
-        loadStats(),
-        loadServiceCounts()
+      const [categoriesData, itemsData] = await Promise.all([
+        getGuideCategories(),
+        getGuideItems({ featured: true, limit: 6 })
       ]);
-
-      // Log any failures for debugging
-      additionalResults.forEach((result, index) => {
-        if (result.status === 'rejected') {
-          console.warn(`Additional data load ${index} failed:`, result.reason);
-        }
-      });
-    } catch (error: any) {
-      console.error("Error loading data:", error);
+      
+      setCategories(categoriesData);
+      setFeaturedItems(itemsData);
+    } catch (error) {
+      console.error("Error loading homepage data:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadStats = async () => {
-    try {
-      console.log("Loading stats...");
-
-      // Use Promise.allSettled for better error handling
-      const statsResults = await Promise.allSettled([
-        supabase.from("services").select("id", { count: "exact", head: true }),
-        supabase.from("bookings").select("id", { count: "exact", head: true }),
-        supabase.from("locations").select("id", { count: "exact", head: true }),
-        supabase.from("services").select("average_rating").not("average_rating", "is", null),
-      ]);
-
-      // Extract counts with fallbacks
-      const servicesCount = statsResults[0].status === 'fulfilled' ? statsResults[0].value : { count: 25 };
-      const bookingsCount = statsResults[1].status === 'fulfilled' ? statsResults[1].value : { count: 150 };
-      const locationsCount = statsResults[2].status === 'fulfilled' ? statsResults[2].value : { count: 2 };
-      const avgRatingData = statsResults[3].status === 'fulfilled' ? statsResults[3].value : { data: [] };
-
-      // Calculate dynamic average rating
-      const validRatings = avgRatingData.data?.filter((service) => service.average_rating > 0) || [];
-      const dynamicAvgRating = validRatings.length > 0
-        ? validRatings.reduce((sum, service) => sum + service.average_rating, 0) / validRatings.length
-        : 4.8;
-
-      const finalStats = {
-        totalServices: servicesCount.count || 25,
-        totalBookings: bookingsCount.count || 150,
-        happyCustomers: Math.floor((bookingsCount.count || 150) * 0.95),
-        citiesCovered: locationsCount.count || 2,
-        avgRating: Number(dynamicAvgRating.toFixed(1)),
-      };
-
-      console.log("Stats loaded:", finalStats);
-      setStats(finalStats);
-    } catch (error) {
-      console.error("Error loading stats:", error);
-      // Fallback stats for demo
-      setStats({
-        totalServices: 25,
-        totalBookings: 150,
-        happyCustomers: 142,
-        citiesCovered: 2,
-        avgRating: 4.8,
-      });
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/guide?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/guide');
     }
   };
 
-  const loadServiceCounts = async () => {
+  const handleDownloadPDF = async () => {
     try {
-      console.log("Loading service counts...");
-
-      const categoryMappings = {
-        "hotels-resorts-homestays": ["homestay", "accommodation"],
-        "restaurants-cafes": ["restaurant", "food"],
-        transportation: ["driver", "transport"],
-        "event-services": ["event_services", "events"],
-        "wellness-spa": ["wellness", "spa"],
-        "content-creators": ["creator", "photography"],
-      };
-
-      const counts: Record<string, number> = {};
-
-      // Load counts with fallbacks
-      for (const [key, categories] of Object.entries(categoryMappings)) {
-        try {
-          const { count } = await supabase
-            .from("services")
-            .select("id", { count: "exact", head: true })
-            .eq("status", "approved")
-            .in("service_type", categories);
-          counts[key] = count || 0;
-        } catch (error) {
-          console.warn(`Failed to load count for ${key}:`, error);
-          counts[key] = Math.floor(Math.random() * 10) + 5; // Fallback random count
-        }
-      }
-
-      console.log("Service counts loaded:", counts);
-      setServiceCounts(counts);
-    } catch (error) {
-      console.error("Error loading service counts:", error);
-      // Fallback counts
-      setServiceCounts({
-        "hotels-resorts-homestays": 8,
-        "restaurants-cafes": 12,
-        transportation: 6,
-        "event-services": 4,
-        "wellness-spa": 3,
-        "content-creators": 7,
-      });
-    }
-  };
-
-  const setupRealTimeSubscriptions = () => {
-    const servicesSubscription = supabase
-      .channel("homepage_services")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "services" },
-        () => loadFeaturedServices(),
-      )
-      .subscribe();
-
-    return () => servicesSubscription.unsubscribe();
-  };
-
-  const loadFeaturedServices = async () => {
-    try {
-      const data = await getServices({
-        featured: true,
-        status: "approved",
-        limit: 12,
-      });
-      setFeaturedServices(data || []);
-    } catch (error) {
-      console.error("Error refreshing featured services:", error);
-    }
-  };
-
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
-
-    setIsSearching(true);
-    try {
-      await trackEvent("search_performed", {
-        query: searchQuery,
-        location_id: selectedLocation,
-        user_id: user?.id,
-      });
-
-      navigate(
-        `/services?q=${encodeURIComponent(searchQuery)}&location=${selectedLocation}`,
-      );
-    } catch (error) {
-      console.error("Search error:", error);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  const handlePlayVideo = () => {
-    try {
-      trackEvent("hero_video_play", {
-        video_url: heroVideoUrl,
-        user_id: user?.id,
-      });
-      if (heroVideoUrl) {
-        window.open(heroVideoUrl, "_blank", "noopener,noreferrer");
+      const response = await fetch('/.netlify/functions/generate-guide-pdf');
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CoastalConnect_Udupi_Manipal_Guide.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
       }
     } catch (error) {
-      console.warn("Failed to track video play event:", error);
+      console.error("Error downloading PDF:", error);
     }
   };
 
-  if (loading || authLoading) {
+  const getCategoryIcon = (slug: string) => {
+    switch (slug) {
+      case 'restaurants': return <Utensils className="w-6 h-6" />;
+      case 'stays': return <Building className="w-6 h-6" />;
+      case 'places': return <TreePine className="w-6 h-6" />;
+      case 'experiences': return <Camera className="w-6 h-6" />;
+      case 'transport': return <Car className="w-6 h-6" />;
+      case 'festivals': return <Music className="w-6 h-6" />;
+      default: return <Navigation className="w-6 h-6" />;
+    }
+  };
+
+  const getCategoryColor = (slug: string) => {
+    switch (slug) {
+      case 'restaurants': return 'from-red-500 to-orange-500';
+      case 'stays': return 'from-blue-500 to-cyan-500';
+      case 'places': return 'from-green-500 to-emerald-500';
+      case 'experiences': return 'from-purple-500 to-pink-500';
+      case 'transport': return 'from-yellow-500 to-amber-500';
+      case 'festivals': return 'from-indigo-500 to-purple-500';
+      default: return 'from-gray-500 to-slate-500';
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-200 border-t-orange-500 mx-auto"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-6 h-6 bg-orange-500 rounded-full animate-pulse"></div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Loading CoastalConnect
-            </h3>
-            <p className="text-gray-600">
-              Preparing your coastal experience...
-            </p>
-          </div>
+          <div className="w-16 h-16 bg-orange-500 rounded-full animate-bounce mx-auto"></div>
+          <p className="text-lg text-gray-700">Loading your coastal guide...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <Layout fullWidth>
-      <div className="min-h-screen bg-white">
-        {/* Redesigned Hero Section - Clean & Modern */}
-        <section className="relative bg-white overflow-hidden">
-          {/* Background with subtle pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 via-white to-red-50/50"></div>
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
-            {/* Hero Content */}
-            <div className="text-center space-y-12">
-              {/* Badges */}
-              <div className="flex justify-center items-center space-x-4">
-                <Badge className="bg-orange-500 text-white border-0 px-6 py-2 text-sm font-semibold">
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  #1 Coastal Platform
-                </Badge>
-                <Badge className="bg-green-500 text-white border-0 px-6 py-2 text-sm font-semibold">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Verified Partners
-                </Badge>
-              </div>
-
-              {/* Main Heading */}
-              <div className="space-y-6">
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight">
-                  Your Gateway to
-                  <span className="block bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
-                    Coastal Bliss
-                  </span>
-                </h1>
-                <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                  Book authentic homestays, discover local flavors, hire trusted
-                  drivers, and connect with talented creators in beautiful
-                  Coastal Karnataka.
-                </p>
-              </div>
-
-              {/* Stats */}
-              <div className="flex justify-center items-center space-x-12">
-                <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">
-                    {stats.totalServices}+
-                  </div>
-                  <div className="text-sm text-gray-600 font-medium">
-                    Verified Services
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">
-                    {stats.avgRating}
-                  </div>
-                  <div className="text-sm text-gray-600 font-medium flex items-center justify-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                    Average Rating
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-black text-gray-900">
-                    {stats.happyCustomers}+
-                  </div>
-                  <div className="text-sm text-gray-600 font-medium">
-                    Happy Travelers
-                  </div>
-                </div>
-              </div>
-
-              {/* Instagram Video Section */}
-              {heroVideoUrl && (
-                <div className="max-w-2xl mx-auto mb-8">
-                  <div
-                    className="relative bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
-                    onClick={handlePlayVideo}
-                  >
-                    <div className="aspect-video relative">
-                      <img
-                        src={videoThumbnail}
-                        alt="Coastal Karnataka Experience"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 group-hover:scale-110 transition-transform shadow-lg">
-                          <PlayCircle className="h-12 w-12 text-orange-500" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-3">
-                          <h3 className="text-white font-semibold text-lg mb-1">
-                            Experience Coastal Karnataka
-                          </h3>
-                          <p className="text-white/90 text-sm">
-                            Watch our Instagram reel showcasing the beauty of Udupi & Manipal
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Search Bar */}
-              <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-                  <div className="p-3">
-                    <div className="flex flex-col md:flex-row gap-2">
-                      {/* Location */}
-                      <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-1">
-                        <LocationIcon className="h-5 w-5 text-orange-500 mr-3" />
-                        <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
-                            Location
-                          </div>
-                          <select
-                            value={selectedLocation}
-                            onChange={(e) =>
-                              setSelectedLocation(e.target.value)
-                            }
-                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold"
-                          >
-                            <option value="">Choose destination</option>
-                            {locations.map((location) => (
-                              <option key={location.id} value={location.id}>
-                                {location.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Search */}
-                      <div className="flex items-center px-6 py-4 bg-gray-50 rounded-2xl md:flex-[2]">
-                        <Search className="h-5 w-5 text-gray-400 mr-3" />
-                        <div className="flex-1">
-                          <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
-                            Search
-                          </div>
-                          <input
-                            type="text"
-                            placeholder="Hotels, restaurants, drivers, events..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) =>
-                              e.key === "Enter" && handleSearch()
-                            }
-                            className="w-full bg-transparent border-none outline-none text-gray-900 font-semibold placeholder-gray-400"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Search Button */}
-                      <Button
-                        onClick={handleSearch}
-                        disabled={isSearching || !searchQuery.trim()}
-                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-6 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-200"
-                      >
-                        {isSearching ? (
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        ) : (
-                          <>
-                            <Search className="h-5 w-5 mr-2" />
-                            Explore
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
+      {/* Navigation */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <Link to="/" className="text-2xl font-bold text-orange-600">
+              CoastalConnect
+            </Link>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/guide" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Guide
+              </Link>
+              <Link to="/feedback" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Feedback
+              </Link>
+              <Link to="/contact" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Contact
+              </Link>
+              <Button 
+                onClick={handleDownloadPDF}
+                variant="outline" 
+                size="sm"
+                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                PDF Guide
+              </Button>
             </div>
           </div>
-        </section>
+        </div>
+      </nav>
 
-        {/* Quick Access Cards */}
-        <section className="py-16 bg-white border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-              {[
-                {
-                  key: "hotels-resorts-homestays",
-                  label: "Hotels & Homestays",
-                  path: "/services?category=hotels-resorts-homestays",
-                  image:
-                    "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&h=200&fit=crop&auto=format",
-                  alt: "Coastal homestays and resorts",
-                },
-                {
-                  key: "restaurants-cafes",
-                  label: "Restaurants",
-                  path: "/services?category=restaurants-cafes",
-                  image:
-                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&h=200&fit=crop&auto=format",
-                  alt: "Traditional South Indian cuisine",
-                },
-                {
-                  key: "transportation",
-                  label: "Transport",
-                  path: "/services?category=transportation",
-                  image:
-                    "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=300&h=200&fit=crop&auto=format",
-                  alt: "Local transportation services",
-                },
-                {
-                  key: "event-services",
-                  label: "Events",
-                  path: "/services?category=event-services",
-                  image:
-                    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop&auto=format",
-                  alt: "Udupi cultural festivals",
-                },
-                {
-                  key: "content-creators",
-                  label: "Creators",
-                  path: "/services?category=content-creators",
-                  image:
-                    "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=200&fit=crop&auto=format",
-                  alt: "Photography and content creation",
-                },
-                {
-                  key: "wellness-spa",
-                  label: "Wellness",
-                  path: "/services?category=wellness-spa",
-                  image:
-                    "https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=300&h=200&fit=crop&auto=format",
-                  alt: "Ayurvedic spa and wellness",
-                },
-                {
-                  key: "visit-guide",
-                  label: "Udupi Guide",
-                  path: "/visit-udupi-guide",
-                  image:
-                    "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=300&h=200&fit=crop&auto=format",
-                  alt: "Udupi attractions",
-                },
-              ].map((action, index) => {
-                const count = serviceCounts[action.key] || 0;
-                // Only show "Coming Soon" for specific services we know aren't ready
-                // Allow navigation to show "No services available" message instead
-                const isComingSoon = false; // Temporarily disable coming soon to allow navigation
-
-                return (
-                  <div
-                    key={index}
-                    onClick={() => !isComingSoon && navigate(action.path)}
-                    className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 ${
-                      isComingSoon
-                        ? "cursor-not-allowed opacity-60"
-                        : "cursor-pointer hover:-translate-y-1"
-                    }`}
-                  >
-                    <div className="aspect-[3/2] relative">
-                      <img
-                        src={action.image}
-                        alt={action.alt}
-                        className={`w-full h-full object-cover ${
-                          isComingSoon ? "grayscale" : "group-hover:scale-105"
-                        } transition-transform duration-500`}
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
-                      {/* Badge */}
-                      <div className="absolute top-2 right-2">
-                        <div
-                          className={`px-2 py-1 rounded-lg text-xs font-bold ${
-                            isComingSoon
-                              ? "bg-gray-500 text-white"
-                              : "bg-orange-500 text-white"
-                          }`}
-                        >
-                          {isComingSoon
-                            ? "Soon"
-                            : action.key === "visit-guide"
-                              ? "📖"
-                              : count}
-                        </div>
-                      </div>
-
-                      {/* Label */}
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-2">
-                          <h3 className="text-white font-bold text-base leading-tight mb-1">
-                            {action.label}
-                          </h3>
-                          <p className="text-white/90 text-sm font-medium">
-                            {isComingSoon
-                              ? "Coming Soon"
-                              : action.key === "visit-guide"
-                                ? "Explore Guide"
-                                : `${count} available`}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Offers Banner */}
-        {offers.length > 0 && (
-          <section className="py-8 bg-gradient-to-r from-orange-500 to-red-500">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex gap-6 overflow-x-auto pb-2 scrollbar-hide">
-                {offers.map((offer) => (
-                  <div
-                    key={offer.id}
-                    className="flex-shrink-0 bg-white/10 backdrop-blur-sm rounded-xl p-4 text-white min-w-[250px] border border-white/20"
-                  >
-                    <div className="font-bold text-lg mb-1">{offer.title}</div>
-                    <div className="text-sm opacity-90 mb-2">
-                      {offer.subtitle}
-                    </div>
-                    <div className="text-xs bg-white/20 px-3 py-1 rounded-full inline-block">
-                      Code: {offer.code}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* What are you looking for - Redesigned */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <Badge className="bg-orange-100 text-orange-700 border-orange-200 mb-6">
-                <Crown className="h-4 w-4 mr-2" />
-                Explore Categories
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <div className="text-center space-y-12">
+            {/* Badges */}
+            <div className="flex justify-center items-center space-x-4">
+              <Badge className="bg-orange-500 text-white border-0 px-6 py-2 text-sm font-semibold">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Phase 1: Visitor Guide
               </Badge>
-              <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6">
-                What are you looking for?
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                From beachside stays to local delicacies, we've got everything
-                for your perfect coastal getaway
+              <Badge className="bg-green-500 text-white border-0 px-6 py-2 text-sm font-semibold">
+                <Shield className="h-4 w-4 mr-2" />
+                Local Verified
+              </Badge>
+            </div>
+
+            {/* Main Heading */}
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-tight">
+                Udupi & Manipal
+                <span className="block bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
+                  Visitor Guide
+                </span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                Discover the best places to eat, stay, visit, and experience in 
+                beautiful coastal Karnataka. Your complete guide to local gems.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {categories.map((category, index) => (
-                <div
-                  key={category.id}
-                  onClick={() =>
-                    navigate(
-                      `/services?category=${category.slug}&location=${selectedLocation}`,
-                    )
-                  }
-                  className="group cursor-pointer bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 overflow-hidden"
+            {/* Call to Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <Link to="/guide">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 >
-                  {/* Card Header */}
-                  <div className="relative p-8 text-center">
-                    {/* Background Pattern */}
-                    <div
-                      className="absolute inset-0 opacity-5 group-hover:opacity-15 transition-all duration-500"
-                      style={{
-                        background: `linear-gradient(135deg, ${category.color || "#f97316"}, ${category.color || "#f97316"}99)`,
-                      }}
-                    ></div>
+                  <Navigation className="w-5 h-5 mr-2" />
+                  Open Udupi–Manipal Guide
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              
+              <Button 
+                onClick={handleDownloadPDF}
+                variant="outline" 
+                size="lg"
+                className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50 px-8 py-4 text-lg font-semibold rounded-xl"
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download PDF Guide
+              </Button>
+            </div>
 
-                    {/* Icon */}
-                    <div className="relative mb-6">
-                      <div
-                        className="w-24 h-24 mx-auto rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-xl"
-                        style={{ backgroundColor: category.color || "#f97316" }}
-                      >
-                        {category.icon || "🏨"}
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative space-y-3">
-                      <h3 className="font-bold text-2xl text-gray-900 group-hover:text-orange-500 transition-colors leading-tight">
-                        {category.name}
-                      </h3>
-                      <p className="text-lg text-gray-600 font-semibold">
-                        {category.service_count || 0} options available
-                      </p>
-                    </div>
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div className="flex">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Input
+                      type="text"
+                      placeholder="Search restaurants, places, experiences..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-12 pr-4 py-4 text-lg border-0 focus:ring-0 focus:outline-none bg-transparent"
+                    />
                   </div>
-
-                  {/* Card Footer */}
-                  <div className="px-8 pb-8">
-                    <div className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-2xl font-bold text-lg opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 shadow-lg text-center">
-                      Explore Now
-                    </div>
-                  </div>
+                  <Button 
+                    type="submit"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 rounded-none rounded-r-2xl"
+                  >
+                    Search
+                  </Button>
                 </div>
-              ))}
+              </form>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* Rest of the sections continue with enhanced styling... */}
-        {/* Featured Services - Swiggy Card Style */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
-                  Featured This Week
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Hand-picked experiences just for you
-                </p>
-              </div>
-              <Link
-                to="/services?featured=true"
-                className="flex items-center text-orange-500 hover:text-orange-600 font-bold text-lg"
-              >
-                View All <ArrowRight className="h-5 w-5 ml-2" />
+      {/* Categories Section */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Explore by Category
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Browse our comprehensive guide organized by what matters most to visitors
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((category) => (
+            <Link key={category.id} to={`/guide?category=${category.slug}`}>
+              <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 shadow-lg overflow-hidden bg-white h-full">
+                <CardContent className="p-0">
+                  <div className={`bg-gradient-to-br ${getCategoryColor(category.slug)} p-8 text-white`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
+                        {getCategoryIcon(category.slug)}
+                      </div>
+                      <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
+                    <p className="text-white/90 text-sm">
+                      Discover the best {category.name.toLowerCase()} in Udupi & Manipal
+                    </p>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">View all places</span>
+                      <ArrowRight className="w-4 h-4 text-orange-500 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured Places Section */}
+      {featuredItems.length > 0 && (
+        <div className="bg-white py-16">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Featured Places
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Hand-picked recommendations from our local experts
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredItems.map((item) => (
+                <Card key={item.id} className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg overflow-hidden bg-white">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={item.image_url || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400"}
+                      alt={item.title}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <Badge className="absolute top-3 right-3 bg-orange-500 text-white">
+                      <Star className="w-3 h-3 mr-1" />
+                      Featured
+                    </Badge>
+                  </div>
+                  
+                  <CardContent className="p-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+                          {item.title}
+                        </h3>
+                        <Badge variant="outline" className="text-xs">
+                          {item.city}
+                        </Badge>
+                      </div>
+                      
+                      {item.description && (
+                        <p className="text-gray-600 text-sm line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                      
+                      {item.cuisine_or_type && (
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <MapPin className="w-4 h-4" />
+                          {item.cuisine_or_type}
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link to="/guide">
+                <Button 
+                  size="lg" 
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg"
+                >
+                  View All Places
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
               </Link>
             </div>
+          </div>
+        </div>
+      )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {featuredServices.slice(0, 8).map((service) => (
-                <div
-                  key={service.id}
-                  onClick={() => navigate(`/service/${service.id}`)}
-                  className="group cursor-pointer bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden"
-                >
-                  <div className="aspect-[4/3] relative overflow-hidden">
-                    <img
-                      src={
-                        service.primary_image_id ||
-                        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop&auto=format"
-                      }
-                      alt={service.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-
-                    {/* Rating Badge */}
-                    <div className="absolute top-3 left-3 z-10">
-                      <div className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold flex items-center shadow-md">
-                        <Star className="h-3 w-3 mr-1 fill-current" />
-                        {service.average_rating.toFixed(1)}
-                      </div>
-                    </div>
-
-                    {/* Favorite Button */}
-                    <button className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-md z-10">
-                      <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
-                    </button>
-
-                    {/* Quick Info */}
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2.5">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-gray-600 flex items-center truncate">
-                            <Timer className="h-3 w-3 mr-1 flex-shrink-0" />
-                            <span className="truncate">Available</span>
-                          </span>
-                          <span className="text-green-600 font-bold ml-2 flex-shrink-0">
-                            ₹{service.base_price.toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h3 className="font-bold text-lg text-gray-900 group-hover:text-orange-500 transition-colors mb-2">
-                        {service.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 capitalize font-medium">
-                        {service.service_type} •{" "}
-                        {service.locations?.name || "Coastal Karnataka"}
-                      </p>
-                    </div>
-
-                    <p className="text-gray-600 mb-4 line-clamp-2">
-                      {service.short_description || service.description}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500">
-                          {service.total_reviews} reviews
-                        </span>
-                        <span className="text-xs text-green-600 font-bold">
-                          Free cancellation
-                        </span>
-                      </div>
-                      <Button
-                        size="sm"
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-md"
-                      >
-                        Book Now
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+      {/* Coming Soon Section */}
+      <div className="bg-gradient-to-r from-orange-50 to-cyan-50 py-16">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            What's Coming in Phase 2?
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            We're building something bigger! Your feedback will help us prioritize these features:
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+              <p className="text-sm font-medium text-gray-700">Online Bookings</p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <Users className="w-8 h-8 text-green-500 mx-auto mb-2" />
+              <p className="text-sm font-medium text-gray-700">Event Management</p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <Car className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+              <p className="text-sm font-medium text-gray-700">Driver Booking</p>
+            </div>
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <Coffee className="w-8 h-8 text-red-500 mx-auto mb-2" />
+              <p className="text-sm font-medium text-gray-700">Food Delivery</p>
             </div>
           </div>
-        </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
-          <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              Ready for Your Coastal Adventure?
-            </h2>
-            <p className="text-xl lg:text-2xl text-white/90 mb-10 font-medium">
-              Join thousands discovering authentic experiences in Karnataka's
-              coastal paradise
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button
-                onClick={() => navigate("/services")}
-                size="lg"
-                className="bg-white text-orange-500 hover:bg-orange-50 px-10 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
-              >
-                Start Exploring
-                <ArrowRight className="h-6 w-6 ml-3" />
-              </Button>
-              <Button
-                onClick={() => navigate("/partner-with-us")}
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-orange-500 px-10 py-4 text-xl font-bold rounded-2xl"
-              >
-                Become a Partner
-              </Button>
-            </div>
-          </div>
-        </section>
+          <Link to="/feedback">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-lg"
+            >
+              <Heart className="w-5 h-5 mr-2" />
+              Share Your Feedback
+            </Button>
+          </Link>
+        </div>
       </div>
-    </Layout>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-orange-500">CoastalConnect</h3>
+              <p className="text-gray-400 text-sm">
+                Your trusted companion for exploring the beautiful coastal region of Udupi & Manipal.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <div className="space-y-2 text-sm">
+                <Link to="/guide" className="block text-gray-400 hover:text-white transition-colors">
+                  Visitor Guide
+                </Link>
+                <Link to="/feedback" className="block text-gray-400 hover:text-white transition-colors">
+                  Feedback
+                </Link>
+                <Link to="/contact" className="block text-gray-400 hover:text-white transition-colors">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <div className="space-y-2 text-sm text-gray-400">
+                <p>hello@coastalconnect.in</p>
+                <p>+91 820 252 0187</p>
+                <p>Udupi & Manipal, Karnataka</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              © 2024 CoastalConnect. Made with ❤️ for coastal Karnataka.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
