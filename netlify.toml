@@ -1,19 +1,21 @@
 [build]
-  command = "echo 'Deploying CoastalConnect'"
-  publish = "."
+  command = "npm run build"
+  publish = "dist"
 
 [build.environment]
+  NODE_VERSION = "18"
   NODE_ENV = "production"
 
 [functions]
-  external_node_modules = ["express"]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["puppeteer"]
 
+# Redirect all routes to index.html for client-side routing
 [[redirects]]
-  force = true
-  from = "/api/*"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  to = "/.netlify/functions/api/:splat"
 
 [[headers]]
   for = "/*"
