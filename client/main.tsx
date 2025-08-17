@@ -69,19 +69,20 @@ function App() {
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<Phase1Homepage />} />
-              <Route path="/services" element={<SwiggyStyleServices />} />
+              {/* Phase 2 Features - Hidden for Phase 1 */}
+              {/* <Route path="/services" element={<SwiggyStyleServices />} />
               <Route path="/service/:id" element={<ModernServiceDetail />} />
               <Route path="/login" element={<ModernLogin />} />
               <Route path="/signup" element={<ModernSignup />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
-              {/* Dashboard Routes */}
+              Dashboard Routes
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/dashboard" element={<RoleBasedRoute><Dashboard /></RoleBasedRoute>} />
               <Route path="/bookings" element={<RoleBasedRoute><Dashboard /></RoleBasedRoute>} />
               <Route path="/vendor" element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>} />
-              <Route path="/api-test" element={<ApiTest />} />
+              <Route path="/api-test" element={<ApiTest />} /> */}
 
               {/* Info Pages */}
               <Route path="/about" element={<SwiggyStyleAbout />} />
