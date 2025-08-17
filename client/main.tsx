@@ -85,7 +85,7 @@ function App() {
 
               {/* Info Pages */}
               {/* Phase 1 Core Pages */}
-              <Route path="/guide" element={<Guide />} />
+              <Route path="/guide" element={<SimpleGuide />} />
               <Route path="/feedback" element={<Feedback />} />
               <Route path="/contact" element={<Contact />} />
 
