@@ -85,13 +85,16 @@ function App() {
               <Route path="/api-test" element={<ApiTest />} /> */}
 
               {/* Info Pages */}
-              <Route path="/about" element={<SwiggyStyleAbout />} />
+              {/* Phase 1 Core Pages */}
+              <Route path="/guide" element={<Guide />} />
+              <Route path="/feedback" element={<Feedback />} />
               <Route path="/contact" element={<Contact />} />
+
+              {/* Phase 2 Features - Hidden for Phase 1 */}
+              {/* <Route path="/about" element={<SwiggyStyleAbout />} />
               <Route path="/help" element={<Help />} />
               <Route path="/support" element={<Help />} />
               <Route path="/safety" element={<Help />} />
-              <Route path="/guide" element={<Guide />} />
-              <Route path="/feedback" element={<Feedback />} />
               <Route path="/visit-udupi-guide" element={<VisitUdupiGuide />} />
               <Route path="/partner-with-us" element={<PartnerWithUs />} />
               <Route path="/gallery" element={<MediaGallery />} />
@@ -99,7 +102,7 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
 
-              {/* Service Category Routes - Direct to filtered services */}
+              Service Category Routes - Direct to filtered services
               <Route path="/hotels" element={<SwiggyStyleServices />} />
               <Route path="/homestays" element={<SwiggyStyleServices />} />
               <Route path="/restaurants" element={<SwiggyStyleServices />} />
@@ -110,7 +113,7 @@ function App() {
               <Route path="/wellness" element={<SwiggyStyleServices />} />
               <Route path="/creators" element={<SwiggyStyleServices />} />
 
-              {/* Event Organizer Routes */}
+              Event Organizer Routes
               <Route
                 path="/organizer-register"
                 element={<EventOrganizerRegister />}
@@ -125,12 +128,12 @@ function App() {
               />
               <Route path="/create-event" element={<EventOrganizerRoute><CreateEvent /></EventOrganizerRoute>} />
 
-              {/* Vendor Routes */}
+              Vendor Routes
               <Route path="/vendor-register" element={<VendorRegister />} />
               <Route
                 path="/vendor-dashboard"
                 element={<VendorRoute><SwiggyStyleVendorDashboard /></VendorRoute>}
-              />
+              /> */}
 
               {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />
