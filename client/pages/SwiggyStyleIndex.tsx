@@ -1,25 +1,19 @@
 /**
- * CoastalConnect - Swiggy/Zomato Inspired Homepage
- * Modern, dynamic UI with video hero and enhanced UX
+ * CoastalConnect Phase 1 - Visitor Guide Homepage
+ * Simplified for Phase 1 launch
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import Layout from "@/components/Layout";
-import { useAuth } from "@/contexts/SupabaseAuthContext";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-  supabase,
-  getServices,
-  getServiceCategories,
-  getLocations,
-  searchServices,
-  trackEvent,
-  SupabaseService,
-  SupabaseCategory,
-  SupabaseLocation,
+  getGuideCategories,
+  getGuideItems,
+  GuideCategory,
+  GuideItem
 } from "@/lib/supabase";
 import {
   Search,
