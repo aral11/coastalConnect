@@ -643,6 +643,126 @@ export const getCulturalAttractions = async (filters?: {
   return data;
 };
 
+// Phase 1 Guide functions
+export const getGuideCategories = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("guide_categories")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      console.warn("Error fetching guide categories:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Guide categories fetch error:", error);
+    return [];
+  }
+};
+
+export const getGuideItems = async (filters?: {
+  category_id?: string;
+  city?: "Udupi" | "Manipal";
+  featured?: boolean;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}) => {
+  try {
+    let query = supabase
+      .from("guide_items")
+      .select(`
+        *,
+        guide_categories(name, slug)
+      `);
+
+    if (filters?.category_id) {
+      query = query.eq("category_id", filters.category_id);
+    }
+
+    if (filters?.city) {
+      query = query.eq("city", filters.city);
+    }
+
+    if (filters?.featured) {
+      query = query.eq("is_featured", true);
+    }
+
+    if (filters?.search) {
+      query = query.or(
+        `title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,cuisine_or_type.ilike.%${filters.search}%`
+      );
+    }
+
+    if (filters?.limit) {
+      query = query.limit(filters.limit);
+    }
+
+    if (filters?.offset) {
+      query = query.range(
+        filters.offset,
+        filters.offset + (filters.limit || 20) - 1
+      );
+    }
+
+    const { data, error } = await query.order("sort_order", { ascending: true });
+
+    if (error) {
+      console.warn("Error fetching guide items:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Guide items fetch error:", error);
+    return [];
+  }
+};
+
+export const getGuideItemById = async (id: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("guide_items")
+      .select(`
+        *,
+        guide_categories(name, slug)
+      `)
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching guide item:", error);
+    return null;
+  }
+};
+
+export const submitGuideFeedback = async (feedback: {
+  name: string;
+  email?: string;
+  message?: string;
+  want_all_in_one: boolean;
+}) => {
+  try {
+    const { data, error } = await supabase
+      .from("guide_feedback")
+      .insert([feedback])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    throw error;
+  }
+};
+
 // Real-time subscriptions
 export const subscribeToServices = (callback: (payload: any) => void) => {
   return supabase
