@@ -1,14 +1,15 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+
+Sitemap: https://coastalconnect.in/sitemap.xml
+
+# Phase 1 - Allow indexing of guide pages
+Allow: /guide
+Allow: /feedback
+Allow: /contact
+
+# Disallow hidden/future features
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /vendor
+Disallow: /api-test
