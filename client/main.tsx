@@ -45,6 +45,7 @@ import MediaGallery from "@/pages/MediaGallery";
 import Guide from "@/pages/Guide";
 import Feedback from "@/pages/Feedback";
 import Phase1Homepage from "@/pages/Phase1Homepage";
+import TestHomepage from "@/pages/TestHomepage";
 import ScrollToTop from "@/components/ScrollToTop";
 import RoleBasedRoute, {
   AdminRoute,
