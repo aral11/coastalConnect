@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Search, MapPin, Phone, ExternalLink, Download, Star, Clock, DollarSign } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
