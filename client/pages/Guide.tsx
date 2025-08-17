@@ -17,11 +17,12 @@ import {
 import { useToast } from "../hooks/use-toast";
 
 const Guide: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState<GuideCategory[]>([]);
   const [guideItems, setGuideItems] = useState<GuideItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get("category") || "all");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [selectedCity, setSelectedCity] = useState<"all" | "Udupi" | "Manipal">("all");
   const [selectedItem, setSelectedItem] = useState<GuideItem | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
